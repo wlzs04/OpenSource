@@ -17,7 +17,7 @@
                             <ColumnDefinition Width="853*"/>
                             <ColumnDefinition Width="741*"/>
                         </Grid.ColumnDefinitions>
-                        <Image HorizontalAlignment="Left" Source="bin/Debug/resource/保存.png"/>
+                        <Image HorizontalAlignment="Left" Source="bin/Debug/resource/保存.ico"/>
                         <Label x:Name="labelTitle" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" FontStretch="Expanded" Grid.ColumnSpan="2" Content="LLGameStudio" />
                         <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/最小化.png" Margin="0,0,100,0" Grid.Column="1" ToolTip="最小化" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
                         <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/最小化.png" Margin="0,0,50,0" Grid.Column="1" ToolTip="最大化" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
@@ -37,6 +37,34 @@
                         </Grid>
                         <Grid HorizontalAlignment="Right">
                             <Label x:Name="labelGameName"></Label>
+                        </Grid>
+                    </Grid>
+                    <Grid Margin="0,50,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*" MinWidth="30"/>
+                            <ColumnDefinition Width="60*" MinWidth="30"/>
+                            <ColumnDefinition Width="20*" MinWidth="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Margin="0" Background="Black" Grid.Column="0">
+                        </Grid>
+                        <GridSplitter x:Name="gridSplitterRow0" Width="3" Background="#FF2D2D30" BorderBrush="#FF686868"/>
+                        <Grid Margin="0" Background="#FF191919" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="70*" MinHeight="30"/>
+                                <RowDefinition Height="30*" MinHeight="30"/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="0" Background="#FF512CC9" Grid.Row="0"/>
+                            <GridSplitter x:Name="gridSplitterColumn0" Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderBrush="#FF686868"/>
+                            <Grid Margin="0" Grid.Row="1" Background="#FF6355EA">
+                                <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" Source="bin/Debug/Resource/左箭头.png" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False" >
+                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232" Margin="0,20,0,0">
+                                    </WrapPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                        <GridSplitter x:Name="gridSplitterRow1" Width="3" Grid.Column="1" Background="#FF2D2D30" BorderBrush="#FF686868"/>
+                        <Grid Margin="0" Background="#FF646464" Grid.Column="2">
                         </Grid>
                     </Grid>
                 </Grid>

@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -102,12 +101,18 @@ namespace LLGameStudio
 
         private void imageCreateGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            studioManager.CreateGame();
+            if(studioManager.CreateGame())
+            {
+                LoadDirectoryToFileArea(studioManager.GameResourcePath);
+            }
         }
 
         private void imageOpenGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            studioManager.OpenGame();
+            if (studioManager.OpenGame())
+            {
+                //LoadDirectoryToFileArea(studioManager.GameResourcePath);
+            }
         }
 
         private void imageStopGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -118,6 +123,35 @@ namespace LLGameStudio
         public void ShowStatusInfo(string info)
         {
             labelStatusInfo.Content = info;
+        }
+
+        public void SetGameName(string gameName)
+        {
+            labelGameName.Content = gameName;
+        }
+
+        public void LoadDirectoryToFileArea(string path)
+        {
+            DirectoryInfo di = new DirectoryInfo(path);
+            foreach (DirectoryInfo diitem in di.GetDirectories())
+            {
+                FileItem fileItem = new FileItem(wrapPanelFileArea, diitem.FullName);
+                fileItem.MouseDoubleClick += OpenDirectory;
+                wrapPanelFileArea.Children.Add(fileItem);
+            }
+
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                FileItem fileItem = new FileItem(wrapPanelFileArea, fi.FullName);
+                wrapPanelFileArea.Children.Add(fileItem);
+            }
+        }
+        
+        private void OpenDirectory(object sender, MouseButtonEventArgs e)
+        {
+            var v = (FileItem)sender;
+            wrapPanelFileArea.Children.Clear();
+            //LoadDirectoryToFileArea(studioManager.GameResourcePath + @"\" + v.textBox.Text);
         }
     }
 }

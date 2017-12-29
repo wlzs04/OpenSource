@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>保存.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>bin\Debug\DLL\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -42,7 +45,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -61,7 +63,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FileItem.xaml.cs">
+      <DependentUpon>FileItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\StudioManager.cs" />
+    <Page Include="FileItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -152,6 +161,15 @@
       <SubType>Designer</SubType>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="保存.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="bin\Debug\resource\保存.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.dll" />
+    <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.Shell.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -27,6 +27,7 @@ namespace LLGameStudio.Studio
         }
 
         public bool FullScreen { get => studioConfig.FullScreen;}
+        public string GameResourcePath { get => gameManager.GameResourcePath; }
 
         public void LoadConfig()
         {
@@ -50,6 +51,7 @@ namespace LLGameStudio.Studio
                 window.Height = studioConfig.Height;
             }
             window.Title = studioConfig.StudioName;
+            ShowStatusInfo("配置加载完成。");
         }
 
         public void SaveConfig()
@@ -57,6 +59,7 @@ namespace LLGameStudio.Studio
             ShowStatusInfo("正保存配置。");
             LLXMLConverter converter = new LLXMLConverter();
             converter.ExportContentToXML(studioConfigFilePath, studioConfig);
+            ShowStatusInfo("配置保存完成。");
         }
 
         public void ResizeStudio()
@@ -115,7 +118,15 @@ namespace LLGameStudio.Studio
 
         public void StartGame()
         {
+            SaveGame();
             gameManager.StartGame();
+        }
+
+        public void SaveGame()
+        {
+            ShowStatusInfo("正保存游戏。");
+            gameManager.SaveGame();
+            ShowStatusInfo("游戏保存完成。");
         }
 
         public void StopGame()
@@ -123,7 +134,7 @@ namespace LLGameStudio.Studio
             gameManager.StopGame();
         }
 
-        public void CreateGame()
+        public bool CreateGame()
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
             folderDialog.IsFolderPicker = true;
@@ -137,28 +148,38 @@ namespace LLGameStudio.Studio
                 {
                     MessageBox.Show("当前文件路径已存在！");
                     ShowStatusInfo("当前文件路径已存在！");
-                    return;
                 }
                 else
                 {
+                    ShowStatusInfo("正新建游戏目录。");
                     gameManager.CreateGame(gamePath,gameName);
+                    ShowStatusInfo("游戏目录新建完成。");
+                    return true;
                 }
             }
+            return false;
         }
 
-        public void OpenGame()
+        public bool OpenGame()
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
             folderDialog.IsFolderPicker = true;
             folderDialog.Title = "请选择游戏目录。";
             if (folderDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                if(!gameManager.OpenGame(folderDialog.FileName))
+                ShowStatusInfo("正打开游戏目录。");
+                if (!gameManager.OpenGame(folderDialog.FileName))
                 {
                     MessageBox.Show("此文件夹不是有效的游戏路径");
                     ShowStatusInfo("此文件夹不是有效的游戏路径");
                 }
+                else
+                {
+                    ShowStatusInfo("打开游戏目录完成。");
+                    return true;
+                }
             }
+            return false;
         }
 
         public void ShowStatusInfo(string info)

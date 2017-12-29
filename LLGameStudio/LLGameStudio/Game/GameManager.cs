@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
 using LLGameStudio.Studio;
@@ -16,13 +17,15 @@ namespace LLGameStudio.Game
     {
         string gamePath = "";
         string gameConfigFilePath = "";
+        string gameResourcePath = "";
         GameConfig gameConfig;
         bool gameLoaded = false;
         StudioManager studioManager;
         Process gameProcess;
-
+        
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
+        public string GameResourcePath { get => gameResourcePath; }
 
         public GameManager(StudioManager studioManager)
         {
@@ -40,15 +43,24 @@ namespace LLGameStudio.Game
             }
             studioManager.ShowStatusInfo("游戏：" + GameName + "正在启动。");
             gameProcess = Process.Start(gamePath + @"\" + gameConfig.GameName + ".exe");
+            gameProcess.EnableRaisingEvents = true;
+            var x=Dispatcher.CurrentDispatcher;
+            gameProcess.Exited += (sender, e) => {
+                x.BeginInvoke(
+                    new Action(() => { StopGame(); }), DispatcherPriority.Normal);
+            };
         }
 
         public void StopGame()
         {
-            if (gameProcess != null && !gameProcess.HasExited)
+            if (gameProcess != null)
             {
+                if(!gameProcess.HasExited)
+                {
+                    gameProcess.CloseMainWindow();
+                    gameProcess.Close();
+                }
                 studioManager.ShowStatusInfo("游戏：" + GameName + "已停止。");
-                gameProcess.CloseMainWindow();
-                gameProcess.Close();
             }
             gameProcess = null;
         }
@@ -59,20 +71,37 @@ namespace LLGameStudio.Game
             gameConfigFilePath = gamePath + @"\" + "Game.xml";
             gameConfig.GameName = gameName;
             SaveConfig();
+            gameResourcePath = gamePath + @"\" + "Resource";
+            Directory.CreateDirectory(gameResourcePath);
+            gameLoaded = true;
         }
 
         public bool OpenGame(string gamePath)
         {
-            gameConfigFilePath = gamePath + @"\" + "Game.xml";
-            if (Directory.Exists(gamePath) && File.Exists(gameConfigFilePath))
+            if (IsLegalGamePath(gamePath))
             {
                 this.gamePath = gamePath;
-
+                gameConfigFilePath = gamePath + @"\" + "Game.xml";
                 LoadConfig();
                 gameLoaded = true;
+                gameResourcePath = gamePath + @"\" + "Resource";
                 return true;
             }
             return false;
+        }
+
+        public bool IsLegalGamePath(string gamePath)
+        {
+            if (Directory.Exists(gamePath) && File.Exists(gamePath + @"\" + "Game.xml")&& Directory.Exists(gamePath+@"\"+"Resource"))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void SaveGame()
+        {
+
         }
 
         public void LoadConfig()
