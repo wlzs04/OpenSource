@@ -1,0 +1,52 @@
+﻿<Window x:Name="window" x:Class="LLGameStudio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LLGameStudio"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="1600" Background="{x:Null}" SizeChanged="window_SizeChanged" AllowsTransparency="True" WindowStyle="None" MinWidth="800" MinHeight="600">
+    <Window.Resources>
+    </Window.Resources>
+    <Grid>
+        <Border x:Name="borderBackground" BorderThickness="3" Height="900" Margin="0" Width="1600" CornerRadius="10" Background="#FFFB6464" BorderBrush="#FF007ACC">
+            <Grid>
+                <Border x:Name="borderTitleArea" CornerRadius="10,10,0,0" Height="30" VerticalAlignment="Top" Background="#FF2D2D30" MouseLeftButtonDown="borderTitleArea_MouseLeftButtonDown" BorderThickness="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="853*"/>
+                            <ColumnDefinition Width="741*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image HorizontalAlignment="Left" Source="bin/Debug/resource/保存.png"/>
+                        <Label x:Name="labelTitle" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" FontStretch="Expanded" Grid.ColumnSpan="2" Content="LLGameStudio" />
+                        <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/最小化.png" Margin="0,0,100,0" Grid.Column="1" ToolTip="最小化" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
+                        <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/最小化.png" Margin="0,0,50,0" Grid.Column="1" ToolTip="最大化" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
+                        <Image x:Name="imageExitWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/退出.png" Grid.Column="1" ToolTip="退出" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
+                    </Grid>
+                </Border>
+                <Grid Margin="0,30" Background="#FFFD9B0E">
+                    <Grid x:Name="gridToolArea" Background="#FFF57115" VerticalAlignment="Top" Height="50">
+                        <Grid HorizontalAlignment="Left">
+                            <Image x:Name="imageCreateGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/新建文件.png" ToolTip="新建游戏" MouseLeftButtonDown="imageCreateGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageOpenGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/打开文件.png" ToolTip="打开游戏" Margin="50,0,0,0" MouseLeftButtonDown="imageOpenGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageSaveGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/保存.png" ToolTip="保存游戏" Margin="100,0,0,0"/>
+                        </Grid>
+                        <Grid HorizontalAlignment="Center">
+                            <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageStopGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
+                        </Grid>
+                        <Grid HorizontalAlignment="Right">
+                            <Label x:Name="labelGameName"></Label>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Border x:Name="borderStatusArea" CornerRadius="0,0,10,10" Height="30" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderThickness="0">
+                    <Grid>
+                        <Label x:Name="labelStatusInfo" HorizontalAlignment="Left"></Label>
+                        <Image x:Name="imageHelp" HorizontalAlignment="Right" Source="bin/Debug/resource/帮助.png" MouseLeftButtonDown="imageHelp_MouseLeftButtonDown"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

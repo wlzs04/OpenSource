@@ -1,0 +1,40 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Executables
+*.exe
+*.out
+*.app
+/LLGameStudio/.vs/LLGameStudio/v15/ipch/AutoPCH/fa2960b011942237
+/LLGameStudio/.vs/LLGameStudio/v15/Server/sqlite3
+/LLGameStudio/.vs/LLGameStudio/v15
+/LLGameStudio/Debug
+/LLGameStudio/LLGameEngine/Debug
+/LLGameStudio/LLGameStudio/obj/Debug
+/LLGameStudio/LLGameStudio/bin/Debug/Microsoft.WindowsAPICodePack.Shell.dll
+/LLGameStudio/LLGameStudio/bin/Debug/Microsoft.WindowsAPICodePack.dll
+/LLGameStudio/LLGameStudio/bin/Debug/LLGameStudio.pdb
+/LLGameStudio/LLGameStudio/bin/Debug/LLGameStudio.exe.config
