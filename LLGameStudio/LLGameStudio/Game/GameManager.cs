@@ -33,6 +33,9 @@ namespace LLGameStudio.Game
             gameConfig = new GameConfig();
         }
 
+        /// <summary>
+        /// 开始游戏。
+        /// </summary>
         public void StartGame()
         {
             StopGame();
@@ -51,6 +54,9 @@ namespace LLGameStudio.Game
             };
         }
 
+        /// <summary>
+        /// 停止游戏。
+        /// </summary>
         public void StopGame()
         {
             if (gameProcess != null)
@@ -65,6 +71,11 @@ namespace LLGameStudio.Game
             gameProcess = null;
         }
 
+        /// <summary>
+        /// 创建新游戏目录。
+        /// </summary>
+        /// <param name="gamePath">游戏根目录</param>
+        /// <param name="gameName">游戏名称</param>
         public void CreateGame(string gamePath, string gameName)
         {
             Directory.CreateDirectory(gamePath);
@@ -76,6 +87,11 @@ namespace LLGameStudio.Game
             gameLoaded = true;
         }
 
+        /// <summary>
+        /// 打开游戏目录。
+        /// </summary>
+        /// <param name="gamePath">游戏路径</param>
+        /// <returns></returns>
         public bool OpenGame(string gamePath)
         {
             if (IsLegalGamePath(gamePath))
@@ -90,6 +106,11 @@ namespace LLGameStudio.Game
             return false;
         }
 
+        /// <summary>
+        /// 判断传入路径下文件结构是否符合要求。
+        /// </summary>
+        /// <param name="gamePath">游戏路径</param>
+        /// <returns></returns>
         public bool IsLegalGamePath(string gamePath)
         {
             if (Directory.Exists(gamePath) && File.Exists(gamePath + @"\" + "Game.xml")&& Directory.Exists(gamePath+@"\"+"Resource"))
@@ -99,11 +120,17 @@ namespace LLGameStudio.Game
             return false;
         }
 
+        /// <summary>
+        /// 保存游戏文件
+        /// </summary>
         public void SaveGame()
         {
 
         }
 
+        /// <summary>
+        /// 加载游戏配置。
+        /// </summary>
         public void LoadConfig()
         {
             LLXMLConverter converter = new LLXMLConverter();
@@ -111,6 +138,9 @@ namespace LLGameStudio.Game
             converter.LoadContentFromXML(gameConfigFilePath, gameConfig);
         }
 
+        /// <summary>
+        /// 保存游戏配置。
+        /// </summary>
         public void SaveConfig()
         {
             LLXMLConverter converter = new LLXMLConverter();

@@ -17,23 +17,23 @@
                             <ColumnDefinition Width="853*"/>
                             <ColumnDefinition Width="741*"/>
                         </Grid.ColumnDefinitions>
-                        <Image HorizontalAlignment="Left" Source="bin/Debug/resource/保存.ico"/>
+                        <Image HorizontalAlignment="Left" Source="bin/Debug/Resource/保存.ico"/>
                         <Label x:Name="labelTitle" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" FontStretch="Expanded" Grid.ColumnSpan="2" Content="LLGameStudio" />
-                        <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/最小化.png" Margin="0,0,100,0" Grid.Column="1" ToolTip="最小化" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
-                        <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/最小化.png" Margin="0,0,50,0" Grid.Column="1" ToolTip="最大化" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
-                        <Image x:Name="imageExitWindow" HorizontalAlignment="Right" Source="bin/Debug/resource/退出.png" Grid.Column="1" ToolTip="退出" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
+                        <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/最小化.png" Margin="0,0,100,0" Grid.Column="1" ToolTip="最小化" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
+                        <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/最小化.png" Margin="0,0,50,0" Grid.Column="1" ToolTip="最大化" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
+                        <Image x:Name="imageExitWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/退出.png" Grid.Column="1" ToolTip="退出" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
                     </Grid>
                 </Border>
                 <Grid Margin="0,30" Background="#FFFD9B0E">
                     <Grid x:Name="gridToolArea" Background="#FFF57115" VerticalAlignment="Top" Height="50">
                         <Grid HorizontalAlignment="Left">
-                            <Image x:Name="imageCreateGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/新建文件.png" ToolTip="新建游戏" MouseLeftButtonDown="imageCreateGame_MouseLeftButtonDown"/>
-                            <Image x:Name="imageOpenGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/打开文件.png" ToolTip="打开游戏" Margin="50,0,0,0" MouseLeftButtonDown="imageOpenGame_MouseLeftButtonDown"/>
-                            <Image x:Name="imageSaveGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/保存.png" ToolTip="保存游戏" Margin="100,0,0,0"/>
+                            <Image x:Name="imageCreateGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/新建文件.png" ToolTip="新建游戏" MouseLeftButtonDown="imageCreateGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageOpenGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/打开文件.png" ToolTip="打开游戏" Margin="50,0,0,0" MouseLeftButtonDown="imageOpenGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageSaveGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/保存.png" ToolTip="保存游戏" Margin="100,0,0,0"/>
                         </Grid>
                         <Grid HorizontalAlignment="Center">
-                            <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
-                            <Image x:Name="imageStopGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
+                            <Image x:Name="imageStopGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
                         </Grid>
                         <Grid HorizontalAlignment="Right">
                             <Label x:Name="labelGameName"></Label>
@@ -53,12 +53,14 @@
                                 <RowDefinition Height="70*" MinHeight="30"/>
                                 <RowDefinition Height="30*" MinHeight="30"/>
                             </Grid.RowDefinitions>
-                            <Grid Margin="0" Background="#FF512CC9" Grid.Row="0"/>
+                            <Grid Margin="0" Background="#FF512CC9" Grid.Row="0">
+                                <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True"></Canvas>
+                            </Grid>
                             <GridSplitter x:Name="gridSplitterColumn0" Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderBrush="#FF686868"/>
                             <Grid Margin="0" Grid.Row="1" Background="#FF6355EA">
-                                <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" Source="bin/Debug/Resource/左箭头.png" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录"/>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False" >
-                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232" Margin="0,20,0,0">
+                                <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" Source="bin/Debug/Resource/左箭头.png" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录" MouseLeftButtonDown="imageReturnLastDirectory_MouseLeftButtonDown"/>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,20,0,0" Focusable="False">
+                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232">
                                     </WrapPanel>
                                 </ScrollViewer>
                             </Grid>
@@ -71,7 +73,7 @@
                 <Border x:Name="borderStatusArea" CornerRadius="0,0,10,10" Height="30" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderThickness="0">
                     <Grid>
                         <Label x:Name="labelStatusInfo" HorizontalAlignment="Left"></Label>
-                        <Image x:Name="imageHelp" HorizontalAlignment="Right" Source="bin/Debug/resource/帮助.png" MouseLeftButtonDown="imageHelp_MouseLeftButtonDown"/>
+                        <Image x:Name="imageHelp" HorizontalAlignment="Right" Source="bin/Debug/Resource/帮助.png" MouseLeftButtonDown="imageHelp_MouseLeftButtonDown"/>
                     </Grid>
                 </Border>
             </Grid>

@@ -9,26 +9,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace LLGameStudio.Studio
 {
     class StudioManager
     {
         string studioConfigFilePath = @"Config\Studio.xml";
+        bool isShowStandard = true;
+        float currentCanvasShowRate = 1;
+        string fileAreaDirectory="";
         StudioConfig studioConfig;
         MainWindow window;
         GameManager gameManager;
+        CanvasManager canvasManager;
 
         public StudioManager(MainWindow window)
         {
             this.window = window;
             LoadConfig();
             gameManager = new GameManager(this);
+            canvasManager = new CanvasManager(window.GetCanvas());
+            
         }
 
         public bool FullScreen { get => studioConfig.FullScreen;}
         public string GameResourcePath { get => gameManager.GameResourcePath; }
+        public string FileAreaDirectory { get => fileAreaDirectory; }
 
+        /// <summary>
+        /// 从文件中加载编辑器配置。
+        /// </summary>
         public void LoadConfig()
         {
             ShowStatusInfo("正加载配置。");
@@ -54,6 +66,9 @@ namespace LLGameStudio.Studio
             ShowStatusInfo("配置加载完成。");
         }
 
+        /// <summary>
+        /// 保存编辑器配置到文件中。
+        /// </summary>
         public void SaveConfig()
         {
             ShowStatusInfo("正保存配置。");
@@ -62,6 +77,20 @@ namespace LLGameStudio.Studio
             ShowStatusInfo("配置保存完成。");
         }
 
+        public void InitCanvas()
+        {
+            canvasManager.ClearAll();
+            canvasManager.DrawStandardGrid();
+        }
+
+        public void ClearCanvas()
+        {
+            canvasManager.ClearAll();
+        }
+
+        /// <summary>
+        /// 重新设置编辑器窗体大小。
+        /// </summary>
         public void ResizeStudio()
         {
             if (!studioConfig.FullScreen)
@@ -73,6 +102,9 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 移动编辑器窗体位置。
+        /// </summary>
         public void MoveStudio()
         {
             window.DragMove();
@@ -81,6 +113,9 @@ namespace LLGameStudio.Studio
             studioConfig.FullScreen = false;
         }
 
+        /// <summary>
+        /// 最大化编辑器。
+        /// </summary>
         public void MaximizeStudio()
         {
             studioConfig.FullScreen = true;
@@ -90,6 +125,9 @@ namespace LLGameStudio.Studio
             window.Left = SystemParameters.WorkArea.Left;
         }
 
+        /// <summary>
+        /// 恢复编辑器大小。
+        /// </summary>
         public void RestoreStudio()
         {
             window.Height = studioConfig.Height;
@@ -99,11 +137,17 @@ namespace LLGameStudio.Studio
             studioConfig.FullScreen = false;
         }
 
+        /// <summary>
+        /// 最小化编辑器。
+        /// </summary>
         public void MinimizeStudio()
         {
             window.WindowState = WindowState.Minimized;
         }
 
+        /// <summary>
+        /// 退出编辑器。
+        /// </summary>
         public void ExitStudio()
         {
             SaveConfig();
@@ -111,17 +155,26 @@ namespace LLGameStudio.Studio
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// 显示编辑器帮助信息。
+        /// </summary>
         public void ShowStudioHelpInfo()
         {
             MessageBox.Show("当前版本：1.0.0。");
         }
 
+        /// <summary>
+        /// 开始游戏。
+        /// </summary>
         public void StartGame()
         {
             SaveGame();
             gameManager.StartGame();
         }
 
+        /// <summary>
+        /// 保存游戏文件。
+        /// </summary>
         public void SaveGame()
         {
             ShowStatusInfo("正保存游戏。");
@@ -129,11 +182,18 @@ namespace LLGameStudio.Studio
             ShowStatusInfo("游戏保存完成。");
         }
 
+        /// <summary>
+        /// 停止游戏。
+        /// </summary>
         public void StopGame()
         {
             gameManager.StopGame();
         }
 
+        /// <summary>
+        /// 创建新游戏目录。
+        /// </summary>
+        /// <returns>返回在当前路径是否创建成功。</returns>
         public bool CreateGame()
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
@@ -153,6 +213,7 @@ namespace LLGameStudio.Studio
                 {
                     ShowStatusInfo("正新建游戏目录。");
                     gameManager.CreateGame(gamePath,gameName);
+                    fileAreaDirectory = GameResourcePath;
                     ShowStatusInfo("游戏目录新建完成。");
                     return true;
                 }
@@ -160,6 +221,10 @@ namespace LLGameStudio.Studio
             return false;
         }
 
+        /// <summary>
+        /// 打开游戏目录。
+        /// </summary>
+        /// <returns></returns>
         public bool OpenGame()
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
@@ -175,24 +240,64 @@ namespace LLGameStudio.Studio
                 }
                 else
                 {
+                    fileAreaDirectory = GameResourcePath;
                     ShowStatusInfo("打开游戏目录完成。");
+                    InitCanvas();
                     return true;
                 }
             }
             return false;
         }
 
+        public void EnterNextDirectory(string folderName)
+        {
+            fileAreaDirectory += @"\" + folderName;
+        }
+
+        /// <summary>
+        /// 返回到上一目录。
+        /// </summary>
+        public void ReturnLastDirectory()
+        {
+            if(fileAreaDirectory==GameResourcePath)
+            {
+                window.ShowStatusInfo("当前已经是根目录。");
+            }
+            else
+            {
+                fileAreaDirectory = fileAreaDirectory.Substring(0, fileAreaDirectory.LastIndexOf('\\'));
+            }
+        }
+
+        /// <summary>
+        /// 显示编辑器状态信息。
+        /// </summary>
+        /// <param name="info">想要显示的文字。</param>
         public void ShowStatusInfo(string info)
         {
             window.ShowStatusInfo(info);
             LogStatusInfo(info);
         }
 
+        /// <summary>
+        /// 保存记录到log文件。
+        /// </summary>
+        /// <param name="info">想要记录的文字。</param>
         public void LogStatusInfo(string info)
         {
             //未完成。
         }
 
+        /// <summary>
+        /// 调用Win32窗体处理方法，使用前需要hook到主窗体上。
+        /// 当前方法只用于帮助无边框wpf窗体调整边界大小。
+        /// </summary>
+        /// <param name="hwnd">窗体句柄</param>
+        /// <param name="msg">触发的事件名称</param>
+        /// <param name="wParam">参数</param>
+        /// <param name="lParam">参数</param>
+        /// <param name="handled">是否已经处理过</param>
+        /// <returns></returns>
         public IntPtr WndResizeProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (FullScreen)

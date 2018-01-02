@@ -62,6 +62,11 @@ namespace LLGameStudio
             imageMaximizeWindow.ToolTip = "最大化";
         }
 
+        public Canvas GetCanvas()
+        {
+            return canvas;
+        }
+
         private void imageMinimizeWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.MinimizeStudio();
@@ -111,7 +116,7 @@ namespace LLGameStudio
         {
             if (studioManager.OpenGame())
             {
-                //LoadDirectoryToFileArea(studioManager.GameResourcePath);
+                LoadDirectoryToFileArea(studioManager.GameResourcePath);
             }
         }
 
@@ -151,7 +156,15 @@ namespace LLGameStudio
         {
             var v = (FileItem)sender;
             wrapPanelFileArea.Children.Clear();
-            //LoadDirectoryToFileArea(studioManager.GameResourcePath + @"\" + v.textBox.Text);
+            studioManager.EnterNextDirectory(v.textBox.Text);
+            LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
+        }
+        
+        private void imageReturnLastDirectory_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            studioManager.ReturnLastDirectory();
+            wrapPanelFileArea.Children.Clear();
+            LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
         }
     }
 }

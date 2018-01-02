@@ -66,6 +66,7 @@
     <Compile Include="FileItem.xaml.cs">
       <DependentUpon>FileItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\CanvasManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
     <Page Include="FileItem.xaml">
       <SubType>Designer</SubType>
@@ -116,45 +117,45 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bin\Debug\resource\上一步.png" />
-    <Resource Include="bin\Debug\resource\下一步.png" />
-    <Resource Include="bin\Debug\resource\保存.png" />
-    <Resource Include="bin\Debug\resource\关闭文件.png" />
-    <Resource Include="bin\Debug\resource\圆柱.png" />
-    <Resource Include="bin\Debug\resource\圆锥.png" />
-    <Resource Include="bin\Debug\resource\左箭头.png" />
-    <Resource Include="bin\Debug\resource\帮助.png" />
-    <Resource Include="bin\Debug\resource\开始.png" />
-    <Resource Include="bin\Debug\resource\打开文件.png" />
-    <Resource Include="bin\Debug\resource\投射光源.png" />
-    <Resource Include="bin\Debug\resource\按钮01off.png" />
-    <Resource Include="bin\Debug\resource\按钮01on.png" />
-    <Resource Include="bin\Debug\resource\按钮02off.png" />
-    <Resource Include="bin\Debug\resource\按钮02on.png" />
-    <Resource Include="bin\Debug\resource\按钮03off.png" />
-    <Resource Include="bin\Debug\resource\按钮03on.png" />
-    <Resource Include="bin\Debug\resource\按钮04off.png" />
-    <Resource Include="bin\Debug\resource\按钮04on.png" />
-    <Resource Include="bin\Debug\resource\按钮05off.png" />
-    <Resource Include="bin\Debug\resource\按钮05on.png" />
-    <Resource Include="bin\Debug\resource\摄像机.png" />
-    <Resource Include="bin\Debug\resource\文件夹.png" />
-    <Resource Include="bin\Debug\resource\新建文件.png" />
-    <Resource Include="bin\Debug\resource\方向光源.png" />
-    <Resource Include="bin\Debug\resource\暂停.png" />
-    <Resource Include="bin\Debug\resource\最小化.png" />
-    <Resource Include="bin\Debug\resource\未知文件.png" />
-    <Resource Include="bin\Debug\resource\未编译.png" />
-    <Resource Include="bin\Debug\resource\材质球.png" />
-    <Resource Include="bin\Debug\resource\点光源.png" />
-    <Resource Include="bin\Debug\resource\环境音.png" />
-    <Resource Include="bin\Debug\resource\球.png" />
-    <Resource Include="bin\Debug\resource\立方体.png" />
-    <Resource Include="bin\Debug\resource\结束.png" />
-    <Resource Include="bin\Debug\resource\编译停止.png" />
-    <Resource Include="bin\Debug\resource\编译失败.png" />
-    <Resource Include="bin\Debug\resource\编译成功.png" />
-    <Resource Include="bin\Debug\resource\退出.png" />
+    <Resource Include="bin\Debug\Resource\上一步.png" />
+    <Resource Include="bin\Debug\Resource\下一步.png" />
+    <Resource Include="bin\Debug\Resource\保存.png" />
+    <Resource Include="bin\Debug\Resource\关闭文件.png" />
+    <Resource Include="bin\Debug\Resource\圆柱.png" />
+    <Resource Include="bin\Debug\Resource\圆锥.png" />
+    <Resource Include="bin\Debug\Resource\左箭头.png" />
+    <Resource Include="bin\Debug\Resource\帮助.png" />
+    <Resource Include="bin\Debug\Resource\开始.png" />
+    <Resource Include="bin\Debug\Resource\打开文件.png" />
+    <Resource Include="bin\Debug\Resource\投射光源.png" />
+    <Resource Include="bin\Debug\Resource\按钮01off.png" />
+    <Resource Include="bin\Debug\Resource\按钮01on.png" />
+    <Resource Include="bin\Debug\Resource\按钮02off.png" />
+    <Resource Include="bin\Debug\Resource\按钮02on.png" />
+    <Resource Include="bin\Debug\Resource\按钮03off.png" />
+    <Resource Include="bin\Debug\Resource\按钮03on.png" />
+    <Resource Include="bin\Debug\Resource\按钮04off.png" />
+    <Resource Include="bin\Debug\Resource\按钮04on.png" />
+    <Resource Include="bin\Debug\Resource\按钮05off.png" />
+    <Resource Include="bin\Debug\Resource\按钮05on.png" />
+    <Resource Include="bin\Debug\Resource\摄像机.png" />
+    <Resource Include="bin\Debug\Resource\文件夹.png" />
+    <Resource Include="bin\Debug\Resource\新建文件.png" />
+    <Resource Include="bin\Debug\Resource\方向光源.png" />
+    <Resource Include="bin\Debug\Resource\暂停.png" />
+    <Resource Include="bin\Debug\Resource\最小化.png" />
+    <Resource Include="bin\Debug\Resource\未知文件.png" />
+    <Resource Include="bin\Debug\Resource\未编译.png" />
+    <Resource Include="bin\Debug\Resource\材质球.png" />
+    <Resource Include="bin\Debug\Resource\点光源.png" />
+    <Resource Include="bin\Debug\Resource\环境音.png" />
+    <Resource Include="bin\Debug\Resource\球.png" />
+    <Resource Include="bin\Debug\Resource\立方体.png" />
+    <Resource Include="bin\Debug\Resource\结束.png" />
+    <Resource Include="bin\Debug\Resource\编译停止.png" />
+    <Resource Include="bin\Debug\Resource\编译失败.png" />
+    <Resource Include="bin\Debug\Resource\编译成功.png" />
+    <Resource Include="bin\Debug\Resource\退出.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="bin\Debug\Config\Studio.xml">
@@ -165,7 +166,7 @@
     <Resource Include="保存.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="bin\Debug\resource\保存.ico" />
+    <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.dll" />
