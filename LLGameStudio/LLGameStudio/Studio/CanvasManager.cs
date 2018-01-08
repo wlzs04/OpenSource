@@ -14,17 +14,33 @@ namespace LLGameStudio.Studio
     {
         Canvas canvas;
         Brush brush;
+        float canvasShowRate = 2.5f;
+        Point rootPosition;
+        Point leftTopPostion;
 
         public CanvasManager(Canvas canvas)
         {
             this.canvas = canvas;
             brush = Brushes.White;
+            rootPosition = new Point(0, 0);
         }
 
         public void DrawStandardGrid()
         {
             SetBrushColor(Brushes.Wheat);
-            DrawLine(new Point(0,0),new Point(canvas.ActualWidth,canvas.ActualHeight));
+            double width = canvas.ActualWidth;
+            double height = canvas.ActualHeight;
+            double spaceBetweenLine = 30 * canvasShowRate;
+            int col = (int)Math.Ceiling(width / spaceBetweenLine);
+            int row = (int)Math.Ceiling(height / spaceBetweenLine);
+            for (int i = 0; i < row; i++)
+            {
+                DrawLine(new Point(0, i * spaceBetweenLine), new Point(width, i * spaceBetweenLine),0.2);
+            }
+            for (int i = 0; i < col; i++)
+            {
+                DrawLine(new Point(i * spaceBetweenLine, 0), new Point(i * spaceBetweenLine, height), 0.2);
+            }
         }
 
         public void ClearAll()

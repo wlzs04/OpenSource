@@ -18,7 +18,6 @@ namespace LLGameStudio.Studio
     {
         string studioConfigFilePath = @"Config\Studio.xml";
         bool isShowStandard = true;
-        float currentCanvasShowRate = 1;
         string fileAreaDirectory="";
         StudioConfig studioConfig;
         MainWindow window;
