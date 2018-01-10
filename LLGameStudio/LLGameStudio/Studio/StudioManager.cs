@@ -1,6 +1,7 @@
 ﻿using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
 using LLGameStudio.Game;
+using LLGameStudio.Studio.Control;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -17,25 +18,23 @@ namespace LLGameStudio.Studio
     class StudioManager
     {
         string studioConfigFilePath = @"Config\Studio.xml";
-        bool isShowStandard = true;
         string fileAreaDirectory="";
         StudioConfig studioConfig;
         MainWindow window;
         GameManager gameManager;
         CanvasManager canvasManager;
 
+        public bool FullScreen { get => studioConfig.FullScreen;}
+        public string GameResourcePath { get => gameManager.GameResourcePath; }
+        public string FileAreaDirectory { get => fileAreaDirectory; }
+
         public StudioManager(MainWindow window)
         {
             this.window = window;
             LoadConfig();
             gameManager = new GameManager(this);
-            canvasManager = new CanvasManager(window.GetCanvas());
-            
+            ThemeManager.LoadTheme(studioConfig.Theme);
         }
-
-        public bool FullScreen { get => studioConfig.FullScreen;}
-        public string GameResourcePath { get => gameManager.GameResourcePath; }
-        public string FileAreaDirectory { get => fileAreaDirectory; }
 
         /// <summary>
         /// 从文件中加载编辑器配置。
@@ -76,12 +75,47 @@ namespace LLGameStudio.Studio
             ShowStatusInfo("配置保存完成。");
         }
 
+        /// <summary>
+        /// 初始化画布
+        /// </summary>
         public void InitCanvas()
         {
-            canvasManager.ClearAll();
-            canvasManager.DrawStandardGrid();
+            canvasManager = new CanvasManager(window.GetCanvas(), gameManager);
+            DrawCanvas();
         }
 
+        /// <summary>
+        /// 移动画布基础位置
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public void MoveCanvas(double x, double y)
+        {
+            canvasManager.MoveCanvas(x, y);
+        }
+
+        /// <summary>
+        /// 缩放画布：对变换过的画布进行再变换
+        /// </summary>
+        /// <param name="centerPosition">中心位置</param>
+        /// <param name="rate">缩放比例</param>
+        public void ScaleCanvas(Point centerPosition,double rate)
+        {
+            canvasManager.ScaleCanvas(centerPosition, rate);
+        }
+
+        /// <summary>
+        /// 缩放画布：直接缩放画布到指定比例
+        /// </summary>
+        /// <param name="rate"></param>
+        public void ScaleCanvas(double rate)
+        {
+            canvasManager.ScaleCanvas(rate);
+        }
+
+        /// <summary>
+        /// 清空画布内容
+        /// </summary>
         public void ClearCanvas()
         {
             canvasManager.ClearAll();
@@ -190,6 +224,17 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
+        /// 绘制画布内容
+        /// </summary>
+        public void DrawCanvas()
+        {
+            if(gameManager.GameLoaded)
+            {
+                canvasManager.ReDrawAll();
+            }
+        }
+
+        /// <summary>
         /// 创建新游戏目录。
         /// </summary>
         /// <returns>返回在当前路径是否创建成功。</returns>
@@ -221,14 +266,21 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
+        /// 恢复画布变换
+        /// </summary>
+        public void RestoreCanvas()
+        {
+            canvasManager.RestoreCanvas();
+        }
+
+        /// <summary>
         /// 打开游戏目录。
         /// </summary>
-        /// <returns></returns>
+        /// <returns>是否成功打开</returns>
         public bool OpenGame()
         {
-            CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
+            CommonOpenFileDialog folderDialog = new CommonOpenFileDialog("请选择游戏目录。");
             folderDialog.IsFolderPicker = true;
-            folderDialog.Title = "请选择游戏目录。";
             if (folderDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 ShowStatusInfo("正打开游戏目录。");
@@ -248,6 +300,10 @@ namespace LLGameStudio.Studio
             return false;
         }
 
+        /// <summary>
+        /// 进入到此文件夹下
+        /// </summary>
+        /// <param name="folderName"></param>
         public void EnterNextDirectory(string folderName)
         {
             fileAreaDirectory += @"\" + folderName;
@@ -306,9 +362,8 @@ namespace LLGameStudio.Studio
             switch ((Window32MessageEnum)msg)
             {
                 case Window32MessageEnum.WM_NCHITTEST:
-                    Point point = new Point();
-                    point.X = (lParam.ToInt32() & 0xFFFF) - window.Left;
-                    point.Y = (lParam.ToInt32() >> 16) - window.Top;
+                    Point point = new Point((lParam.ToInt32() & 0xFFFF) - window.Left,
+                        (lParam.ToInt32() >> 16) - window.Top);
 
                     // 窗口左上角
                     if (point.Y < studioConfig.BorderWidth

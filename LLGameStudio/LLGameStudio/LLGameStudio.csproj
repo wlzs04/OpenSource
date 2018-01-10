@@ -63,12 +63,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FileItem.xaml.cs">
-      <DependentUpon>FileItem.xaml</DependentUpon>
+    <Compile Include="Common\Config\ThemeConfig.cs" />
+    <Compile Include="Studio\Control\LLStudioFileItem.xaml.cs">
+      <DependentUpon>LLStudioFileItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Studio\CanvasManager.cs" />
+    <Compile Include="Studio\Control\LLStudioButton.xaml.cs">
+      <DependentUpon>LLStudioButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Studio\ThemeManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
-    <Page Include="FileItem.xaml">
+    <Page Include="Studio\Control\LLStudioFileItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -89,6 +94,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Studio\Control\LLStudioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -169,8 +178,14 @@
     <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="bin\Debug\Config\Theme.xml">
+      <SubType>Designer</SubType>
+    </Resource>
     <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.dll" />
     <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.Shell.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

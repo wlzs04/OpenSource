@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Theme name="Default">
+  <!--背景颜色：透明度为0-->
+  <backgroundTransparencyColor>#00000000</backgroundTransparencyColor>
+  <!--背景颜色：透明度接近0-->
+  <backgroundAlphaColor>#02252526</backgroundAlphaColor>
+  <!--背景颜色：鼠标悬浮-->
+  <backgroundHoverColor>#1900BFFF</backgroundHoverColor>
+  <!--背景颜色：选中-->
+  <backgroundSelectColor>#3300BFFF</backgroundSelectColor>
+  <!--边框颜色：选中-->
+  <borderSelectColor>#FF00BFFF</borderSelectColor>
+</Theme>

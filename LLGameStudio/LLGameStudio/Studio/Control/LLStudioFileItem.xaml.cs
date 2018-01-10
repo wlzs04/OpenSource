@@ -14,20 +14,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LLGameStudio
+namespace LLGameStudio.Studio.Control
 {
     /// <summary>
     /// FileItem.xaml 的交互逻辑
     /// </summary>
-    public partial class FileItem : UserControl
+    public partial class LLStudioFileItem : UserControl
     {
-        public bool isSelect = false;
+        bool isSelect = false;
         FileInfo fileInfo;
-        public WrapPanel parentPanel;
+        WrapPanel parentPanel;
 
-        public FileItem(WrapPanel wp, string path)
+        public LLStudioFileItem(WrapPanel wp, string path)
         {
             InitializeComponent();
+
             fileInfo = new FileInfo(path);
             Uri uri;
             if(fileInfo.Attributes==FileAttributes.Directory)
@@ -63,6 +64,8 @@ namespace LLGameStudio
             mi1.Header = "删除";
             mi1.Click += menuItem1_Click;
             ContextMenu.Items.Add(mi1);
+
+            border.Background = ThemeManager.GetBrushByName("backgroundAlphaColor");
         }
 
         /// <summary>
@@ -72,13 +75,16 @@ namespace LLGameStudio
         /// <param name="e"></param>
         private void ChangeAllFileItemSelectState(object sender, MouseButtonEventArgs e)
         {
-            var v = (FileItem)sender;
+            var v = (LLStudioFileItem)sender;
             Keyboard.Focus(v);
-            foreach (var item in parentPanel.Children)
+            if(Keyboard.GetKeyStates(Key.LeftCtrl)!=KeyStates.Down)
             {
-                if (item != v)
+                foreach (var item in parentPanel.Children)
                 {
-                    ((FileItem)item).CancelSelectState();
+                    if (item != v)
+                    {
+                        ((LLStudioFileItem)item).CancelSelectState();
+                    }
                 }
             }
         }
@@ -98,7 +104,7 @@ namespace LLGameStudio
         {
             isSelect = false;
             border.BorderBrush = null;
-            border.Background = null;
+            border.Background = ThemeManager.GetBrushByName("backgroundAlphaColor");
         }
 
         /// <summary>
@@ -172,11 +178,10 @@ namespace LLGameStudio
 
         private void border_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (!isSelect)
+            if (!isSelect) 
             {
-                border.BorderBrush = new SolidColorBrush(Colors.DeepSkyBlue);
-                border.Background = new SolidColorBrush(Colors.DeepSkyBlue);
-                border.Background.Opacity = 0.1;
+                border.BorderBrush = ThemeManager.GetBrushByName("borderSelectColor");
+                border.Background = ThemeManager.GetBrushByName("backgroundHoverColor");
             }
         }
 
@@ -191,9 +196,7 @@ namespace LLGameStudio
         private void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             isSelect = true;
-            border.BorderBrush = new SolidColorBrush(Colors.DeepSkyBlue);
-            border.Background = new SolidColorBrush(Colors.DeepSkyBlue);
-            border.Background.Opacity = 0.2;
+            border.Background = ThemeManager.GetBrushByName("backgroundSelectColor");
         }
 
         private void textBox_LostFocus(object sender, RoutedEventArgs e)

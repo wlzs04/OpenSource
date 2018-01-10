@@ -16,8 +16,9 @@ namespace LLGameStudio.Common.Config
         int height=600;
         string studioName="LLGameStudio";
         bool fullScreen=true;
-        int borderWidth=3;
+        int borderWidth = 3;
         string version = "1.0.0";
+        string theme = "Default";
 
         public int Top { get => top; set => top = value; }
         public int Left { get => left; set => left = value; }
@@ -27,6 +28,7 @@ namespace LLGameStudio.Common.Config
         public bool FullScreen { get => fullScreen; set => fullScreen = value; }
         public int BorderWidth { get => borderWidth; set => borderWidth = value; }
         public string Version { get => version; set => version = value; }
+        public string Theme { get => theme; set => theme = value; }
 
         public void LoadContentFromXML(XElement element)
         {
@@ -38,6 +40,7 @@ namespace LLGameStudio.Common.Config
             fullScreen = Convert.ToBoolean(element.Attribute("fullScreen").Value);
             studioName = element.Attribute("studioName").Value;
             version = element.Attribute("version").Value;
+            theme = element.Attribute("theme").Value;
         }
 
         public XElement ExportContentToXML()
@@ -51,6 +54,7 @@ namespace LLGameStudio.Common.Config
             element.Add(new XAttribute("fullScreen", fullScreen));
             element.Add(new XAttribute("studioName", studioName));
             element.Add(new XAttribute("version", version));
+            element.Add(new XAttribute("theme", theme));
             return element;
         }
     }

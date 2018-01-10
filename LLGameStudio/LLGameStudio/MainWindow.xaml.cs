@@ -19,6 +19,7 @@ using Microsoft.Win32;
 using System.IO;
 using LLGameStudio.Studio;
 using LLGameStudio.Game;
+using LLGameStudio.Studio.Control;
 
 namespace LLGameStudio
 {
@@ -28,11 +29,23 @@ namespace LLGameStudio
     public partial class MainWindow : Window
     {
         StudioManager studioManager;
+        Point lastMousePosition;
+        bool canvasStartMove = false;
 
         public MainWindow()
         {
             InitializeComponent();
             InitManager();
+            InitControls();
+        }
+
+        private void InitControls()
+        {
+            comboBoxScaleCanvas.Items.Add(50);
+            comboBoxScaleCanvas.Items.Add(100);
+            comboBoxScaleCanvas.Items.Add(150);
+            comboBoxScaleCanvas.Items.Add(200);
+            comboBoxScaleCanvas.Items.Add(300);
         }
 
         private void InitManager()
@@ -137,25 +150,25 @@ namespace LLGameStudio
 
         public void LoadDirectoryToFileArea(string path)
         {
+            wrapPanelFileArea.Children.Clear();
             DirectoryInfo di = new DirectoryInfo(path);
             foreach (DirectoryInfo diitem in di.GetDirectories())
             {
-                FileItem fileItem = new FileItem(wrapPanelFileArea, diitem.FullName);
+                LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, diitem.FullName);
                 fileItem.MouseDoubleClick += OpenDirectory;
                 wrapPanelFileArea.Children.Add(fileItem);
             }
 
             foreach (FileInfo fi in di.GetFiles())
             {
-                FileItem fileItem = new FileItem(wrapPanelFileArea, fi.FullName);
+                LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, fi.FullName);
                 wrapPanelFileArea.Children.Add(fileItem);
             }
         }
         
         private void OpenDirectory(object sender, MouseButtonEventArgs e)
         {
-            var v = (FileItem)sender;
-            wrapPanelFileArea.Children.Clear();
+            var v = (LLStudioFileItem)sender;
             studioManager.EnterNextDirectory(v.textBox.Text);
             LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
         }
@@ -163,8 +176,53 @@ namespace LLGameStudio
         private void imageReturnLastDirectory_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.ReturnLastDirectory();
-            wrapPanelFileArea.Children.Clear();
             LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
+        }
+
+        private void canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            studioManager.ScaleCanvas(e.GetPosition(canvas), (1 + e.Delta / 3000.0));
+        }
+
+        private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.MiddleButton==MouseButtonState.Pressed)
+            {
+                canvasStartMove = true;
+                lastMousePosition = e.GetPosition(canvas);
+                canvas.CaptureMouse();
+            }
+        }
+
+        private void canvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.MiddleButton == MouseButtonState.Released)
+            {
+                canvasStartMove = false;
+                lastMousePosition = e.GetPosition(canvas);
+                canvas.ReleaseMouseCapture();
+            }
+        }
+
+        private void canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if(canvasStartMove)
+            {
+                Point currentMousePosition = e.GetPosition(canvas);
+                studioManager.MoveCanvas(currentMousePosition.X - lastMousePosition.X, currentMousePosition.Y - lastMousePosition.Y);
+                lastMousePosition = currentMousePosition;
+            }
+        }
+
+        private void buttonRestoreCanvas_Click(object sender, RoutedEventArgs e)
+        {
+            studioManager.RestoreCanvas();
+        }
+
+        private void comboBoxScaleCanvas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            double rate=Convert.ToDouble(comboBoxScaleCanvas.SelectedItem)*0.01;
+            studioManager.ScaleCanvas(rate);
         }
     }
 }

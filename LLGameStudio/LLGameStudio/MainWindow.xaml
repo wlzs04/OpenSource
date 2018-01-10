@@ -53,14 +53,16 @@
                                 <RowDefinition Height="70*" MinHeight="30"/>
                                 <RowDefinition Height="30*" MinHeight="30"/>
                             </Grid.RowDefinitions>
-                            <Grid Margin="0" Background="#FF512CC9" Grid.Row="0">
-                                <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True"></Canvas>
+                            <Grid Margin="0" Background="#FF512CC9">
+                                <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="{x:Null}" SelectionChanged="comboBoxScaleCanvas_SelectionChanged"/>
+                                <Button x:Name="buttonRestoreCanvas" HorizontalAlignment="Left" Width="50" Height="25" VerticalAlignment="Top" Margin="50,0,0,0" Content="还原画布" Click="buttonRestoreCanvas_Click" />
+                                <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True" MouseWheel="canvas_MouseWheel" MouseDown="canvas_MouseDown" MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Margin="0,25,0,0"/>
                             </Grid>
                             <GridSplitter x:Name="gridSplitterColumn0" Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderBrush="#FF686868"/>
                             <Grid Margin="0" Grid.Row="1" Background="#FF6355EA">
                                 <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" Source="bin/Debug/Resource/左箭头.png" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录" MouseLeftButtonDown="imageReturnLastDirectory_MouseLeftButtonDown"/>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,20,0,0" Focusable="False">
-                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,20,0,0" Focusable="False" Padding="0">
+                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232" Margin="0">
                                     </WrapPanel>
                                 </ScrollViewer>
                             </Grid>

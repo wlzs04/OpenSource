@@ -26,6 +26,8 @@ namespace LLGameStudio.Game
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
         public string GameResourcePath { get => gameResourcePath; }
+        public int GameWidth { get => gameConfig.Width; }
+        public int GameHeight { get => gameConfig.Height; }
 
         public GameManager(StudioManager studioManager)
         {
