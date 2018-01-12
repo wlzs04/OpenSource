@@ -94,11 +94,11 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 缩放画布：对变换过的画布进行再变换
+        /// 缩放画布：对变换过的画布进行再变换，返回当前缩放比例
         /// </summary>
         /// <param name="centerPosition">中心位置</param>
         /// <param name="rate">缩放比例</param>
-        public void ScaleCanvas(Point centerPosition, double rate)
+        public double ScaleCanvas(Point centerPosition, double rate)
         {
             ScaleTransform scaleTransform = new ScaleTransform();
             scaleTransform.CenterX = centerPosition.X;
@@ -108,6 +108,7 @@ namespace LLGameStudio.Studio
             canvasShowRate *= rate;
             transformMatrix.Append(scaleTransform.Value);
             ResetCanvasTransform();
+            return canvasShowRate;
         }
 
         /// <summary>

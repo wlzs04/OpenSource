@@ -39,20 +39,47 @@ namespace LLGameStudio
             InitControls();
         }
 
+        /// <summary>
+        /// 初始化控件
+        /// </summary>
         private void InitControls()
         {
-            comboBoxScaleCanvas.Items.Add(50);
-            comboBoxScaleCanvas.Items.Add(100);
-            comboBoxScaleCanvas.Items.Add(150);
-            comboBoxScaleCanvas.Items.Add(200);
-            comboBoxScaleCanvas.Items.Add(300);
+                                       
+            LLStudioButton createGameButton = new LLStudioButton();
+            createGameButton.SetImage("Resource/新建文件.png");
+            createGameButton.ToolTip = "新建游戏";
+            createGameButton.ClickHandler += imageCreateGame_MouseLeftButtonDown;
+            wrapPanelMenuArea.Children.Add(createGameButton);
+
+            LLStudioButton openGameButton = new LLStudioButton();
+            openGameButton.SetImage("Resource/打开文件.png");
+            openGameButton.ToolTip = "打开游戏";
+            openGameButton.ClickHandler += imageOpenGame_MouseLeftButtonDown;
+            wrapPanelMenuArea.Children.Add(openGameButton);
+
+            LLStudioButton saveGameButton = new LLStudioButton();
+            saveGameButton.SetImage("Resource/保存.png");
+            saveGameButton.ToolTip = "保存游戏";
+            wrapPanelMenuArea.Children.Add(saveGameButton);
+
+            //添加画布常用缩放比例
+            comboBoxScaleCanvas.Items.Add("50%");
+            comboBoxScaleCanvas.Items.Add("100%");
+            comboBoxScaleCanvas.Items.Add("150%");
+            comboBoxScaleCanvas.Items.Add("200%");
+            comboBoxScaleCanvas.Items.Add("300%");
+
+
+            imageMaximizeWindow.ToolTip = studioManager.FullScreen ? "还原" : "最大化";
+            labelTitle.Content = Title;
         }
 
+        /// <summary>
+        /// 初始化管理编辑器的类
+        /// </summary>
         private void InitManager()
         {
             studioManager = new StudioManager(this);
-            imageMaximizeWindow.ToolTip = studioManager.FullScreen ? "还原" : "最大化";
-            labelTitle.Content = Title;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -75,6 +102,10 @@ namespace LLGameStudio
             imageMaximizeWindow.ToolTip = "最大化";
         }
 
+        /// <summary>
+        /// 获得窗体画布对象
+        /// </summary>
+        /// <returns></returns>
         public Canvas GetCanvas()
         {
             return canvas;
@@ -138,16 +169,28 @@ namespace LLGameStudio
             studioManager.StopGame();
         }
 
+        /// <summary>
+        /// 显示状态信息
+        /// </summary>
+        /// <param name="info"></param>
         public void ShowStatusInfo(string info)
         {
             labelStatusInfo.Content = info;
         }
 
+        /// <summary>
+        /// 设置游戏名称
+        /// </summary>
+        /// <param name="gameName"></param>
         public void SetGameName(string gameName)
         {
             labelGameName.Content = gameName;
         }
 
+        /// <summary>
+        /// 加载指定路径下文件图标到显示文件区域
+        /// </summary>
+        /// <param name="path"></param>
         public void LoadDirectoryToFileArea(string path)
         {
             wrapPanelFileArea.Children.Clear();
@@ -178,10 +221,11 @@ namespace LLGameStudio
             studioManager.ReturnLastDirectory();
             LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
         }
-
+        
         private void canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            studioManager.ScaleCanvas(e.GetPosition(canvas), (1 + e.Delta / 3000.0));
+            double rate=studioManager.ScaleCanvas(e.GetPosition(canvas), (1 + e.Delta / 3000.0));
+            comboBoxScaleCanvas.Text = (int)(rate*100) + "%";
         }
 
         private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -217,12 +261,19 @@ namespace LLGameStudio
         private void buttonRestoreCanvas_Click(object sender, RoutedEventArgs e)
         {
             studioManager.RestoreCanvas();
+            comboBoxScaleCanvas.SelectionChanged -= comboBoxScaleCanvas_SelectionChanged;
+            comboBoxScaleCanvas.SelectedIndex = 1;
+            comboBoxScaleCanvas.SelectionChanged += comboBoxScaleCanvas_SelectionChanged;
         }
 
         private void comboBoxScaleCanvas_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            double rate=Convert.ToDouble(comboBoxScaleCanvas.SelectedItem)*0.01;
-            studioManager.ScaleCanvas(rate);
+            if(comboBoxScaleCanvas.SelectedItem!=null)
+            {
+                string rateString = comboBoxScaleCanvas.SelectedItem as string;
+                double rate = Convert.ToDouble(rateString.Remove(rateString.Length - 1)) * 0.01;
+                studioManager.ScaleCanvas(rate);
+            }
         }
     }
 }

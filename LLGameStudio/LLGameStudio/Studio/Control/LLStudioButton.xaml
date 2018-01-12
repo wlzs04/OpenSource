@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="50" d:DesignWidth="50">
     <Grid>
-            
+        <Border x:Name="border" BorderThickness="1" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseLeftButtonDown="border_MouseLeftButtonDown" MouseLeftButtonUp="border_MouseLeftButtonUp">
+            <Grid >
+                <Image x:Name="image" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

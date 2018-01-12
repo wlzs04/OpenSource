@@ -1,13 +1,12 @@
-﻿<Window x:Name="window" x:Class="LLGameStudio.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LLGameStudio"
+        xmlns:Control="clr-namespace:LLGameStudio.Studio.Control" x:Name="window" x:Class="LLGameStudio.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1600" Background="{x:Null}" SizeChanged="window_SizeChanged" AllowsTransparency="True" WindowStyle="None" MinWidth="800" MinHeight="600">
-    <Window.Resources>
-    </Window.Resources>
     <Grid>
         <Border x:Name="borderBackground" BorderThickness="3" Height="900" Margin="0" Width="1600" CornerRadius="10" Background="#FFFB6464" BorderBrush="#FF007ACC">
             <Grid>
@@ -26,17 +25,15 @@
                 </Border>
                 <Grid Margin="0,30" Background="#FFFD9B0E">
                     <Grid x:Name="gridToolArea" Background="#FFF57115" VerticalAlignment="Top" Height="50">
-                        <Grid HorizontalAlignment="Left">
-                            <Image x:Name="imageCreateGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/新建文件.png" ToolTip="新建游戏" MouseLeftButtonDown="imageCreateGame_MouseLeftButtonDown"/>
-                            <Image x:Name="imageOpenGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/打开文件.png" ToolTip="打开游戏" Margin="50,0,0,0" MouseLeftButtonDown="imageOpenGame_MouseLeftButtonDown"/>
-                            <Image x:Name="imageSaveGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/保存.png" ToolTip="保存游戏" Margin="100,0,0,0"/>
-                        </Grid>
+                        <WrapPanel x:Name="wrapPanelMenuArea" HorizontalAlignment="Left">
+                            
+                        </WrapPanel>
                         <Grid HorizontalAlignment="Center">
                             <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
                             <Image x:Name="imageStopGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
                         </Grid>
                         <Grid HorizontalAlignment="Right">
-                            <Label x:Name="labelGameName"></Label>
+                            <Label x:Name="labelGameName"/>
                         </Grid>
                     </Grid>
                     <Grid Margin="0,50,0,0">
@@ -45,8 +42,7 @@
                             <ColumnDefinition Width="60*" MinWidth="30"/>
                             <ColumnDefinition Width="20*" MinWidth="30"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Margin="0" Background="Black" Grid.Column="0">
-                        </Grid>
+                        <Grid Margin="0" Background="Black" Grid.Column="0"/>
                         <GridSplitter x:Name="gridSplitterRow0" Width="3" Background="#FF2D2D30" BorderBrush="#FF686868"/>
                         <Grid Margin="0" Background="#FF191919" Grid.Column="1">
                             <Grid.RowDefinitions>
@@ -54,7 +50,7 @@
                                 <RowDefinition Height="30*" MinHeight="30"/>
                             </Grid.RowDefinitions>
                             <Grid Margin="0" Background="#FF512CC9">
-                                <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="{x:Null}" SelectionChanged="comboBoxScaleCanvas_SelectionChanged"/>
+                                <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="#FFD5D5D5" SelectionChanged="comboBoxScaleCanvas_SelectionChanged" Focusable="False"/>
                                 <Button x:Name="buttonRestoreCanvas" HorizontalAlignment="Left" Width="50" Height="25" VerticalAlignment="Top" Margin="50,0,0,0" Content="还原画布" Click="buttonRestoreCanvas_Click" />
                                 <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True" MouseWheel="canvas_MouseWheel" MouseDown="canvas_MouseDown" MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Margin="0,25,0,0"/>
                             </Grid>
@@ -62,19 +58,17 @@
                             <Grid Margin="0" Grid.Row="1" Background="#FF6355EA">
                                 <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" Source="bin/Debug/Resource/左箭头.png" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录" MouseLeftButtonDown="imageReturnLastDirectory_MouseLeftButtonDown"/>
                                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,20,0,0" Focusable="False" Padding="0">
-                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232" Margin="0">
-                                    </WrapPanel>
+                                    <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232" Margin="0"/>
                                 </ScrollViewer>
                             </Grid>
                         </Grid>
                         <GridSplitter x:Name="gridSplitterRow1" Width="3" Grid.Column="1" Background="#FF2D2D30" BorderBrush="#FF686868"/>
-                        <Grid Margin="0" Background="#FF646464" Grid.Column="2">
-                        </Grid>
+                        <Grid Margin="0" Background="#FF646464" Grid.Column="2"/>
                     </Grid>
                 </Grid>
                 <Border x:Name="borderStatusArea" CornerRadius="0,0,10,10" Height="30" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderThickness="0">
                     <Grid>
-                        <Label x:Name="labelStatusInfo" HorizontalAlignment="Left"></Label>
+                        <Label x:Name="labelStatusInfo" HorizontalAlignment="Left"/>
                         <Image x:Name="imageHelp" HorizontalAlignment="Right" Source="bin/Debug/Resource/帮助.png" MouseLeftButtonDown="imageHelp_MouseLeftButtonDown"/>
                     </Grid>
                 </Border>

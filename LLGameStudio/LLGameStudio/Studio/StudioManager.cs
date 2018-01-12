@@ -91,17 +91,24 @@ namespace LLGameStudio.Studio
         /// <param name="y"></param>
         public void MoveCanvas(double x, double y)
         {
-            canvasManager.MoveCanvas(x, y);
+            if(gameManager.GameLoaded)
+            {
+                canvasManager.MoveCanvas(x, y);
+            }
         }
 
         /// <summary>
-        /// 缩放画布：对变换过的画布进行再变换
+        /// 缩放画布：对变换过的画布进行再变换，返回当前缩放比例
         /// </summary>
         /// <param name="centerPosition">中心位置</param>
         /// <param name="rate">缩放比例</param>
-        public void ScaleCanvas(Point centerPosition,double rate)
+        public double ScaleCanvas(Point centerPosition, double rate)
         {
-            canvasManager.ScaleCanvas(centerPosition, rate);
+            if (gameManager.GameLoaded)
+            {
+                return canvasManager.ScaleCanvas(centerPosition, rate);
+            }
+            return 1;
         }
 
         /// <summary>
@@ -110,7 +117,10 @@ namespace LLGameStudio.Studio
         /// <param name="rate"></param>
         public void ScaleCanvas(double rate)
         {
-            canvasManager.ScaleCanvas(rate);
+            if (gameManager.GameLoaded)
+            {
+                canvasManager.ScaleCanvas(rate);
+            }
         }
 
         /// <summary>
