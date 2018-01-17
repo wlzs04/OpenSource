@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
@@ -127,7 +128,7 @@ namespace LLGameStudio.Game
         /// </summary>
         public void SaveGame()
         {
-
+            MessageBox.Show("未完成！");
         }
 
         /// <summary>

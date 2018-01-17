@@ -44,23 +44,7 @@ namespace LLGameStudio
         /// </summary>
         private void InitControls()
         {
-                                       
-            LLStudioButton createGameButton = new LLStudioButton();
-            createGameButton.SetImage("Resource/新建文件.png");
-            createGameButton.ToolTip = "新建游戏";
-            createGameButton.ClickHandler += imageCreateGame_MouseLeftButtonDown;
-            wrapPanelMenuArea.Children.Add(createGameButton);
-
-            LLStudioButton openGameButton = new LLStudioButton();
-            openGameButton.SetImage("Resource/打开文件.png");
-            openGameButton.ToolTip = "打开游戏";
-            openGameButton.ClickHandler += imageOpenGame_MouseLeftButtonDown;
-            wrapPanelMenuArea.Children.Add(openGameButton);
-
-            LLStudioButton saveGameButton = new LLStudioButton();
-            saveGameButton.SetImage("Resource/保存.png");
-            saveGameButton.ToolTip = "保存游戏";
-            wrapPanelMenuArea.Children.Add(saveGameButton);
+            studioManager.InitControls();
 
             //添加画布常用缩放比例
             comboBoxScaleCanvas.Items.Add("50%");
@@ -69,6 +53,9 @@ namespace LLGameStudio
             comboBoxScaleCanvas.Items.Add("200%");
             comboBoxScaleCanvas.Items.Add("300%");
 
+            comboBoxScaleCanvas.SelectedIndex = 1;
+
+            comboBoxScaleCanvas.SelectionChanged += comboBoxScaleCanvas_SelectionChanged;
 
             imageMaximizeWindow.ToolTip = studioManager.FullScreen ? "还原" : "最大化";
             labelTitle.Content = Title;
@@ -111,6 +98,42 @@ namespace LLGameStudio
             return canvas;
         }
 
+        /// <summary>
+        /// 获得窗体菜单容器对象
+        /// </summary>
+        /// <returns></returns>
+        public WrapPanel GetWrapPanelMenuArea()
+        {
+            return wrapPanelMenuArea;
+        }
+
+        /// <summary>
+        /// 获得窗体文件容器对象
+        /// </summary>
+        /// <returns></returns>
+        public WrapPanel GetWrapPanelFileArea()
+        {
+            return wrapPanelFileArea;
+        }
+
+        /// <summary>
+        /// 获得窗体用来显示状态对象
+        /// </summary>
+        /// <returns></returns>
+        public Label GetLabelStatusInfo()
+        {
+            return labelStatusInfo;
+        }
+
+        /// <summary>
+        /// 获得窗体UI层级容器对象
+        /// </summary>
+        /// <returns></returns>
+        public Grid GetGridUILayer()
+        {
+            return gridUILayer;
+        }
+
         private void imageMinimizeWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.MinimizeStudio();
@@ -147,35 +170,10 @@ namespace LLGameStudio
         {
             studioManager.StartGame();
         }
-
-        private void imageCreateGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if(studioManager.CreateGame())
-            {
-                LoadDirectoryToFileArea(studioManager.GameResourcePath);
-            }
-        }
-
-        private void imageOpenGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (studioManager.OpenGame())
-            {
-                LoadDirectoryToFileArea(studioManager.GameResourcePath);
-            }
-        }
-
+        
         private void imageStopGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.StopGame();
-        }
-
-        /// <summary>
-        /// 显示状态信息
-        /// </summary>
-        /// <param name="info"></param>
-        public void ShowStatusInfo(string info)
-        {
-            labelStatusInfo.Content = info;
         }
 
         /// <summary>
@@ -186,40 +184,10 @@ namespace LLGameStudio
         {
             labelGameName.Content = gameName;
         }
-
-        /// <summary>
-        /// 加载指定路径下文件图标到显示文件区域
-        /// </summary>
-        /// <param name="path"></param>
-        public void LoadDirectoryToFileArea(string path)
-        {
-            wrapPanelFileArea.Children.Clear();
-            DirectoryInfo di = new DirectoryInfo(path);
-            foreach (DirectoryInfo diitem in di.GetDirectories())
-            {
-                LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, diitem.FullName);
-                fileItem.MouseDoubleClick += OpenDirectory;
-                wrapPanelFileArea.Children.Add(fileItem);
-            }
-
-            foreach (FileInfo fi in di.GetFiles())
-            {
-                LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, fi.FullName);
-                wrapPanelFileArea.Children.Add(fileItem);
-            }
-        }
-        
-        private void OpenDirectory(object sender, MouseButtonEventArgs e)
-        {
-            var v = (LLStudioFileItem)sender;
-            studioManager.EnterNextDirectory(v.textBox.Text);
-            LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
-        }
         
         private void imageReturnLastDirectory_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.ReturnLastDirectory();
-            LoadDirectoryToFileArea(studioManager.FileAreaDirectory);
         }
         
         private void canvas_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -275,5 +243,6 @@ namespace LLGameStudio
                 studioManager.ScaleCanvas(rate);
             }
         }
+        
     }
 }

@@ -54,6 +54,7 @@ namespace LLGameStudio.Studio.Control
         {
             border.BorderBrush = ThemeManager.GetBrushByName("borderSelectColor");
             border.Background = ThemeManager.GetBrushByName("backgroundHoverColor");
+            isSelect = true;
         }
 
         private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

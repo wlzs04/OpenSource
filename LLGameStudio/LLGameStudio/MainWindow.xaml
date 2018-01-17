@@ -7,6 +7,43 @@
         xmlns:Control="clr-namespace:LLGameStudio.Studio.Control" x:Name="window" x:Class="LLGameStudio.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1600" Background="{x:Null}" SizeChanged="window_SizeChanged" AllowsTransparency="True" WindowStyle="None" MinWidth="800" MinHeight="600">
+    <Window.Resources>
+        <Style TargetType="TextBlock" >
+            <Setter Property="Foreground" Value="#FFF0F0F0"/>
+        </Style>
+        <Style TargetType="TextBox" >
+            <Setter Property="Foreground" Value="#FFF0F0F0"/>
+        </Style>
+        <Style TargetType="TreeViewItem" >
+            <Setter Property="Foreground" Value="#FFF0F0F0"/>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid>
+                            <Border Name="Border" Margin="0" BorderThickness="1,1,0,1" CornerRadius="7,0,0,7" Width="30" Background="#FF323232">
+                                <ContentPresenter x:Name="ContentSite" ContentSource="Header" Margin="4,4,4,4"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" >
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF323232" Offset="0" />
+                                            <GradientStop Color="#48b0e2" Offset="0.5" />
+                                            <GradientStop Color="#FF323232" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Border x:Name="borderBackground" BorderThickness="3" Height="900" Margin="0" Width="1600" CornerRadius="10" Background="#FFFB6464" BorderBrush="#FF007ACC">
             <Grid>
@@ -25,9 +62,7 @@
                 </Border>
                 <Grid Margin="0,30" Background="#FFFD9B0E">
                     <Grid x:Name="gridToolArea" Background="#FFF57115" VerticalAlignment="Top" Height="50">
-                        <WrapPanel x:Name="wrapPanelMenuArea" HorizontalAlignment="Left">
-                            
-                        </WrapPanel>
+                        <WrapPanel x:Name="wrapPanelMenuArea" HorizontalAlignment="Left"/>
                         <Grid HorizontalAlignment="Center">
                             <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
                             <Image x:Name="imageStopGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
@@ -42,7 +77,16 @@
                             <ColumnDefinition Width="60*" MinWidth="30"/>
                             <ColumnDefinition Width="20*" MinWidth="30"/>
                         </Grid.ColumnDefinitions>
-                        <Grid Margin="0" Background="Black" Grid.Column="0"/>
+                        <Grid Margin="0" Background="Black" Grid.Column="0">
+                            <TabControl x:Name="tabControlLeft" Margin="0" Background="Black" TabStripPlacement="Left" BorderBrush="{x:Null}" BorderThickness="0" Padding="0">
+                                <TabItem FontSize="18.667" Background="#FF323232" Margin="0">
+                                    <TabItem.Header>
+                                        <TextBlock Width="30" FontSize="18" TextWrapping="Wrap" Text="层级列表" />
+                                    </TabItem.Header>
+                                    <Grid x:Name="gridUILayer" Background="#FF191919" />
+                                </TabItem>
+                            </TabControl>
+                        </Grid>
                         <GridSplitter x:Name="gridSplitterRow0" Width="3" Background="#FF2D2D30" BorderBrush="#FF686868"/>
                         <Grid Margin="0" Background="#FF191919" Grid.Column="1">
                             <Grid.RowDefinitions>
@@ -50,7 +94,8 @@
                                 <RowDefinition Height="30*" MinHeight="30"/>
                             </Grid.RowDefinitions>
                             <Grid Margin="0" Background="#FF512CC9">
-                                <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="#FFD5D5D5" SelectionChanged="comboBoxScaleCanvas_SelectionChanged" Focusable="False"/>
+                                <WrapPanel x:Name="wrapPanelCanvasControlArea" Height="25" VerticalAlignment="Top"></WrapPanel>
+                                <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="#FFD5D5D5" Focusable="False"/>
                                 <Button x:Name="buttonRestoreCanvas" HorizontalAlignment="Left" Width="50" Height="25" VerticalAlignment="Top" Margin="50,0,0,0" Content="还原画布" Click="buttonRestoreCanvas_Click" />
                                 <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True" MouseWheel="canvas_MouseWheel" MouseDown="canvas_MouseDown" MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Margin="0,25,0,0"/>
                             </Grid>

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace LLGameStudio.Studio
@@ -24,6 +25,18 @@ namespace LLGameStudio.Studio
         GameManager gameManager;
         CanvasManager canvasManager;
 
+        TreeView treeViewUILayer;
+
+        //以下是从主窗体中获得的用来显示控件的容器
+        //菜单区
+        WrapPanel wrapPanelMenuArea;
+        //文件区
+        WrapPanel wrapPanelFileArea;
+        //状态显示
+        Label labelStatusInfo;
+        //UI层级区
+        Grid gridUILayer;
+
         public bool FullScreen { get => studioConfig.FullScreen;}
         public string GameResourcePath { get => gameManager.GameResourcePath; }
         public string FileAreaDirectory { get => fileAreaDirectory; }
@@ -31,6 +44,13 @@ namespace LLGameStudio.Studio
         public StudioManager(MainWindow window)
         {
             this.window = window;
+
+            //从主窗体中获得控件
+            wrapPanelMenuArea = window.GetWrapPanelMenuArea();
+            wrapPanelFileArea = window.GetWrapPanelFileArea();
+            labelStatusInfo = window.GetLabelStatusInfo();
+            gridUILayer = window.GetGridUILayer();
+
             LoadConfig();
             gameManager = new GameManager(this);
             ThemeManager.LoadTheme(studioConfig.Theme);
@@ -73,6 +93,141 @@ namespace LLGameStudio.Studio
             LLXMLConverter converter = new LLXMLConverter();
             converter.ExportContentToXML(studioConfigFilePath, studioConfig);
             ShowStatusInfo("配置保存完成。");
+        }
+
+        /// <summary>
+        /// 初始化控件
+        /// </summary>
+        public void InitControls()
+        {
+            //菜单区
+
+            LLStudioButton createGameButton = new LLStudioButton();
+            createGameButton.SetImage("Resource/新建文件.png");
+            createGameButton.ToolTip = "新建游戏";
+            createGameButton.ClickHandler += CreateGame;
+            wrapPanelMenuArea.Children.Add(createGameButton);
+
+            LLStudioButton openGameButton = new LLStudioButton();
+            openGameButton.SetImage("Resource/打开文件.png");
+            openGameButton.ToolTip = "打开游戏";
+            openGameButton.ClickHandler += OpenGame;
+            wrapPanelMenuArea.Children.Add(openGameButton);
+
+            LLStudioButton saveGameButton = new LLStudioButton();
+            saveGameButton.SetImage("Resource/保存.png");
+            saveGameButton.ToolTip = "保存游戏";
+            saveGameButton.ClickHandler += SaveGame;
+            wrapPanelMenuArea.Children.Add(saveGameButton);
+
+            //UI层级区
+
+            TextBox textBox = new TextBox();
+            textBox.Height = 25;
+            textBox.VerticalAlignment = VerticalAlignment.Top;
+            textBox.Margin = new Thickness(10,2.5,10,2.5);
+            textBox.Background = ThemeManager.GetBrushByName("backgroundTextBoxColor");
+            textBox.ToolTip = "输入文字过滤节点";
+            textBox.TextChanged += UILayerFilterTextChanged;
+            gridUILayer.Children.Add(textBox);
+
+            treeViewUILayer = new TreeView();
+            treeViewUILayer.BorderThickness = new Thickness(0);
+            treeViewUILayer.Background = null;
+            treeViewUILayer.Margin= new Thickness(0, 25, 0, 0);
+            TreeResetItem();
+            gridUILayer.Children.Add(treeViewUILayer);
+        }
+
+        public void TreeResetItem()
+        {
+            treeViewUILayer.Items.Clear();
+            TreeViewItem tvi1 = new TreeViewItem();
+            tvi1.IsExpanded = true;
+            tvi1.Header = "layer1";
+            TreeViewItem tvi11 = new TreeViewItem();
+            tvi11.IsExpanded = true;
+            tvi11.Header = "layer11";
+            TreeViewItem tvi12 = new TreeViewItem();
+            tvi12.IsExpanded = true;
+            tvi12.Header = "layer12";
+            tvi1.Items.Add(tvi11);
+            tvi1.Items.Add(tvi12);
+            TreeViewItem tvi2 = new TreeViewItem();
+            tvi2.IsExpanded = true;
+            tvi2.Header = "layer2";
+            TreeViewItem tvi21 = new TreeViewItem();
+            tvi21.IsExpanded = true;
+            tvi21.Header = "layer21";
+            TreeViewItem tvi22 = new TreeViewItem();
+            tvi22.IsExpanded = true;
+            tvi22.Header = "layer22";
+            TreeViewItem tvi23 = new TreeViewItem();
+            tvi23.IsExpanded = true;
+            tvi23.Header = "layer23";
+            tvi2.Items.Add(tvi21);
+            tvi2.Items.Add(tvi22);
+            tvi2.Items.Add(tvi23);
+
+            treeViewUILayer.Items.Add(tvi1);
+            treeViewUILayer.Items.Add(tvi2);
+        }
+
+        /// <summary>
+        /// 使用指定字符串对节点进行过滤
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="filterString"></param>
+        /// <returns>true：代表找到符合节点</returns>
+        private bool FilterNextNode(TreeViewItem root, string filterString)
+        {
+            bool findFlag = false;
+            for (int i = 0; i < root.Items.Count;)
+            {
+                TreeViewItem item = root.Items[i] as TreeViewItem;
+                if (FilterNextNode(item, filterString))
+                {
+                    findFlag = true;
+                    i++;
+                }
+                else
+                {
+                    root.Items.Remove(item);
+                }
+            }
+            if (((string)root.Header).Contains(filterString))
+            {
+                findFlag = true;
+            }
+            return findFlag;
+        }
+
+        /// <summary>
+        /// 改变输入时过滤UI层级节点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UILayerFilterTextChanged(object sender, TextChangedEventArgs e)
+        {
+            TreeResetItem();
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text == "")
+            {
+                TreeResetItem();
+                return;
+            }
+            for (int i = 0; i < treeViewUILayer.Items.Count;)
+            {
+                TreeViewItem item = treeViewUILayer.Items[i] as TreeViewItem;
+                if (!FilterNextNode(item, textBox.Text))
+                {
+                    treeViewUILayer.Items.Remove(item);
+                }
+                else
+                {
+                    i++;
+                }
+            }
         }
 
         /// <summary>
@@ -245,12 +400,58 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
+        /// 恢复画布变换
+        /// </summary>
+        public void RestoreCanvas()
+        {
+            if (gameManager.GameLoaded)
+            {
+                canvasManager.RestoreCanvas();
+            }
+        }
+
+        /// <summary>
+        /// LLStudioFileItem控件点击事件：打开下一文件目录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OpenDirectory(object sender, MouseButtonEventArgs e)
+        {
+            var v = sender as LLStudioFileItem;
+            EnterNextDirectory(v.textBox.Text);
+            LoadDirectoryToFileArea(FileAreaDirectory);
+        }
+
+        /// <summary>
+        /// 加载指定路径下文件图标到显示文件区域
+        /// </summary>
+        /// <param name="path"></param>
+        public void LoadDirectoryToFileArea(string path)
+        {
+            wrapPanelFileArea.Children.Clear();
+            DirectoryInfo di = new DirectoryInfo(path);
+            foreach (DirectoryInfo diitem in di.GetDirectories())
+            {
+                LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, diitem.FullName);
+                fileItem.MouseDoubleClick += OpenDirectory;
+                wrapPanelFileArea.Children.Add(fileItem);
+            }
+
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, fi.FullName);
+                wrapPanelFileArea.Children.Add(fileItem);
+            }
+        }
+
+        /// <summary>
         /// 创建新游戏目录。
         /// </summary>
         /// <returns>返回在当前路径是否创建成功。</returns>
-        public bool CreateGame()
+        public void CreateGame(object sender, MouseButtonEventArgs e)
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
+            
             folderDialog.IsFolderPicker = true;
             folderDialog.Title = "请选择游戏目录。";
             if (folderDialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -269,25 +470,16 @@ namespace LLGameStudio.Studio
                     gameManager.CreateGame(gamePath,gameName);
                     fileAreaDirectory = GameResourcePath;
                     ShowStatusInfo("游戏目录新建完成。");
-                    return true;
+                    LoadDirectoryToFileArea(GameResourcePath);
                 }
             }
-            return false;
-        }
-
-        /// <summary>
-        /// 恢复画布变换
-        /// </summary>
-        public void RestoreCanvas()
-        {
-            canvasManager.RestoreCanvas();
         }
 
         /// <summary>
         /// 打开游戏目录。
         /// </summary>
         /// <returns>是否成功打开</returns>
-        public bool OpenGame()
+        public void OpenGame(object sender, MouseButtonEventArgs e)
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog("请选择游戏目录。");
             folderDialog.IsFolderPicker = true;
@@ -304,10 +496,19 @@ namespace LLGameStudio.Studio
                     fileAreaDirectory = GameResourcePath;
                     ShowStatusInfo("打开游戏目录完成。");
                     InitCanvas();
-                    return true;
+                    LoadDirectoryToFileArea(GameResourcePath);
                 }
             }
-            return false;
+        }
+
+        /// <summary>
+        /// 保存游戏目录。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void SaveGame(object sender, MouseButtonEventArgs e)
+        {
+            gameManager.SaveGame();
         }
 
         /// <summary>
@@ -326,11 +527,12 @@ namespace LLGameStudio.Studio
         {
             if(fileAreaDirectory==GameResourcePath)
             {
-                window.ShowStatusInfo("当前已经是根目录。");
+                ShowStatusInfo("当前已经是根目录。");
             }
             else
             {
                 fileAreaDirectory = fileAreaDirectory.Substring(0, fileAreaDirectory.LastIndexOf('\\'));
+                LoadDirectoryToFileArea(fileAreaDirectory);
             }
         }
 
@@ -340,7 +542,7 @@ namespace LLGameStudio.Studio
         /// <param name="info">想要显示的文字。</param>
         public void ShowStatusInfo(string info)
         {
-            window.ShowStatusInfo(info);
+            labelStatusInfo.Content = info;
             LogStatusInfo(info);
         }
 
@@ -376,29 +578,29 @@ namespace LLGameStudio.Studio
                         (lParam.ToInt32() >> 16) - window.Top);
 
                     // 窗口左上角
-                    if (point.Y < studioConfig.BorderWidth
-                       && point.X < studioConfig.BorderWidth)
+                    if (point.Y <= studioConfig.BorderWidth+2
+                       && point.X <= studioConfig.BorderWidth)
                     {
                         handled = true;
                         return new IntPtr((int)Window32HandleEnum.HTTOPLEFT);
                     }
                     // 窗口左下角
-                    else if (point.X < studioConfig.BorderWidth
-                        && point.Y > window.Height - studioConfig.BorderWidth)
+                    else if (point.X <= studioConfig.BorderWidth
+                        && point.Y >= window.Height - studioConfig.BorderWidth)
                     {
                         handled = true;
                         return new IntPtr((int)Window32HandleEnum.HTBOTTOMLEFT);
                     }
                     // 窗口右上角
-                    else if (point.Y < studioConfig.BorderWidth
-                       && point.X > window.Width - studioConfig.BorderWidth)
+                    else if (point.Y <= studioConfig.BorderWidth
+                       && point.X >= window.Width - studioConfig.BorderWidth)
                     {
                         handled = true;
                         return new IntPtr((int)Window32HandleEnum.HTTOPRIGHT);
                     }
                     // 窗口右下角
-                    else if (point.X > window.Width - studioConfig.BorderWidth
-                       && point.Y > window.Height - studioConfig.BorderWidth)
+                    else if (point.X >= window.Width - studioConfig.BorderWidth
+                       && point.Y >= window.Height - studioConfig.BorderWidth)
                     {
                         handled = true;
                         return new IntPtr((int)Window32HandleEnum.HTBOTTOMRIGHT);

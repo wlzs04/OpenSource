@@ -10,4 +10,6 @@
   <backgroundSelectColor>#3300BFFF</backgroundSelectColor>
   <!--边框颜色：选中-->
   <borderSelectColor>#FF00BFFF</borderSelectColor>
+  <!--文本框背景颜色：常规-->
+  <backgroundTextBoxColor>#FF333337</backgroundTextBoxColor>
 </Theme>
