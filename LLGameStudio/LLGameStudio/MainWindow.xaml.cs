@@ -133,6 +133,15 @@ namespace LLGameStudio
         {
             return gridUILayer;
         }
+        
+        /// <summary>
+        /// 获得窗体UI控件容器对象
+        /// </summary>
+        /// <returns></returns>
+        public WrapPanel GetWrapPanelUIControlArea()
+        {
+            return wrapPanelUIControlArea;
+        }
 
         private void imageMinimizeWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

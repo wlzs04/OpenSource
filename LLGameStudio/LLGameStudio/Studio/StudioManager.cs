@@ -36,6 +36,8 @@ namespace LLGameStudio.Studio
         Label labelStatusInfo;
         //UI层级区
         Grid gridUILayer;
+        //UI控件区
+        WrapPanel wrapPanelUIControlArea;
 
         public bool FullScreen { get => studioConfig.FullScreen;}
         public string GameResourcePath { get => gameManager.GameResourcePath; }
@@ -50,7 +52,7 @@ namespace LLGameStudio.Studio
             wrapPanelFileArea = window.GetWrapPanelFileArea();
             labelStatusInfo = window.GetLabelStatusInfo();
             gridUILayer = window.GetGridUILayer();
-
+            wrapPanelUIControlArea = window.GetWrapPanelUIControlArea();
             LoadConfig();
             gameManager = new GameManager(this);
             ThemeManager.LoadTheme(studioConfig.Theme);
@@ -137,6 +139,108 @@ namespace LLGameStudio.Studio
             treeViewUILayer.Margin= new Thickness(0, 25, 0, 0);
             TreeResetItem();
             gridUILayer.Children.Add(treeViewUILayer);
+
+            //UI控件区
+
+            LLStudioButton gameControlButton = new LLStudioButton();
+            gameControlButton.Width = 50;
+            gameControlButton.SetImage("Resource/立方体.png");
+            gameControlButton.ToolTip = "按钮";
+            wrapPanelUIControlArea.Children.Add(gameControlButton);
+
+            LLStudioButton gameControlLabel = new LLStudioButton();
+            gameControlLabel.SetImage("Resource/球.png");
+            gameControlLabel.Width = 50;
+            gameControlLabel.ToolTip = "文字";
+            wrapPanelUIControlArea.Children.Add(gameControlLabel);
+
+            LLStudioButton gameControlImage = new LLStudioButton();
+            gameControlImage.SetImage("Resource/圆柱.png");
+            gameControlImage.Width = 50;
+            gameControlImage.ToolTip = "图片";
+            wrapPanelUIControlArea.Children.Add(gameControlImage);
+
+            LLStudioButton gameControlGrid = new LLStudioButton();
+            gameControlGrid.SetImage("Resource/圆锥.png");
+            gameControlGrid.Width = 50;
+            gameControlGrid.ToolTip = "容器";
+            wrapPanelUIControlArea.Children.Add(gameControlGrid);
+
+            //文件区
+
+            ContextMenu ContextMenu = new ContextMenu();
+            MenuItem mi0 = new MenuItem();
+            mi0.Header = "新建文件夹";
+            mi0.Click += CreateNewFolderToCurrrentDirectory;
+            ContextMenu.Items.Add(mi0);
+            MenuItem mi1 = new MenuItem();
+            mi1.Header = "新建layout";
+            mi1.Click += CreateNewLayoutToCurrrentDirectory;
+            ContextMenu.Items.Add(mi1);
+            wrapPanelFileArea.ContextMenu = ContextMenu;
+        }
+
+        /// <summary>
+        /// 添加新文件夹到当前文件夹下，文件夹命名规则：
+        /// “新建文件夹”+数字，最多新建1000个。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateNewFolderToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            if(gameManager.GameLoaded)
+            {
+                int folderNum=1;
+                string newFolderPath = fileAreaDirectory + @"/" +"新建文件夹"+ folderNum;
+                while (Directory.Exists(newFolderPath))
+                {
+                    folderNum++;
+                    newFolderPath = fileAreaDirectory + @"/" + folderNum;
+                    if(folderNum==1000)
+                    {
+                        ShowStatusInfo("当前文件夹内文件夹过多。");
+                        return ;
+                    }
+                }
+                Directory.CreateDirectory(newFolderPath);
+                LoadDirectoryToFileArea(fileAreaDirectory);
+            }
+            else
+            {
+                ShowStatusInfo("未打开游戏目录。");
+            }
+        }
+
+        /// <summary>
+        /// 新建布局文件到当前文件夹下，文件命名规则：
+        /// “layout”+数字+“.layout”，最多新建1000个。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateNewLayoutToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            if (gameManager.GameLoaded)
+            {
+                int fileNum = 0;
+                string newFilePath;
+                do
+                {
+                    if (fileNum == 1000)
+                    {
+                        ShowStatusInfo("当前文件夹内新建文件过多。");
+                        return;
+                    }
+                    fileNum++;
+                    newFilePath = fileAreaDirectory + @"/" + "layout" + fileNum + ".layout";
+                    
+                } while (File.Exists(newFilePath));
+                File.Create(newFilePath);
+                LoadDirectoryToFileArea(fileAreaDirectory);
+            }
+            else
+            {
+                ShowStatusInfo("未打开游戏目录。");
+            }
         }
 
         public void TreeResetItem()

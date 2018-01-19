@@ -14,15 +14,41 @@
         <Style TargetType="TextBox" >
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
-        <Style TargetType="TreeViewItem" >
+        <Style TargetType="TreeViewItem">
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
-        <Style TargetType="TabItem">
+        <Style TargetType="TabItem" x:Key="TabItemStyleLeft">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid >
+                            <Border Name="Border" Margin="0" BorderThickness="1,1,0,1" CornerRadius="7,0,0,7" Width="30" Background="#FF323232">
+                                <ContentPresenter x:Name="ContentSite" ContentSource="Header" Margin="4,4,4,4"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" >
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF323232" Offset="0" />
+                                            <GradientStop Color="#48b0e2" Offset="0.5" />
+                                            <GradientStop Color="#FF323232" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TabItem" x:Key="TabItemStyleRight">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
                         <Grid>
-                            <Border Name="Border" Margin="0" BorderThickness="1,1,0,1" CornerRadius="7,0,0,7" Width="30" Background="#FF323232">
+                            <Border Name="Border" Margin="0" BorderThickness="0,1,1,1" CornerRadius="0,7,7,0" Width="30" Background="#FF323232">
                                 <ContentPresenter x:Name="ContentSite" ContentSource="Header" Margin="4,4,4,4"/>
                             </Border>
                         </Grid>
@@ -79,7 +105,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid Margin="0" Background="Black" Grid.Column="0">
                             <TabControl x:Name="tabControlLeft" Margin="0" Background="Black" TabStripPlacement="Left" BorderBrush="{x:Null}" BorderThickness="0" Padding="0">
-                                <TabItem FontSize="18.667" Background="#FF323232" Margin="0">
+                                <TabItem FontSize="18.667" Background="#FF323232" Margin="0" Style="{StaticResource TabItemStyleLeft}">
                                     <TabItem.Header>
                                         <TextBlock Width="30" FontSize="18" TextWrapping="Wrap" Text="层级列表" />
                                     </TabItem.Header>
@@ -108,7 +134,22 @@
                             </Grid>
                         </Grid>
                         <GridSplitter x:Name="gridSplitterRow1" Width="3" Grid.Column="1" Background="#FF2D2D30" BorderBrush="#FF686868"/>
-                        <Grid Margin="0" Background="#FF646464" Grid.Column="2"/>
+                        <Grid Margin="0" Background="#FF646464" Grid.Column="2">
+                            <TabControl x:Name="tabControlRight" Margin="0" Background="Black" TabStripPlacement="Right" BorderBrush="{x:Null}" BorderThickness="0" Padding="0">
+                                <TabItem FontSize="18.667" Background="#FF323232" Margin="0"  Style="{StaticResource TabItemStyleRight}">
+                                    <TabItem.Header>
+                                        <TextBlock Width="30" FontSize="18" TextWrapping="Wrap" Text="控件列表" />
+                                    </TabItem.Header>
+                                    <WrapPanel x:Name="wrapPanelUIControlArea" Background="#FF191919" />
+                                </TabItem>
+                                <TabItem FontSize="18.667" Background="#FF323232" Margin="0"  Style="{StaticResource TabItemStyleRight}">
+                                    <TabItem.Header>
+                                        <TextBlock Width="30" FontSize="18" TextWrapping="Wrap" Text="属性编辑" />
+                                    </TabItem.Header>
+                                    <Grid x:Name="gridPropertyEditor" Background="#FF191919" />
+                                </TabItem>
+                            </TabControl>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Border x:Name="borderStatusArea" CornerRadius="0,0,10,10" Height="30" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderThickness="0">

@@ -59,7 +59,7 @@ namespace LLGameStudio.Studio.Control
 
         private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if(isSelect)
+            if(isSelect&& clickHandler!=null)
             {
                 clickHandler(sender, e);
             }
