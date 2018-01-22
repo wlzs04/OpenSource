@@ -21,6 +21,7 @@ namespace LLGameStudio.Studio
     {
         string studioConfigFilePath = @"Config\Studio.xml";
         string fileAreaDirectory="";
+        string currentFilePath="";
         StudioConfig studioConfig;
         MainWindow window;
         GameManager gameManager;
@@ -43,6 +44,7 @@ namespace LLGameStudio.Studio
         public bool FullScreen { get => studioConfig.FullScreen;}
         public string GameResourcePath { get => gameManager.GameResourcePath; }
         public string FileAreaDirectory { get => fileAreaDirectory; }
+        public string CurrentFilePath { get => currentFilePath;}
 
         public StudioManager(MainWindow window)
         {
@@ -171,18 +173,28 @@ namespace LLGameStudio.Studio
             gameControlGrid.ToolTip = "容器";
             wrapPanelUIControlArea.Children.Add(gameControlGrid);
 
-            //文件区
+            //文件区：右键菜单
 
-            ContextMenu ContextMenu = new ContextMenu();
+            ContextMenu contextMenu = new ContextMenu();
+
             MenuItem mi0 = new MenuItem();
             mi0.Header = "新建文件夹";
             mi0.Click += CreateNewFolderToCurrrentDirectory;
-            ContextMenu.Items.Add(mi0);
+            contextMenu.Items.Add(mi0);
+
+            contextMenu.Items.Add(new Separator());
+
             MenuItem mi1 = new MenuItem();
-            mi1.Header = "新建layout";
-            mi1.Click += CreateNewLayoutToCurrrentDirectory;
-            ContextMenu.Items.Add(mi1);
-            wrapPanelFileArea.ContextMenu = ContextMenu;
+            mi1.Header = "新建Scene";
+            mi1.Click += CreateNewSceneToCurrrentDirectory;
+            contextMenu.Items.Add(mi1);
+
+            MenuItem mi2 = new MenuItem();
+            mi2.Header = "新建layout";
+            mi2.Click += CreateNewLayoutToCurrrentDirectory;
+            contextMenu.Items.Add(mi2);
+
+            wrapPanelFileArea.ContextMenu = contextMenu;
         }
 
         /// <summary>
@@ -217,27 +229,28 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 新建布局文件到当前文件夹下，文件命名规则：
-        /// “layout”+数字+“.layout”，最多新建1000个。
+        /// 新建文件到当前文件夹下，文件命名规则：
+        /// 文件类型+数字+“.”+文件类型，最多新建1000个。
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CreateNewLayoutToCurrrentDirectory(object sender, RoutedEventArgs e)
+        /// <param name="uiType"></param>
+        /// <returns></returns>
+        private bool CreateNewFileToCurrrentDirectory(GameUIFileEnum uiType)
         {
             if (gameManager.GameLoaded)
             {
                 int fileNum = 0;
                 string newFilePath;
+                string fileType = uiType.ToString().ToLower();
                 do
                 {
                     if (fileNum == 1000)
                     {
                         ShowStatusInfo("当前文件夹内新建文件过多。");
-                        return;
+                        return false;
                     }
                     fileNum++;
-                    newFilePath = fileAreaDirectory + @"/" + "layout" + fileNum + ".layout";
-                    
+                    newFilePath = fileAreaDirectory + @"/" + fileType + fileNum + "."+ fileType;
+
                 } while (File.Exists(newFilePath));
                 File.Create(newFilePath);
                 LoadDirectoryToFileArea(fileAreaDirectory);
@@ -245,9 +258,34 @@ namespace LLGameStudio.Studio
             else
             {
                 ShowStatusInfo("未打开游戏目录。");
+                return false;
             }
+            return true;
         }
 
+        /// <summary>
+        /// 新建场景文件到当前文件夹下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateNewSceneToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Scene);
+        }
+
+        /// <summary>
+        /// 新建布局文件到当前文件夹下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateNewLayoutToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Layout);
+        }
+
+        /// <summary>
+        /// 重新加载UI结构树
+        /// </summary>
         public void TreeResetItem()
         {
             treeViewUILayer.Items.Clear();
@@ -520,15 +558,32 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// LLStudioFileItem控件点击事件：打开下一文件目录
+        /// 打开下一文件目录
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OpenDirectory(object sender, MouseButtonEventArgs e)
         {
-            var v = sender as LLStudioFileItem;
-            EnterNextDirectory(v.textBox.Text);
+            currentFilePath = "";
+            LLStudioFileItem item = sender as LLStudioFileItem;
+            fileAreaDirectory += @"\" + item.textBox.Text;
             LoadDirectoryToFileArea(FileAreaDirectory);
+        }
+
+        private void OpenFile(object sender, MouseButtonEventArgs e)
+        {
+            LLStudioFileItem item = sender as LLStudioFileItem;
+            currentFilePath = fileAreaDirectory+@"\"+item.textBox.Text;
+            switch (item.GetFileEnum())
+            {
+                case GameUIFileEnum.Scene:
+                    OpenScene();
+                    break;
+                case GameUIFileEnum.Layout:
+                    OpenLayout();
+                    break;
+                case GameUIFileEnum.Unknown:
+                    ShowStatusInfo("未知文件无法打开！");
+                    break;
+            }
         }
 
         /// <summary>
@@ -549,6 +604,7 @@ namespace LLGameStudio.Studio
             foreach (FileInfo fi in di.GetFiles())
             {
                 LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, fi.FullName);
+                fileItem.MouseDoubleClick += OpenFile;
                 wrapPanelFileArea.Children.Add(fileItem);
             }
         }
@@ -604,7 +660,6 @@ namespace LLGameStudio.Studio
                 {
                     fileAreaDirectory = GameResourcePath;
                     ShowStatusInfo("打开游戏目录完成。");
-                    InitCanvas();
                     LoadDirectoryToFileArea(GameResourcePath);
                 }
             }
@@ -618,15 +673,6 @@ namespace LLGameStudio.Studio
         public void SaveGame(object sender, MouseButtonEventArgs e)
         {
             gameManager.SaveGame();
-        }
-
-        /// <summary>
-        /// 进入到此文件夹下
-        /// </summary>
-        /// <param name="folderName"></param>
-        public void EnterNextDirectory(string folderName)
-        {
-            fileAreaDirectory += @"\" + folderName;
         }
 
         /// <summary>
@@ -662,6 +708,24 @@ namespace LLGameStudio.Studio
         public void LogStatusInfo(string info)
         {
             //未完成。
+        }
+
+        /// <summary>
+        /// 打开场景文件
+        /// </summary>
+        public void OpenScene()
+        {
+            //canvasManager.ClearAll();
+            gameManager.OpenScene(currentFilePath);
+        }
+
+        /// <summary>
+        /// 打开布局文件
+        /// </summary>
+        public void OpenLayout()
+        {
+            canvasManager.ClearAll();
+            gameManager.OpenLayout();
         }
 
         /// <summary>

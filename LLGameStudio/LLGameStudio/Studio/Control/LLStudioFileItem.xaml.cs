@@ -23,6 +23,7 @@ namespace LLGameStudio.Studio.Control
     {
         bool isSelect = false;
         FileInfo fileInfo;
+        GameUIFileEnum gameUIFileEnum;
         WrapPanel parentPanel;
 
         public LLStudioFileItem(WrapPanel wp, string path)
@@ -34,6 +35,7 @@ namespace LLGameStudio.Studio.Control
             if(fileInfo.Attributes==FileAttributes.Directory)
             {
                 uri = new Uri(Environment.CurrentDirectory + @"\Resource\文件夹.png");
+                gameUIFileEnum = GameUIFileEnum.Folder;
             }
             else
             {
@@ -42,7 +44,16 @@ namespace LLGameStudio.Studio.Control
                     case ".png":
                         uri = new Uri(path);
                         break;
+                    case ".scene":
+                        gameUIFileEnum = GameUIFileEnum.Scene;
+                        uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
+                        break;
+                    case ".layout":
+                        gameUIFileEnum = GameUIFileEnum.Layout;
+                        uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
+                        break;
                     default:
+                        gameUIFileEnum = GameUIFileEnum.Unknown;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
                         break;
                 }
@@ -205,6 +216,11 @@ namespace LLGameStudio.Studio.Control
             {
                 RenameFile();
             }
+        }
+
+        public GameUIFileEnum GetFileEnum()
+        {
+            return gameUIFileEnum;
         }
     }
 }

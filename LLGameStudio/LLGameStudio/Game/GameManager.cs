@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Threading;
 using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
+using LLGameStudio.Game.UI;
 using LLGameStudio.Studio;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
@@ -149,5 +150,30 @@ namespace LLGameStudio.Game
             LLXMLConverter converter = new LLXMLConverter();
             converter.ExportContentToXML(gameConfigFilePath, gameConfig);
         }
+
+        public void OpenScene(string path)
+        {
+            LLGameScene lLGameScene = new LLGameScene(path);
+        }
+
+        public void OpenLayout()
+        {
+
+        }
     }
+}
+
+public enum GameUIFileEnum
+{
+    Folder,//文件夹
+    Scene,//场景
+    Layout,//布局
+    Unknown,//未知
+}
+
+enum GameUIControlEnum
+{
+    Window,//窗体
+    Button,//按钮
+    Image,//图片
 }
