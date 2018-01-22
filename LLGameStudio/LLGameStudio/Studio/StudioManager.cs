@@ -1,5 +1,6 @@
 ﻿using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
+using LLGameStudio.Common;
 using LLGameStudio.Game;
 using LLGameStudio.Studio.Control;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -45,6 +46,10 @@ namespace LLGameStudio.Studio
 
         public StudioManager(MainWindow window)
         {
+            System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
+            Common.Standard.ScaleX = Common.Standard.StandardDpiX / g.DpiX;
+            Common.Standard.ScaleY = Common.Standard.StandardDpiY / g.DpiY;
+
             this.window = window;
 
             //从主窗体中获得控件
@@ -678,9 +683,9 @@ namespace LLGameStudio.Studio
             switch ((Window32MessageEnum)msg)
             {
                 case Window32MessageEnum.WM_NCHITTEST:
-                    Point point = new Point((lParam.ToInt32() & 0xFFFF) - window.Left,
-                        (lParam.ToInt32() >> 16) - window.Top);
-
+                    Point point = new Point();
+                    point.X = (lParam.ToInt32() & 0xFFFF) * Common.Standard.ScaleX-window.Left;
+                    point.Y = (lParam.ToInt32() >> 16)* Common.Standard.ScaleY- window.Top;
                     // 窗口左上角
                     if (point.Y <= studioConfig.BorderWidth+2
                        && point.X <= studioConfig.BorderWidth)

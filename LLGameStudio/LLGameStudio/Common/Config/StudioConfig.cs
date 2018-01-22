@@ -77,3 +77,4 @@ enum Window32HandleEnum
     HTBOTTOMLEFT = 16,
     HTBOTTOMRIGHT = 17,
 }
+

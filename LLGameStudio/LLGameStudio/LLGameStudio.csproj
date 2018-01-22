@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,6 +65,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\Config\ThemeConfig.cs" />
+    <Compile Include="Common\Standard.cs" />
     <Compile Include="Studio\Control\LLStudioFileItem.xaml.cs">
       <DependentUpon>LLStudioFileItem.xaml</DependentUpon>
     </Compile>
