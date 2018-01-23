@@ -11,18 +11,18 @@ namespace LLGameStudio.Game.UI
     class LLGameScene : IXMLClass
     {
         string name;
+        LLGameBack back;
         LLGameCanvas canvas;
         List<LLGameLayout> listLayout;
 
         string filePath;
-
-        public LLGameScene(string path)
+        
+        public bool LoadContentFromFile(string path)
         {
             filePath = path;
-            
-            LLXMLConverter converter = new LLXMLConverter();
-            converter.LoadContentFromXML(path, this);
-
+            listLayout = new List<LLGameLayout>();
+            LLXMLConverter.LoadContentFromXML(path, this);
+            return true;
         }
 
         public XElement ExportContentToXML()
@@ -38,13 +38,17 @@ namespace LLGameStudio.Game.UI
             {
                 switch (item.Name.ToString())
                 {
-                    case "LLGameMap":
-
+                    case "LLGameBack":
+                        back = new LLGameBack();
+                        back.LoadContentFromXML(item);
                         break;
                     case "LLGameCanvas":
+                        canvas = new LLGameCanvas();
+                        canvas.LoadContentFromXML(item);
                         break;
                     case "LLGameLayout":
                         listLayout.Add(new LLGameLayout());
+                        listLayout[listLayout.Count - 1].LoadContentFromXML(item);
                         break;
                     default:
                         break;

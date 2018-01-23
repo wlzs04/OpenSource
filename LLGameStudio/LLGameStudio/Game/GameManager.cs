@@ -137,9 +137,8 @@ namespace LLGameStudio.Game
         /// </summary>
         public void LoadConfig()
         {
-            LLXMLConverter converter = new LLXMLConverter();
             gameConfig = new GameConfig();
-            converter.LoadContentFromXML(gameConfigFilePath, gameConfig);
+            LLXMLConverter.LoadContentFromXML(gameConfigFilePath, gameConfig);
         }
 
         /// <summary>
@@ -147,18 +146,19 @@ namespace LLGameStudio.Game
         /// </summary>
         public void SaveConfig()
         {
-            LLXMLConverter converter = new LLXMLConverter();
-            converter.ExportContentToXML(gameConfigFilePath, gameConfig);
+            LLXMLConverter.ExportContentToXML(gameConfigFilePath, gameConfig);
         }
 
-        public void OpenScene(string path)
+        public bool OpenScene(string path)
         {
-            LLGameScene lLGameScene = new LLGameScene(path);
+            LLGameScene llGameScene = new LLGameScene();
+            return llGameScene.LoadContentFromFile(path);
         }
 
-        public void OpenLayout()
+        public bool OpenLayout(string path)
         {
-
+            LLGameLayout llGameLayout = new LLGameLayout();
+            return llGameLayout.LoadContentFromFile(path);
         }
     }
 }

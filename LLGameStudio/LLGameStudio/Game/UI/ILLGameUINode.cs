@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameMap
+    interface ILLGameUINode
     {
+        void Render();
     }
 }

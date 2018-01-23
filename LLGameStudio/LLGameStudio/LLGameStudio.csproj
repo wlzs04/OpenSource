@@ -66,9 +66,10 @@
     </ApplicationDefinition>
     <Compile Include="Common\Config\ThemeConfig.cs" />
     <Compile Include="Common\Standard.cs" />
+    <Compile Include="Game\UI\ILLGameUINode.cs" />
     <Compile Include="Game\UI\LLGameCanvas.cs" />
     <Compile Include="Game\UI\LLGameLayout.cs" />
-    <Compile Include="Game\UI\LLGameMap.cs" />
+    <Compile Include="Game\UI\LLGameBack.cs" />
     <Compile Include="Game\UI\LLGameScene.cs" />
     <Compile Include="Studio\Control\LLStudioFileItem.xaml.cs">
       <DependentUpon>LLStudioFileItem.xaml</DependentUpon>

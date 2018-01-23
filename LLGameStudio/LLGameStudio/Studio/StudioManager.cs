@@ -63,6 +63,8 @@ namespace LLGameStudio.Studio
             LoadConfig();
             gameManager = new GameManager(this);
             ThemeManager.LoadTheme(studioConfig.Theme);
+            
+            canvasManager = new CanvasManager(window.GetCanvas(), gameManager);
         }
 
         /// <summary>
@@ -71,9 +73,8 @@ namespace LLGameStudio.Studio
         public void LoadConfig()
         {
             ShowStatusInfo("正加载配置。");
-            LLXMLConverter converter = new LLXMLConverter();
             studioConfig = new StudioConfig();
-            converter.LoadContentFromXML(studioConfigFilePath, studioConfig);
+            LLXMLConverter.LoadContentFromXML(studioConfigFilePath, studioConfig);
 
             if (studioConfig.FullScreen)
             {
@@ -99,8 +100,7 @@ namespace LLGameStudio.Studio
         public void SaveConfig()
         {
             ShowStatusInfo("正保存配置。");
-            LLXMLConverter converter = new LLXMLConverter();
-            converter.ExportContentToXML(studioConfigFilePath, studioConfig);
+            LLXMLConverter.ExportContentToXML(studioConfigFilePath, studioConfig);
             ShowStatusInfo("配置保存完成。");
         }
 
@@ -382,7 +382,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void InitCanvas()
         {
-            canvasManager = new CanvasManager(window.GetCanvas(), gameManager);
+            ClearCanvas();
             DrawCanvas();
         }
 
@@ -715,8 +715,15 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void OpenScene()
         {
-            //canvasManager.ClearAll();
-            gameManager.OpenScene(currentFilePath);
+            if(gameManager.OpenScene(currentFilePath))
+            {
+                canvasManager.ClearAll();
+
+            }
+            else
+            {
+                ShowStatusInfo("场景文件打开失败。");
+            }
         }
 
         /// <summary>
@@ -724,8 +731,15 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void OpenLayout()
         {
-            canvasManager.ClearAll();
-            gameManager.OpenLayout();
+            if (gameManager.OpenLayout(currentFilePath))
+            {
+                canvasManager.ClearAll();
+                canvasManager.SetContentFrom();
+            }
+            else
+            {
+                ShowStatusInfo("布局文件打开失败。");
+            }
         }
 
         /// <summary>

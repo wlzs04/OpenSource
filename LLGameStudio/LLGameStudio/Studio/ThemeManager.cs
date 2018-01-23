@@ -18,9 +18,8 @@ namespace LLGameStudio.Studio
 
         public static void LoadTheme(string themeName)
         {
-            LLXMLConverter converter = new LLXMLConverter();
             themeConfig = new ThemeConfig();
-            converter.LoadContentFromXML(themeConfigFilePath, themeConfig);
+            LLXMLConverter.LoadContentFromXML(themeConfigFilePath, themeConfig);
             dictionaryNameBrush = new Dictionary<string, Brush>();
         }
 

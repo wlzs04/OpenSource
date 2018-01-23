@@ -11,7 +11,7 @@ namespace LLGameStudio.Common.XML
 {
     class LLXMLConverter
     {
-        public void LoadContentFromXML(string filepath,IXMLClass iXMLClass)
+        public static void LoadContentFromXML(string filepath,IXMLClass iXMLClass)
         {
             XDocument doc = XDocument.Load(filepath);
             XElement root = doc.Root;
@@ -19,7 +19,7 @@ namespace LLGameStudio.Common.XML
             iXMLClass.LoadContentFromXML(root);
         }
 
-        public void ExportContentToXML(string filepath, IXMLClass iXMLClass)
+        public static void ExportContentToXML(string filepath, IXMLClass iXMLClass)
         {
             XDocument doc = new XDocument();
             XElement root = iXMLClass.ExportContentToXML();

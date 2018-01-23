@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameCanvas : IXMLClass
+    class LLGameBack : IXMLClass
     {
         string name;
 
