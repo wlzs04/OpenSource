@@ -9,6 +9,9 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Common.XML
 {
+    /// <summary>
+    /// 用于与XML文件交互的类。
+    /// </summary>
     class LLXMLConverter
     {
         public static void LoadContentFromXML(string filepath,IXMLClass iXMLClass)

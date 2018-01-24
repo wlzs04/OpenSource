@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Common.Config
 {
+    /// <summary>
+    /// 主题配置
+    /// </summary>
     class ThemeConfig : IXMLClass
     {
         Dictionary<string, string> dictionaryColor = new Dictionary<string, string>();
@@ -25,6 +28,11 @@ namespace LLGameStudio.Common.Config
             }
         }
 
+        /// <summary>
+        /// 通过传入名获得相应主题颜色例如“#00000000”的字符串
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public string GetColorValueByName(string name)
         {
             return dictionaryColor[name];

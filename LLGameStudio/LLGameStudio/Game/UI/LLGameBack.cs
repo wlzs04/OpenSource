@@ -8,18 +8,27 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameBack : IXMLClass
+    class LLGameBack : ILLGameUINode
     {
-        string name;
 
-        public XElement ExportContentToXML()
+        public override XElement ExportContentToXML()
         {
             throw new NotImplementedException();
         }
 
-        public void LoadContentFromXML(XElement element)
+        public override void LoadContentFromXML(XElement element)
         {
-            name = element.Attribute("name").Value;
+            LoadBaseAttrbuteFromXML(element);
+
+            foreach (var item in element.Attributes())
+            {
+
+            }
+        }
+
+        public override void Render()
+        {
+            throw new NotImplementedException();
         }
     }
 }

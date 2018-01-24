@@ -8,11 +8,16 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameLayout : IXMLClass ,ILLGameUINode
+    class LLGameLayout : ILLGameUINode
     {
-        string name;
         string filePath;
-        
+        List<ILLGameUINode> listNode;
+
+        public LLGameLayout()
+        {
+            listNode = new List<ILLGameUINode>();
+        }
+
         public bool LoadContentFromFile(string path)
         {
             filePath = path;
@@ -20,19 +25,35 @@ namespace LLGameStudio.Game.UI
             return true;
         }
 
-        public XElement ExportContentToXML()
+        public override XElement ExportContentToXML()
         {
             throw new NotImplementedException();
         }
 
-        public void LoadContentFromXML(XElement element)
+        public override void LoadContentFromXML(XElement element)
         {
-            name = element.Attribute("name").Value;
+            LoadBaseAttrbuteFromXML(element);
+
+            XAttribute xAttribute = element.Attribute("filePath");
+            if (xAttribute != null) { filePath = xAttribute.Value; xAttribute.Remove(); }
+            
+            foreach (var item in element.Elements())
+            {
+                switch (item.Name.ToString())
+                {
+                    case "LLGameImage":
+                        listNode.Add(new LLGameImage());
+                        listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
-        public void Render()
+        public override void Render()
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

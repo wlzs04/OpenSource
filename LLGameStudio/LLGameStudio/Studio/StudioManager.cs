@@ -734,7 +734,7 @@ namespace LLGameStudio.Studio
             if (gameManager.OpenLayout(currentFilePath))
             {
                 canvasManager.ClearAll();
-                canvasManager.SetContentFrom();
+                //canvasManager.RenderContent();
             }
             else
             {

@@ -8,6 +8,9 @@ using LLGameStudio.Common.XML;
 
 namespace LLGameStudio.Common.Config
 {
+    /// <summary>
+    /// 编辑器配置
+    /// </summary>
     class StudioConfig : IXMLClass
     {
         int top=0;

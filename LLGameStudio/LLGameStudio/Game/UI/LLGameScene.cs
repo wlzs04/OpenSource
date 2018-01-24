@@ -2,21 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameScene : IXMLClass
+    class LLGameScene : ILLGameUINode
     {
-        string name;
         LLGameBack back;
         LLGameCanvas canvas;
         List<LLGameLayout> listLayout;
 
         string filePath;
-        
+
+        public string FilePath { get => filePath; set => filePath = value; }
+
+        public LLGameScene()
+        {
+            listLayout = new List<LLGameLayout>();
+        }
+
         public bool LoadContentFromFile(string path)
         {
             filePath = path;
@@ -25,14 +32,19 @@ namespace LLGameStudio.Game.UI
             return true;
         }
 
-        public XElement ExportContentToXML()
+        public override XElement ExportContentToXML()
         {
             return null;
         }
 
-        public void LoadContentFromXML(XElement element)
+        public override void LoadContentFromXML(XElement element)
         {
-            name = element.Attribute("name").Value;
+            LoadBaseAttrbuteFromXML(element);
+
+            foreach (var item in element.Attributes())
+            {
+
+            }
 
             foreach (var item in element.Elements())
             {
@@ -54,6 +66,11 @@ namespace LLGameStudio.Game.UI
                         break;
                 }
             }
+        }
+
+        public override void Render()
+        {
+            throw new NotImplementedException();
         }
     }
 }

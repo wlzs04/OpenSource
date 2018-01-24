@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Common.Config
 {
+    /// <summary>
+    /// 游戏配置
+    /// </summary>
     class GameConfig : IXMLClass
     {
         int width=800;

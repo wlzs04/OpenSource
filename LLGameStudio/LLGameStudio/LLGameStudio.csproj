@@ -68,6 +68,7 @@
     <Compile Include="Common\Standard.cs" />
     <Compile Include="Game\UI\ILLGameUINode.cs" />
     <Compile Include="Game\UI\LLGameCanvas.cs" />
+    <Compile Include="Game\UI\LLGameImage.cs" />
     <Compile Include="Game\UI\LLGameLayout.cs" />
     <Compile Include="Game\UI\LLGameBack.cs" />
     <Compile Include="Game\UI\LLGameScene.cs" />
