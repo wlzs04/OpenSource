@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameScene : ILLGameUINode
+    class LLGameScene : IUINode
     {
         LLGameBack back;
         LLGameCanvas canvas;

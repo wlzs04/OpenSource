@@ -8,19 +8,19 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameLayout : ILLGameUINode
+    class LLGameLayout : IUINode
     {
-        string filePath;
-        List<ILLGameUINode> listNode;
+        public Property.FilePath filePath = new Property.FilePath();
+        List<IUINode> listNode;
 
         public LLGameLayout()
         {
-            listNode = new List<ILLGameUINode>();
+            listNode = new List<IUINode>();
         }
 
         public bool LoadContentFromFile(string path)
         {
-            filePath = path;
+            filePath.Value = path;
             LLXMLConverter.LoadContentFromXML(path, this);
             return true;
         }
@@ -35,8 +35,8 @@ namespace LLGameStudio.Game.UI
             LoadBaseAttrbuteFromXML(element);
 
             XAttribute xAttribute = element.Attribute("filePath");
-            if (xAttribute != null) { filePath = xAttribute.Value; xAttribute.Remove(); }
-            
+            if (xAttribute != null) { filePath.Value = xAttribute.Value; xAttribute.Remove(); }
+
             foreach (var item in element.Elements())
             {
                 switch (item.Name.ToString())
@@ -54,6 +54,14 @@ namespace LLGameStudio.Game.UI
         public override void Render()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    namespace Property
+    {
+        class FilePath : IUIProperty
+        {
+            public FilePath() : base("FilePath", typeof(String), UIPropertyEnum.Common, "当前节点文件路径。", "") { }
         }
     }
 }

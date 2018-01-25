@@ -715,7 +715,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void OpenScene()
         {
-            if(gameManager.OpenScene(currentFilePath))
+            if (gameManager.OpenScene(currentFilePath))
             {
                 canvasManager.ClearAll();
 

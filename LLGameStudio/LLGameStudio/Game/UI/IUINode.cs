@@ -1,9 +1,11 @@
 ﻿using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
@@ -11,7 +13,7 @@ namespace LLGameStudio.Game.UI
     /// <summary>
     /// UI节点抽象类
     /// </summary>
-    abstract class ILLGameUINode : IXMLClass
+    abstract class IUINode : IXMLClass
     {
         protected double posX = 0;
         protected double posY = 0;
@@ -19,19 +21,15 @@ namespace LLGameStudio.Game.UI
         protected double rotateY = 0;
         protected double scaleX = 1;
         protected double scaleY = 1;
-        protected GameUIAnchorEnum anchorEnum = GameUIAnchorEnum.Left_Top;
-        protected double width = 0.2;
-        protected double height = 0.2;
-        protected string name = "";
+        public Property.GameUIAnchorEnum anchorEnum = new Property.GameUIAnchorEnum();
+        public Property.Width width = new Property.Width();
+        public Property.Height height = new Property.Height();
+        public Property.Name name = new Property.Name();
 
         public double RotateX { get => rotateX; set => rotateX = value; }
         public double RotateY { get => rotateY; set => rotateY = value; }
         public double ScaleX { get => scaleX; set => scaleX = value; }
         public double ScaleY { get => scaleY; set => scaleY = value; }
-        public GameUIAnchorEnum AnchorEnum { get => anchorEnum; set => anchorEnum = value; }
-        public double Width { get => width; set => width = value; }
-        public double Height { get => height; set => height = value; }
-        public string Name { get => name; set => name = value; }
 
         public abstract XElement ExportContentToXML();
         public abstract void LoadContentFromXML(XElement element);
@@ -39,6 +37,8 @@ namespace LLGameStudio.Game.UI
 
         protected void LoadBaseAttrbuteFromXML(XElement element)
         {
+            //TypeConverter;
+            Vector vector = new Vector();
             XAttribute xAttribute;
             xAttribute = element.Attribute("rotateX");
             if (xAttribute != null) { rotateX = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
@@ -49,15 +49,43 @@ namespace LLGameStudio.Game.UI
             xAttribute = element.Attribute("scaleY");
             if (xAttribute != null) { scaleY = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
             xAttribute = element.Attribute("width");
-            if (xAttribute != null) { width = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
+            if (xAttribute != null) { width.Value = xAttribute.Value; xAttribute.Remove(); }
             xAttribute = element.Attribute("height");
-            if (xAttribute != null) { height = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
+            if (xAttribute != null) { height.Value = xAttribute.Value; xAttribute.Remove(); }
             xAttribute = element.Attribute("name");
-            if (xAttribute != null) { name = xAttribute.Value; xAttribute.Remove(); }
+            if (xAttribute != null) { name.Value = xAttribute.Value; xAttribute.Remove(); }
             xAttribute = element.Attribute("anchorEnum");
-            if (xAttribute != null) { anchorEnum = (GameUIAnchorEnum)Enum.Parse(typeof(GameUIAnchorEnum), xAttribute.Value); xAttribute.Remove(); }
+            if (xAttribute != null) { anchorEnum.Value =xAttribute.Value; xAttribute.Remove(); }
         }
     }
+    namespace Property
+    {
+        class Name : IUIProperty
+        {
+            public Name() : base("Name", typeof(String), UIPropertyEnum.Common, "当前UI节点的名称。", "node") { }
+        }
+
+        class Width : IUIProperty
+        {
+            public Width() : base("Width", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的宽度。", "0.2") { }
+        }
+
+        class Height : IUIProperty
+        {
+            public Height() : base("Height", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的高度。", "0.2") { }
+        }
+
+        class GameUIAnchorEnum : IUIProperty
+        {
+            public GameUIAnchorEnum() : base("GameUIAnchorEnum", typeof(UI.GameUIAnchorEnum), UIPropertyEnum.Transform, "当前UI节点的节点锚点。", "Left_Top") { }
+        }
+
+        class Scale : IUIProperty
+        {
+            public Scale() : base("Scale", typeof(Vector), UIPropertyEnum.Transform, "当前UI节点的缩放。", "0.2") { }
+        }
+    }
+    
 
     /// <summary>
     /// UI节点锚点枚举

@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameImage : ILLGameUINode
+    class LLGameImage : IUINode
     {
         string filePath = "";
 

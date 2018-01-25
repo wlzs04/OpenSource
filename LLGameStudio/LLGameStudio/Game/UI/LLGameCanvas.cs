@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
-    class LLGameCanvas : ILLGameUINode
+    class LLGameCanvas : IUINode
     {
         
         public override XElement ExportContentToXML()
