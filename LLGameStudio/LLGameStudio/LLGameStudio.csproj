@@ -98,7 +98,6 @@
     <Compile Include="Common\Config\GameConfig.cs" />
     <Compile Include="Common\Config\StudioConfig.cs" />
     <Compile Include="Common\XML\IXMLClass.cs" />
-    <Compile Include="Common\XML\LLXMLConverter.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

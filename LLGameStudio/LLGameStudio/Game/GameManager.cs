@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using LLGameStudio.Common;
 using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
 using LLGameStudio.Game.UI;
@@ -138,7 +139,7 @@ namespace LLGameStudio.Game
         public void LoadConfig()
         {
             gameConfig = new GameConfig();
-            LLXMLConverter.LoadContentFromXML(gameConfigFilePath, gameConfig);
+            LLConvert.LoadContentFromXML(gameConfigFilePath, gameConfig);
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace LLGameStudio.Game
         /// </summary>
         public void SaveConfig()
         {
-            LLXMLConverter.ExportContentToXML(gameConfigFilePath, gameConfig);
+            LLConvert.ExportContentToXML(gameConfigFilePath, gameConfig);
         }
 
         public bool OpenScene(string path)

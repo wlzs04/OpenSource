@@ -34,6 +34,12 @@ namespace LLGameStudio.Game.UI
         }
     }
 
+    interface IConvertStringClass
+    {
+        void GetValueFromString(string s);
+        string ToString();
+    }
+
     enum UIPropertyEnum
     {
         Transform,

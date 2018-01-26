@@ -74,7 +74,7 @@ namespace LLGameStudio.Studio
         {
             ShowStatusInfo("正加载配置。");
             studioConfig = new StudioConfig();
-            LLXMLConverter.LoadContentFromXML(studioConfigFilePath, studioConfig);
+            LLConvert.LoadContentFromXML(studioConfigFilePath, studioConfig);
 
             if (studioConfig.FullScreen)
             {
@@ -100,7 +100,7 @@ namespace LLGameStudio.Studio
         public void SaveConfig()
         {
             ShowStatusInfo("正保存配置。");
-            LLXMLConverter.ExportContentToXML(studioConfigFilePath, studioConfig);
+            LLConvert.ExportContentToXML(studioConfigFilePath, studioConfig);
             ShowStatusInfo("配置保存完成。");
         }
 

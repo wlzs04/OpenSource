@@ -1,4 +1,5 @@
-﻿using LLGameStudio.Common.Config;
+﻿using LLGameStudio.Common;
+using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace LLGameStudio.Studio
         public static void LoadTheme(string themeName)
         {
             themeConfig = new ThemeConfig();
-            LLXMLConverter.LoadContentFromXML(themeConfigFilePath, themeConfig);
+            LLConvert.LoadContentFromXML(themeConfigFilePath, themeConfig);
             dictionaryNameBrush = new Dictionary<string, Brush>();
         }
 

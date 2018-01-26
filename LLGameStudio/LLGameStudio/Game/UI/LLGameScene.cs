@@ -1,4 +1,5 @@
-﻿using LLGameStudio.Common.XML;
+﻿using LLGameStudio.Common;
+using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace LLGameStudio.Game.UI
         {
             filePath = path;
             listLayout = new List<LLGameLayout>();
-            LLXMLConverter.LoadContentFromXML(path, this);
+            LLConvert.LoadContentFromXML(path, this);
             return true;
         }
 

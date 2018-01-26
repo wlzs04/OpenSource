@@ -1,4 +1,5 @@
-﻿using LLGameStudio.Common.XML;
+﻿using LLGameStudio.Common;
+using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,19 +18,20 @@ namespace LLGameStudio.Game.UI
     {
         protected double posX = 0;
         protected double posY = 0;
-        protected double rotateX = 0;
-        protected double rotateY = 0;
-        protected double scaleX = 1;
-        protected double scaleY = 1;
+        //protected double rotateX = 0;
+        //protected double rotateY = 0;
+        //protected double scaleX = 1;
+        //protected double scaleY = 1;
         public Property.GameUIAnchorEnum anchorEnum = new Property.GameUIAnchorEnum();
         public Property.Width width = new Property.Width();
         public Property.Height height = new Property.Height();
         public Property.Name name = new Property.Name();
+        public Property.Rotation rotation = new Property.Rotation();
 
-        public double RotateX { get => rotateX; set => rotateX = value; }
-        public double RotateY { get => rotateY; set => rotateY = value; }
-        public double ScaleX { get => scaleX; set => scaleX = value; }
-        public double ScaleY { get => scaleY; set => scaleY = value; }
+        //public double RotateX { get => rotateX; set => rotateX = value; }
+        //public double RotateY { get => rotateY; set => rotateY = value; }
+        //public double ScaleX { get => scaleX; set => scaleX = value; }
+        //public double ScaleY { get => scaleY; set => scaleY = value; }
 
         public abstract XElement ExportContentToXML();
         public abstract void LoadContentFromXML(XElement element);
@@ -37,17 +39,15 @@ namespace LLGameStudio.Game.UI
 
         protected void LoadBaseAttrbuteFromXML(XElement element)
         {
-            //TypeConverter;
-            Vector vector = new Vector();
             XAttribute xAttribute;
-            xAttribute = element.Attribute("rotateX");
-            if (xAttribute != null) { rotateX = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
-            xAttribute = element.Attribute("rotateY");
-            if (xAttribute != null) { rotateY = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
-            xAttribute = element.Attribute("scaleX");
-            if (xAttribute != null) { scaleX = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
-            xAttribute = element.Attribute("scaleY");
-            if (xAttribute != null) { scaleY = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
+            //xAttribute = element.Attribute("rotateX");
+            //if (xAttribute != null) { rotateX = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
+            //xAttribute = element.Attribute("rotateY");
+            //if (xAttribute != null) { rotateY = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
+            //xAttribute = element.Attribute("scaleX");
+            //if (xAttribute != null) { scaleX = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
+            //xAttribute = element.Attribute("scaleY");
+            //if (xAttribute != null) { scaleY = Convert.ToDouble(xAttribute.Value); xAttribute.Remove(); }
             xAttribute = element.Attribute("width");
             if (xAttribute != null) { width.Value = xAttribute.Value; xAttribute.Remove(); }
             xAttribute = element.Attribute("height");
@@ -56,6 +56,8 @@ namespace LLGameStudio.Game.UI
             if (xAttribute != null) { name.Value = xAttribute.Value; xAttribute.Remove(); }
             xAttribute = element.Attribute("anchorEnum");
             if (xAttribute != null) { anchorEnum.Value =xAttribute.Value; xAttribute.Remove(); }
+            xAttribute = element.Attribute("rotation");
+            if (xAttribute != null) { rotation.Value = xAttribute.Value; xAttribute.Remove(); }
         }
     }
     namespace Property
@@ -80,9 +82,14 @@ namespace LLGameStudio.Game.UI
             public GameUIAnchorEnum() : base("GameUIAnchorEnum", typeof(UI.GameUIAnchorEnum), UIPropertyEnum.Transform, "当前UI节点的节点锚点。", "Left_Top") { }
         }
 
-        class Scale : IUIProperty
+        class Rotation : IUIProperty, IConvertStringClass
         {
-            public Scale() : base("Scale", typeof(Vector), UIPropertyEnum.Transform, "当前UI节点的缩放。", "0.2") { }
+            public Rotation() : base("Rotation", typeof(Rotation), UIPropertyEnum.Transform, "当前UI节点的旋转。", "{0,0}") { }
+
+            public void GetValueFromString(string s)
+            {
+                value=LLConvert.StringToVector(s);
+            }
         }
     }
     
