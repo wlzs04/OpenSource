@@ -1,4 +1,5 @@
 ﻿using LLGameStudio.Common.XML;
+using LLGameStudio.Studio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace LLGameStudio.Game.UI
 {
     class LLGameBack : IUINode
     {
-
         public override XElement ExportContentToXML()
         {
             throw new NotImplementedException();
@@ -18,7 +18,7 @@ namespace LLGameStudio.Game.UI
 
         public override void LoadContentFromXML(XElement element)
         {
-            LoadBaseAttrbuteFromXML(element);
+            LoadAttrbuteFromXML(element);
 
             foreach (var item in element.Attributes())
             {
@@ -26,9 +26,9 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public override void Render()
+        public override void Render(CanvasManager canvasManager)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

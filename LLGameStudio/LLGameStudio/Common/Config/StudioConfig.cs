@@ -22,6 +22,7 @@ namespace LLGameStudio.Common.Config
         int borderWidth = 3;
         string version = "1.0.0";
         string theme = "Default";
+        string lastGamePath = "";
 
         public int Top { get => top; set => top = value; }
         public int Left { get => left; set => left = value; }
@@ -32,6 +33,7 @@ namespace LLGameStudio.Common.Config
         public int BorderWidth { get => borderWidth; set => borderWidth = value; }
         public string Version { get => version; set => version = value; }
         public string Theme { get => theme; set => theme = value; }
+        public string LastGamePath { get => lastGamePath; set => lastGamePath = value; }
 
         public void LoadContentFromXML(XElement element)
         {
@@ -44,6 +46,7 @@ namespace LLGameStudio.Common.Config
             studioName = element.Attribute("studioName").Value;
             version = element.Attribute("version").Value;
             theme = element.Attribute("theme").Value;
+            lastGamePath = element.Attribute("lastGamePath").Value;
         }
 
         public XElement ExportContentToXML()
@@ -58,6 +61,7 @@ namespace LLGameStudio.Common.Config
             element.Add(new XAttribute("studioName", studioName));
             element.Add(new XAttribute("version", version));
             element.Add(new XAttribute("theme", theme));
+            element.Add(new XAttribute("lastGamePath", lastGamePath));
             return element;
         }
     }

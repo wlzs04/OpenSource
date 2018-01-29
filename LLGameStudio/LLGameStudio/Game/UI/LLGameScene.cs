@@ -1,5 +1,6 @@
 ﻿using LLGameStudio.Common;
 using LLGameStudio.Common.XML;
+using LLGameStudio.Studio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,16 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
+    /// <summary>
+    /// UI场景类
+    /// </summary>
     class LLGameScene : IUINode
     {
         LLGameBack back;
         LLGameCanvas canvas;
         List<LLGameLayout> listLayout;
 
-        string filePath;
-
-        public string FilePath { get => filePath; set => filePath = value; }
+        string filePath = "";
 
         public LLGameScene()
         {
@@ -40,7 +42,7 @@ namespace LLGameStudio.Game.UI
 
         public override void LoadContentFromXML(XElement element)
         {
-            LoadBaseAttrbuteFromXML(element);
+            LoadAttrbuteFromXML(element);
 
             foreach (var item in element.Attributes())
             {
@@ -69,9 +71,15 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public override void Render()
+        public override void Render(CanvasManager canvasManager)
         {
-            throw new NotImplementedException();
+            canvasManager.AddPath(path);
+            back.Render(canvasManager);
+            canvas.Render(canvasManager);
+            foreach (var item in listLayout)
+            {
+                item.Render(canvasManager);
+            }
         }
     }
 }

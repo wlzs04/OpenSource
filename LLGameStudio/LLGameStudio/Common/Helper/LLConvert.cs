@@ -1,4 +1,5 @@
-﻿using LLGameStudio.Common.XML;
+﻿using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.XML;
 using LLGameStudio.Game.UI;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,22 @@ namespace LLGameStudio.Common
     /// </summary>
     class LLConvert
     {
+        /// <summary>
+        /// 将value值转换为指定类型。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static object ChangeType(object value, Type type)
         {
             if(type.IsEnum)
             {
                 return Enum.Parse(type, value.ToString());
             }
-            if(type==typeof(LLGameStudio.Game.UI.Property.Rotation))
-            if(type.GetInterface("IConvertStringClass")!=null)
+            if(typeof(IConvertStringClass).IsAssignableFrom(type))
             {
                 IConvertStringClass o = (IConvertStringClass)Activator.CreateInstance(type);
-                o.GetValueFromString(value.ToString());
+                o.FromString(value.ToString());
                 return o;
             }
             return Convert.ChangeType(value, type);
@@ -39,20 +45,10 @@ namespace LLGameStudio.Common
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static Vector StringToVector(string s)
+        public static Vector2 StringToVector2(string s)
         {
-            Vector v = new Vector();
-            if(s.Length>4)
-            {
-                s.Remove(0, 1);
-                s.Remove(s.Length - 1, 1);
-                string[] sarray=s.Split(',');
-                if(sarray.Length>1)
-                {
-                    v.X = Convert.ToInt32(sarray[0]);
-                    v.Y = Convert.ToInt32(sarray[1]);
-                }
-            }
+            Vector2 v = new Vector2();
+            v.FromString(s);
             return v;
         }
 

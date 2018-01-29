@@ -1,5 +1,6 @@
 ﻿using LLGameStudio.Common;
 using LLGameStudio.Common.XML;
+using LLGameStudio.Studio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.UI
 {
+    /// <summary>
+    /// UI布局类
+    /// </summary>
     class LLGameLayout : IUINode
     {
         public Property.FilePath filePath = new Property.FilePath();
@@ -33,10 +37,7 @@ namespace LLGameStudio.Game.UI
 
         public override void LoadContentFromXML(XElement element)
         {
-            LoadBaseAttrbuteFromXML(element);
-
-            XAttribute xAttribute = element.Attribute("filePath");
-            if (xAttribute != null) { filePath.Value = xAttribute.Value; xAttribute.Remove(); }
+            LoadAttrbuteFromXML(element);
 
             foreach (var item in element.Elements())
             {
@@ -52,17 +53,13 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public override void Render()
+        public override void Render(CanvasManager canvasManager)
         {
-            throw new NotImplementedException();
-        }
-    }
-
-    namespace Property
-    {
-        class FilePath : IUIProperty
-        {
-            public FilePath() : base("FilePath", typeof(String), UIPropertyEnum.Common, "当前节点文件路径。", "") { }
+            canvasManager.AddPath(path);
+            foreach (var item in listNode)
+            {
+                item.Render(canvasManager);
+            }
         }
     }
 }

@@ -65,6 +65,11 @@ namespace LLGameStudio.Studio
             ThemeManager.LoadTheme(studioConfig.Theme);
             
             canvasManager = new CanvasManager(window.GetCanvas(), gameManager);
+            
+            if(!string.IsNullOrEmpty(studioConfig.LastGamePath))
+            {
+                OpenGameByPath(studioConfig.LastGamePath);
+            }
         }
 
         /// <summary>
@@ -114,13 +119,13 @@ namespace LLGameStudio.Studio
             LLStudioButton createGameButton = new LLStudioButton();
             createGameButton.SetImage("Resource/新建文件.png");
             createGameButton.ToolTip = "新建游戏";
-            createGameButton.ClickHandler += CreateGame;
+            createGameButton.ClickHandler += ChooseNewGamePathAndOpen;
             wrapPanelMenuArea.Children.Add(createGameButton);
 
             LLStudioButton openGameButton = new LLStudioButton();
             openGameButton.SetImage("Resource/打开文件.png");
             openGameButton.ToolTip = "打开游戏";
-            openGameButton.ClickHandler += OpenGame;
+            openGameButton.ClickHandler += ChooseGamePathAndOpen;
             wrapPanelMenuArea.Children.Add(openGameButton);
 
             LLStudioButton saveGameButton = new LLStudioButton();
@@ -568,6 +573,11 @@ namespace LLGameStudio.Studio
             LoadDirectoryToFileArea(FileAreaDirectory);
         }
 
+        /// <summary>
+        /// 打开文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenFile(object sender, MouseButtonEventArgs e)
         {
             LLStudioFileItem item = sender as LLStudioFileItem;
@@ -587,7 +597,7 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 加载指定路径下文件图标到显示文件区域
+        /// 加载指定路径下文件图标到显示文件区域。
         /// </summary>
         /// <param name="path"></param>
         public void LoadDirectoryToFileArea(string path)
@@ -610,10 +620,10 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 创建新游戏目录。
+        /// 新建游戏路径并打开。
         /// </summary>
         /// <returns>返回在当前路径是否创建成功。</returns>
-        public void CreateGame(object sender, MouseButtonEventArgs e)
+        public void ChooseNewGamePathAndOpen(object sender, MouseButtonEventArgs e)
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
             
@@ -633,35 +643,44 @@ namespace LLGameStudio.Studio
                 {
                     ShowStatusInfo("正新建游戏目录。");
                     gameManager.CreateGame(gamePath,gameName);
-                    fileAreaDirectory = GameResourcePath;
                     ShowStatusInfo("游戏目录新建完成。");
-                    LoadDirectoryToFileArea(GameResourcePath);
+                    OpenGameByPath(gamePath);
                 }
             }
         }
 
         /// <summary>
-        /// 打开游戏目录。
+        /// 选择游戏路径并打开。
         /// </summary>
         /// <returns>是否成功打开</returns>
-        public void OpenGame(object sender, MouseButtonEventArgs e)
+        public void ChooseGamePathAndOpen(object sender, MouseButtonEventArgs e)
         {
             CommonOpenFileDialog folderDialog = new CommonOpenFileDialog("请选择游戏目录。");
             folderDialog.IsFolderPicker = true;
             if (folderDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 ShowStatusInfo("正打开游戏目录。");
-                if (!gameManager.OpenGame(folderDialog.FileName))
-                {
-                    MessageBox.Show("此文件夹不是有效的游戏路径");
-                    ShowStatusInfo("此文件夹不是有效的游戏路径");
-                }
-                else
-                {
-                    fileAreaDirectory = GameResourcePath;
-                    ShowStatusInfo("打开游戏目录完成。");
-                    LoadDirectoryToFileArea(GameResourcePath);
-                }
+                OpenGameByPath(folderDialog.FileName);
+            }
+        }
+
+        /// <summary>
+        /// 通过路径打开游戏。
+        /// </summary>
+        /// <param name="path"></param>
+        public void OpenGameByPath(string path)
+        {
+            if (!gameManager.OpenGame(path))
+            {
+                MessageBox.Show("此文件夹不是有效的游戏路径");
+                ShowStatusInfo("此文件夹不是有效的游戏路径");
+            }
+            else
+            {
+                fileAreaDirectory = GameResourcePath;
+                ShowStatusInfo("打开游戏目录完成。");
+                LoadDirectoryToFileArea(GameResourcePath);
+                studioConfig.LastGamePath = gameManager.GamePath;
             }
         }
 
@@ -734,7 +753,7 @@ namespace LLGameStudio.Studio
             if (gameManager.OpenLayout(currentFilePath))
             {
                 canvasManager.ClearAll();
-                //canvasManager.RenderContent();
+                gameManager.RenderToCanvas(canvasManager);
             }
             else
             {

@@ -1,4 +1,5 @@
 ﻿using LLGameStudio.Game;
+using LLGameStudio.Game.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace LLGameStudio.Studio
         Point leftTopPostion;
         bool isShowStandard = true;
         GameManager gameManager;
-        List<Path> listPath;
+        List<IUINode> uiNodelist;
         Matrix transformMatrix = new Matrix();
 
         public CanvasManager(Canvas canvas, GameManager gameManager)
@@ -30,7 +31,7 @@ namespace LLGameStudio.Studio
             brush = Brushes.White;
             leftTopPostion = new Point(0, 0);
             rootPosition = new Point(canvas.ActualWidth / 10, canvas.ActualHeight / 10);
-            listPath = new List<Path>();
+            uiNodelist = new List<IUINode>();
         }
 
         /// <summary>
@@ -215,7 +216,7 @@ namespace LLGameStudio.Studio
             path.StrokeThickness = thickness;
             path.Data = lineGeometry;
 
-            DrawPath(path);
+            AddPath(path);
         }
 
         public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
@@ -225,7 +226,7 @@ namespace LLGameStudio.Studio
             path.Stroke = brush;
             path.StrokeThickness = thickness;
             path.Data = rectangleGeometry;
-            DrawPath(path);
+            AddPath(path);
         }
 
         public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
@@ -235,14 +236,14 @@ namespace LLGameStudio.Studio
             path.Stroke = brush;
             path.StrokeThickness = thickness;
             path.Data = rectangleGeometry;
-            DrawPath(path);
+            AddPath(path);
         }
         
         /// <summary>
         /// 画路径
         /// </summary>
         /// <param name="path"></param>
-        public void DrawPath(Path path)
+        public void AddPath(Path path)
         {
             canvas.Children.Add(path);
         }

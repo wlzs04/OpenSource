@@ -12,4 +12,12 @@
   <borderSelectColor>#FF00BFFF</borderSelectColor>
   <!--文本框背景颜色：常规-->
   <backgroundTextBoxColor>#FF333337</backgroundTextBoxColor>
+  <!--UI控件边框颜色：常规-->
+  <borderUIColor>#00000000</borderUIColor>
+  <!--UI控件边框颜色：鼠标悬浮-->
+  <borderUIHoverColor>#FF00BFFF</borderUIHoverColor>
+  <!--UI控件边框颜色：选中-->
+  <borderUISelectColor>#FF00BFFF</borderUISelectColor>
+  <!--UI控件背景颜色：透明度接近0-->
+  <backgroundUIAlphaColor>#02252526</backgroundUIAlphaColor>
 </Theme>

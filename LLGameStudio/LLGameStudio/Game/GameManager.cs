@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using LLGameStudio.Common;
 using LLGameStudio.Common.Config;
@@ -25,7 +26,9 @@ namespace LLGameStudio.Game
         bool gameLoaded = false;
         StudioManager studioManager;
         Process gameProcess;
-        
+        IUINode uiNode;
+
+        public string GamePath { get => gamePath; }
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
         public string GameResourcePath { get => gameResourcePath; }
@@ -153,13 +156,28 @@ namespace LLGameStudio.Game
         public bool OpenScene(string path)
         {
             LLGameScene llGameScene = new LLGameScene();
-            return llGameScene.LoadContentFromFile(path);
+            if (llGameScene.LoadContentFromFile(path))
+            {
+                uiNode = llGameScene;
+                return true;
+            }
+            return false;
         }
 
         public bool OpenLayout(string path)
         {
             LLGameLayout llGameLayout = new LLGameLayout();
-            return llGameLayout.LoadContentFromFile(path);
+            if(llGameLayout.LoadContentFromFile(path))
+            {
+                uiNode = llGameLayout;
+                return true;
+            }
+            return false;
+        }
+
+        public void RenderToCanvas(CanvasManager canvasManager)
+        {
+            uiNode.Render(canvasManager);
         }
     }
 }

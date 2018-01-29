@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace LLGameStudio.Common.XML
 {
     /// <summary>
-    /// 实现用于与xml文件交互的接口，配合LLXMLConverter类使用
+    /// 实现用于与xml文件交互的接口，配合LLConvert类使用
     /// </summary>
     interface IXMLClass
     {
