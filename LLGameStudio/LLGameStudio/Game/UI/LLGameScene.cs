@@ -71,14 +71,25 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public override void Render(CanvasManager canvasManager)
+        public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            canvasManager.AddPath(path);
-            back.Render(canvasManager);
-            canvas.Render(canvasManager);
+            canvasManager.AddUINode(this);
+            back.AddUINodeToCanvas(canvasManager);
+            canvas.AddUINodeToCanvas(canvasManager);
             foreach (var item in listLayout)
             {
-                item.Render(canvasManager);
+                item.AddUINodeToCanvas(canvasManager);
+            }
+        }
+
+        public override void ResetUIProperty()
+        {
+            base.ResetUIProperty();
+            back.ResetUIProperty();
+            canvas.ResetUIProperty();
+            foreach (var item in listLayout)
+            {
+                item.ResetUIProperty();
             }
         }
     }

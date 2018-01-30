@@ -216,7 +216,7 @@ namespace LLGameStudio.Studio
             path.StrokeThickness = thickness;
             path.Data = lineGeometry;
 
-            AddPath(path);
+            AddUINode(path);
         }
 
         public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
@@ -226,7 +226,7 @@ namespace LLGameStudio.Studio
             path.Stroke = brush;
             path.StrokeThickness = thickness;
             path.Data = rectangleGeometry;
-            AddPath(path);
+            AddUINode(path);
         }
 
         public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
@@ -236,16 +236,16 @@ namespace LLGameStudio.Studio
             path.Stroke = brush;
             path.StrokeThickness = thickness;
             path.Data = rectangleGeometry;
-            AddPath(path);
+            AddUINode(path);
         }
         
         /// <summary>
-        /// 画路径
+        /// 添加UI节点
         /// </summary>
         /// <param name="path"></param>
-        public void AddPath(Path path)
+        public void AddUINode(UIElement ui)
         {
-            canvas.Children.Add(path);
+            canvas.Children.Add(ui);
         }
 
         /// <summary>

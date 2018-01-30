@@ -237,6 +237,11 @@ namespace LLGameStudio
 
         private void buttonRestoreCanvas_Click(object sender, RoutedEventArgs e)
         {
+            RestoreCanvas();
+        }
+
+        public void RestoreCanvas()
+        {
             studioManager.RestoreCanvas();
             comboBoxScaleCanvas.SelectionChanged -= comboBoxScaleCanvas_SelectionChanged;
             comboBoxScaleCanvas.SelectedIndex = 1;

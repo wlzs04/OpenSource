@@ -43,12 +43,12 @@ namespace LLGameStudio.Common
 
         struct Rect : IConvertStringClass
         {
-            double left, top, right, down;
+            double left, top, right, bottom;
 
             public double Left { get => left; set => left = value; }
             public double Top { get => top; set => top = value; }
             public double Right { get => right; set => right = value; }
-            public double Down { get => down; set => down = value; }
+            public double Bottom { get => bottom; set => bottom = value; }
 
             public void FromString(string s)
             {
@@ -62,36 +62,36 @@ namespace LLGameStudio.Common
                         left = Convert.ToInt32(sarray[0]);
                         top = Convert.ToInt32(sarray[1]);
                         right = Convert.ToInt32(sarray[2]);
-                        down = Convert.ToInt32(sarray[3]);
+                        bottom = Convert.ToInt32(sarray[3]);
                     }
                     else if (sarray.Length == 2)
                     {
                         left = Convert.ToInt32(sarray[0]);
                         top = Convert.ToInt32(sarray[1]);
                         right = left;
-                        down = top;
+                        bottom = top;
                     }
                     else if(sarray.Length==1)
                     {
                         left = Convert.ToInt32(sarray[0]);
                         top = left;
                         right = left;
-                        down = left;
+                        bottom = left;
                     }
                 }
             }
 
             public override string ToString()
             {
-                if(left== top&& left== right && left == down)
+                if(left== top&& left== right && left == bottom)
                 {
                     return "{" + left + "}";
                 }
-                else if(left == right && top == down)
+                else if(left == right && top == bottom)
                 {
                     return "{" + left + "," + top + "}";
                 }
-                return "{" + left + "," + top + "," + right + "," + down + "}";
+                return "{" + left + "," + top + "," + right + "," + bottom + "}";
             }
         }
     }

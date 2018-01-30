@@ -11,22 +11,22 @@ using System.Xml.Linq;
 namespace LLGameStudio.Game.UI
 {
     /// <summary>
-    /// UI布局类
+    /// UI布局文件类
     /// </summary>
     class LLGameLayout : IUINode
     {
         public Property.FilePath filePath = new Property.FilePath();
-        List<IUINode> listNode;
+        LLGameGrid llGameGrid;
 
         public LLGameLayout()
         {
-            listNode = new List<IUINode>();
         }
 
         public bool LoadContentFromFile(string path)
         {
             filePath.Value = path;
-            LLConvert.LoadContentFromXML(path, this);
+            llGameGrid = new LLGameGrid();
+            LLConvert.LoadContentFromXML(path, llGameGrid);
             return true;
         }
 
@@ -38,28 +38,19 @@ namespace LLGameStudio.Game.UI
         public override void LoadContentFromXML(XElement element)
         {
             LoadAttrbuteFromXML(element);
-
-            foreach (var item in element.Elements())
-            {
-                switch (item.Name.ToString())
-                {
-                    case "LLGameImage":
-                        listNode.Add(new LLGameImage());
-                        listNode[listNode.Count - 1].LoadContentFromXML(item);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            
         }
 
-        public override void Render(CanvasManager canvasManager)
+        public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            canvasManager.AddPath(path);
-            foreach (var item in listNode)
-            {
-                item.Render(canvasManager);
-            }
+            canvasManager.AddUINode(this);
+            llGameGrid.AddUINodeToCanvas(canvasManager);
+        }
+
+        public override void ResetUIProperty()
+        {
+            base.ResetUIProperty();
+            llGameGrid.ResetUIProperty();
         }
     }
 }

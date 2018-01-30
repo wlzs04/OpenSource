@@ -13,7 +13,7 @@
   <!--文本框背景颜色：常规-->
   <backgroundTextBoxColor>#FF333337</backgroundTextBoxColor>
   <!--UI控件边框颜色：常规-->
-  <borderUIColor>#00000000</borderUIColor>
+  <borderUIColor>#02252526</borderUIColor>
   <!--UI控件边框颜色：鼠标悬浮-->
   <borderUIHoverColor>#FF00BFFF</borderUIHoverColor>
   <!--UI控件边框颜色：选中-->

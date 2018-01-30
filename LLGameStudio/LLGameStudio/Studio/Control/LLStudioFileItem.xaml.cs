@@ -88,7 +88,7 @@ namespace LLGameStudio.Studio.Control
         {
             var v = (LLStudioFileItem)sender;
             Keyboard.Focus(v);
-            if(Keyboard.GetKeyStates(Key.LeftCtrl)!=KeyStates.Down)
+            if(!Keyboard.IsKeyDown(Key.LeftCtrl))
             {
                 foreach (var item in parentPanel.Children)
                 {

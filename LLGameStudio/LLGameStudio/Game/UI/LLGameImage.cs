@@ -34,22 +34,10 @@ namespace LLGameStudio.Game.UI
             LoadAttrbuteFromXML(element);
         }
 
-        public void ResetPath()
+        public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            RectangleGeometry rectangleGeometry = new RectangleGeometry(
-                new Rect(posX,posY,50, 50));
-            
-            path.Stroke = ThemeManager.GetBrushByName("borderUIColor");
-            path.StrokeThickness = 1;
-            path.Fill = new ImageBrush(new BitmapImage(new Uri(filePath.Value, UriKind.Relative)));
-            
-            path.Data = rectangleGeometry;
-        }
-
-        public override void Render(CanvasManager canvasManager)
-        {
-            ResetPath();
-            canvasManager.AddPath(path);
+            grid.Background = new ImageBrush(new BitmapImage(new Uri(filePath.Value, UriKind.Relative)));
+            canvasManager.AddUINode(this);
         }
     }
 }

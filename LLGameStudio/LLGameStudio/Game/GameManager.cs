@@ -177,7 +177,12 @@ namespace LLGameStudio.Game
 
         public void RenderToCanvas(CanvasManager canvasManager)
         {
-            uiNode.Render(canvasManager);
+            uiNode.AddUINodeToCanvas(canvasManager);
+        }
+
+        public void ResetUIProperty()
+        {
+            uiNode.ResetUIProperty();
         }
     }
 }

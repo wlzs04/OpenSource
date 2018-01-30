@@ -586,9 +586,11 @@ namespace LLGameStudio.Studio
             {
                 case GameUIFileEnum.Scene:
                     OpenScene();
+                    window.RestoreCanvas();
                     break;
                 case GameUIFileEnum.Layout:
                     OpenLayout();
+                    window.RestoreCanvas();
                     break;
                 case GameUIFileEnum.Unknown:
                     ShowStatusInfo("未知文件无法打开！");
@@ -753,6 +755,7 @@ namespace LLGameStudio.Studio
             if (gameManager.OpenLayout(currentFilePath))
             {
                 canvasManager.ClearAll();
+                gameManager.ResetUIProperty();
                 gameManager.RenderToCanvas(canvasManager);
             }
             else

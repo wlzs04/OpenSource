@@ -8,6 +8,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 
@@ -21,10 +24,12 @@ namespace LLGameStudio.Game.UI
     /// AddProperty()方法添加。如果只作为内部变量出现则不需要上述步骤。
     /// 2.内部统一使用WPF提供的Path进行绘制。
     /// </summary>
-    abstract class IUINode : IXMLClass
+    abstract class IUINode : UIControl, IXMLClass
     {
         protected double posX = 0;
         protected double posY = 0;
+        protected double actualWidth = 0;
+        protected double actualHeight = 0;
         protected Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
 
         public Property.GameUIAnchorEnum anchorEnum = new Property.GameUIAnchorEnum();
@@ -34,8 +39,7 @@ namespace LLGameStudio.Game.UI
         public Property.Rotation rotation = new Property.Rotation();
         public Property.Margin margin = new Property.Margin();
         
-        protected Path path;
-        protected IUINode parentNode=null;
+        public IUINode parentNode=null;
 
         public IUINode()
         {
@@ -45,8 +49,6 @@ namespace LLGameStudio.Game.UI
             AddProperty(name);
             AddProperty(rotation);
             AddProperty(margin);
-
-            path = new Path();
         }
 
         /// <summary>
@@ -68,10 +70,58 @@ namespace LLGameStudio.Game.UI
             propertyDictionary[name].Value = value;
         }
 
+        /// <summary>
+        /// 用于在对宽度、旋转等属性进行赋值后，重新计算UI节点真实宽度等属性的方法。
+        /// </summary>
+        public virtual void ResetUIProperty()
+        {
+            double parentWidth = 0;
+            double parentHeight = 0;
+            double parentPosX = 0;
+            double parentPosY = 0;
+            actualWidth = width.Value;
+            actualHeight = height.Value;
+            if (parentNode!=null)
+            {
+                parentWidth = parentNode.actualWidth;
+                parentHeight = parentNode.actualHeight;
+                parentPosX = parentNode.posX;
+                parentPosY = parentNode.posY;
+                if(width.Value<=1)
+                {
+                    actualWidth = parentWidth * width.Value;
+                }
+                if (height.Value <= 1)
+                {
+                    actualHeight = parentHeight * height.Value;
+                }
+            }
+            if ((anchorEnum.Value & GameUIAnchorEnum.Left)!=0)
+            {
+                posX = margin.Value.Left + parentPosX;
+            }
+            if((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
+            {
+                posY = margin.Value.Top + parentPosY;
+            }
+            if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
+            {
+                posX = parentNode.posX + parentWidth - margin.Value.Right - actualWidth;
+            }
+            if((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
+            {
+                posY = parentNode.posY + parentHeight-margin.Value.Bottom - actualHeight;
+            }
+
+            Width = actualWidth;
+            Height = actualHeight;
+            Margin = new System.Windows.Thickness(posX,posY,0,0);
+        }
+
         public abstract XElement ExportContentToXML();
         public abstract void LoadContentFromXML(XElement element);
-        public abstract void Render(CanvasManager canvasManager);
-
+        public abstract void AddUINodeToCanvas(CanvasManager canvasManager);
+        
         public virtual void AddNode(IUINode node)
         {
             node.parentNode = this;
@@ -83,7 +133,13 @@ namespace LLGameStudio.Game.UI
             foreach (var item in propertyDictionary)
             {
                 xAttribute = element.Attribute(item.Key);
-                if (xAttribute != null) { item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
+                if (xAttribute != null) {
+
+
+
+
+
+                    item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
             }
         }
     }

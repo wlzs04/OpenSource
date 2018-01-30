@@ -26,7 +26,7 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public override void Render(CanvasManager canvasManager)
+        public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
             
         }
