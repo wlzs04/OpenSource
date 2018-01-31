@@ -38,7 +38,8 @@ namespace LLGameStudio.Game.UI
         public Property.Name name = new Property.Name();
         public Property.Rotation rotation = new Property.Rotation();
         public Property.Margin margin = new Property.Margin();
-        
+        public Property.ClipByParent clipByParent = new Property.ClipByParent();
+
         public IUINode parentNode=null;
 
         public IUINode()
@@ -49,6 +50,7 @@ namespace LLGameStudio.Game.UI
             AddProperty(name);
             AddProperty(rotation);
             AddProperty(margin);
+            AddProperty(clipByParent);
         }
 
         /// <summary>
@@ -77,45 +79,52 @@ namespace LLGameStudio.Game.UI
         {
             double parentWidth = 0;
             double parentHeight = 0;
-            double parentPosX = 0;
-            double parentPosY = 0;
             actualWidth = width.Value;
             actualHeight = height.Value;
+            double actualLeft = margin.Value.Left;
+            double actualTop = margin.Value.Top;
+            double actualRight = margin.Value.Right;
+            double actualBottom = margin.Value.Bottom;
             if (parentNode!=null)
             {
                 parentWidth = parentNode.actualWidth;
                 parentHeight = parentNode.actualHeight;
-                parentPosX = parentNode.posX;
-                parentPosY = parentNode.posY;
-                if(width.Value<=1)
-                {
-                    actualWidth = parentWidth * width.Value;
-                }
-                if (height.Value <= 1)
-                {
-                    actualHeight = parentHeight * height.Value;
-                }
+                actualWidth = actualWidth <= 1 ? parentWidth * actualWidth : actualWidth;
+                actualHeight = actualHeight <= 1 ? parentHeight * actualHeight : actualHeight;
+                actualLeft = actualLeft <= 1 ? parentWidth * actualLeft : actualLeft;
+                actualTop = actualTop <= 1 ? parentHeight * actualTop : actualTop;
+                actualRight = actualRight <= 1 ? parentWidth * actualRight : actualRight;
+                actualBottom = actualBottom <= 1 ? parentHeight * actualBottom : actualBottom;
             }
             if ((anchorEnum.Value & GameUIAnchorEnum.Left)!=0)
             {
-                posX = margin.Value.Left + parentPosX;
+                posX = actualLeft;
+            }
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
+            {
+                posX =  parentWidth - actualRight - actualWidth;
+            }
+            else
+            {
+                posX = (parentWidth - actualWidth) / 2;
             }
             if((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
             {
-                posY = margin.Value.Top + parentPosY;
+                posY = actualTop;
             }
-            if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
+            else if((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
             {
-                posX = parentNode.posX + parentWidth - margin.Value.Right - actualWidth;
+                posY =  + parentHeight- actualBottom - actualHeight;
             }
-            if((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
+            else
             {
-                posY = parentNode.posY + parentHeight-margin.Value.Bottom - actualHeight;
+                posY = (parentHeight - actualHeight) / 2;
             }
 
             Width = actualWidth;
             Height = actualHeight;
             Margin = new System.Windows.Thickness(posX,posY,0,0);
+            ClipToBounds = clipByParent.Value;
         }
 
         public abstract XElement ExportContentToXML();
@@ -125,6 +134,13 @@ namespace LLGameStudio.Game.UI
         public virtual void AddNode(IUINode node)
         {
             node.parentNode = this;
+            grid.Children.Add(node);
+        }
+
+        public virtual void RemoveNode(IUINode node)
+        {
+            node.parentNode = null;
+            grid.Children.Remove(node);
         }
 
         protected void LoadAttrbuteFromXML(XElement element)
@@ -133,16 +149,11 @@ namespace LLGameStudio.Game.UI
             foreach (var item in propertyDictionary)
             {
                 xAttribute = element.Attribute(item.Key);
-                if (xAttribute != null) {
-
-
-
-
-
-                    item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
+                if (xAttribute != null) {item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
             }
         }
     }
+
     namespace Property
     {
         class Name : IUIProperty
@@ -152,12 +163,12 @@ namespace LLGameStudio.Game.UI
 
         class Width : IUIProperty
         {
-            public Width() : base("width", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的宽度。", "0.2") { }
+            public Width() : base("width", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的宽度。", "1") { }
         }
 
         class Height : IUIProperty
         {
-            public Height() : base("height", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的高度。", "0.2") { }
+            public Height() : base("height", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的高度。", "1") { }
         }
 
         class GameUIAnchorEnum : IUIProperty
@@ -178,6 +189,11 @@ namespace LLGameStudio.Game.UI
         class Margin : IUIProperty
         {
             public Margin() : base("margin", typeof(Rect), UIPropertyEnum.Common, "当前节点文件路径。", "{0}") { }
+        }
+
+        class ClipByParent : IUIProperty
+        {
+            public ClipByParent() : base("clipByParent", typeof(bool), UIPropertyEnum.Common, "是否被父容器剪切。", "false") { }
         }
     }
     

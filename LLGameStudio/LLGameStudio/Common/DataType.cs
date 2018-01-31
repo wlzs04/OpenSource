@@ -59,21 +59,21 @@ namespace LLGameStudio.Common
                     string[] sarray = s.Split(',');
                     if (sarray.Length > 3)
                     {
-                        left = Convert.ToInt32(sarray[0]);
-                        top = Convert.ToInt32(sarray[1]);
-                        right = Convert.ToInt32(sarray[2]);
-                        bottom = Convert.ToInt32(sarray[3]);
+                        left = Convert.ToDouble(sarray[0]);
+                        top = Convert.ToDouble(sarray[1]);
+                        right = Convert.ToDouble(sarray[2]);
+                        bottom = Convert.ToDouble(sarray[3]);
                     }
                     else if (sarray.Length == 2)
                     {
-                        left = Convert.ToInt32(sarray[0]);
-                        top = Convert.ToInt32(sarray[1]);
+                        left = Convert.ToDouble(sarray[0]);
+                        top = Convert.ToDouble(sarray[1]);
                         right = left;
                         bottom = top;
                     }
                     else if(sarray.Length==1)
                     {
-                        left = Convert.ToInt32(sarray[0]);
+                        left = Convert.ToDouble(sarray[0]);
                         top = left;
                         right = left;
                         bottom = left;

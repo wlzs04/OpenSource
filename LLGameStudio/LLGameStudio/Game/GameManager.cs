@@ -21,7 +21,7 @@ namespace LLGameStudio.Game
     {
         string gamePath = "";
         string gameConfigFilePath = "";
-        string gameResourcePath = "";
+        static string gameResourcePath = "";
         GameConfig gameConfig;
         bool gameLoaded = false;
         StudioManager studioManager;
@@ -31,7 +31,7 @@ namespace LLGameStudio.Game
         public string GamePath { get => gamePath; }
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
-        public string GameResourcePath { get => gameResourcePath; }
+        public static string GameResourcePath { get => gameResourcePath; }
         public int GameWidth { get => gameConfig.Width; }
         public int GameHeight { get => gameConfig.Height; }
 

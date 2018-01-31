@@ -42,7 +42,6 @@ namespace LLGameStudio.Studio
         WrapPanel wrapPanelUIControlArea;
 
         public bool FullScreen { get => studioConfig.FullScreen;}
-        public string GameResourcePath { get => gameManager.GameResourcePath; }
         public string FileAreaDirectory { get => fileAreaDirectory; }
         public string CurrentFilePath { get => currentFilePath;}
 
@@ -679,9 +678,9 @@ namespace LLGameStudio.Studio
             }
             else
             {
-                fileAreaDirectory = GameResourcePath;
+                fileAreaDirectory = GameManager.GameResourcePath;
                 ShowStatusInfo("打开游戏目录完成。");
-                LoadDirectoryToFileArea(GameResourcePath);
+                LoadDirectoryToFileArea(GameManager.GameResourcePath);
                 studioConfig.LastGamePath = gameManager.GamePath;
             }
         }
@@ -701,7 +700,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void ReturnLastDirectory()
         {
-            if(fileAreaDirectory==GameResourcePath)
+            if(fileAreaDirectory== GameManager.GameResourcePath)
             {
                 ShowStatusInfo("当前已经是根目录。");
             }
@@ -739,7 +738,8 @@ namespace LLGameStudio.Studio
             if (gameManager.OpenScene(currentFilePath))
             {
                 canvasManager.ClearAll();
-
+                gameManager.RenderToCanvas(canvasManager);
+                gameManager.ResetUIProperty();
             }
             else
             {
@@ -755,8 +755,8 @@ namespace LLGameStudio.Studio
             if (gameManager.OpenLayout(currentFilePath))
             {
                 canvasManager.ClearAll();
-                gameManager.ResetUIProperty();
                 gameManager.RenderToCanvas(canvasManager);
+                gameManager.ResetUIProperty();
             }
             else
             {

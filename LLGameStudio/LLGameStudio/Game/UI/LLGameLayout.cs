@@ -3,6 +3,7 @@ using LLGameStudio.Common.XML;
 using LLGameStudio.Studio;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,13 +21,22 @@ namespace LLGameStudio.Game.UI
 
         public LLGameLayout()
         {
+            AddProperty(filePath);
         }
 
         public bool LoadContentFromFile(string path)
         {
-            filePath.Value = path;
+            if (!Path.IsPathRooted(path))
+            {
+                filePath.Value = GameManager.GameResourcePath + @"\" + path;
+            }
+            else
+            {
+                filePath.Value = path;
+            }
             llGameGrid = new LLGameGrid();
-            LLConvert.LoadContentFromXML(path, llGameGrid);
+            LLConvert.LoadContentFromXML(filePath.Value, llGameGrid);
+            AddNode(llGameGrid);
             return true;
         }
 
@@ -38,13 +48,13 @@ namespace LLGameStudio.Game.UI
         public override void LoadContentFromXML(XElement element)
         {
             LoadAttrbuteFromXML(element);
-            
+            LoadContentFromFile(filePath.Value);
         }
 
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            canvasManager.AddUINode(this);
-            llGameGrid.AddUINodeToCanvas(canvasManager);
+            RemoveNode(llGameGrid);
+            canvasManager.AddUINode(llGameGrid);
         }
 
         public override void ResetUIProperty()

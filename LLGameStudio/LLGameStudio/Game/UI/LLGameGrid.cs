@@ -35,8 +35,8 @@ namespace LLGameStudio.Game.UI
                 {
                     case "LLGameImage":
                         listNode.Add(new LLGameImage());
-                        listNode[listNode.Count - 1].parentNode = this;
                         listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        AddNode(listNode[listNode.Count - 1]);
                         break;
                     default:
                         break;
@@ -46,11 +46,6 @@ namespace LLGameStudio.Game.UI
 
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            canvasManager.AddUINode(this);
-            foreach (var item in listNode)
-            {
-                item.AddUINodeToCanvas(canvasManager);
-            }
         }
 
         public override void ResetUIProperty()

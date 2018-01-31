@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -18,7 +19,7 @@ namespace LLGameStudio.Game.UI
     class LLGameImage : IUINode
     {
         public Property.FilePath filePath = new Property.FilePath();
-        
+
         public LLGameImage()
         {
             AddProperty(filePath);
@@ -36,8 +37,13 @@ namespace LLGameStudio.Game.UI
 
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            grid.Background = new ImageBrush(new BitmapImage(new Uri(filePath.Value, UriKind.Relative)));
             canvasManager.AddUINode(this);
+        }
+
+        public override void ResetUIProperty()
+        {
+            base.ResetUIProperty();
+            grid.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + filePath.Value, UriKind.Relative)));
         }
     }
 }

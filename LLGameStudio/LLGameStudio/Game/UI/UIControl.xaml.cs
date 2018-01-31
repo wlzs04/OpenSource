@@ -51,7 +51,7 @@ namespace LLGameStudio.Game.UI
 
         private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-
+            
         }
 
         /// <summary>

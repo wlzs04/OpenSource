@@ -56,14 +56,17 @@ namespace LLGameStudio.Game.UI
                     case "LLGameBack":
                         back = new LLGameBack();
                         back.LoadContentFromXML(item);
+                        AddNode(back);
                         break;
                     case "LLGameCanvas":
                         canvas = new LLGameCanvas();
                         canvas.LoadContentFromXML(item);
+                        AddNode(canvas);
                         break;
                     case "LLGameLayout":
                         listLayout.Add(new LLGameLayout());
                         listLayout[listLayout.Count - 1].LoadContentFromXML(item);
+                        AddNode(listLayout[listLayout.Count - 1]);
                         break;
                     default:
                         break;
@@ -74,12 +77,6 @@ namespace LLGameStudio.Game.UI
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
             canvasManager.AddUINode(this);
-            back.AddUINodeToCanvas(canvasManager);
-            canvas.AddUINodeToCanvas(canvasManager);
-            foreach (var item in listLayout)
-            {
-                item.AddUINodeToCanvas(canvasManager);
-            }
         }
 
         public override void ResetUIProperty()

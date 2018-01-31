@@ -4,25 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LLGameStudio"
-        xmlns:Control="clr-namespace:LLGameStudio.Studio.Control" x:Name="window" x:Class="LLGameStudio.MainWindow"
+        xmlns:Control="clr-namespace:LLGameStudio.Studio.Control" xmlns:UI="clr-namespace:LLGameStudio.Game.UI" x:Name="window" x:Class="LLGameStudio.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1600" Background="{x:Null}" SizeChanged="window_SizeChanged" AllowsTransparency="True" WindowStyle="None" MinWidth="800" MinHeight="600">
     <Window.Resources>
-        <Style TargetType="TextBlock" >
+        <Style TargetType="{x:Type TextBlock}" >
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
-        <Style TargetType="TextBox" >
+        <Style TargetType="{x:Type TextBox}" >
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
-        <Style TargetType="TreeViewItem">
+        <Style TargetType="{x:Type TreeViewItem}">
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
-        <Style TargetType="TabItem" x:Key="TabItemStyleLeft">
+        <Style TargetType="{x:Type TabItem}" x:Key="TabItemStyleLeft">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
+                    <ControlTemplate TargetType="{x:Type TabItem}">
                         <Grid >
-                            <Border Name="Border" Margin="0" BorderThickness="1,1,0,1" CornerRadius="7,0,0,7" Width="30" Background="#FF323232">
+                            <Border x:Name="Border" Margin="0" BorderThickness="1,1,0,1" CornerRadius="7,0,0,7" Width="30" Background="#FF323232">
                                 <ContentPresenter x:Name="ContentSite" ContentSource="Header" Margin="4,4,4,4"/>
                             </Border>
                         </Grid>
@@ -43,12 +43,12 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="TabItem" x:Key="TabItemStyleRight">
+        <Style TargetType="{x:Type TabItem}" x:Key="TabItemStyleRight">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
+                    <ControlTemplate TargetType="{x:Type TabItem}">
                         <Grid>
-                            <Border Name="Border" Margin="0" BorderThickness="0,1,1,1" CornerRadius="0,7,7,0" Width="30" Background="#FF323232">
+                            <Border x:Name="Border" Margin="0" BorderThickness="0,1,1,1" CornerRadius="0,7,7,0" Width="30" Background="#FF323232">
                                 <ContentPresenter x:Name="ContentSite" ContentSource="Header" Margin="4,4,4,4"/>
                             </Border>
                         </Grid>
@@ -92,7 +92,7 @@
                         <Grid HorizontalAlignment="Center">
                             <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
                             <Image x:Name="imageStopGame" HorizontalAlignment="Right" VerticalAlignment="Center" Source="bin/Debug/Resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
-                            
+
                         </Grid>
                         <Grid HorizontalAlignment="Right">
                             <Label x:Name="labelGameName"/>
@@ -121,7 +121,7 @@
                                 <RowDefinition Height="30*" MinHeight="30"/>
                             </Grid.RowDefinitions>
                             <Grid Margin="0" Background="#FF512CC9">
-                                <WrapPanel x:Name="wrapPanelCanvasControlArea" Height="25" VerticalAlignment="Top"></WrapPanel>
+                                <WrapPanel x:Name="wrapPanelCanvasControlArea" Height="25" VerticalAlignment="Top"/>
                                 <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="#FFD5D5D5" Focusable="False"/>
                                 <Button x:Name="buttonRestoreCanvas" HorizontalAlignment="Left" Width="50" Height="25" VerticalAlignment="Top" Margin="50,0,0,0" Content="还原画布" Click="buttonRestoreCanvas_Click" />
                                 <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True" MouseWheel="canvas_MouseWheel" MouseDown="canvas_MouseDown" MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Margin="0,25,0,0"/>
