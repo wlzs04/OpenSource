@@ -16,21 +16,15 @@ namespace LLGameStudio.Game.UI
     /// </summary>
     class LLGameScene : IUINode
     {
-        LLGameBack back;
-        LLGameCanvas canvas;
-        List<LLGameLayout> listLayout;
-
         string filePath = "";
 
         public LLGameScene()
         {
-            listLayout = new List<LLGameLayout>();
         }
 
         public bool LoadContentFromFile(string path)
         {
             filePath = path;
-            listLayout = new List<LLGameLayout>();
             LLConvert.LoadContentFromXML(path, this);
             return true;
         }
@@ -54,19 +48,19 @@ namespace LLGameStudio.Game.UI
                 switch (item.Name.ToString())
                 {
                     case "LLGameBack":
-                        back = new LLGameBack();
+                        LLGameBack back = new LLGameBack();
                         back.LoadContentFromXML(item);
                         AddNode(back);
                         break;
                     case "LLGameCanvas":
-                        canvas = new LLGameCanvas();
+                        LLGameCanvas canvas = new LLGameCanvas();
                         canvas.LoadContentFromXML(item);
                         AddNode(canvas);
                         break;
                     case "LLGameLayout":
-                        listLayout.Add(new LLGameLayout());
-                        listLayout[listLayout.Count - 1].LoadContentFromXML(item);
-                        AddNode(listLayout[listLayout.Count - 1]);
+                        AddNode(new LLGameLayout());
+                        listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        
                         break;
                     default:
                         break;
@@ -82,9 +76,7 @@ namespace LLGameStudio.Game.UI
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();
-            back.ResetUIProperty();
-            canvas.ResetUIProperty();
-            foreach (var item in listLayout)
+            foreach (var item in listNode)
             {
                 item.ResetUIProperty();
             }

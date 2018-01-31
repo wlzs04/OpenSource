@@ -26,6 +26,7 @@ namespace LLGameStudio.Game.UI
     /// </summary>
     abstract class IUINode : UIControl, IXMLClass
     {
+        public List<IUINode> listNode;
         protected double posX = 0;
         protected double posY = 0;
         protected double actualWidth = 0;
@@ -51,6 +52,8 @@ namespace LLGameStudio.Game.UI
             AddProperty(rotation);
             AddProperty(margin);
             AddProperty(clipByParent);
+
+            listNode = new List<IUINode>();
         }
 
         /// <summary>
@@ -85,17 +88,25 @@ namespace LLGameStudio.Game.UI
             double actualTop = margin.Value.Top;
             double actualRight = margin.Value.Right;
             double actualBottom = margin.Value.Bottom;
-            if (parentNode!=null)
+            if (parentNode != null)
             {
                 parentWidth = parentNode.actualWidth;
                 parentHeight = parentNode.actualHeight;
-                actualWidth = actualWidth <= 1 ? parentWidth * actualWidth : actualWidth;
-                actualHeight = actualHeight <= 1 ? parentHeight * actualHeight : actualHeight;
-                actualLeft = actualLeft <= 1 ? parentWidth * actualLeft : actualLeft;
-                actualTop = actualTop <= 1 ? parentHeight * actualTop : actualTop;
-                actualRight = actualRight <= 1 ? parentWidth * actualRight : actualRight;
-                actualBottom = actualBottom <= 1 ? parentHeight * actualBottom : actualBottom;
             }
+            else
+            {
+                parentWidth = GameManager.GameWidth;
+                parentHeight = GameManager.GameHeight;
+
+            }
+            actualWidth = actualWidth <= 1 ? parentWidth * actualWidth : actualWidth;
+            actualHeight = actualHeight <= 1 ? parentHeight * actualHeight : actualHeight;
+            actualLeft = actualLeft <= 1 ? parentWidth * actualLeft : actualLeft;
+            actualTop = actualTop <= 1 ? parentHeight * actualTop : actualTop;
+            actualRight = actualRight <= 1 ? parentWidth * actualRight : actualRight;
+            actualBottom = actualBottom <= 1 ? parentHeight * actualBottom : actualBottom;
+
+
             if ((anchorEnum.Value & GameUIAnchorEnum.Left)!=0)
             {
                 posX = actualLeft;
@@ -134,12 +145,14 @@ namespace LLGameStudio.Game.UI
         public virtual void AddNode(IUINode node)
         {
             node.parentNode = this;
+            listNode.Add(node);
             grid.Children.Add(node);
         }
 
         public virtual void RemoveNode(IUINode node)
         {
             node.parentNode = null;
+            listNode.Remove(node);
             grid.Children.Remove(node);
         }
 

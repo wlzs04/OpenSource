@@ -164,7 +164,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void DrawGame()
         {
-            DrawRectangle(0, 0, gameManager.GameWidth,gameManager.GameHeight);
+            DrawRectangle(0, 0, GameManager.GameWidth,GameManager.GameHeight);
         }
 
         /// <summary>

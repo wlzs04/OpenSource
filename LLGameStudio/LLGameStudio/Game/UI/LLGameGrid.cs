@@ -13,12 +13,6 @@ namespace LLGameStudio.Game.UI
     /// </summary>
     class LLGameGrid : IUINode
     {
-        List<IUINode> listNode;
-
-        public LLGameGrid()
-        {
-            listNode = new List<IUINode>();
-        }
 
         public override XElement ExportContentToXML()
         {
@@ -34,9 +28,9 @@ namespace LLGameStudio.Game.UI
                 switch (item.Name.ToString())
                 {
                     case "LLGameImage":
-                        listNode.Add(new LLGameImage());
+                        AddNode(new LLGameImage());
                         listNode[listNode.Count - 1].LoadContentFromXML(item);
-                        AddNode(listNode[listNode.Count - 1]);
+                        
                         break;
                     default:
                         break;

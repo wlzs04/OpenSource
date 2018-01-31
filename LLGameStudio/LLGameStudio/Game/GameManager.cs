@@ -26,14 +26,17 @@ namespace LLGameStudio.Game
         bool gameLoaded = false;
         StudioManager studioManager;
         Process gameProcess;
-        IUINode uiNode;
+        public IUINode uiNode;
+
+        static double gameWidth = 0;
+        static double gameHeight = 0;
 
         public string GamePath { get => gamePath; }
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
         public static string GameResourcePath { get => gameResourcePath; }
-        public int GameWidth { get => gameConfig.Width; }
-        public int GameHeight { get => gameConfig.Height; }
+        public static double GameWidth { get => gameWidth; }
+        public static double GameHeight { get => gameHeight; }
 
         public GameManager(StudioManager studioManager)
         {
@@ -143,6 +146,8 @@ namespace LLGameStudio.Game
         {
             gameConfig = new GameConfig();
             LLConvert.LoadContentFromXML(gameConfigFilePath, gameConfig);
+            gameWidth = gameConfig.Width;
+            gameHeight = gameConfig.Height;
         }
 
         /// <summary>

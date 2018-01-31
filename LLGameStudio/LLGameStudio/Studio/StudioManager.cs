@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using LLGameStudio.Game.UI;
 
 namespace LLGameStudio.Studio
 {
@@ -292,36 +293,30 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void TreeResetItem()
         {
-            treeViewUILayer.Items.Clear();
-            TreeViewItem tvi1 = new TreeViewItem();
-            tvi1.IsExpanded = true;
-            tvi1.Header = "layer1";
-            TreeViewItem tvi11 = new TreeViewItem();
-            tvi11.IsExpanded = true;
-            tvi11.Header = "layer11";
-            TreeViewItem tvi12 = new TreeViewItem();
-            tvi12.IsExpanded = true;
-            tvi12.Header = "layer12";
-            tvi1.Items.Add(tvi11);
-            tvi1.Items.Add(tvi12);
-            TreeViewItem tvi2 = new TreeViewItem();
-            tvi2.IsExpanded = true;
-            tvi2.Header = "layer2";
-            TreeViewItem tvi21 = new TreeViewItem();
-            tvi21.IsExpanded = true;
-            tvi21.Header = "layer21";
-            TreeViewItem tvi22 = new TreeViewItem();
-            tvi22.IsExpanded = true;
-            tvi22.Header = "layer22";
-            TreeViewItem tvi23 = new TreeViewItem();
-            tvi23.IsExpanded = true;
-            tvi23.Header = "layer23";
-            tvi2.Items.Add(tvi21);
-            tvi2.Items.Add(tvi22);
-            tvi2.Items.Add(tvi23);
+            if(gameManager.uiNode!=null)
+            {
+                treeViewUILayer.Items.Clear();
+                foreach (var item in gameManager.uiNode.listNode)
+                {
+                    TreeViewItem treeViewItem = new TreeViewItem();
+                    treeViewItem.Header = item.name.Value;
+                    treeViewItem.IsExpanded = true;
+                    AddNodeToTree(item, treeViewItem);
+                    treeViewUILayer.Items.Add(treeViewItem);
+                }
+            }
+        }
 
-            treeViewUILayer.Items.Add(tvi1);
-            treeViewUILayer.Items.Add(tvi2);
+        public void AddNodeToTree(IUINode node,TreeViewItem rootItem)
+        {
+            foreach (var item in node.listNode)
+            {
+                TreeViewItem treeViewItem = new TreeViewItem();
+                treeViewItem.Header = item.name.Value;
+                treeViewItem.IsExpanded = true;
+                AddNodeToTree(item, treeViewItem);
+                rootItem.Items.Add(treeViewItem);
+            }
         }
 
         /// <summary>
