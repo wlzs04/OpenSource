@@ -6,8 +6,10 @@
              xmlns:local="clr-namespace:LLGameStudio.Game.UI"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200" HorizontalAlignment="Left" VerticalAlignment="Top">
-
-    <Border x:Name="border" BorderThickness="1" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseLeftButtonDown="border_MouseLeftButtonDown" MouseLeftButtonUp="border_MouseLeftButtonUp">
-        <Grid x:Name="grid"/>
-    </Border>
+    <Grid>
+        <Grid x:Name="grid" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseLeftButtonDown="border_MouseLeftButtonDown" MouseLeftButtonUp="border_MouseLeftButtonUp">
+            <Grid x:Name="gridContent"/>
+        </Grid>
+        <Border x:Name="border" BorderThickness="1"/>
+    </Grid>
 </UserControl>

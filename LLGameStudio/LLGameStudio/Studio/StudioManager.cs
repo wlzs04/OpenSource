@@ -202,6 +202,32 @@ namespace LLGameStudio.Studio
             wrapPanelFileArea.ContextMenu = contextMenu;
         }
 
+        public void SelectUINodeToTree(IUINode currentUINode, TreeViewItem treeView =null)
+        {
+            if (treeView == null)
+            {
+                foreach (TreeViewItem item in treeViewUILayer.Items)
+                {
+                    if (item.Header.ToString() == currentUINode.name.Value)
+                    {
+                        item.IsSelected = true;
+                    }
+                    SelectUINodeToTree(currentUINode, item);
+                }
+            }
+            else
+            {
+                foreach (TreeViewItem item in treeView.Items)
+                {
+                    if (item.Header.ToString() == currentUINode.name.Value)
+                    {
+                        item.IsSelected = true;
+                    }
+                    SelectUINodeToTree(currentUINode, item);
+                }
+            }
+        }
+
         /// <summary>
         /// 添加新文件夹到当前文件夹下，文件夹命名规则：
         /// “新建文件夹”+数字，最多新建1000个。
@@ -301,9 +327,19 @@ namespace LLGameStudio.Studio
                     TreeViewItem treeViewItem = new TreeViewItem();
                     treeViewItem.Header = item.name.Value;
                     treeViewItem.IsExpanded = true;
+                    treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
                     AddNodeToTree(item, treeViewItem);
                     treeViewUILayer.Items.Add(treeViewItem);
                 }
+            }
+        }
+
+        private void SelectUINodeByTreeView(object sender, MouseButtonEventArgs e)
+        {
+            TreeViewItem treeViewItem = sender as TreeViewItem;
+            if(treeViewItem== treeViewUILayer.SelectedItem)
+            {
+                canvasManager.SelectUINodeByName(treeViewItem.Header.ToString());
             }
         }
 
@@ -314,6 +350,7 @@ namespace LLGameStudio.Studio
                 TreeViewItem treeViewItem = new TreeViewItem();
                 treeViewItem.Header = item.name.Value;
                 treeViewItem.IsExpanded = true;
+                treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
                 AddNodeToTree(item, treeViewItem);
                 rootItem.Items.Add(treeViewItem);
             }

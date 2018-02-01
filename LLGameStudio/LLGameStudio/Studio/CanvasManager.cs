@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -23,6 +24,7 @@ namespace LLGameStudio.Studio
         GameManager gameManager;
         List<IUINode> uiNodelist;
         Matrix transformMatrix = new Matrix();
+        IUINode currentUINode;
 
         public CanvasManager(Canvas canvas, GameManager gameManager)
         {
@@ -164,7 +166,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void DrawGame()
         {
-            DrawRectangle(0, 0, GameManager.GameWidth,GameManager.GameHeight);
+            //DrawRectangle(0, 0, GameManager.GameWidth,GameManager.GameHeight);
         }
 
         /// <summary>
@@ -201,52 +203,88 @@ namespace LLGameStudio.Studio
             brush = new SolidColorBrush(color);
         }
 
-        /// <summary>
-        /// 画线段
-        /// </summary>
-        /// <param name="startPoint">起点</param>
-        /// <param name="endPoint">终点</param>
-        /// <param name="thickness">线宽度，默认值是1</param>
-        public void DrawLine(Point startPoint,Point endPoint,double thickness=1)
-        {
-            LineGeometry lineGeometry = new LineGeometry(startPoint,endPoint);
+        ///// <summary>
+        ///// 画线段
+        ///// </summary>
+        ///// <param name="startPoint">起点</param>
+        ///// <param name="endPoint">终点</param>
+        ///// <param name="thickness">线宽度，默认值是1</param>
+        //public void DrawLine(Point startPoint,Point endPoint,double thickness=1)
+        //{
+        //    LineGeometry lineGeometry = new LineGeometry(startPoint,endPoint);
 
-            Path path = new Path();
-            path.Stroke = brush;
-            path.StrokeThickness = thickness;
-            path.Data = lineGeometry;
+        //    Path path = new Path();
+        //    path.Stroke = brush;
+        //    path.StrokeThickness = thickness;
+        //    path.Data = lineGeometry;
 
-            AddUINode(path);
-        }
+        //    AddUINode(path);
+        //}
 
-        public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
-        {
-            RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(startPoint, endPoint));
-            Path path = new Path();
-            path.Stroke = brush;
-            path.StrokeThickness = thickness;
-            path.Data = rectangleGeometry;
-            AddUINode(path);
-        }
+        //public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
+        //{
+        //    RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(startPoint, endPoint));
+        //    Path path = new Path();
+        //    path.Stroke = brush;
+        //    path.StrokeThickness = thickness;
+        //    path.Data = rectangleGeometry;
+        //    AddUINode(path);
+        //}
 
-        public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
-        {
-            RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(left, top, width, height));
-            Path path = new Path();
-            path.Stroke = brush;
-            path.StrokeThickness = thickness;
-            path.Data = rectangleGeometry;
-            AddUINode(path);
-        }
+        //public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
+        //{
+        //    RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(left, top, width, height));
+        //    Path path = new Path();
+        //    path.Stroke = brush;
+        //    path.StrokeThickness = thickness;
+        //    path.Data = rectangleGeometry;
+        //    AddUINode(path);
+        //}
         
         /// <summary>
         /// 添加UI节点
         /// </summary>
         /// <param name="path"></param>
-        public void AddUINode(UIElement ui)
+        public void AddRootUINode(UIElement ui)
         {
             canvas.Children.Add(ui);
+            LoadAllUINodeFromRootUINode(gameManager.uiNode);
         }
+
+        public void LoadAllUINodeFromRootUINode(IUINode rootUINode)
+        {
+            foreach (var item in rootUINode.listNode)
+            {
+                uiNodelist.Add(item);
+                item.MouseLeftButtonDown += UINodeMouseLeftButtonDown;
+                LoadAllUINodeFromRootUINode(item);
+            }
+        }
+
+        private void UINodeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(currentUINode!=null)
+            {
+                currentUINode.CancelSelectState();
+            }
+            currentUINode = sender as IUINode;
+            gameManager.SelectUINode(currentUINode);
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// 取消所有UI节点的选择状态。
+        /// </summary>
+        //private void CancelAllUINodeSelectState(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (!Keyboard.IsKeyDown(Key.LeftCtrl))
+        //    {
+        //        foreach (var item in uiNodelist)
+        //        {
+        //            item.CancelSelectState();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 画背景
@@ -257,6 +295,27 @@ namespace LLGameStudio.Studio
             {
                 DrawStandardGrid();
             }
+        }
+
+        public void SelectUINodeByName(string uiNodeName)
+        {
+            foreach (var item in uiNodelist)
+            {
+                if(item.name.Value== uiNodeName)
+                {
+                    SelectUINode(item);
+                }
+            }
+        }
+
+        public void SelectUINode(IUINode uiNode)
+        {
+            if (currentUINode != null)
+            {
+                currentUINode.CancelSelectState();
+            }
+            currentUINode = uiNode;
+            uiNode.SelectUINode();
         }
     }
 }

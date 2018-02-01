@@ -97,7 +97,6 @@ namespace LLGameStudio.Game.UI
             {
                 parentWidth = GameManager.GameWidth;
                 parentHeight = GameManager.GameHeight;
-
             }
             actualWidth = actualWidth <= 1 ? parentWidth * actualWidth : actualWidth;
             actualHeight = actualHeight <= 1 ? parentHeight * actualHeight : actualHeight;

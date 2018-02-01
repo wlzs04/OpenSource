@@ -53,8 +53,7 @@ namespace LLGameStudio.Game.UI
 
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            RemoveNode(llGameGrid);
-            canvasManager.AddUINode(llGameGrid);
+            canvasManager.AddRootUINode(this);
         }
 
         public override void ResetUIProperty()

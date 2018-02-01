@@ -189,6 +189,11 @@ namespace LLGameStudio.Game
         {
             uiNode.ResetUIProperty();
         }
+
+        public void SelectUINode(IUINode currentUINode)
+        {
+            studioManager.SelectUINodeToTree(currentUINode);
+        }
     }
 }
 

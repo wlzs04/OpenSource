@@ -70,7 +70,7 @@ namespace LLGameStudio.Game.UI
 
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            canvasManager.AddUINode(this);
+            canvasManager.AddRootUINode(this);
         }
 
         public override void ResetUIProperty()

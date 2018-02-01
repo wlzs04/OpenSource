@@ -37,13 +37,13 @@ namespace LLGameStudio.Game.UI
 
         public override void AddUINodeToCanvas(CanvasManager canvasManager)
         {
-            canvasManager.AddUINode(this);
+            //canvasManager.AddUINode(this);
         }
 
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();
-            grid.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + filePath.Value, UriKind.Relative)));
+            gridContent.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + filePath.Value, UriKind.Relative)));
         }
     }
 }

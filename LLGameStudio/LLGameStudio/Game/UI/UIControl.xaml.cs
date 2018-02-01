@@ -27,7 +27,7 @@ namespace LLGameStudio.Game.UI
         {
             InitializeComponent();
             border.BorderBrush = ThemeManager.GetBrushByName("borderUIColor");
-            border.Background = ThemeManager.GetBrushByName("backgroundUIAlphaColor");
+            grid.Background = ThemeManager.GetBrushByName("backgroundUIAlphaColor");
         }
 
         private void border_MouseEnter(object sender, MouseEventArgs e)
@@ -43,10 +43,16 @@ namespace LLGameStudio.Game.UI
             }
         }
 
+        public void SelectUINode()
+        {
+            Keyboard.Focus(this);
+            isSelect = true;
+            border.BorderBrush = ThemeManager.GetBrushByName("borderUISelectColor");
+        }
+
         private void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            CancelAllUINodeSelectState();
-            isSelect = true;
+            SelectUINode();
         }
 
         private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -61,7 +67,6 @@ namespace LLGameStudio.Game.UI
         {
             isSelect = false;
             border.BorderBrush = ThemeManager.GetBrushByName("borderUIColor");
-            border.Background = ThemeManager.GetBrushByName("backgroundAlphaColor");
         }
 
         /// <summary>
@@ -70,7 +75,7 @@ namespace LLGameStudio.Game.UI
         private void CancelAllUINodeSelectState()
         {
             Keyboard.Focus(this);
-            if (Keyboard.GetKeyStates(Key.LeftCtrl) != KeyStates.Down)
+            if (!Keyboard.IsKeyDown(Key.LeftCtrl))
             {
                 foreach (var item in ((Canvas)Parent).Children)
                 {
