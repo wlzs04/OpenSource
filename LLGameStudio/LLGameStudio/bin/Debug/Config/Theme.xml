@@ -20,4 +20,6 @@
   <borderUISelectColor>#FF00BFFF</borderUISelectColor>
   <!--UI控件背景颜色：透明度接近0-->
   <backgroundUIAlphaColor>#02252526</backgroundUIAlphaColor>
+  <!--UI选择控件四边节点背景颜色：常规-->
+  <backgroundSelectBorderColor>#FFFFFFFF</backgroundSelectBorderColor>
 </Theme>

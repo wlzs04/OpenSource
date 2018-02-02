@@ -30,12 +30,12 @@ namespace LLGameStudio.Game.UI
             grid.Background = ThemeManager.GetBrushByName("backgroundUIAlphaColor");
         }
 
-        private void border_MouseEnter(object sender, MouseEventArgs e)
+        private void grid_MouseEnter(object sender, MouseEventArgs e)
         {
             border.BorderBrush = ThemeManager.GetBrushByName("borderUIHoverColor");
         }
 
-        private void border_MouseLeave(object sender, MouseEventArgs e)
+        private void grid_MouseLeave(object sender, MouseEventArgs e)
         {
             if(!isSelect)
             {
@@ -50,15 +50,15 @@ namespace LLGameStudio.Game.UI
             border.BorderBrush = ThemeManager.GetBrushByName("borderUISelectColor");
         }
 
-        private void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            SelectUINode();
-        }
+        //private void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    SelectUINode();
+        //}
 
-        private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
+        //private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        //{
+
+        //}
 
         /// <summary>
         /// 取消选中状态。
@@ -67,24 +67,6 @@ namespace LLGameStudio.Game.UI
         {
             isSelect = false;
             border.BorderBrush = ThemeManager.GetBrushByName("borderUIColor");
-        }
-
-        /// <summary>
-        /// 取消所有UI节点的选择状态。
-        /// </summary>
-        private void CancelAllUINodeSelectState()
-        {
-            Keyboard.Focus(this);
-            if (!Keyboard.IsKeyDown(Key.LeftCtrl))
-            {
-                foreach (var item in ((Canvas)Parent).Children)
-                {
-                    if (item != this)
-                    {
-                        ((UIControl)item).CancelSelectState();
-                    }
-                }
-            }
         }
     }
 }

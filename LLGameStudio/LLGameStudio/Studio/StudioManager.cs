@@ -204,27 +204,29 @@ namespace LLGameStudio.Studio
 
         public void SelectUINodeToTree(IUINode currentUINode, TreeViewItem treeView =null)
         {
+            ItemCollection itemCollection;
             if (treeView == null)
             {
-                foreach (TreeViewItem item in treeViewUILayer.Items)
-                {
-                    if (item.Header.ToString() == currentUINode.name.Value)
-                    {
-                        item.IsSelected = true;
-                    }
-                    SelectUINodeToTree(currentUINode, item);
-                }
+                itemCollection = treeViewUILayer.Items;
             }
             else
             {
-                foreach (TreeViewItem item in treeView.Items)
+                itemCollection = treeView.Items;
+            }
+            foreach (TreeViewItem item in itemCollection)
+            {
+                if (item.Header.ToString() == currentUINode.name.Value)
                 {
-                    if (item.Header.ToString() == currentUINode.name.Value)
+                    item.IsSelected = true;
+                    TreeViewItem parentTreeViewItem = item.Parent as TreeViewItem;
+                    while (parentTreeViewItem != null)
                     {
-                        item.IsSelected = true;
+                        parentTreeViewItem.IsExpanded = true;
+                        parentTreeViewItem = parentTreeViewItem.Parent as TreeViewItem;
                     }
-                    SelectUINodeToTree(currentUINode, item);
+                    return;
                 }
+                SelectUINodeToTree(currentUINode, item);
             }
         }
 

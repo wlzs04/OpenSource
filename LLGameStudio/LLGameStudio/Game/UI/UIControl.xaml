@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200" HorizontalAlignment="Left" VerticalAlignment="Top">
     <Grid>
-        <Grid x:Name="grid" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseLeftButtonDown="border_MouseLeftButtonDown" MouseLeftButtonUp="border_MouseLeftButtonUp">
+        <Grid x:Name="grid" MouseEnter="grid_MouseEnter" MouseLeave="grid_MouseLeave">
             <Grid x:Name="gridContent"/>
         </Grid>
         <Border x:Name="border" BorderThickness="1"/>

@@ -55,7 +55,7 @@ namespace LLGameStudio.Game
                 System.Windows.MessageBox.Show("当前未加载游戏！");
                 return;
             }
-            studioManager.ShowStatusInfo("游戏：" + GameName + "正在启动。");
+            ShowStatusInfo("游戏：" + GameName + "正在启动。");
             gameProcess = Process.Start(gamePath + @"\" + gameConfig.GameName + ".exe");
             gameProcess.EnableRaisingEvents = true;
             var x=Dispatcher.CurrentDispatcher;
@@ -63,6 +63,11 @@ namespace LLGameStudio.Game
                 x.BeginInvoke(
                     new Action(() => { StopGame(); }), DispatcherPriority.Normal);
             };
+        }
+
+        public void ShowStatusInfo(string s)
+        {
+            studioManager.ShowStatusInfo(s);
         }
 
         /// <summary>
@@ -77,7 +82,7 @@ namespace LLGameStudio.Game
                     gameProcess.CloseMainWindow();
                     gameProcess.Close();
                 }
-                studioManager.ShowStatusInfo("游戏：" + GameName + "已停止。");
+                ShowStatusInfo("游戏：" + GameName + "已停止。");
             }
             gameProcess = null;
         }
@@ -183,6 +188,7 @@ namespace LLGameStudio.Game
         public void RenderToCanvas(CanvasManager canvasManager)
         {
             uiNode.AddUINodeToCanvas(canvasManager);
+            studioManager.TreeResetItem();
         }
 
         public void ResetUIProperty()

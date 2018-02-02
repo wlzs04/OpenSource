@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="LLGameStudio.Studio.Control.LLStudioSelectBorder"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LLGameStudio.Studio.Control"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <Grid>
+        <Border x:Name="border" BorderThickness="1"/>
+        <Grid x:Name="gridLeft" Background="White" HorizontalAlignment="Left" Width="5" Height="5" Cursor="SizeWE"/>
+        <Grid x:Name="gridTop" VerticalAlignment="Top" Width="5" Height="5" Background="White" Cursor="SizeNS"/>
+        <Grid x:Name="gridRight" Background="White" HorizontalAlignment="Right" Width="5" Height="5" Cursor="SizeWE"/>
+        <Grid x:Name="gridBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNS"/>
+    </Grid>
+</UserControl>

@@ -67,6 +67,7 @@
     <Compile Include="Common\Config\ThemeConfig.cs" />
     <Compile Include="Common\DataType.cs" />
     <Compile Include="Common\Helper\LLConvert.cs" />
+    <Compile Include="Common\Helper\LLMath.cs" />
     <Compile Include="Common\Standard.cs" />
     <Compile Include="Game\UI\IUINode.cs" />
     <Compile Include="Game\UI\IUIProperty.cs" />
@@ -85,6 +86,9 @@
     <Compile Include="Studio\CanvasManager.cs" />
     <Compile Include="Studio\Control\LLStudioButton.xaml.cs">
       <DependentUpon>LLStudioButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Studio\Control\LLStudioSelectBorder.xaml.cs">
+      <DependentUpon>LLStudioSelectBorder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Studio\ThemeManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
@@ -113,6 +117,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Studio\Control\LLStudioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioSelectBorder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

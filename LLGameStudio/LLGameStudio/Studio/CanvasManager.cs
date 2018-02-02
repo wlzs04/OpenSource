@@ -1,5 +1,6 @@
 ﻿using LLGameStudio.Game;
 using LLGameStudio.Game.UI;
+using LLGameStudio.Studio.Control;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,21 +20,42 @@ namespace LLGameStudio.Studio
         Brush brush;
         double canvasShowRate = 1;
         Point rootPosition;
-        Point leftTopPostion;
         bool isShowStandard = true;
         GameManager gameManager;
         List<IUINode> uiNodelist;
         Matrix transformMatrix = new Matrix();
         IUINode currentUINode;
+        Point lastMousePosition;
+        bool uiNodeStartMove = false;
+        LLStudioSelectBorder llStudioSelectBorder;
 
         public CanvasManager(Canvas canvas, GameManager gameManager)
         {
             this.canvas = canvas;
             this.gameManager = gameManager;
             brush = Brushes.White;
-            leftTopPostion = new Point(0, 0);
             rootPosition = new Point(canvas.ActualWidth / 10, canvas.ActualHeight / 10);
             uiNodelist = new List<IUINode>();
+
+            llStudioSelectBorder = new LLStudioSelectBorder();
+            llStudioSelectBorder.MouseLeftButtonDown += SelectNodeMouseLeftButtonDown;
+            //llStudioSelectBorder.MouseMove += UINodeMouseMove;
+            //llStudioSelectBorder.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
+            //item.MouseMove += UINodeMouseMove;
+            //item.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
+        }
+
+        public void ShowUINodeBorder()
+        {
+            canvas.Children.Remove(llStudioSelectBorder);
+            canvas.Children.Add(llStudioSelectBorder);
+            ResetUINodeBorderPosition();
+        }
+
+        public void ResetUINodeBorderPosition()
+        {
+            Point point = currentUINode .TranslatePoint(new Point(0, 0), canvas);
+            llStudioSelectBorder.SetRect(new Rect(point, new Size(currentUINode.width.Value* canvasShowRate, currentUINode.height.Value * canvasShowRate)));
         }
 
         /// <summary>
@@ -41,47 +63,47 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void DrawStandardGrid()
         {
-            //             SetBrushByColor(Color.FromArgb(125,255,255,255));
-            //             double spaceBetweenLine = 30 * canvasShowRate;
-            //             double width = canvas.ActualWidth;
-            //             double height = canvas.ActualHeight;
-            //             Point startPosition = new Point(0, 0);
-            //             if (rootPosition.X>0)
-            //             {
-            //                 startPosition.X = rootPosition.X % spaceBetweenLine;
-            //             }
-            //             else
-            //             {
-            //                 startPosition.X = spaceBetweenLine-(rootPosition.X % spaceBetweenLine);
-            //             }
-            //             if (rootPosition.Y > 0)
-            //             {
-            //                 startPosition.Y = rootPosition.Y % spaceBetweenLine;
-            //             }
-            //             else
-            //             {
-            //                 startPosition.Y = spaceBetweenLine - (rootPosition.Y % spaceBetweenLine);
-            //             }
-            //             //绘制横线
-            //             for (int i = 0; startPosition.Y+i*spaceBetweenLine<height; i++)
-            //             {
-            //                 DrawLine(new Point(0, startPosition.Y + i * spaceBetweenLine), new Point(width, startPosition.Y + i * spaceBetweenLine), 0.2);
-            //             }
-            //             //绘制竖线
-            //             for (int i = 0; startPosition.X + i * spaceBetweenLine < width; i++)
-            //             {
-            //                 DrawLine(new Point(startPosition.X + i * spaceBetweenLine, 0), new Point(startPosition.X + i * spaceBetweenLine, height), 0.2);
-            //             }
-            // 
-            //             //绘制窗体边缘线
-            //             if (rootPosition.Y > 0)
-            //             {
-            //                 DrawLine(new Point(0, rootPosition.Y), new Point(width, rootPosition.Y), 1);
-            //             }
-            //             if (rootPosition.X > 0)
-            //             {
-            //                 DrawLine(new Point(rootPosition.X, 0), new Point(rootPosition.X, height), 1);
-            //             }
+            SetBrushByColor(Color.FromArgb(125, 255, 255, 255));
+            double spaceBetweenLine = 30 * canvasShowRate;
+            double width = canvas.ActualWidth;
+            double height = canvas.ActualHeight;
+            Point startPosition = new Point(0, 0);
+            if (rootPosition.X > 0)
+            {
+                startPosition.X = rootPosition.X % spaceBetweenLine;
+            }
+            else
+            {
+                startPosition.X = spaceBetweenLine - (rootPosition.X % spaceBetweenLine);
+            }
+            if (rootPosition.Y > 0)
+            {
+                startPosition.Y = rootPosition.Y % spaceBetweenLine;
+            }
+            else
+            {
+                startPosition.Y = spaceBetweenLine - (rootPosition.Y % spaceBetweenLine);
+            }
+            //绘制横线
+            for (int i = 0; startPosition.Y + i * spaceBetweenLine < height; i++)
+            {
+                DrawLine(new Point(0, startPosition.Y + i * spaceBetweenLine), new Point(width, startPosition.Y + i * spaceBetweenLine), 0.2);
+            }
+            //绘制竖线
+            for (int i = 0; startPosition.X + i * spaceBetweenLine < width; i++)
+            {
+                DrawLine(new Point(startPosition.X + i * spaceBetweenLine, 0), new Point(startPosition.X + i * spaceBetweenLine, height), 0.2);
+            }
+
+            //绘制窗体边缘线
+            if (rootPosition.Y > 0)
+            {
+                DrawLine(new Point(0, rootPosition.Y), new Point(width, rootPosition.Y), 1);
+            }
+            if (rootPosition.X > 0)
+            {
+                DrawLine(new Point(rootPosition.X, 0), new Point(rootPosition.X, height), 1);
+            }
         }
 
         /// <summary>
@@ -148,7 +170,15 @@ namespace LLGameStudio.Studio
             MatrixTransform matrixTransform=new MatrixTransform(transformMatrix);
             foreach (UIElement item in canvas.Children)
             {
-                item.RenderTransform = matrixTransform;
+                if (item != llStudioSelectBorder)
+                {
+                    item.RenderTransform = matrixTransform;
+                }
+            }
+
+            if (currentUINode != null)
+            {
+                ResetUINodeBorderPosition();
             }
         }
 
@@ -166,7 +196,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void DrawGame()
         {
-            //DrawRectangle(0, 0, GameManager.GameWidth,GameManager.GameHeight);
+            DrawRectangle(0, 0, GameManager.GameWidth,GameManager.GameHeight);
         }
 
         /// <summary>
@@ -184,6 +214,8 @@ namespace LLGameStudio.Studio
         public void ClearAll()
         {
             canvas.Children.Clear();
+            transformMatrix = Matrix.Identity;
+            currentUINode = null;
         }
 
         /// <summary>
@@ -203,44 +235,49 @@ namespace LLGameStudio.Studio
             brush = new SolidColorBrush(color);
         }
 
-        ///// <summary>
-        ///// 画线段
-        ///// </summary>
-        ///// <param name="startPoint">起点</param>
-        ///// <param name="endPoint">终点</param>
-        ///// <param name="thickness">线宽度，默认值是1</param>
-        //public void DrawLine(Point startPoint,Point endPoint,double thickness=1)
-        //{
-        //    LineGeometry lineGeometry = new LineGeometry(startPoint,endPoint);
+        /// <summary>
+        /// 画线段
+        /// </summary>
+        /// <param name="startPoint">起点</param>
+        /// <param name="endPoint">终点</param>
+        /// <param name="thickness">线宽度，默认值是1</param>
+        public void DrawLine(Point startPoint, Point endPoint, double thickness = 1)
+        {
+            LineGeometry lineGeometry = new LineGeometry(startPoint, endPoint);
 
-        //    Path path = new Path();
-        //    path.Stroke = brush;
-        //    path.StrokeThickness = thickness;
-        //    path.Data = lineGeometry;
+            Path path = new Path();
+            path.Stroke = brush;
+            path.StrokeThickness = thickness;
+            path.Data = lineGeometry;
 
-        //    AddUINode(path);
-        //}
+            AddPath(path);
+        }
 
-        //public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
-        //{
-        //    RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(startPoint, endPoint));
-        //    Path path = new Path();
-        //    path.Stroke = brush;
-        //    path.StrokeThickness = thickness;
-        //    path.Data = rectangleGeometry;
-        //    AddUINode(path);
-        //}
+        public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
+        {
+            RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(startPoint, endPoint));
+            Path path = new Path();
+            path.Stroke = brush;
+            path.StrokeThickness = thickness;
+            path.Data = rectangleGeometry;
+            AddPath(path);
+        }
 
-        //public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
-        //{
-        //    RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(left, top, width, height));
-        //    Path path = new Path();
-        //    path.Stroke = brush;
-        //    path.StrokeThickness = thickness;
-        //    path.Data = rectangleGeometry;
-        //    AddUINode(path);
-        //}
-        
+        public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
+        {
+            RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(left, top, width, height));
+            Path path = new Path();
+            path.Stroke = brush;
+            path.StrokeThickness = thickness;
+            path.Data = rectangleGeometry;
+            AddPath(path);
+        }
+
+        public void AddPath(Path path)
+        {
+            canvas.Children.Add(path);
+        }
+
         /// <summary>
         /// 添加UI节点
         /// </summary>
@@ -257,34 +294,66 @@ namespace LLGameStudio.Studio
             {
                 uiNodelist.Add(item);
                 item.MouseLeftButtonDown += UINodeMouseLeftButtonDown;
+                item.MouseMove += UINodeMouseMove;
+                item.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
                 LoadAllUINodeFromRootUINode(item);
             }
         }
 
+        private void UINodeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            uiNodeStartMove = false;
+            if(currentUINode!=null)
+            {
+                lastMousePosition = e.GetPosition(canvas);
+                ResetUINodeBorderPosition();
+                currentUINode.ReleaseMouseCapture();
+            }
+            e.Handled = true;
+        }
+
+        private void UINodeMouseMove(object sender, MouseEventArgs e)
+        {
+            if(uiNodeStartMove)
+            {
+                Point currentMousePosition = e.GetPosition(canvas);
+
+                if (currentUINode != null)
+                {
+                    currentUINode.Move((currentMousePosition.X - lastMousePosition.X)/ canvasShowRate, (currentMousePosition.Y - lastMousePosition.Y) / canvasShowRate);
+                    //gameManager.ShowStatusInfo(currentUINode.margin.Value.ToString());
+                }
+
+                lastMousePosition = currentMousePosition;
+                ResetUINodeBorderPosition();
+            }
+        }
+
+        private void SelectNodeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            uiNodeStartMove = true;
+            lastMousePosition = e.GetPosition(canvas);
+            lastMousePosition = e.GetPosition(canvas);
+            uiNodeStartMove = true;
+            currentUINode.CaptureMouse();
+            //e.Handled = true;
+        }
+
         private void UINodeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if(currentUINode!=null)
+            if (currentUINode != null)
             {
                 currentUINode.CancelSelectState();
             }
             currentUINode = sender as IUINode;
             gameManager.SelectUINode(currentUINode);
+            currentUINode.SelectUINode();
+            lastMousePosition = e.GetPosition(canvas);
+            uiNodeStartMove = true;
+            currentUINode.CaptureMouse();
+            ShowUINodeBorder();
             e.Handled = true;
         }
-
-        /// <summary>
-        /// 取消所有UI节点的选择状态。
-        /// </summary>
-        //private void CancelAllUINodeSelectState(object sender, MouseButtonEventArgs e)
-        //{
-        //    if (!Keyboard.IsKeyDown(Key.LeftCtrl))
-        //    {
-        //        foreach (var item in uiNodelist)
-        //        {
-        //            item.CancelSelectState();
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// 画背景
@@ -316,6 +385,7 @@ namespace LLGameStudio.Studio
             }
             currentUINode = uiNode;
             uiNode.SelectUINode();
+            ShowUINodeBorder();
         }
     }
 }

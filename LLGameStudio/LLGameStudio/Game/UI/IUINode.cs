@@ -1,5 +1,6 @@
 ﻿using LLGameStudio.Common;
 using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.Helper;
 using LLGameStudio.Common.XML;
 using LLGameStudio.Studio;
 using System;
@@ -27,10 +28,10 @@ namespace LLGameStudio.Game.UI
     abstract class IUINode : UIControl, IXMLClass
     {
         public List<IUINode> listNode;
-        protected double posX = 0;
-        protected double posY = 0;
         protected double actualWidth = 0;
         protected double actualHeight = 0;
+        protected Rect actualMargin ;
+
         protected Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
 
         public Property.GameUIAnchorEnum anchorEnum = new Property.GameUIAnchorEnum();
@@ -98,43 +99,88 @@ namespace LLGameStudio.Game.UI
                 parentWidth = GameManager.GameWidth;
                 parentHeight = GameManager.GameHeight;
             }
-            actualWidth = actualWidth <= 1 ? parentWidth * actualWidth : actualWidth;
-            actualHeight = actualHeight <= 1 ? parentHeight * actualHeight : actualHeight;
-            actualLeft = actualLeft <= 1 ? parentWidth * actualLeft : actualLeft;
-            actualTop = actualTop <= 1 ? parentHeight * actualTop : actualTop;
-            actualRight = actualRight <= 1 ? parentWidth * actualRight : actualRight;
-            actualBottom = actualBottom <= 1 ? parentHeight * actualBottom : actualBottom;
-
-
+            actualWidth = LLMath.IsRange1To0(actualWidth)? parentWidth * actualWidth : actualWidth;
+            actualHeight = LLMath.IsRange1To0(actualHeight) ? parentHeight * actualHeight : actualHeight;
+            actualLeft = LLMath.IsRange1To0(actualLeft) ? parentWidth * actualLeft : actualLeft;
+            actualTop = LLMath.IsRange1To0(actualTop) ? parentHeight * actualTop : actualTop;
+            actualRight = LLMath.IsRange1To0(actualRight) ? parentWidth * actualRight : actualRight;
+            actualBottom = LLMath.IsRange1To0(actualBottom) ? parentHeight * actualBottom : actualBottom;
+            
             if ((anchorEnum.Value & GameUIAnchorEnum.Left)!=0)
             {
-                posX = actualLeft;
+                actualMargin.Left = actualLeft;
             }
             else if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
             {
-                posX =  parentWidth - actualRight - actualWidth;
+                actualMargin.Left =  parentWidth - actualRight - actualWidth;
             }
             else
             {
-                posX = (parentWidth - actualWidth) / 2;
+                actualMargin.Left = (parentWidth - actualWidth) / 2;
             }
             if((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
             {
-                posY = actualTop;
+                actualMargin.Top = actualTop;
             }
             else if((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
             {
-                posY =  + parentHeight- actualBottom - actualHeight;
+                actualMargin.Top =  + parentHeight- actualBottom - actualHeight;
             }
             else
             {
-                posY = (parentHeight - actualHeight) / 2;
+                actualMargin.Top = (parentHeight - actualHeight) / 2;
             }
 
             Width = actualWidth;
             Height = actualHeight;
-            Margin = new System.Windows.Thickness(posX,posY,0,0);
+            Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0,0);
             ClipToBounds = clipByParent.Value;
+        }
+
+        /// <summary>
+        /// 向X、Y方向移动的距离，锚点为中间时对应方向的移动无效。
+        /// 例：锚点为Top时，X方向的移动无效。
+        /// </summary>
+        public void Move(double x,double y)
+        {
+            actualMargin.Left += x;
+            actualMargin.Right -= x;
+            actualMargin.Top += y;
+            actualMargin.Bottom -= y;
+
+            margin.Value.Left += x;
+            if(LLMath.IsRange1To0(margin.Value.Left))
+            {
+                margin.Value.Left = LLMath.One;
+            }
+            margin.Value.Right -= x;
+            if (LLMath.IsRange1To0(margin.Value.Right))
+            {
+                margin.Value.Right = LLMath.One;
+            }
+            margin.Value.Top += y;
+            if (LLMath.IsRange1To0(margin.Value.Top))
+            {
+                margin.Value.Top = LLMath.One;
+            }
+            margin.Value.Bottom -= y;
+            if (LLMath.IsRange1To0(margin.Value.Bottom))
+            {
+                margin.Value.Bottom = LLMath.One;
+            }
+
+            Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0, 0);
+        }
+
+        /// <summary>
+        /// 移动到相对于父节点的指定位置,并将UI节点的锚点设为左上角。
+        /// </summary>
+        public void MoveTo(double x, double y)
+        {
+            anchorEnum.Value = GameUIAnchorEnum.Left_Top;
+            margin.Value.Left = x;
+            margin.Value.Top = y;
+            ResetUIProperty();
         }
 
         public abstract XElement ExportContentToXML();
