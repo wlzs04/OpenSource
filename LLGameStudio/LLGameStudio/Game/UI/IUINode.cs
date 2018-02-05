@@ -25,12 +25,12 @@ namespace LLGameStudio.Game.UI
     /// AddProperty()方法添加。如果只作为内部变量出现则不需要上述步骤。
     /// 2.内部统一使用WPF提供的Path进行绘制。
     /// </summary>
-    abstract class IUINode : UIControl, IXMLClass
+    public abstract class IUINode : UIControl, IXMLClass
     {
         public List<IUINode> listNode;
-        protected double actualWidth = 0;
-        protected double actualHeight = 0;
-        protected Rect actualMargin ;
+        public double actualWidth = 0;
+        public double actualHeight = 0;
+        public Rect actualMargin;
 
         protected Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
 
@@ -81,6 +81,9 @@ namespace LLGameStudio.Game.UI
         /// </summary>
         public virtual void ResetUIProperty()
         {
+            width.Value = Math.Abs(width.Value);
+            height.Value = Math.Abs(height.Value);
+
             double parentWidth = 0;
             double parentHeight = 0;
             actualWidth = width.Value;
@@ -130,11 +133,11 @@ namespace LLGameStudio.Game.UI
             {
                 actualMargin.Top = (parentHeight - actualHeight) / 2;
             }
-
+            actualWidth = Math.Abs(actualWidth);
+            actualHeight = Math.Abs(actualHeight);
             Width = actualWidth;
             Height = actualHeight;
             Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0,0);
-            ClipToBounds = clipByParent.Value;
         }
 
         /// <summary>
@@ -178,8 +181,40 @@ namespace LLGameStudio.Game.UI
         public void MoveTo(double x, double y)
         {
             anchorEnum.Value = GameUIAnchorEnum.Left_Top;
+            actualMargin.Left = x;
+            actualMargin.Top = y;
             margin.Value.Left = x;
-            margin.Value.Top = y;
+            if (LLMath.IsRange1To0(margin.Value.Left))
+            {
+                margin.Value.Left = LLMath.One;
+            }
+            margin.Value.Top = x;
+            if (LLMath.IsRange1To0(margin.Value.Top))
+            {
+                margin.Value.Top = LLMath.One;
+            }
+            Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0, 0);
+        }
+
+        public void SetWidth(double d)
+        {
+            actualWidth = d;
+            width.Value = d;
+            if (LLMath.IsRange1To0(width.Value))
+            {
+                width.Value = LLMath.One;
+            }
+            ResetUIProperty();
+        }
+
+        public void SetHeight(double d)
+        {
+            actualHeight = d;
+            height.Value = d;
+            if (LLMath.IsRange1To0(height.Value))
+            {
+                height.Value = LLMath.One;
+            }
             ResetUIProperty();
         }
 
@@ -214,42 +249,42 @@ namespace LLGameStudio.Game.UI
 
     namespace Property
     {
-        class Name : IUIProperty
+        public class Name : IUIProperty
         {
             public Name() : base("name", typeof(String), UIPropertyEnum.Common, "当前UI节点的名称。", "node") { }
         }
 
-        class Width : IUIProperty
+        public class Width : IUIProperty
         {
             public Width() : base("width", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的宽度。", "1") { }
         }
 
-        class Height : IUIProperty
+        public class Height : IUIProperty
         {
             public Height() : base("height", typeof(Double), UIPropertyEnum.Transform, "当前UI节点的高度。", "1") { }
         }
 
-        class GameUIAnchorEnum : IUIProperty
+        public class GameUIAnchorEnum : IUIProperty
         {
             public GameUIAnchorEnum() : base("anchorEnum", typeof(UI.GameUIAnchorEnum), UIPropertyEnum.Transform, "当前UI节点的节点锚点。", "Left_Top") { }
         }
 
-        class Rotation : IUIProperty
+        public class Rotation : IUIProperty
         {
             public Rotation() : base("rotation", typeof(Vector2), UIPropertyEnum.Transform, "当前UI节点的旋转。", "{0,0}") { }
         }
 
-        class FilePath : IUIProperty
+        public class FilePath : IUIProperty
         {
             public FilePath() : base("filePath", typeof(String), UIPropertyEnum.Common, "当前节点文件路径。", "") { }
         }
 
-        class Margin : IUIProperty
+        public class Margin : IUIProperty
         {
             public Margin() : base("margin", typeof(Rect), UIPropertyEnum.Common, "当前节点文件路径。", "{0}") { }
         }
 
-        class ClipByParent : IUIProperty
+        public class ClipByParent : IUIProperty
         {
             public ClipByParent() : base("clipByParent", typeof(bool), UIPropertyEnum.Common, "是否被父容器剪切。", "false") { }
         }

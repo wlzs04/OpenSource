@@ -13,7 +13,7 @@ namespace LLGameStudio.Common
         /// <summary>
         /// 二维向量，可以与字符串相互转换，格式为：“{x,y}”,例：“{2.4,5}”。
         /// </summary>
-        struct Vector2 : IConvertStringClass
+        public struct Vector2 : IConvertStringClass
         {
             double x,y;
 
@@ -41,7 +41,7 @@ namespace LLGameStudio.Common
             }
         }
 
-        struct Rect : IConvertStringClass
+        public struct Rect : IConvertStringClass
         {
             double left, top, right, bottom;
 

@@ -11,7 +11,7 @@ namespace LLGameStudio.Game.UI
     /// UI节点的属性类，有需要与XML文件交互或
     /// 需要与图形化界面关联的属性可以继承此类。
     /// </summary>
-    abstract class IUIProperty
+    public abstract class IUIProperty
     {
         protected string name;
         protected Type type;
@@ -51,7 +51,7 @@ namespace LLGameStudio.Game.UI
     /// <summary>
     /// UI属性枚举，用于描述属性属于哪一分类。
     /// </summary>
-    enum UIPropertyEnum
+    public enum UIPropertyEnum
     {
         Transform,//变换
         Common,//通用

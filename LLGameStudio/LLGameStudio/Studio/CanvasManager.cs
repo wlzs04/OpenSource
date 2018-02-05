@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 
 namespace LLGameStudio.Studio
 {
-    class CanvasManager
+    public class CanvasManager
     {
         Canvas canvas;
         Brush brush;
@@ -37,16 +37,12 @@ namespace LLGameStudio.Studio
             rootPosition = new Point(canvas.ActualWidth / 10, canvas.ActualHeight / 10);
             uiNodelist = new List<IUINode>();
 
-            llStudioSelectBorder = new LLStudioSelectBorder();
-            llStudioSelectBorder.MouseLeftButtonDown += SelectNodeMouseLeftButtonDown;
-            //llStudioSelectBorder.MouseMove += UINodeMouseMove;
-            //llStudioSelectBorder.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
-            //item.MouseMove += UINodeMouseMove;
-            //item.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
+            llStudioSelectBorder = new LLStudioSelectBorder(this);
         }
 
         public void ShowUINodeBorder()
         {
+            llStudioSelectBorder.SetSelectUINode(currentUINode);
             canvas.Children.Remove(llStudioSelectBorder);
             canvas.Children.Add(llStudioSelectBorder);
             ResetUINodeBorderPosition();
@@ -54,7 +50,8 @@ namespace LLGameStudio.Studio
 
         public void ResetUINodeBorderPosition()
         {
-            Point point = currentUINode .TranslatePoint(new Point(0, 0), canvas);
+            Point point = currentUINode.TranslatePoint(new Point(0, 0), canvas);
+           
             llStudioSelectBorder.SetRect(new Rect(point, new Size(currentUINode.width.Value* canvasShowRate, currentUINode.height.Value * canvasShowRate)));
         }
 
@@ -175,7 +172,7 @@ namespace LLGameStudio.Studio
                     item.RenderTransform = matrixTransform;
                 }
             }
-
+            canvas.UpdateLayout();
             if (currentUINode != null)
             {
                 ResetUINodeBorderPosition();
@@ -321,22 +318,11 @@ namespace LLGameStudio.Studio
                 if (currentUINode != null)
                 {
                     currentUINode.Move((currentMousePosition.X - lastMousePosition.X)/ canvasShowRate, (currentMousePosition.Y - lastMousePosition.Y) / canvasShowRate);
-                    //gameManager.ShowStatusInfo(currentUINode.margin.Value.ToString());
                 }
 
                 lastMousePosition = currentMousePosition;
                 ResetUINodeBorderPosition();
             }
-        }
-
-        private void SelectNodeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            uiNodeStartMove = true;
-            lastMousePosition = e.GetPosition(canvas);
-            lastMousePosition = e.GetPosition(canvas);
-            uiNodeStartMove = true;
-            currentUINode.CaptureMouse();
-            //e.Handled = true;
         }
 
         private void UINodeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -347,7 +333,7 @@ namespace LLGameStudio.Studio
             }
             currentUINode = sender as IUINode;
             gameManager.SelectUINode(currentUINode);
-            currentUINode.SelectUINode();
+            currentUINode.SetSelectState();
             lastMousePosition = e.GetPosition(canvas);
             uiNodeStartMove = true;
             currentUINode.CaptureMouse();
@@ -381,10 +367,14 @@ namespace LLGameStudio.Studio
         {
             if (currentUINode != null)
             {
+                if(currentUINode== uiNode)
+                {
+                    return;
+                }
                 currentUINode.CancelSelectState();
             }
             currentUINode = uiNode;
-            uiNode.SelectUINode();
+            uiNode.SetSelectState();
             ShowUINodeBorder();
         }
     }

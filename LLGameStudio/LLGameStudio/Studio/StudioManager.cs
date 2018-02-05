@@ -18,7 +18,7 @@ using LLGameStudio.Game.UI;
 
 namespace LLGameStudio.Studio
 {
-    class StudioManager
+    public class StudioManager
     {
         string studioConfigFilePath = @"Config\Studio.xml";
         string fileAreaDirectory="";

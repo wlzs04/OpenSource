@@ -43,7 +43,7 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public void SelectUINode()
+        public void SetSelectState()
         {
             Keyboard.Focus(this);
             isSelect = true;

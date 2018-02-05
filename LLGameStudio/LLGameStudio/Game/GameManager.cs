@@ -17,7 +17,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace LLGameStudio.Game
 {
-    class GameManager
+    public class GameManager
     {
         string gamePath = "";
         string gameConfigFilePath = "";

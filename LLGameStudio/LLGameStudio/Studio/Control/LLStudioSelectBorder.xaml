@@ -8,9 +8,9 @@
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
         <Border x:Name="border" BorderThickness="1"/>
-        <Grid x:Name="gridLeft" Background="White" HorizontalAlignment="Left" Width="5" Height="5" Cursor="SizeWE"/>
-        <Grid x:Name="gridTop" VerticalAlignment="Top" Width="5" Height="5" Background="White" Cursor="SizeNS"/>
-        <Grid x:Name="gridRight" Background="White" HorizontalAlignment="Right" Width="5" Height="5" Cursor="SizeWE"/>
-        <Grid x:Name="gridBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNS"/>
+        <Grid x:Name="gridLeft" Background="White" HorizontalAlignment="Left" Width="5" Height="5" Cursor="SizeWE" MouseLeftButtonDown="gridLeft_MouseLeftButtonDown" MouseLeftButtonUp="gridLeft_MouseLeftButtonUp" MouseMove="gridLeft_MouseMove"/>
+        <Grid x:Name="gridTop" VerticalAlignment="Top" Width="5" Height="5" Background="White" Cursor="SizeNS" MouseLeftButtonDown="gridTop_MouseLeftButtonDown" MouseLeftButtonUp="gridTop_MouseLeftButtonUp" MouseMove="gridTop_MouseMove"/>
+        <Grid x:Name="gridRight" Background="White" HorizontalAlignment="Right" Width="5" Height="5" Cursor="SizeWE" MouseLeftButtonDown="gridRight_MouseLeftButtonDown" MouseLeftButtonUp="gridRight_MouseLeftButtonUp" MouseMove="gridRight_MouseMove"/>
+        <Grid x:Name="gridBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNS" MouseLeftButtonDown="gridBottom_MouseLeftButtonDown" MouseLeftButtonUp="gridBottom_MouseLeftButtonUp" MouseMove="gridBottom_MouseMove"/>
     </Grid>
 </UserControl>
