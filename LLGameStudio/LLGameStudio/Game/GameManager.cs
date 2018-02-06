@@ -27,6 +27,7 @@ namespace LLGameStudio.Game
         StudioManager studioManager;
         Process gameProcess;
         public IUINode uiNode;
+        string currentUINodeFilePath;
 
         static double gameWidth = 0;
         static double gameHeight = 0;
@@ -141,7 +142,10 @@ namespace LLGameStudio.Game
         /// </summary>
         public void SaveGame()
         {
-            MessageBox.Show("未完成！");
+            if(uiNode!=null)
+            {
+                LLConvert.ExportContentToXML(currentUINodeFilePath, uiNode);
+            }
         }
 
         /// <summary>
@@ -168,6 +172,7 @@ namespace LLGameStudio.Game
             LLGameScene llGameScene = new LLGameScene();
             if (llGameScene.LoadContentFromFile(path))
             {
+                currentUINodeFilePath = path;
                 uiNode = llGameScene;
                 return true;
             }
@@ -179,6 +184,7 @@ namespace LLGameStudio.Game
             LLGameLayout llGameLayout = new LLGameLayout();
             if(llGameLayout.LoadContentFromFile(path))
             {
+                currentUINodeFilePath = path;
                 uiNode = llGameLayout;
                 return true;
             }

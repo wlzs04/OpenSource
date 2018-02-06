@@ -42,7 +42,7 @@ namespace LLGameStudio.Game.UI
         public Property.Margin margin = new Property.Margin();
         public Property.ClipByParent clipByParent = new Property.ClipByParent();
 
-        public IUINode parentNode=null;
+        public IUINode parentNode = null;
 
         public IUINode()
         {
@@ -71,7 +71,7 @@ namespace LLGameStudio.Game.UI
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public void SetProperty(string name,string value)
+        public void SetProperty(string name, string value)
         {
             propertyDictionary[name].Value = value;
         }
@@ -81,8 +81,8 @@ namespace LLGameStudio.Game.UI
         /// </summary>
         public virtual void ResetUIProperty()
         {
-            width.Value = Math.Abs(width.Value);
-            height.Value = Math.Abs(height.Value);
+            width.Value = width.Value;
+            height.Value = height.Value;
 
             double parentWidth = 0;
             double parentHeight = 0;
@@ -102,49 +102,47 @@ namespace LLGameStudio.Game.UI
                 parentWidth = GameManager.GameWidth;
                 parentHeight = GameManager.GameHeight;
             }
-            actualWidth = LLMath.IsRange1To0(actualWidth)? parentWidth * actualWidth : actualWidth;
+            actualWidth = LLMath.IsRange1To0(actualWidth) ? parentWidth * actualWidth : actualWidth;
             actualHeight = LLMath.IsRange1To0(actualHeight) ? parentHeight * actualHeight : actualHeight;
             actualLeft = LLMath.IsRange1To0(actualLeft) ? parentWidth * actualLeft : actualLeft;
             actualTop = LLMath.IsRange1To0(actualTop) ? parentHeight * actualTop : actualTop;
             actualRight = LLMath.IsRange1To0(actualRight) ? parentWidth * actualRight : actualRight;
             actualBottom = LLMath.IsRange1To0(actualBottom) ? parentHeight * actualBottom : actualBottom;
-            
-            if ((anchorEnum.Value & GameUIAnchorEnum.Left)!=0)
+
+            if ((anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
             {
                 actualMargin.Left = actualLeft;
             }
             else if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
             {
-                actualMargin.Left =  parentWidth - actualRight - actualWidth;
+                actualMargin.Left = parentWidth - actualRight - actualWidth;
             }
             else
             {
                 actualMargin.Left = (parentWidth - actualWidth) / 2;
             }
-            if((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
+            if ((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
             {
                 actualMargin.Top = actualTop;
             }
-            else if((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
             {
-                actualMargin.Top =  + parentHeight- actualBottom - actualHeight;
+                actualMargin.Top = +parentHeight - actualBottom - actualHeight;
             }
             else
             {
                 actualMargin.Top = (parentHeight - actualHeight) / 2;
             }
-            actualWidth = Math.Abs(actualWidth);
-            actualHeight = Math.Abs(actualHeight);
             Width = actualWidth;
             Height = actualHeight;
-            Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0,0);
+            Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0, 0);
         }
 
         /// <summary>
         /// 向X、Y方向移动的距离，锚点为中间时对应方向的移动无效。
         /// 例：锚点为Top时，X方向的移动无效。
         /// </summary>
-        public void Move(double x,double y)
+        public void Move(double x, double y)
         {
             actualMargin.Left += x;
             actualMargin.Right -= x;
@@ -152,7 +150,7 @@ namespace LLGameStudio.Game.UI
             actualMargin.Bottom -= y;
 
             margin.Value.Left += x;
-            if(LLMath.IsRange1To0(margin.Value.Left))
+            if (LLMath.IsRange1To0(margin.Value.Left))
             {
                 margin.Value.Left = LLMath.One;
             }
@@ -198,22 +196,38 @@ namespace LLGameStudio.Game.UI
 
         public void SetWidth(double d)
         {
-            actualWidth = d;
-            width.Value = d;
-            if (LLMath.IsRange1To0(width.Value))
+            if (d < 0)
             {
-                width.Value = LLMath.One;
+                actualWidth = 0;
+                width.Value = 0;
+            }
+            else
+            {
+                actualWidth = d;
+                width.Value = d;
+                if (LLMath.IsRange1To0(width.Value))
+                {
+                    width.Value = LLMath.One;
+                }
             }
             ResetUIProperty();
         }
 
         public void SetHeight(double d)
         {
-            actualHeight = d;
-            height.Value = d;
-            if (LLMath.IsRange1To0(height.Value))
+            if (d < 0)
             {
-                height.Value = LLMath.One;
+                actualHeight = 0;
+                height.Value = 0;
+            }
+            else
+            {
+                actualHeight = d;
+                height.Value = d;
+                if (LLMath.IsRange1To0(height.Value))
+                {
+                    height.Value = LLMath.One;
+                }
             }
             ResetUIProperty();
         }
@@ -221,7 +235,7 @@ namespace LLGameStudio.Game.UI
         public abstract XElement ExportContentToXML();
         public abstract void LoadContentFromXML(XElement element);
         public abstract void AddUINodeToCanvas(CanvasManager canvasManager);
-        
+
         public virtual void AddNode(IUINode node)
         {
             node.parentNode = this;
@@ -242,7 +256,84 @@ namespace LLGameStudio.Game.UI
             foreach (var item in propertyDictionary)
             {
                 xAttribute = element.Attribute(item.Key);
-                if (xAttribute != null) {item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
+                if (xAttribute != null) { item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
+            }
+        }
+
+        public void ChangeLeft(double d)
+        {
+            if ((anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
+            {
+                Move(d, 0);
+                SetWidth(actualWidth - d);
+            }
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
+            {
+                SetWidth(actualWidth - d);
+            }
+            else
+            {
+                Move(d, 0);
+                SetWidth(actualWidth - 2 * d);
+            }
+        }
+
+        public void ChangeRight(double d)
+        {
+            if ((anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
+            {
+                SetWidth(actualWidth + d);
+            }
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
+            {
+                margin.Value.Right -= d;
+                if (LLMath.IsRange1To0(margin.Value.Right))
+                {
+                    margin.Value.Right = LLMath.One;
+                }
+                actualMargin.Right -= d;
+                SetWidth(actualWidth + d);
+            }
+            else
+            {
+                Move(-d, 0);
+                SetWidth(actualWidth + 2 * d);
+            }
+        }
+
+        public void ChangeTop(double d)
+        {
+            if ((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
+            {
+                Move(0, d);
+                SetHeight(actualHeight - d);
+            }
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
+            {
+                SetHeight(actualHeight - d);
+            }
+            else
+            {
+                Move(0, d);
+                SetHeight(actualHeight - 2 * d);
+            }
+        }
+
+        public void ChangeBottom(double d)
+        {
+            if ((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
+            {
+                SetHeight(actualHeight + d);
+            }
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
+            {
+                Move(0, d);
+                SetHeight(actualHeight + d);
+            }
+            else
+            {
+                Move(0, d);
+                SetHeight(actualHeight + 2 * d);
             }
         }
     }

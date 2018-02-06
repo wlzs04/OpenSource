@@ -7,10 +7,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
-        <Border x:Name="border" BorderThickness="1"/>
-        <Grid x:Name="gridLeft" Background="White" HorizontalAlignment="Left" Width="5" Height="5" Cursor="SizeWE" MouseLeftButtonDown="gridLeft_MouseLeftButtonDown" MouseLeftButtonUp="gridLeft_MouseLeftButtonUp" MouseMove="gridLeft_MouseMove"/>
-        <Grid x:Name="gridTop" VerticalAlignment="Top" Width="5" Height="5" Background="White" Cursor="SizeNS" MouseLeftButtonDown="gridTop_MouseLeftButtonDown" MouseLeftButtonUp="gridTop_MouseLeftButtonUp" MouseMove="gridTop_MouseMove"/>
-        <Grid x:Name="gridRight" Background="White" HorizontalAlignment="Right" Width="5" Height="5" Cursor="SizeWE" MouseLeftButtonDown="gridRight_MouseLeftButtonDown" MouseLeftButtonUp="gridRight_MouseLeftButtonUp" MouseMove="gridRight_MouseMove"/>
-        <Grid x:Name="gridBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNS" MouseLeftButtonDown="gridBottom_MouseLeftButtonDown" MouseLeftButtonUp="gridBottom_MouseLeftButtonUp" MouseMove="gridBottom_MouseMove"/>
+        <Border x:Name="border" BorderThickness="1" Margin="2.5"/>
+        <Grid x:Name="gridLeft" Background="White" HorizontalAlignment="Left" Width="5" Height="5" Cursor="SizeWE" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridLeft_MouseLeftButtonUp" MouseMove="gridLeft_MouseMove"/>
+        <Grid x:Name="gridTop" VerticalAlignment="Top" Width="5" Height="5" Background="White" Cursor="SizeNS" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridTop_MouseLeftButtonUp" MouseMove="gridTop_MouseMove"/>
+        <Grid x:Name="gridRight" Background="White" HorizontalAlignment="Right" Width="5" Height="5" Cursor="SizeWE" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridRight_MouseLeftButtonUp" MouseMove="gridRight_MouseMove"/>
+        <Grid x:Name="gridBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNS" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridBottom_MouseLeftButtonUp" MouseMove="gridBottom_MouseMove"/>
+        <Grid x:Name="gridLeftTop" Width="5" Height="5" VerticalAlignment="Top" Background="White" Cursor="SizeNWSE" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridLeftTop_MouseLeftButtonUp" MouseMove="gridLeftTop_MouseMove" HorizontalAlignment="Left"/>
+        <Grid x:Name="gridRightTop" Width="5" Height="5" VerticalAlignment="Top" Background="White" Cursor="SizeNESW" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridRightTop_MouseLeftButtonUp" MouseMove="gridRightTop_MouseMove" HorizontalAlignment="Right"/>
+        <Grid x:Name="gridLeftBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNESW" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridLeftBottom_MouseLeftButtonUp" MouseMove="gridLeftBottom_MouseMove" HorizontalAlignment="Left"/>
+        <Grid x:Name="gridRightBottom" Width="5" Height="5" VerticalAlignment="Bottom" Background="White" Cursor="SizeNWSE" MouseLeftButtonDown="grid_MouseLeftButtonDown" MouseLeftButtonUp="gridRightBottom_MouseLeftButtonUp" MouseMove="gridRightBottom_MouseMove" HorizontalAlignment="Right"/>
     </Grid>
 </UserControl>

@@ -28,6 +28,9 @@ namespace LLGameStudio.Studio
         Point lastMousePosition;
         bool uiNodeStartMove = false;
         LLStudioSelectBorder llStudioSelectBorder;
+        bool rootUINodeIsScene = false;
+
+        public double CanvasShowRate { get => canvasShowRate; }
 
         public CanvasManager(Canvas canvas, GameManager gameManager)
         {
@@ -52,7 +55,7 @@ namespace LLGameStudio.Studio
         {
             Point point = currentUINode.TranslatePoint(new Point(0, 0), canvas);
            
-            llStudioSelectBorder.SetRect(new Rect(point, new Size(currentUINode.width.Value* canvasShowRate, currentUINode.height.Value * canvasShowRate)));
+            llStudioSelectBorder.SetRect(new Rect(point, new Size(currentUINode.actualWidth* canvasShowRate, currentUINode.actualHeight * canvasShowRate)));
         }
 
         /// <summary>
@@ -282,18 +285,22 @@ namespace LLGameStudio.Studio
         public void AddRootUINode(UIElement ui)
         {
             canvas.Children.Add(ui);
+            rootUINodeIsScene = ui is LLGameScene;
             LoadAllUINodeFromRootUINode(gameManager.uiNode);
         }
 
-        public void LoadAllUINodeFromRootUINode(IUINode rootUINode)
+        public void LoadAllUINodeFromRootUINode(IUINode rootUINode,bool addEvent=true)
         {
             foreach (var item in rootUINode.listNode)
             {
                 uiNodelist.Add(item);
-                item.MouseLeftButtonDown += UINodeMouseLeftButtonDown;
-                item.MouseMove += UINodeMouseMove;
-                item.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
-                LoadAllUINodeFromRootUINode(item);
+                if(addEvent)
+                {
+                    item.MouseLeftButtonDown += UINodeMouseLeftButtonDown;
+                    item.MouseMove += UINodeMouseMove;
+                    item.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
+                }
+                LoadAllUINodeFromRootUINode(item, addEvent && !(item is LLGameLayout));
             }
         }
 

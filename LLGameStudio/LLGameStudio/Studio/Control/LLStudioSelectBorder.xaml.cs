@@ -23,10 +23,7 @@ namespace LLGameStudio.Studio.Control
     public partial class LLStudioSelectBorder : UserControl
     {
         IUINode uiNode;
-        bool scaleLeft = false;
-        bool scaleTop = false;
-        bool scaleRight = false;
-        bool scaleBottom = false;
+        bool canScale = false;
         Point lastMousePosition;
         CanvasManager canvasManager;
 
@@ -43,101 +40,19 @@ namespace LLGameStudio.Studio.Control
 
         public void SetRect(Rect rect)
         {
-            Margin = new Thickness(rect.Left, rect.Top, 0, 0);
-            Width = rect.Width;
-            Height = rect.Height;
+            Margin = new Thickness(rect.Left-2.5, rect.Top-2.5, 0, 0);
+            Width = rect.Width+5;
+            Height = rect.Height + 5;
         }
 
         public void SetSelectUINode(IUINode uiNode)
         {
             this.uiNode = uiNode;
         }
-
-        private void ChangeLeft(double d)
+        
+        private void grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
-            {
-                uiNode.Move(d, 0);
-                uiNode.SetWidth(uiNode.width.Value-d);
-            }
-            else if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
-            {
-                uiNode.SetWidth(uiNode.width.Value - d);
-            }
-            else
-            {
-                uiNode.Move(d, 0);
-                uiNode.SetWidth(uiNode.width.Value - 2 * d);
-            }
-            canvasManager.ResetUINodeBorderPosition();
-        }
-
-        private void ChangeRight(double d)
-        {
-            if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
-            {
-                uiNode.SetWidth(uiNode.width.Value + d);
-            }
-            else if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Right) != 0)
-            {
-                uiNode.margin.Value.Right -= d;
-                if (LLMath.IsRange1To0(uiNode.margin.Value.Right))
-                {
-                    uiNode.margin.Value.Right = LLMath.One;
-                }
-                
-                uiNode.actualMargin.Right -= d;
-                uiNode.SetWidth(uiNode.width.Value + d);
-            }
-            else
-            {
-                uiNode.Move(-d, 0);
-                uiNode.SetWidth(uiNode.width.Value + 2 * d);
-            }
-            canvasManager.ResetUINodeBorderPosition();
-        }
-
-        private void ChangeTop(double d)
-        {
-            if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
-            {
-                uiNode.Move(0, d);
-                uiNode.SetHeight(uiNode.height.Value-d);
-            }
-            else if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
-            {
-                uiNode.SetHeight(uiNode.height.Value - d);
-            }
-            else
-            {
-                uiNode.Move(0, d);
-                uiNode.SetHeight(uiNode.height.Value - 2 * d);
-            }
-            canvasManager.ResetUINodeBorderPosition();
-        }
-
-        private void ChangeBottom(double d)
-        {
-            if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
-            {
-                uiNode.SetHeight(uiNode.height.Value + d);
-            }
-            else if ((uiNode.anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
-            {
-                uiNode.Move(0, d);
-                uiNode.SetHeight(uiNode.height.Value + d);
-            }
-            else
-            {
-                uiNode.Move(0, d);
-                uiNode.SetHeight(uiNode.height.Value + 2 * d);
-            }
-            canvasManager.ResetUINodeBorderPosition();
-        }
-
-        private void gridLeft_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            scaleLeft = true;
+            canScale = true;
             lastMousePosition = e.GetPosition((Canvas)Parent);
             ((Grid)sender).CaptureMouse();
             e.Handled = true;
@@ -146,36 +61,34 @@ namespace LLGameStudio.Studio.Control
         private void gridLeft_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
-            ChangeLeft(currentMousePosition.X - lastMousePosition.X);
+            double dtemp = currentMousePosition.X - lastMousePosition.X;
+            uiNode.ChangeLeft(dtemp/ canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
-            scaleLeft = false;
+            canScale = false;
             e.Handled = true;
         }
 
         private void gridLeft_MouseMove(object sender, MouseEventArgs e)
         {
-            if(scaleLeft)
+            if(canScale)
             {
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
-                ChangeLeft(currentMousePosition.X - lastMousePosition.X);
+                double dtemp = currentMousePosition.X - lastMousePosition.X;
+                uiNode.ChangeLeft(dtemp / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
                 lastMousePosition = currentMousePosition;
             }
         }
 
-        private void gridTop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            scaleTop = true;
-            lastMousePosition = e.GetPosition((Canvas)Parent);
-            ((Grid)sender).CaptureMouse();
-            e.Handled = true;
-        }
-
         private void gridTop_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            scaleTop = false;
+            canScale = false;
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
-            ChangeTop(currentMousePosition.Y- lastMousePosition.Y);
+            double dtemp = currentMousePosition.Y - lastMousePosition.Y;
+            uiNode.ChangeTop(dtemp / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             e.Handled = true;
@@ -183,28 +96,24 @@ namespace LLGameStudio.Studio.Control
 
         private void gridTop_MouseMove(object sender, MouseEventArgs e)
         {
-            if (scaleTop)
+            if (canScale)
             {
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
-                ChangeTop(currentMousePosition.Y - lastMousePosition.Y);
+                double dtemp = currentMousePosition.Y - lastMousePosition.Y;
+                uiNode.ChangeTop(dtemp / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
                 lastMousePosition = currentMousePosition;
                 
             }
         }
 
-        private void gridRight_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            scaleRight = true;
-            lastMousePosition = e.GetPosition((Canvas)Parent);
-            ((Grid)sender).CaptureMouse();
-            e.Handled = true;
-        }
-
         private void gridRight_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            scaleRight = false;
+            canScale = false;
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
-            ChangeRight(currentMousePosition.X - lastMousePosition.X);
+            double dtemp = currentMousePosition.X - lastMousePosition.X;
+            uiNode.ChangeRight(dtemp / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             e.Handled = true;
@@ -212,27 +121,23 @@ namespace LLGameStudio.Studio.Control
 
         private void gridRight_MouseMove(object sender, MouseEventArgs e)
         {
-            if (scaleRight)
+            if (canScale)
             {
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
-                ChangeRight(currentMousePosition.X - lastMousePosition.X);
+                double dtemp = currentMousePosition.X - lastMousePosition.X;
+                uiNode.ChangeRight(dtemp / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
                 lastMousePosition = currentMousePosition;
             }
         }
 
-        private void gridBottom_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            scaleBottom = true;
-            lastMousePosition = e.GetPosition((Canvas)Parent);
-            ((Grid)sender).CaptureMouse();
-            e.Handled = true;
-        }
-
         private void gridBottom_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            scaleBottom = false;
+            canScale = false;
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
-            ChangeBottom(currentMousePosition.Y - lastMousePosition.Y);
+            double dtemp = currentMousePosition.Y - lastMousePosition.Y;
+            uiNode.ChangeBottom(dtemp / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             e.Handled = true;
@@ -240,10 +145,124 @@ namespace LLGameStudio.Studio.Control
 
         private void gridBottom_MouseMove(object sender, MouseEventArgs e)
         {
-            if (scaleBottom)
+            if (canScale)
             {
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
-                ChangeBottom(currentMousePosition.Y - lastMousePosition.Y);
+                double dtemp = currentMousePosition.Y - lastMousePosition.Y;
+                uiNode.ChangeBottom(dtemp / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
+                lastMousePosition = currentMousePosition;
+            }
+        }
+
+        private void gridLeftTop_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Point currentMousePosition = e.GetPosition((Canvas)Parent);
+            double dtempX = currentMousePosition.X - lastMousePosition.X;
+            double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+            uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
+            uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
+            lastMousePosition = currentMousePosition;
+            ((Grid)sender).ReleaseMouseCapture();
+            canScale = false;
+            e.Handled = true;
+        }
+
+        private void gridLeftTop_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (canScale)
+            {
+                Point currentMousePosition = e.GetPosition((Canvas)Parent);
+                double dtempX = currentMousePosition.X - lastMousePosition.X;
+                double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+                uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
+                uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
+                lastMousePosition = currentMousePosition;
+            }
+        }
+
+        private void gridRightTop_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Point currentMousePosition = e.GetPosition((Canvas)Parent);
+            double dtempX = currentMousePosition.X - lastMousePosition.X;
+            double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+            uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
+            uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
+            lastMousePosition = currentMousePosition;
+            ((Grid)sender).ReleaseMouseCapture();
+            canScale = false;
+            e.Handled = true;
+        }
+
+        private void gridRightTop_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (canScale)
+            {
+                Point currentMousePosition = e.GetPosition((Canvas)Parent);
+                double dtempX = currentMousePosition.X - lastMousePosition.X;
+                double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+                uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
+                uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
+                lastMousePosition = currentMousePosition;
+            }
+        }
+
+        private void gridLeftBottom_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Point currentMousePosition = e.GetPosition((Canvas)Parent);
+            double dtempX = currentMousePosition.X - lastMousePosition.X;
+            double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+            uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
+            uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
+            lastMousePosition = currentMousePosition;
+            ((Grid)sender).ReleaseMouseCapture();
+            canScale = false;
+            e.Handled = true;
+        }
+
+        private void gridLeftBottom_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (canScale)
+            {
+                Point currentMousePosition = e.GetPosition((Canvas)Parent);
+                double dtempX = currentMousePosition.X - lastMousePosition.X;
+                double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+                uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
+                uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
+                lastMousePosition = currentMousePosition;
+            }
+        }
+
+        private void gridRightBottom_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Point currentMousePosition = e.GetPosition((Canvas)Parent);
+            double dtempX = currentMousePosition.X - lastMousePosition.X;
+            double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+            uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
+            uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
+            canvasManager.ResetUINodeBorderPosition();
+            lastMousePosition = currentMousePosition;
+            ((Grid)sender).ReleaseMouseCapture();
+            canScale = false;
+            e.Handled = true;
+        }
+
+        private void gridRightBottom_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (canScale)
+            {
+                Point currentMousePosition = e.GetPosition((Canvas)Parent);
+                double dtempX = currentMousePosition.X - lastMousePosition.X;
+                double dtempY = currentMousePosition.Y - lastMousePosition.Y;
+                uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
+                uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
+                canvasManager.ResetUINodeBorderPosition();
                 lastMousePosition = currentMousePosition;
             }
         }
