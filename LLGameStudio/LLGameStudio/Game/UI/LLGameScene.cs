@@ -31,17 +31,18 @@ namespace LLGameStudio.Game.UI
 
         public override XElement ExportContentToXML()
         {
-            return null;
+            XElement element = new XElement("LLGameScene");
+            ExportAttrbuteToXML(element);
+            foreach (var item in listNode)
+            {
+                element.Add(item.ExportContentToXML());
+            }
+            return element;
         }
 
         public override void LoadContentFromXML(XElement element)
         {
             LoadAttrbuteFromXML(element);
-
-            foreach (var item in element.Attributes())
-            {
-
-            }
 
             foreach (var item in element.Elements())
             {

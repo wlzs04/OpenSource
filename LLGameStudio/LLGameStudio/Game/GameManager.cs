@@ -144,7 +144,15 @@ namespace LLGameStudio.Game
         {
             if(uiNode!=null)
             {
-                LLConvert.ExportContentToXML(currentUINodeFilePath, uiNode);
+                if(uiNode is LLGameScene)
+                {
+                    LLConvert.ExportContentToXML(currentUINodeFilePath, uiNode);
+                }
+                else if(uiNode is LLGameLayout)
+                {
+                    LLGameLayout lLGameLayout = uiNode as LLGameLayout;
+                    LLConvert.ExportContentToXML(currentUINodeFilePath, lLGameLayout.llGameGrid);
+                }
             }
         }
 

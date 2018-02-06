@@ -13,7 +13,9 @@ namespace LLGameStudio.Game.UI
     {
         public override XElement ExportContentToXML()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("LLGameCanvas");
+            ExportAttrbuteToXML(element);
+            return element;
         }
 
         public override void LoadContentFromXML(XElement element)

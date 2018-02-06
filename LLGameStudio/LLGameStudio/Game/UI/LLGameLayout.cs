@@ -17,7 +17,7 @@ namespace LLGameStudio.Game.UI
     class LLGameLayout : IUINode
     {
         public Property.FilePath filePath = new Property.FilePath();
-        LLGameGrid llGameGrid;
+        public LLGameGrid llGameGrid;
 
         public LLGameLayout()
         {
@@ -40,9 +40,16 @@ namespace LLGameStudio.Game.UI
             return true;
         }
 
+        public XElement ExportGridContentToXML()
+        {
+            return llGameGrid.ExportContentToXML();
+        }
+
         public override XElement ExportContentToXML()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("LLGameLayout");
+            ExportAttrbuteToXML(element);
+            return element;
         }
 
         public override void LoadContentFromXML(XElement element)

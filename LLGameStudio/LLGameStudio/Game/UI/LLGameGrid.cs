@@ -13,10 +13,15 @@ namespace LLGameStudio.Game.UI
     /// </summary>
     class LLGameGrid : IUINode
     {
-
         public override XElement ExportContentToXML()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("LLGameGrid");
+            ExportAttrbuteToXML(element);
+            foreach (var item in listNode)
+            {
+                element.Add(item.ExportContentToXML());
+            }
+            return element;
         }
 
         public override void LoadContentFromXML(XElement element)

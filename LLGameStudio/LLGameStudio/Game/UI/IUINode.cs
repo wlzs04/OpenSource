@@ -46,12 +46,12 @@ namespace LLGameStudio.Game.UI
 
         public IUINode()
         {
+            AddProperty(name);
             AddProperty(anchorEnum);
             AddProperty(width);
             AddProperty(height);
-            AddProperty(name);
-            AddProperty(rotation);
             AddProperty(margin);
+            AddProperty(rotation);
             AddProperty(clipByParent);
 
             listNode = new List<IUINode>();
@@ -260,6 +260,17 @@ namespace LLGameStudio.Game.UI
             }
         }
 
+        protected void ExportAttrbuteToXML(XElement element)
+        {
+            foreach (var item in propertyDictionary)
+            {
+                if(!item.Value.IsDefault)
+                {
+                    element.Add(new XAttribute(item.Value.Name, item.Value.Value));
+                }
+            }
+        }
+
         public void ChangeLeft(double d)
         {
             if ((anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
@@ -377,7 +388,7 @@ namespace LLGameStudio.Game.UI
 
         public class ClipByParent : IUIProperty
         {
-            public ClipByParent() : base("clipByParent", typeof(bool), UIPropertyEnum.Common, "是否被父容器剪切。", "false") { }
+            public ClipByParent() : base("clipByParent", typeof(bool), UIPropertyEnum.Common, "是否被父容器剪切。", "False") { }
         }
     }
     
