@@ -21,6 +21,7 @@ namespace LLGameStudio.Game.UI
         protected dynamic value;
 
         public string Name { get => name; }
+        public Type Type { get => type; }
         public UIPropertyEnum PropertyEnum { get => propertyEnum; }
         public string HelpText { get => helpText;}
         public string DefaultValue { get => defaultValue;}

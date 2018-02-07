@@ -41,6 +41,10 @@ namespace LLGameStudio.Studio
         Grid gridUILayer;
         //UI控件区
         WrapPanel wrapPanelUIControlArea;
+        //属性编辑区
+        Grid gridPropertyEditorArea;
+        //属性编辑列表
+        LLStudioPropertyListBox listBoxPropertyEditor;
 
         public bool FullScreen { get => studioConfig.FullScreen;}
         public string FileAreaDirectory { get => fileAreaDirectory; }
@@ -60,6 +64,8 @@ namespace LLGameStudio.Studio
             labelStatusInfo = window.GetLabelStatusInfo();
             gridUILayer = window.GetGridUILayer();
             wrapPanelUIControlArea = window.GetWrapPanelUIControlArea();
+            gridPropertyEditorArea = window.GetGridPropertyEditorArea();
+
             LoadConfig();
             gameManager = new GameManager(this);
             ThemeManager.LoadTheme(studioConfig.Theme);
@@ -200,6 +206,15 @@ namespace LLGameStudio.Studio
             contextMenu.Items.Add(mi2);
 
             wrapPanelFileArea.ContextMenu = contextMenu;
+
+            //属性编辑区
+
+            listBoxPropertyEditor = new LLStudioPropertyListBox();
+            listBoxPropertyEditor.AddProperty(new Game.UI.Property.Name());
+            listBoxPropertyEditor.AddProperty(new Game.UI.Property.GameUIAnchorEnum());
+            listBoxPropertyEditor.AddProperty(new Game.UI.Property.Width());
+            listBoxPropertyEditor.AddProperty(new Game.UI.Property.Rotation());
+            gridPropertyEditorArea.Children.Add(listBoxPropertyEditor);
         }
 
         public void SelectUINodeToTree(IUINode currentUINode, TreeViewItem treeView =null)

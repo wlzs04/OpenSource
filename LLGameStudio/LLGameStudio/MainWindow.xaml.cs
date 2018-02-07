@@ -143,6 +143,15 @@ namespace LLGameStudio
             return wrapPanelUIControlArea;
         }
 
+        /// <summary>
+        /// 获得窗体属性编辑容器对象
+        /// </summary>
+        /// <returns></returns>
+        public Grid GetGridPropertyEditorArea()
+        {
+            return gridPropertyEditorArea;
+        }
+
         private void imageMinimizeWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.MinimizeStudio();

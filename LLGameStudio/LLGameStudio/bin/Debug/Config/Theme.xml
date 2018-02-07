@@ -22,4 +22,13 @@
   <backgroundUIAlphaColor>#02252526</backgroundUIAlphaColor>
   <!--UI选择控件四边节点背景颜色：常规-->
   <backgroundSelectBorderColor>#FFFFFFFF</backgroundSelectBorderColor>
+  
+  <!--文本框背景颜色：错误-->
+  <backgroundTextBoxErrorColor>#FFFF0000</backgroundTextBoxErrorColor>
+  <!--下拉框边框颜色：常规-->
+  <borderComboBoxColor>#FF646464</borderComboBoxColor>
+  <!--下拉框背景颜色：常规-->
+  <backgroundComboBoxColor>#FF646464</backgroundComboBoxColor>
+  <!--字体颜色：常规-->
+  <fontColor>#FFD5D5D5</fontColor>
 </Theme>

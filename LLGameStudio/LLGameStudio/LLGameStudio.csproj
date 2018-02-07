@@ -87,6 +87,12 @@
     <Compile Include="Studio\Control\LLStudioButton.xaml.cs">
       <DependentUpon>LLStudioButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Control\LLStudioNumberTextBox.xaml.cs">
+      <DependentUpon>LLStudioNumberTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Studio\Control\LLStudioPropertyListBox.xaml.cs">
+      <DependentUpon>LLStudioPropertyListBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Control\LLStudioSelectBorder.xaml.cs">
       <DependentUpon>LLStudioSelectBorder.xaml</DependentUpon>
     </Compile>
@@ -117,6 +123,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Studio\Control\LLStudioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioNumberTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioPropertyListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
