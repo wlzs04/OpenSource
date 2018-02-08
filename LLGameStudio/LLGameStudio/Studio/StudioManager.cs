@@ -210,10 +210,6 @@ namespace LLGameStudio.Studio
             //属性编辑区
 
             listBoxPropertyEditor = new LLStudioPropertyListBox();
-            listBoxPropertyEditor.AddProperty(new Game.UI.Property.Name());
-            listBoxPropertyEditor.AddProperty(new Game.UI.Property.GameUIAnchorEnum());
-            listBoxPropertyEditor.AddProperty(new Game.UI.Property.Width());
-            listBoxPropertyEditor.AddProperty(new Game.UI.Property.Rotation());
             gridPropertyEditorArea.Children.Add(listBoxPropertyEditor);
         }
 
@@ -242,6 +238,23 @@ namespace LLGameStudio.Studio
                     return;
                 }
                 SelectUINodeToTree(currentUINode, item);
+            }
+            ShowPropertyToEditorArea(currentUINode);
+        }
+
+        /// <summary>
+        /// 将当前节点的属性添加到属性编辑区。
+        /// </summary>
+        /// <param name="currentUINode"></param>
+        public void ShowPropertyToEditorArea(IUINode currentUINode)
+        {
+            if(currentUINode!=null)
+            {
+                listBoxPropertyEditor.ClearAllProperty();
+                foreach (var item in currentUINode.propertyDictionary)
+                {
+                    listBoxPropertyEditor.AddProperty(item.Value);
+                }
             }
         }
 
@@ -336,10 +349,10 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void TreeResetItem()
         {
-            if(gameManager.uiNode!=null)
+            if(gameManager.rootNode != null)
             {
                 treeViewUILayer.Items.Clear();
-                foreach (var item in gameManager.uiNode.listNode)
+                foreach (var item in gameManager.rootNode.listNode)
                 {
                     TreeViewItem treeViewItem = new TreeViewItem();
                     treeViewItem.Header = item.name.Value;
@@ -358,6 +371,7 @@ namespace LLGameStudio.Studio
             {
                 canvasManager.SelectUINodeByName(treeViewItem.Header.ToString());
             }
+            ShowPropertyToEditorArea(gameManager.currentSelectUINode);
         }
 
         public void AddNodeToTree(IUINode node,TreeViewItem rootItem)

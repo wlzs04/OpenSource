@@ -8,7 +8,7 @@
     <Grid>
         <Border x:Name="border" CornerRadius="4"  BorderThickness="0" Background="#FF646464">
             <TextBox x:Name="textBox" Margin="0" InputMethod.IsInputMethodEnabled="False" FontSize="14.667" Background="{x:Null}" Foreground="#FFF0F0F0" BorderBrush="{x:Null}"
-                 BorderThickness="0" PreviewTextInput="PreviewTextInput_CanAppendToDouble" PreviewKeyDown="PreviewKeyDown_ExceptSpace" Text="0"/>
+                 BorderThickness="0" PreviewTextInput="PreviewTextInput_CanAppendToDouble" PreviewKeyDown="PreviewKeyDown_ExceptSpace" Text="0" VerticalAlignment="Center"/>
         </Border>
     </Grid>
 </UserControl>

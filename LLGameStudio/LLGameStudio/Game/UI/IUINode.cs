@@ -32,7 +32,7 @@ namespace LLGameStudio.Game.UI
         public double actualHeight = 0;
         public Rect actualMargin;
 
-        protected Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
+        public Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
 
         public Property.GameUIAnchorEnum anchorEnum = new Property.GameUIAnchorEnum();
         public Property.Width width = new Property.Width();

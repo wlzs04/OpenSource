@@ -63,7 +63,8 @@ namespace LLGameStudio.Studio.Control
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
             double dtemp = currentMousePosition.X - lastMousePosition.X;
             uiNode.ChangeLeft(dtemp/ canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             canScale = false;
@@ -77,7 +78,7 @@ namespace LLGameStudio.Studio.Control
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
                 double dtemp = currentMousePosition.X - lastMousePosition.X;
                 uiNode.ChangeLeft(dtemp / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }
@@ -88,7 +89,8 @@ namespace LLGameStudio.Studio.Control
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
             double dtemp = currentMousePosition.Y - lastMousePosition.Y;
             uiNode.ChangeTop(dtemp / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             e.Handled = true;
@@ -101,7 +103,7 @@ namespace LLGameStudio.Studio.Control
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
                 double dtemp = currentMousePosition.Y - lastMousePosition.Y;
                 uiNode.ChangeTop(dtemp / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
                 
             }
@@ -113,7 +115,8 @@ namespace LLGameStudio.Studio.Control
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
             double dtemp = currentMousePosition.X - lastMousePosition.X;
             uiNode.ChangeRight(dtemp / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             e.Handled = true;
@@ -126,7 +129,7 @@ namespace LLGameStudio.Studio.Control
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
                 double dtemp = currentMousePosition.X - lastMousePosition.X;
                 uiNode.ChangeRight(dtemp / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }
@@ -137,7 +140,8 @@ namespace LLGameStudio.Studio.Control
             Point currentMousePosition = e.GetPosition((Canvas)Parent);
             double dtemp = currentMousePosition.Y - lastMousePosition.Y;
             uiNode.ChangeBottom(dtemp / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             e.Handled = true;
@@ -150,7 +154,7 @@ namespace LLGameStudio.Studio.Control
                 Point currentMousePosition = e.GetPosition((Canvas)Parent);
                 double dtemp = currentMousePosition.Y - lastMousePosition.Y;
                 uiNode.ChangeBottom(dtemp / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }
@@ -162,7 +166,8 @@ namespace LLGameStudio.Studio.Control
             double dtempY = currentMousePosition.Y - lastMousePosition.Y;
             uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
             uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             canScale = false;
@@ -178,7 +183,7 @@ namespace LLGameStudio.Studio.Control
                 double dtempY = currentMousePosition.Y - lastMousePosition.Y;
                 uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
                 uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }
@@ -190,7 +195,8 @@ namespace LLGameStudio.Studio.Control
             double dtempY = currentMousePosition.Y - lastMousePosition.Y;
             uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
             uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             canScale = false;
@@ -206,7 +212,7 @@ namespace LLGameStudio.Studio.Control
                 double dtempY = currentMousePosition.Y - lastMousePosition.Y;
                 uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
                 uiNode.ChangeTop(dtempY / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }
@@ -218,7 +224,8 @@ namespace LLGameStudio.Studio.Control
             double dtempY = currentMousePosition.Y - lastMousePosition.Y;
             uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
             uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             canScale = false;
@@ -234,7 +241,7 @@ namespace LLGameStudio.Studio.Control
                 double dtempY = currentMousePosition.Y - lastMousePosition.Y;
                 uiNode.ChangeLeft(dtempX / canvasManager.CanvasShowRate);
                 uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }
@@ -246,7 +253,8 @@ namespace LLGameStudio.Studio.Control
             double dtempY = currentMousePosition.Y - lastMousePosition.Y;
             uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
             uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
-            canvasManager.ResetUINodeBorderPosition();
+            canvasManager.ResetUINodeBorderPositionAndSize();
+            canvasManager.ReLoadTransformProperty();
             lastMousePosition = currentMousePosition;
             ((Grid)sender).ReleaseMouseCapture();
             canScale = false;
@@ -262,7 +270,7 @@ namespace LLGameStudio.Studio.Control
                 double dtempY = currentMousePosition.Y - lastMousePosition.Y;
                 uiNode.ChangeRight(dtempX / canvasManager.CanvasShowRate);
                 uiNode.ChangeBottom(dtempY / canvasManager.CanvasShowRate);
-                canvasManager.ResetUINodeBorderPosition();
+                canvasManager.ResetUINodeBorderPositionAndSize();
                 lastMousePosition = currentMousePosition;
             }
         }

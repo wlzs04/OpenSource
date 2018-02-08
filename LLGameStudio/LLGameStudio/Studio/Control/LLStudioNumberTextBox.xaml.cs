@@ -75,5 +75,10 @@ namespace LLGameStudio.Studio.Control
                 }
             }
         }
+
+        public void SetNumber(double d)
+        {
+            textBox.Text = d.ToString();
+        }
     }
 }

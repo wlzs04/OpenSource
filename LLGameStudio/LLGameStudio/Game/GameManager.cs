@@ -26,7 +26,8 @@ namespace LLGameStudio.Game
         bool gameLoaded = false;
         StudioManager studioManager;
         Process gameProcess;
-        public IUINode uiNode;
+        public IUINode rootNode;
+        public IUINode currentSelectUINode;
         string currentUINodeFilePath;
 
         static double gameWidth = 0;
@@ -43,6 +44,11 @@ namespace LLGameStudio.Game
         {
             this.studioManager = studioManager;
             gameConfig = new GameConfig();
+        }
+
+        public void ReLoadTransformProperty()
+        {
+            studioManager.ShowPropertyToEditorArea(currentSelectUINode);
         }
 
         /// <summary>
@@ -142,15 +148,15 @@ namespace LLGameStudio.Game
         /// </summary>
         public void SaveGame()
         {
-            if(uiNode!=null)
+            if(rootNode != null)
             {
-                if(uiNode is LLGameScene)
+                if(rootNode is LLGameScene)
                 {
-                    LLConvert.ExportContentToXML(currentUINodeFilePath, uiNode);
+                    LLConvert.ExportContentToXML(currentUINodeFilePath, rootNode);
                 }
-                else if(uiNode is LLGameLayout)
+                else if(rootNode is LLGameLayout)
                 {
-                    LLGameLayout lLGameLayout = uiNode as LLGameLayout;
+                    LLGameLayout lLGameLayout = rootNode as LLGameLayout;
                     LLConvert.ExportContentToXML(currentUINodeFilePath, lLGameLayout.llGameGrid);
                 }
             }
@@ -181,7 +187,8 @@ namespace LLGameStudio.Game
             if (llGameScene.LoadContentFromFile(path))
             {
                 currentUINodeFilePath = path;
-                uiNode = llGameScene;
+                rootNode = llGameScene;
+                currentSelectUINode = rootNode;
                 return true;
             }
             return false;
@@ -193,7 +200,8 @@ namespace LLGameStudio.Game
             if(llGameLayout.LoadContentFromFile(path))
             {
                 currentUINodeFilePath = path;
-                uiNode = llGameLayout;
+                rootNode = llGameLayout;
+                currentSelectUINode = rootNode;
                 return true;
             }
             return false;
@@ -201,17 +209,18 @@ namespace LLGameStudio.Game
 
         public void RenderToCanvas(CanvasManager canvasManager)
         {
-            uiNode.AddUINodeToCanvas(canvasManager);
+            rootNode.AddUINodeToCanvas(canvasManager);
             studioManager.TreeResetItem();
         }
 
         public void ResetUIProperty()
         {
-            uiNode.ResetUIProperty();
+            rootNode.ResetUIProperty();
         }
 
         public void SelectUINode(IUINode currentUINode)
         {
+            currentSelectUINode = currentUINode;
             studioManager.SelectUINodeToTree(currentUINode);
         }
     }

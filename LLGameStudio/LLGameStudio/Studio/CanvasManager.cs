@@ -43,18 +43,28 @@ namespace LLGameStudio.Studio
             llStudioSelectBorder = new LLStudioSelectBorder(this);
         }
 
+        public void ReLoadTransformProperty()
+        {
+            gameManager.ReLoadTransformProperty();
+        }
+
+        /// <summary>
+        /// 显示用来辅助节点移动的缩放的边框。
+        /// </summary>
         public void ShowUINodeBorder()
         {
             llStudioSelectBorder.SetSelectUINode(currentUINode);
             canvas.Children.Remove(llStudioSelectBorder);
             canvas.Children.Add(llStudioSelectBorder);
-            ResetUINodeBorderPosition();
+            ResetUINodeBorderPositionAndSize();
         }
 
-        public void ResetUINodeBorderPosition()
+        /// <summary>
+        /// 根据当前选中节点重新设置节点边框位置和大小。
+        /// </summary>
+        public void ResetUINodeBorderPositionAndSize()
         {
             Point point = currentUINode.TranslatePoint(new Point(0, 0), canvas);
-           
             llStudioSelectBorder.SetRect(new Rect(point, new Size(currentUINode.actualWidth* canvasShowRate, currentUINode.actualHeight * canvasShowRate)));
         }
 
@@ -178,7 +188,7 @@ namespace LLGameStudio.Studio
             canvas.UpdateLayout();
             if (currentUINode != null)
             {
-                ResetUINodeBorderPosition();
+                ResetUINodeBorderPositionAndSize();
             }
         }
 
@@ -286,7 +296,7 @@ namespace LLGameStudio.Studio
         {
             canvas.Children.Add(ui);
             rootUINodeIsScene = ui is LLGameScene;
-            LoadAllUINodeFromRootUINode(gameManager.uiNode);
+            LoadAllUINodeFromRootUINode(gameManager.rootNode);
         }
 
         public void LoadAllUINodeFromRootUINode(IUINode rootUINode,bool addEvent=true)
@@ -310,8 +320,9 @@ namespace LLGameStudio.Studio
             if(currentUINode!=null)
             {
                 lastMousePosition = e.GetPosition(canvas);
-                ResetUINodeBorderPosition();
+                ResetUINodeBorderPositionAndSize();
                 currentUINode.ReleaseMouseCapture();
+                gameManager.ReLoadTransformProperty();
             }
             e.Handled = true;
         }
@@ -328,7 +339,7 @@ namespace LLGameStudio.Studio
                 }
 
                 lastMousePosition = currentMousePosition;
-                ResetUINodeBorderPosition();
+                ResetUINodeBorderPositionAndSize();
             }
         }
 
@@ -365,6 +376,7 @@ namespace LLGameStudio.Studio
             {
                 if(item.name.Value== uiNodeName)
                 {
+                    gameManager.currentSelectUINode = item;
                     SelectUINode(item);
                 }
             }
