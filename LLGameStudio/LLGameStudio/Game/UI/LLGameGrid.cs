@@ -43,10 +43,6 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public override void AddUINodeToCanvas(CanvasManager canvasManager)
-        {
-        }
-
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();

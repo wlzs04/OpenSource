@@ -29,12 +29,13 @@ namespace LLGameStudio.Studio.Control
         double gridOtherHeight = 0;
 
         public IUINode currentUINode;
-        private CanvasManager canvasManager;
+        //private CanvasManager canvasManager;
+        private StudioManager studioManager;
 
-        public LLStudioPropertyListBox(CanvasManager canvasManager)
+        public LLStudioPropertyListBox(StudioManager studioManager)
         {
             InitializeComponent();
-            this.canvasManager = canvasManager;
+            this.studioManager = studioManager;
         }
 
         public void AddProperty(IUIProperty uiProperty)
@@ -58,7 +59,12 @@ namespace LLGameStudio.Studio.Control
         public void ChangText(string name,string value)
         {
             currentUINode.SetProperty(name, value);
-            canvasManager.ResetUINodeBorderPositionAndSize();
+            studioManager.ResetUINodeBorderPositionAndSize();
+        }
+
+        public void ChangeName()
+        {
+            studioManager.TreeResetItem();
         }
         
         public Grid GetPropertyGridByType(IUIProperty uiProperty,ref double gridHeight)
@@ -253,6 +259,10 @@ namespace LLGameStudio.Studio.Control
                 textBox.SetValue(Grid.ColumnProperty, 1);
                 textBox.SetText(uiProperty.Value);
                 textBox.ChangText += (s)=>{ ChangText(uiProperty.Name, s); };
+                if(uiProperty.Name=="name")
+                {
+                    textBox.ChangText += (s) => { ChangeName(); };
+                }
                 grid.Children.Add(textBox);
                 gridHeight += everyItemHeight;
             }

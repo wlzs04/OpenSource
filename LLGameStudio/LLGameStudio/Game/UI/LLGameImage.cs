@@ -37,11 +37,6 @@ namespace LLGameStudio.Game.UI
             LoadAttrbuteFromXML(element);
         }
 
-        public override void AddUINodeToCanvas(CanvasManager canvasManager)
-        {
-            //canvasManager.AddUINode(this);
-        }
-
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();

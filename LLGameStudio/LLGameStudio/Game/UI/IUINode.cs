@@ -195,6 +195,10 @@ namespace LLGameStudio.Game.UI
             Margin = new System.Windows.Thickness(actualMargin.Left, actualMargin.Top, 0, 0);
         }
 
+        /// <summary>
+        /// 设置宽度
+        /// </summary>
+        /// <param name="d"></param>
         public void SetWidth(double d)
         {
             if (d < 0)
@@ -214,6 +218,10 @@ namespace LLGameStudio.Game.UI
             ResetUIProperty();
         }
 
+        /// <summary>
+        /// 设置高度
+        /// </summary>
+        /// <param name="d"></param>
         public void SetHeight(double d)
         {
             if (d < 0)
@@ -235,8 +243,8 @@ namespace LLGameStudio.Game.UI
 
         public abstract XElement ExportContentToXML();
         public abstract void LoadContentFromXML(XElement element);
-        public abstract void AddUINodeToCanvas(CanvasManager canvasManager);
 
+        //向当前节点添加子节点
         public virtual void AddNode(IUINode node)
         {
             node.parentNode = this;
@@ -244,6 +252,7 @@ namespace LLGameStudio.Game.UI
             grid.Children.Add(node);
         }
 
+        //移除当前节点的指定子节点
         public virtual void RemoveNode(IUINode node)
         {
             node.parentNode = null;

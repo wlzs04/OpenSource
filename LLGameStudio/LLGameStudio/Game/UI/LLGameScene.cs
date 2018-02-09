@@ -49,29 +49,19 @@ namespace LLGameStudio.Game.UI
                 switch (item.Name.ToString())
                 {
                     case "LLGameBack":
-                        LLGameBack back = new LLGameBack();
-                        back.LoadContentFromXML(item);
-                        AddNode(back);
+                        AddNode(new LLGameBack());
                         break;
                     case "LLGameCanvas":
-                        LLGameCanvas canvas = new LLGameCanvas();
-                        canvas.LoadContentFromXML(item);
-                        AddNode(canvas);
+                        AddNode(new LLGameCanvas());
                         break;
                     case "LLGameLayout":
                         AddNode(new LLGameLayout());
-                        listNode[listNode.Count - 1].LoadContentFromXML(item);
-                        
                         break;
                     default:
                         break;
                 }
+                listNode[listNode.Count - 1].LoadContentFromXML(item);
             }
-        }
-
-        public override void AddUINodeToCanvas(CanvasManager canvasManager)
-        {
-            canvasManager.AddRootUINode(this);
         }
 
         public override void ResetUIProperty()

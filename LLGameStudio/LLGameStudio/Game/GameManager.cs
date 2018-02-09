@@ -209,7 +209,8 @@ namespace LLGameStudio.Game
 
         public void RenderToCanvas(CanvasManager canvasManager)
         {
-            rootNode.AddUINodeToCanvas(canvasManager);
+            canvasManager.AddRootUINode(rootNode);
+            //rootNode.AddUINodeToCanvas(canvasManager);
             studioManager.TreeResetItem();
         }
 

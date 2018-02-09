@@ -78,6 +78,11 @@ namespace LLGameStudio.Studio
             }
         }
 
+        public void ResetUINodeBorderPositionAndSize()
+        {
+            canvasManager.ResetUINodeBorderPositionAndSize();
+        }
+
         /// <summary>
         /// 从文件中加载编辑器配置。
         /// </summary>
@@ -209,10 +214,15 @@ namespace LLGameStudio.Studio
 
             //属性编辑区
 
-            listBoxPropertyEditor = new LLStudioPropertyListBox(canvasManager);
+            listBoxPropertyEditor = new LLStudioPropertyListBox(this);
             gridPropertyEditorArea.Children.Add(listBoxPropertyEditor);
         }
 
+        /// <summary>
+        /// 将选中的UI节点同步到UI层级树中。
+        /// </summary>
+        /// <param name="currentUINode"></param>
+        /// <param name="treeView"></param>
         public void SelectUINodeToTree(IUINode currentUINode, TreeViewItem treeView =null)
         {
             ItemCollection itemCollection;
@@ -359,12 +369,21 @@ namespace LLGameStudio.Studio
                     treeViewItem.Header = item.name.Value;
                     treeViewItem.IsExpanded = true;
                     treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
-                    AddNodeToTree(item, treeViewItem);
+                    if (!(item is LLGameLayout))
+                    {
+                        AddNodeToTree(item, treeViewItem);
+                    }
                     treeViewUILayer.Items.Add(treeViewItem);
                 }
             }
         }
 
+
+        /// <summary>
+        /// 通过双击UI层级树的某个节点来选中画布中的相应节点，并刷新属性编辑区。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectUINodeByTreeView(object sender, MouseButtonEventArgs e)
         {
             TreeViewItem treeViewItem = sender as TreeViewItem;
@@ -383,7 +402,10 @@ namespace LLGameStudio.Studio
                 treeViewItem.Header = item.name.Value;
                 treeViewItem.IsExpanded = true;
                 treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
-                AddNodeToTree(item, treeViewItem);
+                if(!(item is LLGameLayout))
+                {
+                    AddNodeToTree(item, treeViewItem);
+                }
                 rootItem.Items.Add(treeViewItem);
             }
         }

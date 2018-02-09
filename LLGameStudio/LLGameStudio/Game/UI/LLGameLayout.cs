@@ -58,11 +58,6 @@ namespace LLGameStudio.Game.UI
             LoadContentFromFile(filePath.Value);
         }
 
-        public override void AddUINodeToCanvas(CanvasManager canvasManager)
-        {
-            canvasManager.AddRootUINode(this);
-        }
-
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();
