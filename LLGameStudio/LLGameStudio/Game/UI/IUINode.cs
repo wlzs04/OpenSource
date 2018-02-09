@@ -71,9 +71,10 @@ namespace LLGameStudio.Game.UI
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public void SetProperty(string name, string value)
+        public virtual void SetProperty(string name, string value)
         {
             propertyDictionary[name].Value = value;
+            ResetUIProperty();
         }
 
         /// <summary>
@@ -383,7 +384,7 @@ namespace LLGameStudio.Game.UI
 
         public class Margin : IUIProperty
         {
-            public Margin() : base("margin", typeof(Rect), UIPropertyEnum.Common, "当前节点文件路径。", "{0}") { }
+            public Margin() : base("margin", typeof(Rect), UIPropertyEnum.Transform, "当前节点文件路径。", "{0}") { }
         }
 
         public class ClipByParent : IUIProperty

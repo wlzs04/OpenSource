@@ -7,8 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ScrollViewer Margin="0" VerticalScrollBarVisibility="Auto">
-            <ListBox Background="#FF191919" BorderThickness="0,0,3,0" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch">
+            <ListBox Background="#FF191919" BorderThickness="0,0,3,0" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <Expander Header="变换">
                     <Grid x:Name="gridTransform"/>
                 </Expander>
@@ -19,6 +18,5 @@
                     <Grid x:Name="gridOther"/>
                 </Expander>
             </ListBox>
-        </ScrollViewer>
     </Grid>
 </UserControl>

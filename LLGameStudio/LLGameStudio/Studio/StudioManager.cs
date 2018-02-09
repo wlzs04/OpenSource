@@ -209,7 +209,7 @@ namespace LLGameStudio.Studio
 
             //属性编辑区
 
-            listBoxPropertyEditor = new LLStudioPropertyListBox();
+            listBoxPropertyEditor = new LLStudioPropertyListBox(canvasManager);
             gridPropertyEditorArea.Children.Add(listBoxPropertyEditor);
         }
 
@@ -251,6 +251,7 @@ namespace LLGameStudio.Studio
             if(currentUINode!=null)
             {
                 listBoxPropertyEditor.ClearAllProperty();
+                listBoxPropertyEditor.currentUINode = currentUINode;
                 foreach (var item in currentUINode.propertyDictionary)
                 {
                     listBoxPropertyEditor.AddProperty(item.Value);

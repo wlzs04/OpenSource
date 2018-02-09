@@ -64,6 +64,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void ResetUINodeBorderPositionAndSize()
         {
+            canvas.UpdateLayout();
             Point point = currentUINode.TranslatePoint(new Point(0, 0), canvas);
             llStudioSelectBorder.SetRect(new Rect(point, new Size(currentUINode.actualWidth* canvasShowRate, currentUINode.actualHeight * canvasShowRate)));
         }
@@ -185,7 +186,6 @@ namespace LLGameStudio.Studio
                     item.RenderTransform = matrixTransform;
                 }
             }
-            canvas.UpdateLayout();
             if (currentUINode != null)
             {
                 ResetUINodeBorderPositionAndSize();

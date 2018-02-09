@@ -22,6 +22,8 @@ namespace LLGameStudio.Studio.Control
     {
         Color color_TextBox_Default = Color.FromArgb(0xFF, 0x64, 0x64, 0x64);//文本框默认颜色
         public float number = 0;
+        public delegate void ChangTextHandle(double d);
+        public ChangTextHandle ChangText;
 
         public LLStudioNumberTextBox()
         {
@@ -59,6 +61,7 @@ namespace LLGameStudio.Studio.Control
                 {
                     textBox.Text = number.ToString();
                     border.Background = new SolidColorBrush(color_TextBox_Default);
+                    ChangText?.Invoke(number);
                 }
                 else
                 {

@@ -28,9 +28,13 @@ namespace LLGameStudio.Studio.Control
         double gridCommonHeight = 0;
         double gridOtherHeight = 0;
 
-        public LLStudioPropertyListBox()
+        public IUINode currentUINode;
+        private CanvasManager canvasManager;
+
+        public LLStudioPropertyListBox(CanvasManager canvasManager)
         {
             InitializeComponent();
+            this.canvasManager = canvasManager;
         }
 
         public void AddProperty(IUIProperty uiProperty)
@@ -49,6 +53,12 @@ namespace LLGameStudio.Studio.Control
                 default:
                     break;
             }
+        }
+
+        public void ChangText(string name,string value)
+        {
+            currentUINode.SetProperty(name, value);
+            canvasManager.ResetUINodeBorderPositionAndSize();
         }
         
         public Grid GetPropertyGridByType(IUIProperty uiProperty,ref double gridHeight)
@@ -81,6 +91,7 @@ namespace LLGameStudio.Studio.Control
                 llStudioNumberTextBox.Padding = new Thickness(3);
                 llStudioNumberTextBox.SetValue(Grid.ColumnProperty, 1);
                 llStudioNumberTextBox.SetNumber(uiProperty.Value);
+                llStudioNumberTextBox.ChangText += (d) => { ChangText(uiProperty.Name,d.ToString()); };
                 grid.Children.Add(llStudioNumberTextBox);
                 gridHeight += everyItemHeight;
             }
@@ -97,7 +108,10 @@ namespace LLGameStudio.Studio.Control
                 {
                     comboBox.Items.Add(enumName);
                 }
-                
+                comboBox.SelectedItem = uiProperty.Value.ToString();
+
+                comboBox.SelectionChanged += (sender,o) => { ChangText(uiProperty.Name, comboBox.SelectedItem.ToString()); };
+
                 grid.Children.Add(comboBox);
                 gridHeight += everyItemHeight;
             }
@@ -109,6 +123,7 @@ namespace LLGameStudio.Studio.Control
                 checkBox.Padding = new Thickness(3);
                 checkBox.SetValue(Grid.ColumnProperty, 1);
                 checkBox.IsChecked = uiProperty.Value;
+                checkBox.Click += (sender, o) => { ChangText(uiProperty.Name, checkBox.IsChecked.ToString()); };
                 grid.Children.Add(checkBox);
                 gridHeight += everyItemHeight;
             }
@@ -127,16 +142,22 @@ namespace LLGameStudio.Studio.Control
                 columnDefinition22.MinWidth = everyItemNameMinWidth;
                 childGrid.ColumnDefinitions.Add(columnDefinition22);
 
+                //X
                 LLStudioNumberTextBox llStudioNumberTextBox1 = new LLStudioNumberTextBox();
+                llStudioNumberTextBox1.ToolTip = "X";
                 llStudioNumberTextBox1.Padding = new Thickness(3);
                 llStudioNumberTextBox1.SetValue(Grid.ColumnProperty, 0);
                 llStudioNumberTextBox1.SetNumber(uiProperty.Value.X);
+                llStudioNumberTextBox1.ChangText += (d) => {uiProperty.Value.X= d; ChangText(uiProperty.Name, uiProperty.Value.ToString()); };
                 childGrid.Children.Add(llStudioNumberTextBox1);
 
+                //Y
                 LLStudioNumberTextBox llStudioNumberTextBox2 = new LLStudioNumberTextBox();
+                llStudioNumberTextBox2.ToolTip = "Y";
                 llStudioNumberTextBox2.Padding = new Thickness(3);
                 llStudioNumberTextBox2.SetValue(Grid.ColumnProperty, 1);
                 llStudioNumberTextBox2.SetNumber(uiProperty.Value.Y);
+                llStudioNumberTextBox2.ChangText += (d) => { uiProperty.Value.Y = d; ChangText(uiProperty.Name, uiProperty.Value.ToString()); };
                 childGrid.Children.Add(llStudioNumberTextBox2);
 
                 grid.Children.Add(childGrid);
@@ -163,16 +184,22 @@ namespace LLGameStudio.Studio.Control
                 columnDefinition22.MinWidth = everyItemNameMinWidth;
                 grandchildGrid1.ColumnDefinitions.Add(columnDefinition22);
                 
+                //Left
                 LLStudioNumberTextBox llStudioNumberTextBox1 = new LLStudioNumberTextBox();
+                llStudioNumberTextBox1.ToolTip = "Left";
                 llStudioNumberTextBox1.Padding = new Thickness(3);
                 llStudioNumberTextBox1.SetValue(Grid.ColumnProperty, 0);
                 llStudioNumberTextBox1.SetNumber(uiProperty.Value.Left);
+                llStudioNumberTextBox1.ChangText+= (d) => { uiProperty.Value.Left = d; ChangText(uiProperty.Name, uiProperty.Value.ToString()); };
                 grandchildGrid1.Children.Add(llStudioNumberTextBox1);
 
+                //Top
                 LLStudioNumberTextBox llStudioNumberTextBox2 = new LLStudioNumberTextBox();
+                llStudioNumberTextBox2.ToolTip = "Top";
                 llStudioNumberTextBox2.Padding = new Thickness(3);
                 llStudioNumberTextBox2.SetValue(Grid.ColumnProperty, 1);
                 llStudioNumberTextBox2.SetNumber(uiProperty.Value.Top);
+                llStudioNumberTextBox2.ChangText += (d) => { uiProperty.Value.Top = d; ChangText(uiProperty.Name, uiProperty.Value.ToString()); };
                 grandchildGrid1.Children.Add(llStudioNumberTextBox2);
 
                 childGrid.Children.Add(grandchildGrid1);
@@ -192,16 +219,22 @@ namespace LLGameStudio.Studio.Control
                 columnDefinition24.MinWidth = everyItemNameMinWidth;
                 grandchildGrid2.ColumnDefinitions.Add(columnDefinition24);
                 
+                //Right
                 LLStudioNumberTextBox llStudioNumberTextBox3 = new LLStudioNumberTextBox();
+                llStudioNumberTextBox3.ToolTip = "Right";
                 llStudioNumberTextBox3.Padding = new Thickness(3);
                 llStudioNumberTextBox3.SetValue(Grid.ColumnProperty, 0);
                 llStudioNumberTextBox3.SetNumber(uiProperty.Value.Right);
+                llStudioNumberTextBox3.ChangText += (d) => { uiProperty.Value.Right = d; ChangText(uiProperty.Name, uiProperty.Value.ToString()); };
                 grandchildGrid2.Children.Add(llStudioNumberTextBox3);
 
+                //Bottom
                 LLStudioNumberTextBox llStudioNumberTextBox4 = new LLStudioNumberTextBox();
+                llStudioNumberTextBox4.ToolTip = "Bottom";
                 llStudioNumberTextBox4.Padding = new Thickness(3);
                 llStudioNumberTextBox4.SetValue(Grid.ColumnProperty, 1);
                 llStudioNumberTextBox4.SetNumber(uiProperty.Value.Bottom);
+                llStudioNumberTextBox4.ChangText += (d) => { uiProperty.Value.Bottom = d; ChangText(uiProperty.Name, uiProperty.Value.ToString()); };
                 grandchildGrid2.Children.Add(llStudioNumberTextBox4);
 
                 childGrid.Children.Add(grandchildGrid2);
@@ -211,14 +244,15 @@ namespace LLGameStudio.Studio.Control
             }
             else
             {
-                TextBox textBox = new TextBox();
+                LLStudioTextBox textBox = new LLStudioTextBox();
                 textBox.Padding = new Thickness(3);
                 textBox.VerticalAlignment = VerticalAlignment.Center;
                 textBox.FontSize = 15;
                 textBox.BorderBrush = null;
                 textBox.Background = ThemeManager.GetBrushByName("backgroundTextBoxColor");
                 textBox.SetValue(Grid.ColumnProperty, 1);
-                textBox.Text = uiProperty.Value;
+                textBox.SetText(uiProperty.Value);
+                textBox.ChangText += (s)=>{ ChangText(uiProperty.Name, s); };
                 grid.Children.Add(textBox);
                 gridHeight += everyItemHeight;
             }

@@ -26,16 +26,16 @@ namespace LLGameStudio.Game.UI
 
         public bool LoadContentFromFile(string path)
         {
+            llGameGrid = new LLGameGrid();
             if (!Path.IsPathRooted(path))
             {
-                filePath.Value = GameManager.GameResourcePath + @"\" + path;
+                LLConvert.LoadContentFromXML(GameManager.GameResourcePath + @"\" + path, llGameGrid);
+                
             }
             else
             {
-                filePath.Value = path;
+                LLConvert.LoadContentFromXML(path, llGameGrid);
             }
-            llGameGrid = new LLGameGrid();
-            LLConvert.LoadContentFromXML(filePath.Value, llGameGrid);
             AddNode(llGameGrid);
             return true;
         }
@@ -67,6 +67,16 @@ namespace LLGameStudio.Game.UI
         {
             base.ResetUIProperty();
             llGameGrid.ResetUIProperty();
+        }
+
+        public override void SetProperty(string name, string value)
+        {
+            if(name== filePath.Name)
+            {
+                RemoveNode(llGameGrid);
+                LoadContentFromFile(value);
+            }
+            base.SetProperty(name, value);
         }
     }
 }

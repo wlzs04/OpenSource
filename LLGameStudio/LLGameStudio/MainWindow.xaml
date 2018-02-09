@@ -98,7 +98,6 @@
                         <Grid HorizontalAlignment="Center">
                             <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
                             <Image x:Name="imageStopGame" HorizontalAlignment="Right" VerticalAlignment="Center" Source="bin/Debug/Resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
-
                         </Grid>
                         <Grid HorizontalAlignment="Right">
                             <Label x:Name="labelGameName"/>

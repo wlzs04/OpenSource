@@ -96,6 +96,9 @@
     <Compile Include="Studio\Control\LLStudioSelectBorder.xaml.cs">
       <DependentUpon>LLStudioSelectBorder.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Control\LLStudioTextBox.xaml.cs">
+      <DependentUpon>LLStudioTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\ThemeManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
     <Page Include="Game\UI\UIControl.xaml">
@@ -135,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Control\LLStudioSelectBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
