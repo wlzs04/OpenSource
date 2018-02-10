@@ -799,6 +799,7 @@ namespace LLGameStudio.Studio
                 ShowStatusInfo("打开游戏目录完成。");
                 LoadDirectoryToFileArea(GameManager.GameResourcePath);
                 studioConfig.LastGamePath = gameManager.GamePath;
+                window.SetGameName(gameManager.GameName);
             }
         }
 

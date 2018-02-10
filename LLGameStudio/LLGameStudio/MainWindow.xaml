@@ -97,7 +97,7 @@
                         <WrapPanel x:Name="wrapPanelMenuArea" HorizontalAlignment="Left"/>
                         <Grid x:Name="gridGameControlArea" HorizontalAlignment="Center"/>
                         <Grid HorizontalAlignment="Right">
-                            <Label x:Name="labelGameName"/>
+                            <Label x:Name="labelGameName" FontSize="16" FontWeight="Bold" FontStretch="Expanded"/>
                         </Grid>
                     </Grid>
                     <Grid Margin="0,50,0,0">
