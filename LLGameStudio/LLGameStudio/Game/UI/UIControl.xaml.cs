@@ -39,26 +39,19 @@ namespace LLGameStudio.Game.UI
         {
             if(!isSelect)
             {
-                CancelSelectState();
+                border.BorderBrush = ThemeManager.GetBrushByName("borderUIColor");
             }
         }
 
+        /// <summary>
+        /// 设置选中状态。
+        /// </summary>
         public void SetSelectState()
         {
             Keyboard.Focus(this);
             isSelect = true;
             border.BorderBrush = ThemeManager.GetBrushByName("borderUISelectColor");
         }
-
-        //private void border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    SelectUINode();
-        //}
-
-        //private void border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        //{
-
-        //}
 
         /// <summary>
         /// 取消选中状态。

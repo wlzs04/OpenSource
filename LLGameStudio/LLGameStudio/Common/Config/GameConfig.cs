@@ -22,7 +22,7 @@ namespace LLGameStudio.Common.Config
         public int Height { get => height; set => height = value; }
         public string GameName { get => gameName; set => gameName = value; }
         public bool FullScreen { get => fullScreen; set => fullScreen = value; }
-
+        
         public XElement ExportContentToXML()
         {
             XElement element = new XElement("Studio");

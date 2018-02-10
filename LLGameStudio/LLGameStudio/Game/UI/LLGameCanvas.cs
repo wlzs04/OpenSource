@@ -21,11 +21,6 @@ namespace LLGameStudio.Game.UI
         public override void LoadContentFromXML(XElement element)
         {
             LoadAttrbuteFromXML(element);
-
-            foreach (var item in element.Attributes())
-            {
-
-            }
         }
     }
 }

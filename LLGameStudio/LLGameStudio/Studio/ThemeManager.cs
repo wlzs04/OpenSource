@@ -17,6 +17,10 @@ namespace LLGameStudio.Studio
         static Dictionary<string, Brush> dictionaryNameBrush;
         static ThemeConfig themeConfig;
 
+        /// <summary>
+        /// 加载编辑器主题。
+        /// </summary>
+        /// <param name="themeName"></param>
         public static void LoadTheme(string themeName)
         {
             themeConfig = new ThemeConfig();
@@ -24,6 +28,11 @@ namespace LLGameStudio.Studio
             dictionaryNameBrush = new Dictionary<string, Brush>();
         }
 
+        /// <summary>
+        /// 通过画刷名字获得画刷。
+        /// </summary>
+        /// <param name="brushName"></param>
+        /// <returns></returns>
         public static Brush GetBrushByName(string brushName)
         {
             if (!dictionaryNameBrush.ContainsKey(brushName))

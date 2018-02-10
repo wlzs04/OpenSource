@@ -46,6 +46,9 @@ namespace LLGameStudio.Game
             gameConfig = new GameConfig();
         }
 
+        /// <summary>
+        /// 让studioManager重新从当前选中的UI节点中加载属性到属性编辑区。
+        /// </summary>
         public void ReLoadTransformProperty()
         {
             studioManager.ShowPropertyToEditorArea(currentSelectUINode);
@@ -72,6 +75,10 @@ namespace LLGameStudio.Game
             };
         }
 
+        /// <summary>
+        /// 显示当前状态到编辑器到状态显示区。
+        /// </summary>
+        /// <param name="s"></param>
         public void ShowStatusInfo(string s)
         {
             studioManager.ShowStatusInfo(s);
@@ -181,36 +188,45 @@ namespace LLGameStudio.Game
             LLConvert.ExportContentToXML(gameConfigFilePath, gameConfig);
         }
 
-        public bool OpenScene(string path)
+        /// <summary>
+        /// 打开文件。
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public bool OpenFile(string path)
         {
-            LLGameScene llGameScene = new LLGameScene();
-            if (llGameScene.LoadContentFromFile(path))
+            IUINode uiNode=null;
+            bool canOpen = false;
+            switch (System.IO.Path.GetExtension(path))
+            {
+                case ".layout":
+                    uiNode = new LLGameLayout();
+                    canOpen=((LLGameLayout)uiNode).LoadContentFromFile(path);
+                    break;
+                case ".scene":
+                    uiNode = new LLGameScene();
+                    canOpen=((LLGameScene)uiNode).LoadContentFromFile(path);
+                    break;
+                default:
+                    break;
+            }
+            if (canOpen)
             {
                 currentUINodeFilePath = path;
-                rootNode = llGameScene;
+                rootNode = uiNode;
                 currentSelectUINode = rootNode;
                 return true;
             }
             return false;
         }
-
-        public bool OpenLayout(string path)
-        {
-            LLGameLayout llGameLayout = new LLGameLayout();
-            if(llGameLayout.LoadContentFromFile(path))
-            {
-                currentUINodeFilePath = path;
-                rootNode = llGameLayout;
-                currentSelectUINode = rootNode;
-                return true;
-            }
-            return false;
-        }
-
+        
+        /// <summary>
+        /// 将当前UI根节点添加到画布管理器上并重新设置
+        /// </summary>
+        /// <param name="canvasManager"></param>
         public void RenderToCanvas(CanvasManager canvasManager)
         {
             canvasManager.AddRootUINode(rootNode);
-            //rootNode.AddUINodeToCanvas(canvasManager);
             studioManager.TreeResetItem();
         }
 
@@ -219,6 +235,10 @@ namespace LLGameStudio.Game
             rootNode.ResetUIProperty();
         }
 
+        /// <summary>
+        /// 选择此节点并同步到UI层级树。
+        /// </summary>
+        /// <param name="currentUINode"></param>
         public void SelectUINode(IUINode currentUINode)
         {
             currentSelectUINode = currentUINode;

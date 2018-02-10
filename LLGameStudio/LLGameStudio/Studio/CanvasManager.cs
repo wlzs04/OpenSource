@@ -43,6 +43,9 @@ namespace LLGameStudio.Studio
             llStudioSelectBorder = new LLStudioSelectBorder(this);
         }
 
+        /// <summary>
+        /// 在画布中对当前UI节点进行位置变换操作后，通过此方法同步属性编辑器相应属性。
+        /// </summary>
         public void ReLoadTransformProperty()
         {
             gameManager.ReLoadTransformProperty();
@@ -263,6 +266,12 @@ namespace LLGameStudio.Studio
             AddPath(path);
         }
 
+        /// <summary>
+        /// 画矩形，给定起始点和终点坐标。
+        /// </summary>
+        /// <param name="startPoint"></param>
+        /// <param name="endPoint"></param>
+        /// <param name="thickness"></param>
         public void DrawRectangle(Point startPoint, Point endPoint, double thickness = 1)
         {
             RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(startPoint, endPoint));
@@ -273,6 +282,14 @@ namespace LLGameStudio.Studio
             AddPath(path);
         }
 
+        /// <summary>
+        /// 画矩形，给定起始点left、top值和矩形的宽高。
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="thickness"></param>
         public void DrawRectangle(double left, double top, double width, double height, double thickness = 1)
         {
             RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(left, top, width, height));
@@ -283,6 +300,10 @@ namespace LLGameStudio.Studio
             AddPath(path);
         }
 
+        /// <summary>
+        /// 添加形状（Path）到画布上。
+        /// </summary>
+        /// <param name="path"></param>
         public void AddPath(Path path)
         {
             canvas.Children.Add(path);
@@ -299,6 +320,11 @@ namespace LLGameStudio.Studio
             LoadAllUINodeFromRootUINode(gameManager.rootNode);
         }
 
+        /// <summary>
+        /// 从根节点中加载子节点，并为子节点添加鼠标点击等事件。
+        /// </summary>
+        /// <param name="rootUINode"></param>
+        /// <param name="addEvent"></param>
         public void LoadAllUINodeFromRootUINode(IUINode rootUINode,bool addEvent=true)
         {
             foreach (var item in rootUINode.listNode)
@@ -314,6 +340,11 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// UI节点的鼠标左键弹起事件，控制UI节点的移动。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UINodeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             uiNodeStartMove = false;
@@ -327,6 +358,11 @@ namespace LLGameStudio.Studio
             e.Handled = true;
         }
 
+        /// <summary>
+        /// UI节点的鼠标移动事件，控制UI节点的移动。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UINodeMouseMove(object sender, MouseEventArgs e)
         {
             if(uiNodeStartMove)
@@ -343,6 +379,11 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// UI节点的鼠标左键点击事件，控制UI节点的选中状态。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UINodeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (currentUINode != null)
@@ -370,6 +411,10 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 通过UI节点的Name属性选择UI节点，此方法即将修改。
+        /// </summary>
+        /// <param name="uiNodeName"></param>
         public void SelectUINodeByName(string uiNodeName)
         {
             foreach (var item in uiNodelist)
@@ -382,6 +427,10 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 控制UI节点的选中。
+        /// </summary>
+        /// <param name="uiNode"></param>
         public void SelectUINode(IUINode uiNode)
         {
             if (currentUINode != null)

@@ -249,6 +249,7 @@ namespace LLGameStudio
             RestoreCanvas();
         }
 
+        //恢复画布缩放比例和移动。
         public void RestoreCanvas()
         {
             studioManager.RestoreCanvas();

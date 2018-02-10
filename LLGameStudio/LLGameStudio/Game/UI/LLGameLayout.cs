@@ -30,7 +30,6 @@ namespace LLGameStudio.Game.UI
             if (!Path.IsPathRooted(path))
             {
                 LLConvert.LoadContentFromXML(GameManager.GameResourcePath + @"\" + path, llGameGrid);
-                
             }
             else
             {

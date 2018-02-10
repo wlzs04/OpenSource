@@ -12,7 +12,16 @@ namespace LLGameStudio.Common.XML
     /// </summary>
     interface IXMLClass
     {
+        /// <summary>
+        /// 从XML节点中加载内容
+        /// </summary>
+        /// <param name="element"></param>
         void LoadContentFromXML(XElement element);
+
+        /// <summary>
+        /// 将内容导出为XML节点。
+        /// </summary>
+        /// <returns></returns>
         XElement ExportContentToXML();
     }
 }

@@ -244,7 +244,10 @@ namespace LLGameStudio.Game.UI
         public abstract XElement ExportContentToXML();
         public abstract void LoadContentFromXML(XElement element);
 
-        //向当前节点添加子节点
+        /// <summary>
+        /// 向当前节点添加子节点
+        /// </summary>
+        /// <param name="node"></param>
         public virtual void AddNode(IUINode node)
         {
             node.parentNode = this;
@@ -252,7 +255,10 @@ namespace LLGameStudio.Game.UI
             grid.Children.Add(node);
         }
 
-        //移除当前节点的指定子节点
+        /// <summary>
+        /// 移除当前节点的指定子节点
+        /// </summary>
+        /// <param name="node"></param>
         public virtual void RemoveNode(IUINode node)
         {
             node.parentNode = null;
@@ -260,6 +266,10 @@ namespace LLGameStudio.Game.UI
             grid.Children.Remove(node);
         }
 
+        /// <summary>
+        /// 从XML节点中加载属性。
+        /// </summary>
+        /// <param name="element"></param>
         protected void LoadAttrbuteFromXML(XElement element)
         {
             XAttribute xAttribute;
@@ -270,6 +280,10 @@ namespace LLGameStudio.Game.UI
             }
         }
 
+        /// <summary>
+        /// 导出属性到XML节点。
+        /// </summary>
+        /// <param name="element"></param>
         protected void ExportAttrbuteToXML(XElement element)
         {
             foreach (var item in propertyDictionary)
@@ -281,6 +295,10 @@ namespace LLGameStudio.Game.UI
             }
         }
 
+        /// <summary>
+        /// 控制UI节点的左边界的移动。
+        /// </summary>
+        /// <param name="d"></param>
         public void ChangeLeft(double d)
         {
             if ((anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
@@ -299,6 +317,32 @@ namespace LLGameStudio.Game.UI
             }
         }
 
+        /// <summary>
+        /// 控制UI节点的上边界的移动。
+        /// </summary>
+        /// <param name="d"></param>
+        public void ChangeTop(double d)
+        {
+            if ((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
+            {
+                Move(0, d);
+                SetHeight(actualHeight - d);
+            }
+            else if ((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
+            {
+                SetHeight(actualHeight - d);
+            }
+            else
+            {
+                Move(0, d);
+                SetHeight(actualHeight - 2 * d);
+            }
+        }
+
+        /// <summary>
+        /// 控制UI节点的右边界的移动。
+        /// </summary>
+        /// <param name="d"></param>
         public void ChangeRight(double d)
         {
             if ((anchorEnum.Value & GameUIAnchorEnum.Left) != 0)
@@ -322,24 +366,10 @@ namespace LLGameStudio.Game.UI
             }
         }
 
-        public void ChangeTop(double d)
-        {
-            if ((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)
-            {
-                Move(0, d);
-                SetHeight(actualHeight - d);
-            }
-            else if ((anchorEnum.Value & GameUIAnchorEnum.Bottom) != 0)
-            {
-                SetHeight(actualHeight - d);
-            }
-            else
-            {
-                Move(0, d);
-                SetHeight(actualHeight - 2 * d);
-            }
-        }
-
+        /// <summary>
+        /// 控制UI节点的下边界的移动。
+        /// </summary>
+        /// <param name="d"></param>
         public void ChangeBottom(double d)
         {
             if ((anchorEnum.Value & GameUIAnchorEnum.Top) != 0)

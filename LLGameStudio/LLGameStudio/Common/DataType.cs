@@ -41,6 +41,9 @@ namespace LLGameStudio.Common
             }
         }
 
+        /// <summary>
+        /// 矩形，可以与字符串相互转换，格式为：“{left,top,right,down}”,例：“{0}”,“{0,0}”，“{0,0,0,0}”。
+        /// </summary>
         public struct Rect : IConvertStringClass
         {
             double left, top, right, bottom;

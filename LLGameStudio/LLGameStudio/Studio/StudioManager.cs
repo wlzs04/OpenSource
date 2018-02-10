@@ -378,7 +378,6 @@ namespace LLGameStudio.Studio
             }
         }
 
-
         /// <summary>
         /// 通过双击UI层级树的某个节点来选中画布中的相应节点，并刷新属性编辑区。
         /// </summary>
@@ -394,6 +393,11 @@ namespace LLGameStudio.Studio
             ShowPropertyToEditorArea(gameManager.currentSelectUINode);
         }
 
+        /// <summary>
+        /// 添加UI节点到UI层级树中。
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="rootItem"></param>
         public void AddNodeToTree(IUINode node,TreeViewItem rootItem)
         {
             foreach (var item in node.listNode)
@@ -670,11 +674,8 @@ namespace LLGameStudio.Studio
             switch (item.GetFileEnum())
             {
                 case GameUIFileEnum.Scene:
-                    OpenScene();
-                    window.RestoreCanvas();
-                    break;
                 case GameUIFileEnum.Layout:
-                    OpenLayout();
+                    OpenFile();
                     window.RestoreCanvas();
                     break;
                 case GameUIFileEnum.Unknown:
@@ -817,11 +818,11 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 打开场景文件
+        /// 打开文件。
         /// </summary>
-        public void OpenScene()
+        public void OpenFile()
         {
-            if (gameManager.OpenScene(currentFilePath))
+            if (gameManager.OpenFile(currentFilePath))
             {
                 canvasManager.ClearAll();
                 gameManager.RenderToCanvas(canvasManager);
@@ -829,27 +830,10 @@ namespace LLGameStudio.Studio
             }
             else
             {
-                ShowStatusInfo("场景文件打开失败。");
+                ShowStatusInfo("文件打开失败。");
             }
         }
-
-        /// <summary>
-        /// 打开布局文件
-        /// </summary>
-        public void OpenLayout()
-        {
-            if (gameManager.OpenLayout(currentFilePath))
-            {
-                canvasManager.ClearAll();
-                gameManager.RenderToCanvas(canvasManager);
-                gameManager.ResetUIProperty();
-            }
-            else
-            {
-                ShowStatusInfo("布局文件打开失败。");
-            }
-        }
-
+        
         /// <summary>
         /// 调用Win32窗体处理方法，使用前需要hook到主窗体上。
         /// 当前方法只用于帮助无边框wpf窗体调整边界大小。
