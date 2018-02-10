@@ -95,10 +95,7 @@
                 <Grid Margin="0,30" Background="#FFFD9B0E">
                     <Grid x:Name="gridToolArea" Background="#FFF57115" VerticalAlignment="Top" Height="50">
                         <WrapPanel x:Name="wrapPanelMenuArea" HorizontalAlignment="Left"/>
-                        <Grid HorizontalAlignment="Center">
-                            <Image x:Name="imageStartGame" HorizontalAlignment="Left" VerticalAlignment="Center" Source="bin/Debug/Resource/开始.png" ToolTip="开始游戏" MouseLeftButtonDown="imageStartGame_MouseLeftButtonDown"/>
-                            <Image x:Name="imageStopGame" HorizontalAlignment="Right" VerticalAlignment="Center" Source="bin/Debug/Resource/结束.png" ToolTip="结束游戏" Margin="100,0,0,0" MouseLeftButtonDown="imageStopGame_MouseLeftButtonDown"/>
-                        </Grid>
+                        <Grid x:Name="gridGameControlArea" HorizontalAlignment="Center"/>
                         <Grid HorizontalAlignment="Right">
                             <Label x:Name="labelGameName"/>
                         </Grid>

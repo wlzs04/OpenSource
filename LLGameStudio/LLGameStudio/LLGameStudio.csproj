@@ -99,6 +99,7 @@
     <Compile Include="Studio\Control\LLStudioTextBox.xaml.cs">
       <DependentUpon>LLStudioTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Control\LLStudioTreeViewItem.cs" />
     <Compile Include="Studio\ThemeManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
     <Page Include="Game\UI\UIControl.xaml">

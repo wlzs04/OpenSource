@@ -108,6 +108,15 @@ namespace LLGameStudio
         }
 
         /// <summary>
+        /// 获得窗体游戏控制菜单容器对象
+        /// </summary>
+        /// <returns></returns>
+        public Grid GetGridGameControlArea()
+        {
+            return gridGameControlArea;
+        }
+
+        /// <summary>
         /// 获得窗体文件容器对象
         /// </summary>
         /// <returns></returns>
@@ -183,17 +192,7 @@ namespace LLGameStudio
         {
             studioManager.ShowStudioHelpInfo();
         }
-
-        private void imageStartGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            studioManager.StartGame();
-        }
         
-        private void imageStopGame_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            studioManager.StopGame();
-        }
-
         /// <summary>
         /// 设置游戏名称
         /// </summary>

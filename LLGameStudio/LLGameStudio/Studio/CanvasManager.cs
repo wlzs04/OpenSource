@@ -411,21 +411,21 @@ namespace LLGameStudio.Studio
             }
         }
 
-        /// <summary>
-        /// 通过UI节点的Name属性选择UI节点，此方法即将修改。
-        /// </summary>
-        /// <param name="uiNodeName"></param>
-        public void SelectUINodeByName(string uiNodeName)
-        {
-            foreach (var item in uiNodelist)
-            {
-                if(item.name.Value== uiNodeName)
-                {
-                    gameManager.currentSelectUINode = item;
-                    SelectUINode(item);
-                }
-            }
-        }
+        ///// <summary>
+        ///// 通过UI节点的Name属性选择UI节点，此方法即将修改。
+        ///// </summary>
+        ///// <param name="uiNodeName"></param>
+        //public void SelectUINodeByName(string uiNodeName)
+        //{
+        //    foreach (var item in uiNodelist)
+        //    {
+        //        if(item.name.Value== uiNodeName)
+        //        {
+        //            gameManager.currentSelectUINode = item;
+        //            SelectUINode(item);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 控制UI节点的选中。

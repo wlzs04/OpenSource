@@ -33,6 +33,8 @@ namespace LLGameStudio.Studio
         //以下是从主窗体中获得的用来显示控件的容器
         //菜单区
         WrapPanel wrapPanelMenuArea;
+        //游戏控制区
+        Grid gridGameControlArea;
         //文件区
         WrapPanel wrapPanelFileArea;
         //状态显示
@@ -60,6 +62,7 @@ namespace LLGameStudio.Studio
 
             //从主窗体中获得控件
             wrapPanelMenuArea = window.GetWrapPanelMenuArea();
+            gridGameControlArea = window.GetGridGameControlArea();
             wrapPanelFileArea = window.GetWrapPanelFileArea();
             labelStatusInfo = window.GetLabelStatusInfo();
             gridUILayer = window.GetGridUILayer();
@@ -78,6 +81,9 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 让画布重新设置UI选中边框的位置和大小。
+        /// </summary>
         public void ResetUINodeBorderPositionAndSize()
         {
             canvasManager.ResetUINodeBorderPositionAndSize();
@@ -144,6 +150,25 @@ namespace LLGameStudio.Studio
             saveGameButton.ToolTip = "保存游戏";
             saveGameButton.ClickHandler += SaveGame;
             wrapPanelMenuArea.Children.Add(saveGameButton);
+
+            //游戏控制区
+            
+            LLStudioButton startGameButton = new LLStudioButton();
+            startGameButton.SetImage("Resource/开始.png");
+            startGameButton.ToolTip = "开始游戏";
+            startGameButton.ClickHandler += StartGame;
+            startGameButton.HorizontalAlignment = HorizontalAlignment.Left;
+            startGameButton.VerticalAlignment = VerticalAlignment.Center;
+            gridGameControlArea.Children.Add(startGameButton);
+
+            LLStudioButton stopGameButton = new LLStudioButton();
+            stopGameButton.SetImage("Resource/结束.png");
+            stopGameButton.ToolTip = "结束游戏";
+            stopGameButton.ClickHandler += StopGame;
+            stopGameButton.HorizontalAlignment = HorizontalAlignment.Right;
+            stopGameButton.VerticalAlignment = VerticalAlignment.Center;
+            stopGameButton.Margin = new Thickness(100, 0, 0, 0);
+            gridGameControlArea.Children.Add(stopGameButton);
 
             //UI层级区
 
@@ -223,7 +248,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         /// <param name="currentUINode"></param>
         /// <param name="treeView"></param>
-        public void SelectUINodeToTree(IUINode currentUINode, TreeViewItem treeView =null)
+        public void SelectUINodeToTree(IUINode currentUINode, LLStudioTreeViewItem treeView =null)
         {
             ItemCollection itemCollection;
             if (treeView == null)
@@ -234,16 +259,16 @@ namespace LLGameStudio.Studio
             {
                 itemCollection = treeView.Items;
             }
-            foreach (TreeViewItem item in itemCollection)
+            foreach (LLStudioTreeViewItem item in itemCollection)
             {
-                if (item.Header.ToString() == currentUINode.name.Value)
+                if (item.GetUINode() == currentUINode)
                 {
                     item.IsSelected = true;
-                    TreeViewItem parentTreeViewItem = item.Parent as TreeViewItem;
+                    LLStudioTreeViewItem parentTreeViewItem = item.Parent as LLStudioTreeViewItem;
                     while (parentTreeViewItem != null)
                     {
                         parentTreeViewItem.IsExpanded = true;
-                        parentTreeViewItem = parentTreeViewItem.Parent as TreeViewItem;
+                        parentTreeViewItem = parentTreeViewItem.Parent as LLStudioTreeViewItem;
                     }
                     return;
                 }
@@ -365,8 +390,8 @@ namespace LLGameStudio.Studio
                 treeViewUILayer.Items.Clear();
                 foreach (var item in gameManager.rootNode.listNode)
                 {
-                    TreeViewItem treeViewItem = new TreeViewItem();
-                    treeViewItem.Header = item.name.Value;
+                    LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
+                    treeViewItem.SetUINodeItem(item);
                     treeViewItem.IsExpanded = true;
                     treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
                     if (!(item is LLGameLayout))
@@ -379,31 +404,16 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 通过双击UI层级树的某个节点来选中画布中的相应节点，并刷新属性编辑区。
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SelectUINodeByTreeView(object sender, MouseButtonEventArgs e)
-        {
-            TreeViewItem treeViewItem = sender as TreeViewItem;
-            if(treeViewItem== treeViewUILayer.SelectedItem)
-            {
-                canvasManager.SelectUINodeByName(treeViewItem.Header.ToString());
-            }
-            ShowPropertyToEditorArea(gameManager.currentSelectUINode);
-        }
-
-        /// <summary>
         /// 添加UI节点到UI层级树中。
         /// </summary>
         /// <param name="node"></param>
         /// <param name="rootItem"></param>
-        public void AddNodeToTree(IUINode node,TreeViewItem rootItem)
+        public void AddNodeToTree(IUINode node, LLStudioTreeViewItem rootItem)
         {
             foreach (var item in node.listNode)
             {
-                TreeViewItem treeViewItem = new TreeViewItem();
-                treeViewItem.Header = item.name.Value;
+                LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
+                treeViewItem.SetUINodeItem(item);
                 treeViewItem.IsExpanded = true;
                 treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
                 if(!(item is LLGameLayout))
@@ -415,17 +425,33 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
+        /// 通过双击UI层级树的某个节点来选中画布中的相应节点，并刷新属性编辑区。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SelectUINodeByTreeView(object sender, MouseButtonEventArgs e)
+        {
+            LLStudioTreeViewItem treeViewItem = sender as LLStudioTreeViewItem;
+            if (treeViewItem == treeViewUILayer.SelectedItem)
+            {
+                canvasManager.SelectUINode(treeViewItem.GetUINode());
+                gameManager.currentSelectUINode = treeViewItem.GetUINode();
+            }
+            ShowPropertyToEditorArea(gameManager.currentSelectUINode);
+        }
+
+        /// <summary>
         /// 使用指定字符串对节点进行过滤
         /// </summary>
         /// <param name="root"></param>
         /// <param name="filterString"></param>
         /// <returns>true：代表找到符合节点</returns>
-        private bool FilterNextNode(TreeViewItem root, string filterString)
+        private bool FilterNextNode(LLStudioTreeViewItem root, string filterString)
         {
             bool findFlag = false;
             for (int i = 0; i < root.Items.Count;)
             {
-                TreeViewItem item = root.Items[i] as TreeViewItem;
+                LLStudioTreeViewItem item = root.Items[i] as LLStudioTreeViewItem;
                 if (FilterNextNode(item, filterString))
                 {
                     findFlag = true;
@@ -459,7 +485,7 @@ namespace LLGameStudio.Studio
             }
             for (int i = 0; i < treeViewUILayer.Items.Count;)
             {
-                TreeViewItem item = treeViewUILayer.Items[i] as TreeViewItem;
+                LLStudioTreeViewItem item = treeViewUILayer.Items[i] as LLStudioTreeViewItem;
                 if (!FilterNextNode(item, textBox.Text))
                 {
                     treeViewUILayer.Items.Remove(item);
@@ -605,7 +631,9 @@ namespace LLGameStudio.Studio
         /// <summary>
         /// 开始游戏。
         /// </summary>
-        public void StartGame()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void StartGame(object sender, MouseButtonEventArgs e)
         {
             SaveGame();
             gameManager.StartGame();
@@ -624,7 +652,9 @@ namespace LLGameStudio.Studio
         /// <summary>
         /// 停止游戏。
         /// </summary>
-        public void StopGame()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void StopGame(object sender, MouseButtonEventArgs e)
         {
             gameManager.StopGame();
         }
@@ -779,7 +809,7 @@ namespace LLGameStudio.Studio
         /// <param name="e"></param>
         public void SaveGame(object sender, MouseButtonEventArgs e)
         {
-            gameManager.SaveGame();
+            SaveGame();
         }
 
         /// <summary>
