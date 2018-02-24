@@ -1,0 +1,5 @@
+
+<LLGameGrid name="grid1" width="200" height="200">
+  <LLGameImage name="image1" width="53" height="64" margin="{16,37,-16,-37}" filePath="layout1\b??.png" />
+  <LLGameImage name="image2" anchorEnum="Right_Bottom" width="73" height="100" margin="{-23,-19.9999,0,20}" filePath="layout1\?.png" />
+</LLGameGrid>第三方
