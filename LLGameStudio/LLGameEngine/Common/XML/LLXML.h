@@ -2,6 +2,7 @@
 #include <fstream>
 #include <list>
 #include <string>
+#include <codecvt>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ class LLXMLProperty
 
 };
 
-enum FileEncode
+enum class FileEncode
 {
 	ANSI,//ANSI编码
 	UTF_8_WITH_BOM,//UTF_8使用BOM标记
@@ -34,6 +35,16 @@ public:
 	bool SaveXMLToFile(wstring filePath);
 	FileEncode CheckFileEncode(wifstream& file);
 private:
+	bool LoadUnknown(wchar_t*& fileBuffer,int& bufferSize);//不知道接下来的内容,用于判断。
+	bool LoadNode(wchar_t*& fileBuffer, int& bufferSize);//加载节点
+	bool LoadDefine(wchar_t*& fileBuffer, int& bufferSize);//加载声明
+
+
+
+
+
+
 	LLXMLNode rootNode;
+
 };
 
