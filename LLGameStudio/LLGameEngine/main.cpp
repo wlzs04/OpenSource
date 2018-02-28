@@ -180,7 +180,17 @@
 
 int main()
 {
+	wchar_t a[] = L"asd";
+
 	LLXMLDocument document;
-	document.LoadXMLFromFile(L"layout1.layout");
+	if (document.LoadXMLFromFile(L"layout1.layout"))
+	{
+		int y = 0;
+	}
+	else
+	{
+		printf("XML文件读取失败！");
+	}
+	LLXMLNode* llXMLNode = document.GetRootNode();
 	system("pause");
 }
