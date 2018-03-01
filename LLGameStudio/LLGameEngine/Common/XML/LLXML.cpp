@@ -50,6 +50,16 @@ void LLXMLNode::AddProperty(LLXMLProperty* llProperty)
 	propertyMap[llProperty->GetName()] = llProperty;
 }
 
+void LLXMLNode::SetInnerText(wstring innerText)
+{
+	this->innerText = innerText;
+}
+
+wstring LLXMLNode::GetInnerText()
+{
+	return innerText;
+}
+
 void LLXMLNode::AddNode(LLXMLNode* llNode)
 {
 	childNodeList.push_back(llNode);
@@ -113,7 +123,7 @@ bool LLXMLDocument::LoadXMLFromFile(wstring filePath)
 		//开始分析语法。
 		while (fileBuffer<fileBufferEnd&&fileLength>0 &&* fileBuffer != L'\0')
 		{
-			if(WCharCanIgnore(*fileBuffer))
+			if (WCharCanIgnore(*fileBuffer))
 			{
 				fileBuffer++;
 				fileLength--;
@@ -268,7 +278,8 @@ bool LLXMLDocument::WCharCanIgnore(wchar_t wc)
 bool LLXMLDocument::WCharIsLegalNameStart(wchar_t wc)
 {
 	return (L'a' <= wc&&wc <= L'z') 
-		|| (L'A' <= wc&&wc <= L'Z');
+		|| (L'A' <= wc&&wc <= L'Z')
+		;
 }
 
 bool LLXMLDocument::WCharIsLegalName(wchar_t wc)
@@ -276,7 +287,8 @@ bool LLXMLDocument::WCharIsLegalName(wchar_t wc)
 	return (L'a' <= wc&&wc <= L'z') 
 		|| (L'A' <= wc&&wc <= L'Z')
 		|| (L'0' <= wc&&wc <= L'9')
-		|| (wc == L'_');
+		|| (wc == L'_')
+		;
 }
 
 bool LLXMLDocument::LoadUnknown(wchar_t*& fileBuffer, int& bufferSize)
@@ -334,6 +346,21 @@ bool LLXMLDocument::LoadUnknown(wchar_t*& fileBuffer, int& bufferSize)
 		{
 			LoadNode(fileBuffer, bufferSize);
 		}
+	}
+	else if(!nodeStack.empty())
+	{
+		wchar_t* textStart = fileBuffer;
+		while (*fileBuffer!=L'<')
+		{
+			fileBuffer++;
+			bufferSize--;
+			if (bufferSize == 0)
+			{
+				return false;
+			}
+		}
+		wstring innerText = wstring(textStart, fileBuffer - textStart);
+		nodeStack.top()->SetInnerText(FormatWStringFromXML(innerText));
 	}
 	else
 	{
@@ -470,7 +497,7 @@ bool LLXMLDocument::LoadProperty(wchar_t *& fileBuffer, int & bufferSize)
 		}
 		fileBuffer++;
 		bufferSize--;
-		while (*fileBuffer != L'"')
+		while (WCharIsLegalName(*fileBuffer))
 		{
 			fileBuffer++;
 			bufferSize--;
@@ -479,9 +506,7 @@ bool LLXMLDocument::LoadProperty(wchar_t *& fileBuffer, int & bufferSize)
 				return false;
 			}
 		}
-		fileBuffer++;
-		bufferSize--;
-		llProperty->SetValue(LoadFormatValue(fileBuffer, bufferSize));
+		llProperty->SetValue(LoadPropertyValue(fileBuffer, bufferSize));
 		if (bufferSize == 0)
 		{
 			return false;
@@ -502,16 +527,91 @@ bool LLXMLDocument::LoadProperty(wchar_t *& fileBuffer, int & bufferSize)
 	return true;
 }
 
-wstring LLXMLDocument::LoadFormatValue(wchar_t*& fileBuffer, int& bufferSize)
+wstring LLXMLDocument::LoadPropertyValue(wchar_t*& fileBuffer, int& bufferSize)
 {
+	wchar_t startWChar;
+	if (*fileBuffer == L'"')
+	{
+		startWChar = L'"';
+	}
+	else if(*fileBuffer == L'\'')
+	{
+		startWChar = L'\'';
+	}
+	else
+	{
+		return wstring(L"");
+	}
+	fileBuffer++;
+	bufferSize--;
+
 	wchar_t* valueStart = fileBuffer;
-	while (*fileBuffer!=L'"')
+	while (*fileBuffer != startWChar)
 	{
 		fileBuffer++;
 		bufferSize--;
+		if (bufferSize == 0)
+		{
+			return false;
+		}
 	}
 	wstring value = wstring(valueStart, fileBuffer - valueStart);
 	fileBuffer++;
 	bufferSize--;
-	return value;
+	return FormatWStringFromXML(value);
+}
+
+wstring LLXMLDocument::FormatWStringFromXML(wstring ws)
+{
+	wsstream.str(L"");//需要进行两步操作，只用clear的话wsstream内的保存的字符串是不变的。
+	wsstream.clear();//需要清空缓存
+	int curPos = 0;
+	int wsSize = ws.size();
+	while (curPos<wsSize)
+	{
+		if (ws[curPos] == L'&')
+		{
+			if (ws.substr(curPos,6)==L"&quot;")
+			{
+				wsstream << L'"';
+				curPos += 6;
+			}
+			else if (ws.substr(curPos, 6) == L"&apos;")
+			{
+				wsstream << L'\'';
+				curPos += 6;
+			}
+			else if (ws.substr(curPos, 5) == L"&amp;")
+			{
+				wsstream << L'&';
+				curPos += 5;
+			}
+			else if (ws.substr(curPos, 4) == L"&lt;")
+			{
+				wsstream << L'<';
+				curPos += 4;
+			}
+			else if (ws.substr(curPos, 4) == L"&gt;")
+			{
+				wsstream << L'>';
+				curPos += 4;
+			}
+			else
+			{
+				wsstream << ws[curPos];
+				curPos++;
+			}
+		}
+		else
+		{
+			wsstream << ws[curPos];
+			curPos++;
+		}
+	}
+	return wsstream.str();
+}
+
+wstring LLXMLDocument::FormatWStringToXML(wstring ws)
+{
+	return wstring();
 }

@@ -180,8 +180,6 @@
 
 int main()
 {
-	wchar_t a[] = L"asd";
-
 	LLXMLDocument document;
 	if (document.LoadXMLFromFile(L"layout1.layout"))
 	{

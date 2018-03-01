@@ -4,6 +4,7 @@
 #include <codecvt>
 #include <unordered_map>
 #include <stack>
+#include <sstream>
 
 using namespace std;
 
@@ -27,10 +28,13 @@ class LLXMLNode
 public:
 	LLXMLNode(wstring name);
 	void AddProperty(LLXMLProperty* llProperty);
+	void SetInnerText(wstring innerText);
+	wstring GetInnerText();
 	void AddNode(LLXMLNode* llNode);
 	wstring GetName();
 private:
 	wstring name;
+	wstring innerText;
 	unordered_map<wstring, LLXMLProperty*> propertyMap;
 	list<LLXMLNode*> childNodeList;
 };
@@ -60,8 +64,10 @@ private:
 	bool LoadComment(wchar_t*& fileBuffer, int& bufferSize);//加载注释
 	bool LoadNode(wchar_t*& fileBuffer, int& bufferSize);//加载节点
 	bool LoadProperty(wchar_t*& fileBuffer, int& bufferSize);//加载属性
-	wstring LoadFormatValue(wchar_t*& fileBuffer, int& bufferSize);//加载属性值
-
+	wstring LoadPropertyValue(wchar_t*& fileBuffer, int& bufferSize);//加载属性值
+	wstring FormatWStringFromXML(wstring ws);
+	wstring FormatWStringToXML(wstring ws);
 	LLXMLNode* rootNode;
 	stack<LLXMLNode*> nodeStack;
+	wstringstream wsstream;
 };
