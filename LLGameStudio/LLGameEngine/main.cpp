@@ -181,7 +181,7 @@
 int main()
 {
 	LLXMLDocument document;
-	if (document.LoadXMLFromFile(L"layout1.layout"))
+	if (document.LoadXMLFromFile(L"layout0.layout"))
 	{
 		int y = 0;
 	}
@@ -189,6 +189,10 @@ int main()
 	{
 		printf("XML文件读取失败！");
 	}
+	LLXMLProperty* llProperty=new LLXMLProperty(L"string");
+	llProperty->SetValue(L"wstring=L\"asdfadsf\"");
+	document.GetRootNode()->AddProperty(llProperty);
+	document.SaveXMLToFile(L"layout2.layout");
 	LLXMLNode* llXMLNode = document.GetRootNode();
-	system("pause");
+	//system("pause");
 }

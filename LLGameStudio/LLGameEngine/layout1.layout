@@ -1,7 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LLGameGrid name="grid1" width="200" height="200">
-<!---->
-  <Value>测试数据</Value>
-  <LLGameImage name='image1' width="53" height="64" string="&quot; &lt;asdasd&gt;  &quot;" margin="{16,37,-16,-37}" filePath="layout1\立方体.png" />
-  <LLGameImage name="image2" anchorEnum="Right_Bottom" width="73" height="100" margin="{-23,-19.9999,0,20}" filePath="layout1\球.png" />
+  <Value>asdfasdfasdf</Value>
+  <LLGameImage height="64" name="image1" margin="{16,37,-16,-37}" width="53" filePath="layout1\立方体.png" />
+  <LLGameImage height="100" name="image2" anchorEnum="Right_Bottom" margin="{-23,-19.9999,0,20}" width="73" filePath="layout1\球.png" />
 </LLGameGrid>

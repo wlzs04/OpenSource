@@ -50,6 +50,11 @@ void LLXMLNode::AddProperty(LLXMLProperty* llProperty)
 	propertyMap[llProperty->GetName()] = llProperty;
 }
 
+void LLXMLNode::RemoveProperty(wstring name)
+{
+	propertyMap.erase(name);
+}
+
 void LLXMLNode::SetInnerText(wstring innerText)
 {
 	this->innerText = innerText;
@@ -65,26 +70,49 @@ void LLXMLNode::AddNode(LLXMLNode* llNode)
 	childNodeList.push_back(llNode);
 }
 
+void LLXMLNode::RemoveNode(LLXMLNode * llNode)
+{
+	childNodeList.remove(llNode);
+}
+
+unordered_map<wstring, LLXMLProperty*>& LLXMLNode::GetPropertyMap()
+{
+	return propertyMap;
+}
+
+list<LLXMLNode*>& LLXMLNode::GetChildNodeList()
+{
+	return childNodeList;
+}
+
 wstring LLXMLNode::GetName()
 {
 	return name;
 }
 
-bool LLXMLDocument::LoadXMLFromFile(wstring filePath)
+LLXMLProperty * LLXMLNode::GetProperty(wstring name)
+{
+	return propertyMap[name];
+}
+
+bool LLXMLDocument::LoadXMLFromFile(wstring filePath, FileEncode fileEncode)
 {
 	while (!nodeStack.empty())
 	{
 		nodeStack.pop();
 	}
-	wifstream file(filePath, wifstream::binary );
+	wifstream file(filePath, wifstream::binary);
 	//在Windows下，文件中回车是“\n\r”,在获得文件长度时是2，读取却当成一个字符，有可能会影响编码判断。
 	
 	if (file)
 	{
-		FileEncode fe = CheckFileEncode(file);
+		if (fileEncode == FileEncode::UNKNOWN)
+		{
+			fileEncode = CheckFileEncode(file);
+		}
 		int markBufferNum = 0;
 		int markBufferLength = 0;
-		switch (fe)
+		switch (fileEncode)
 		{
 		case FileEncode::ANSI:
 			file.imbue(locale(""));
@@ -149,8 +177,46 @@ bool LLXMLDocument::LoadXMLFromFile(wstring filePath)
 	return false;
 }
 
-bool LLXMLDocument::SaveXMLToFile(wstring filePath)
+bool LLXMLDocument::SaveXMLToFile(wstring filePath, FileEncode fileEncode, bool writeDefine)
 {
+	wofstream file(filePath);
+	if (file)
+	{
+		switch (fileEncode)
+		{
+		case FileEncode::ANSI:
+			file.imbue(locale(""));
+			break;
+		case FileEncode::UTF_8_WITH_BOM:
+		case FileEncode::UTF_8_NO_BOM:
+			file.imbue(locale(locale::empty(), new codecvt_utf8<wchar_t>));
+			break;
+		case FileEncode::UTF_16_LITTLE_ENDIAN:
+			break;
+		case FileEncode::UTF_16_BIG_ENDIAN:
+			file.imbue(locale(locale::empty(), new codecvt_utf16<wchar_t>));
+			break;
+		default:
+			break;
+		}
+		if (rootNode)
+		{
+			if (writeDefine)//编码不是utf_8的话也这么写不太好，但用不到定义内容，追求细节的话就做一下判断吧！
+			{
+				file << L"<?xml version=\"1.0\" encoding=\"utf-8\"?>" << endl;
+			}
+			SaveNode(file,rootNode,0);
+		}
+		else
+		{
+			file.close();
+			return false;
+		}
+		file.close();
+	}
+
+
+
 	return false;
 }
 
@@ -190,6 +256,10 @@ FileEncode LLXMLDocument::CheckFileEncode(wifstream& file)
 
 		file.seekg(0, ios_base::end); // 移动到文件尾。
 		int fileLength = (int)file.tellg(); // 取得当前位置的指针长度，即文件长度。
+		if (fileLength == -1)
+		{
+			return fileEncode;
+		}
 		fileLength++;//需要多一位来存储文件结尾标记。
 		file.seekg(0, ios_base::beg); // 移动到文件头。
 		wchar_t* fileBuffer = new wchar_t[fileLength];
@@ -613,5 +683,88 @@ wstring LLXMLDocument::FormatWStringFromXML(wstring ws)
 
 wstring LLXMLDocument::FormatWStringToXML(wstring ws)
 {
-	return wstring();
+	wsstream.str(L"");//需要进行两步操作，只用clear的话wsstream内的保存的字符串是不变的。
+	wsstream.clear();//需要清空缓存
+	int curPos = 0;
+	int wsSize = ws.size();
+	while (curPos < wsSize)
+	{
+		if (ws[curPos] == L'"')
+		{
+			wsstream << L"&quot;";
+		}
+		else if (ws[curPos] == L'\'')
+		{
+			wsstream << L"&apos;";
+		}
+		else if (ws[curPos] == L'&')
+		{
+			wsstream << L"&amp;";
+		}
+		else if (ws[curPos] == L'<')
+		{
+			wsstream << L"&lt;";
+		}
+		else if (ws[curPos] == L'>')
+		{
+			wsstream << L"&gt;";
+		}
+		else
+		{
+			wsstream << ws[curPos];
+		}
+		curPos++;
+	}
+	return wsstream.str();
+}
+
+void LLXMLDocument::SaveNode(wofstream& file, LLXMLNode* node, int depth)
+{
+	for (int i=0;i<depth;i++)
+	{
+		file << L'\t';
+	}
+	file << L"<" + node->GetName() ;
+	if (node->GetPropertyMap().size()!=0)
+	{
+		file << L" ";
+		for (auto var : node->GetPropertyMap())
+		{
+			SaveProperty(file, var.second);
+			file << L" ";
+		}
+	}
+	bool tempBool = false;
+	if (node->GetInnerText() != L""|| node->GetChildNodeList().size() > 0)
+	{
+		tempBool = true;
+	}
+	if (!tempBool)
+	{
+		file << L"/>"<< endl;
+		return;
+	}
+	file <<L">"<< endl;
+	if (node->GetInnerText() != L"")
+	{
+		for (int i = 0; i < depth+1; i++)
+		{
+			file << L'\t';
+		}
+		file << node->GetInnerText() << endl;
+	}
+	for (auto var : node->GetChildNodeList())
+	{
+		SaveNode(file, var,depth+1);
+	}
+	for (int i = 0; i < depth; i++)
+	{
+		file << L'\t';
+	}
+	file << L"</" << node->GetName() << L">"<<endl;
+}
+
+void LLXMLDocument::SaveProperty(wofstream & file, LLXMLProperty * llProperty)
+{
+	file << llProperty->GetName() << L"=" << L'"' << FormatWStringToXML(llProperty->GetValue()) << L'"';
 }

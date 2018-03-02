@@ -27,11 +27,16 @@ class LLXMLNode
 {
 public:
 	LLXMLNode(wstring name);
+	wstring GetName();
 	void AddProperty(LLXMLProperty* llProperty);
+	void RemoveProperty(wstring name);
+	LLXMLProperty* GetProperty(wstring name);
 	void SetInnerText(wstring innerText);
 	wstring GetInnerText();
 	void AddNode(LLXMLNode* llNode);
-	wstring GetName();
+	void RemoveNode(LLXMLNode* llNode);
+	unordered_map<wstring, LLXMLProperty*>& GetPropertyMap();
+	list<LLXMLNode*>& GetChildNodeList();
 private:
 	wstring name;
 	wstring innerText;
@@ -41,6 +46,7 @@ private:
 
 enum class FileEncode
 {
+	UNKNOWN,//未知编码
 	ANSI,//ANSI编码
 	UTF_8_WITH_BOM,//UTF_8使用BOM标记
 	UTF_8_NO_BOM,//UTF_8无BOM标记
@@ -51,8 +57,8 @@ enum class FileEncode
 class LLXMLDocument
 {
 public:
-	bool LoadXMLFromFile(wstring filePath);
-	bool SaveXMLToFile(wstring filePath);
+	bool LoadXMLFromFile(wstring filePath, FileEncode fileEncode = FileEncode::UNKNOWN);
+	bool SaveXMLToFile(wstring filePath, FileEncode fileEncode= FileEncode::UTF_8_WITH_BOM,bool writeDefine=false);
 	LLXMLNode* GetRootNode();
 private:
 	FileEncode CheckFileEncode(wifstream& file);
@@ -67,6 +73,10 @@ private:
 	wstring LoadPropertyValue(wchar_t*& fileBuffer, int& bufferSize);//加载属性值
 	wstring FormatWStringFromXML(wstring ws);
 	wstring FormatWStringToXML(wstring ws);
+
+	void SaveNode(wofstream& file, LLXMLNode* node,int depth);
+	void SaveProperty(wofstream& file, LLXMLProperty* llProperty);
+
 	LLXMLNode* rootNode;
 	stack<LLXMLNode*> nodeStack;
 	wstringstream wsstream;
