@@ -122,11 +122,15 @@
   <ItemGroup>
     <ClCompile Include="Common\Config\GameConfig.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
+    <ClCompile Include="Common\Window\LLGameWindow.cpp" />
+    <ClCompile Include="Game\LLGame.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
     <ClInclude Include="Common\XML\LLXML.h" />
+    <ClInclude Include="Common\Window\LLGameWindow.h" />
+    <ClInclude Include="Game\LLGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
