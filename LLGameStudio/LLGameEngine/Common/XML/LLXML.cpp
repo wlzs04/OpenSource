@@ -5,6 +5,12 @@ LLXMLProperty::LLXMLProperty(wstring name)
 	this->name = name;
 }
 
+LLXMLProperty::LLXMLProperty(wstring name, wstring value)
+{
+	this->name = name;
+	this->value = value;
+}
+
 void LLXMLProperty::SetValue(wstring value)
 {
 	this->value = value;
@@ -43,6 +49,19 @@ bool LLXMLProperty::GetValueBool()
 LLXMLNode::LLXMLNode(wstring name)
 {
 	this->name = name;
+}
+
+LLXMLNode::~LLXMLNode()
+{
+	for (auto propertyPair : propertyMap)
+	{
+		delete propertyPair.second;
+	}
+
+	for (auto node : childNodeList)
+	{
+		delete node;
+	}
 }
 
 void LLXMLNode::AddProperty(LLXMLProperty* llProperty)
@@ -95,12 +114,33 @@ LLXMLProperty * LLXMLNode::GetProperty(wstring name)
 	return propertyMap[name];
 }
 
+LLXMLDocument::LLXMLDocument()
+{
+
+}
+
+LLXMLDocument::~LLXMLDocument()
+{
+	while (!nodeStack.empty())
+	{
+		nodeStack.pop();
+	}
+	delete rootNode;
+}
+
 bool LLXMLDocument::LoadXMLFromFile(wstring filePath, FileEncode fileEncode)
 {
 	while (!nodeStack.empty())
 	{
 		nodeStack.pop();
 	}
+
+	if (rootNode)
+	{
+		delete rootNode;
+		rootNode = nullptr;
+	}
+
 	wifstream file(filePath, wifstream::binary);
 	//在Windows下，文件中回车是“\n\r”,在获得文件长度时是2，读取却当成一个字符，有可能会影响编码判断。
 	
@@ -214,15 +254,23 @@ bool LLXMLDocument::SaveXMLToFile(wstring filePath, FileEncode fileEncode, bool 
 		}
 		file.close();
 	}
-
-
-
 	return false;
 }
 
 LLXMLNode * LLXMLDocument::GetRootNode()
 {
 	return rootNode;
+}
+
+void LLXMLDocument::SetRootNode(LLXMLNode* rootNode)
+{
+	if (this->rootNode)
+	{
+		delete this->rootNode;
+		this->rootNode = nullptr;
+	}
+	
+	this->rootNode = rootNode;
 }
 
 FileEncode LLXMLDocument::CheckFileEncode(wifstream& file)

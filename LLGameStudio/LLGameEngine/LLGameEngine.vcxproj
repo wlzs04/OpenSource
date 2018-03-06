@@ -89,6 +89,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,6 +122,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\Config\GameConfig.cpp" />
+    <ClCompile Include="Common\Helper\MessageHelper.cpp" />
+    <ClCompile Include="Common\Helper\SystemHelper.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
@@ -128,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
+    <ClInclude Include="Common\Helper\MessageHelper.h" />
+    <ClInclude Include="Common\Helper\SystemHelper.h" />
+    <ClInclude Include="Common\Helper\WStringHelper.h" />
     <ClInclude Include="Common\XML\LLXML.h" />
     <ClInclude Include="Common\Window\LLGameWindow.h" />
     <ClInclude Include="Game\LLGame.h" />

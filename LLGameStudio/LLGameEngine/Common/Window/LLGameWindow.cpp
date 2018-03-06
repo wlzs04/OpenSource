@@ -2,9 +2,8 @@
 
 const wstring LLGameWindow::className = L"LLGameWindow";
 
-LLGameWindow::LLGameWindow(HINSTANCE hInstance)
+LLGameWindow::LLGameWindow()
 {
-	this->hInstance = hInstance;
 	left = 0;
 	top = 0;
 	width = 800;
@@ -14,7 +13,7 @@ LLGameWindow::LLGameWindow(HINSTANCE hInstance)
 
 LLGameWindow::~LLGameWindow()
 {
-	UnregisterClass(className.c_str(), hInstance);
+	UnregisterClass(className.c_str(), GetModuleHandle(0));
 }
 
 void LLGameWindow::Run()
@@ -73,16 +72,26 @@ void LLGameWindow::SetTitle(wstring title)
 	SetWindowText(hWnd, title.c_str());
 }
 
+void LLGameWindow::SetMaximize()
+{
+	ShowWindow(hWnd, SW_MAXIMIZE);
+}
+
+void LLGameWindow::SetMinimize()
+{
+	ShowWindow(hWnd, SW_MINIMIZE);
+}
+
 void LLGameWindow::InitWindow()
 {
 	WNDCLASSEX wc = {};
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.lpfnWndProc = WndProcess;
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	wc.hInstance = hInstance;
+	wc.hInstance = GetModuleHandle(0);
 	wc.lpszClassName = L"GameWindow";
 	RegisterClassEx(&wc);
-	hWnd = CreateWindow(L"GameWindow", L"", WS_POPUP, 0, 0, 800, 600, 0, 0, hInstance, 0);
+	hWnd = CreateWindow(L"GameWindow", L"", WS_POPUP, 0, 0, 800, 600, 0, 0, GetModuleHandle(0), 0);
 
 	//使用系统提供的方法将类指针和hWnd关联起来，可以在窗体处理方法中获得。
 	SetWindowLong(hWnd, GWLP_USERDATA, (LONG)this);

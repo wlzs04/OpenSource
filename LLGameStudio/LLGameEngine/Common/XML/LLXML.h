@@ -12,6 +12,7 @@ class LLXMLProperty
 {
 public:
 	LLXMLProperty(wstring name);
+	LLXMLProperty(wstring name,wstring value);
 	void SetValue(wstring value);
 	wstring GetName();
 	wstring GetValue();
@@ -27,6 +28,7 @@ class LLXMLNode
 {
 public:
 	LLXMLNode(wstring name);
+	~LLXMLNode();
 	wstring GetName();
 	void AddProperty(LLXMLProperty* llProperty);
 	void RemoveProperty(wstring name);
@@ -57,9 +59,12 @@ enum class FileEncode
 class LLXMLDocument
 {
 public:
+	LLXMLDocument();
+	~LLXMLDocument();
 	bool LoadXMLFromFile(wstring filePath, FileEncode fileEncode = FileEncode::UNKNOWN);
 	bool SaveXMLToFile(wstring filePath, FileEncode fileEncode= FileEncode::UTF_8_WITH_BOM,bool writeDefine=false);
 	LLXMLNode* GetRootNode();
+	void SetRootNode(LLXMLNode* rootNode);
 private:
 	FileEncode CheckFileEncode(wifstream& file);
 	bool WCharCanIgnore(wchar_t wc);
@@ -77,7 +82,7 @@ private:
 	void SaveNode(wofstream& file, LLXMLNode* node,int depth);
 	void SaveProperty(wofstream& file, LLXMLProperty* llProperty);
 
-	LLXMLNode* rootNode;
+	LLXMLNode* rootNode = nullptr;
 	stack<LLXMLNode*> nodeStack;
 	wstringstream wsstream;
 };

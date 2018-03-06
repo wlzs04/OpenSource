@@ -12,12 +12,14 @@ typedef function<void(void*,int)> HandlerUIEvent;
 class LLGameWindow
 {
 public:
-	LLGameWindow(HINSTANCE hInstance);
+	LLGameWindow();
 	~LLGameWindow();
 	void Run();
 	void SetPosition(double left,double top);
 	void SetSize(double width, double height);
 	void SetTitle(wstring title);
+	void SetMaximize();
+	void SetMinimize();
 
 	//开始事件
 	HandlerEvent OnBeginEvent = nullptr;
@@ -51,7 +53,6 @@ private:
 	LRESULT WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	//对于窗体的处理方法要求是静态的，但可以通过特殊方法处理。
 	static LRESULT CALLBACK WndProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	HINSTANCE hInstance = NULL;
 	HWND hWnd = NULL;
 	double left;
 	double top;

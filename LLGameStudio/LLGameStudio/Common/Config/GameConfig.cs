@@ -17,11 +17,13 @@ namespace LLGameStudio.Common.Config
         int height=600;
         string gameName="游戏";
         bool fullScreen=false;
+        bool canMultiGame = false;
 
         public int Width { get => width; set => width = value; }
         public int Height { get => height; set => height = value; }
         public string GameName { get => gameName; set => gameName = value; }
         public bool FullScreen { get => fullScreen; set => fullScreen = value; }
+        public bool CanMultiGame { get => canMultiGame; set => canMultiGame = value; }
         
         public XElement ExportContentToXML()
         {
@@ -30,6 +32,7 @@ namespace LLGameStudio.Common.Config
             element.Add(new XAttribute("height", height));
             element.Add(new XAttribute("fullScreen", fullScreen));
             element.Add(new XAttribute("gameName", gameName));
+            element.Add(new XAttribute("CanMultiGame", canMultiGame));
             return element;
         }
 
@@ -38,6 +41,7 @@ namespace LLGameStudio.Common.Config
             width = Convert.ToInt32(element.Attribute("width").Value);
             height = Convert.ToInt32(element.Attribute("height").Value);
             fullScreen = Convert.ToBoolean(element.Attribute("fullScreen").Value);
+            canMultiGame = Convert.ToBoolean(element.Attribute("canMultiGame").Value);
             gameName = element.Attribute("gameName").Value;
         }
     }
