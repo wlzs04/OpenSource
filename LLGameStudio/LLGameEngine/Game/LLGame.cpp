@@ -17,12 +17,15 @@ void LLGame::Init()
 {
 	currentPath = SystemHelper::GetCurrentPath();
 	LoadConfig();
-	
+	InitWindow();
 }
 
 void LLGame::Start()
 {
-	gameWindow->Run();
+	if (gameWindow)
+	{
+		gameWindow->Run();
+	}
 }
 
 void LLGame::LoadConfig()

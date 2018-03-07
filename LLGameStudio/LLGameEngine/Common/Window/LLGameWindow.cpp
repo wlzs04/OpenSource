@@ -18,7 +18,7 @@ LLGameWindow::~LLGameWindow()
 
 void LLGameWindow::Run()
 {
-	if (OnBeginEvent)
+	if (OnBeginEvent != nullptr)
 	{
 		OnBeginEvent();
 	}
@@ -89,9 +89,9 @@ void LLGameWindow::InitWindow()
 	wc.lpfnWndProc = WndProcess;
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.hInstance = GetModuleHandle(0);
-	wc.lpszClassName = L"GameWindow";
+	wc.lpszClassName = className.c_str();
 	RegisterClassEx(&wc);
-	hWnd = CreateWindow(L"GameWindow", L"", WS_POPUP, 0, 0, 800, 600, 0, 0, GetModuleHandle(0), 0);
+	hWnd = CreateWindow(className.c_str(), L"", WS_POPUP, 0, 0, 800, 600, 0, 0, GetModuleHandle(0), 0);
 
 	//使用系统提供的方法将类指针和hWnd关联起来，可以在窗体处理方法中获得。
 	SetWindowLong(hWnd, GWLP_USERDATA, (LONG)this);

@@ -36,6 +36,12 @@
     <ClCompile Include="Common\Helper\MessageHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\UI\IUINode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Helper\WStringHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -57,6 +63,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Common\Helper\MessageHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\UI\IUINode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\UI\IUIProperty.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Helper\EnumHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

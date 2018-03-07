@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <stack>
 #include <sstream>
+#include "..\Helper\WStringHelper.h"
 
 using namespace std;
 

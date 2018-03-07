@@ -28,22 +28,17 @@ wstring LLXMLProperty::GetValue()
 
 int LLXMLProperty::GetValueInt()
 {
-	return _wtoi(value.c_str());
+	return WStringHelper::GetInt(value);
 }
 
 float LLXMLProperty::GetValueFloat()
 {
-	return _wtof(value.c_str());
+	return WStringHelper::GetFloat(value);
 }
 
 bool LLXMLProperty::GetValueBool()
 {
-	return !(value == L""
-		|| value == L"0"
-		|| value == L"false"
-		|| value == L"False"
-		|| value == L"FALSE")
-		;
+	return WStringHelper::GetBool(value);
 }
 
 LLXMLNode::LLXMLNode(wstring name)
