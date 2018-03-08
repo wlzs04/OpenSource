@@ -125,18 +125,20 @@
     <ClCompile Include="Common\Helper\MessageHelper.cpp" />
     <ClCompile Include="Common\Helper\SystemHelper.cpp" />
     <ClCompile Include="Common\Helper\WStringHelper.cpp" />
+    <ClCompile Include="Common\LLBase.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
     <ClCompile Include="Game\UI\IUINode.cpp" />
+    <ClCompile Include="Game\UI\IUIProperty.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
-    <ClInclude Include="Common\Helper\EnumHelper.h" />
     <ClInclude Include="Common\Helper\MessageHelper.h" />
     <ClInclude Include="Common\Helper\SystemHelper.h" />
     <ClInclude Include="Common\Helper\WStringHelper.h" />
+    <ClInclude Include="Common\LLBase.h" />
     <ClInclude Include="Common\XML\LLXML.h" />
     <ClInclude Include="Common\Window\LLGameWindow.h" />
     <ClInclude Include="Game\LLGame.h" />

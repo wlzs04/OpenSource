@@ -42,6 +42,12 @@
     <ClCompile Include="Common\Helper\WStringHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Common\LLBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\UI\IUIProperty.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -71,7 +77,7 @@
     <ClInclude Include="Game\UI\IUIProperty.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Helper\EnumHelper.h">
+    <ClInclude Include="Common\LLBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

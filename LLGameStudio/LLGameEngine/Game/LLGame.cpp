@@ -18,11 +18,12 @@ void LLGame::Init()
 	currentPath = SystemHelper::GetCurrentPath();
 	LoadConfig();
 	InitWindow();
+	InitData();
 }
 
 void LLGame::Start()
 {
-	if (gameWindow)
+	if (!gameExit)
 	{
 		gameWindow->Run();
 	}
@@ -75,6 +76,7 @@ void LLGame::InitWindow()
 			{
 				ReleaseMutex(hMutex);
 			}
+			gameExit = true;
 			return;
 		}
 	}
@@ -98,4 +100,12 @@ void LLGame::InitWindow()
 
 void LLGame::InitData()
 {
+	if (!gameExit)
+	{
+		rootNode = new IUINode();
+		LLXMLDocument doc;
+		doc.LoadXMLFromFile(startScene);
+		LLXMLNode* node= doc.GetRootNode();
+		int i = 0;
+	}
 }

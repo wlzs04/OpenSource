@@ -4,6 +4,7 @@
 #include "../Common/Config/GameConfig.h"
 #include "../Common/Helper/MessageHelper.h"
 #include "../Common/Helper/SystemHelper.h"
+#include "UI/IUINode.h"
 
 class LLGame
 {
@@ -26,4 +27,7 @@ private:
 	wstring currentPath;
 	GameConfig gameConfig;
 	LLGameWindow* gameWindow;
+	bool gameExit = false;
+	wstring startScene = L"Resource\\layout1\\scene1.scene";
+	IUINode* rootNode;
 };

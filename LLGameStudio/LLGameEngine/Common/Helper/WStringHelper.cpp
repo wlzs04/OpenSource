@@ -1,16 +1,16 @@
 ﻿#include "WStringHelper.h"
 
-int WStringHelper::GetInt(wstring value)
+int WStringHelper::GetInt(wstring& value)
 {
 	return _wtoi(value.c_str());
 }
 
-int WStringHelper::GetFloat(wstring value)
+int WStringHelper::GetFloat(wstring& value)
 {
 	return _wtof(value.c_str());
 }
 
-int WStringHelper::GetBool(wstring value)
+int WStringHelper::GetBool(wstring& value)
 {
 	//如果value很长，判断效率会不会比只判断三个false低？还是加上判断吧！
 	if (value.size() > 5)
@@ -39,4 +39,17 @@ wstring WStringHelper::ToLower(wstring value)
 		value[i] = tolower(value[i]);
 	}
 	return value;
+}
+
+void WStringHelper::Split(wstring ws, wchar_t w,vector<wstring>& v)
+{
+	int pos1 = 0;
+	int pos2 = ws.find(w);
+	while (pos2 >= 0)
+	{
+		v.push_back(ws.substr(pos1, pos2- pos1));
+		pos1 = pos2+1;
+		pos2= ws.find(w, pos1);
+	}
+	v.push_back(ws.substr(pos1));
 }

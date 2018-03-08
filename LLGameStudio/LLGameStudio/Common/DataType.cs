@@ -55,7 +55,7 @@ namespace LLGameStudio.Common
 
             public void FromString(string s)
             {
-                if (s.Length > 4)
+                if (s.Length > 2)
                 {
                     s = s.Remove(0, 1);
                     s = s.Remove(s.Length - 1, 1);

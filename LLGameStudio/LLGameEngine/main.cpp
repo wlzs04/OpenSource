@@ -5,5 +5,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LLGame llGame;
 	llGame.Init();
 	llGame.Start();
+
 	return 0;
 }
