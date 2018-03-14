@@ -13,6 +13,6 @@ public:
 	wstring ToWString();
 	void GetValueFromWString(wstring ws);
 protected:
-	virtual unordered_map<wstring, int>& GetEnumMap() {};
+	virtual unordered_map<wstring, int>& GetEnumMap()=0;
 	int value = 0;
 };

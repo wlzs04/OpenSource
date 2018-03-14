@@ -122,6 +122,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\Config\GameConfig.cpp" />
+    <ClCompile Include="Common\Graphics\Direct2D\Direct2DApi.cpp" />
+    <ClCompile Include="Common\Graphics\GraphicsApi.cpp" />
     <ClCompile Include="Common\Helper\MessageHelper.cpp" />
     <ClCompile Include="Common\Helper\SystemHelper.cpp" />
     <ClCompile Include="Common\Helper\WStringHelper.cpp" />
@@ -131,10 +133,14 @@
     <ClCompile Include="Game\LLGame.cpp" />
     <ClCompile Include="Game\UI\IUINode.cpp" />
     <ClCompile Include="Game\UI\IUIProperty.cpp" />
+    <ClCompile Include="Game\UI\LLGameBack.cpp" />
+    <ClCompile Include="Game\UI\LLGameScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
+    <ClInclude Include="Common\Graphics\Direct2D\Direct2DApi.h" />
+    <ClInclude Include="Common\Graphics\GraphicsApi.h" />
     <ClInclude Include="Common\Helper\MessageHelper.h" />
     <ClInclude Include="Common\Helper\SystemHelper.h" />
     <ClInclude Include="Common\Helper\WStringHelper.h" />
@@ -144,6 +150,8 @@
     <ClInclude Include="Game\LLGame.h" />
     <ClInclude Include="Game\UI\IUINode.h" />
     <ClInclude Include="Game\UI\IUIProperty.h" />
+    <ClInclude Include="Game\UI\LLGameBack.h" />
+    <ClInclude Include="Game\UI\LLGameScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

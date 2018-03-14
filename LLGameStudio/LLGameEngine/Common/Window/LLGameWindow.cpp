@@ -2,6 +2,19 @@
 
 const wstring LLGameWindow::className = L"LLGameWindow";
 
+void LLGameWindow::AddHandleUIEvent(wstring eventName, HandleUIEvent handleUIEvent)
+{
+	eventMap[eventName] = handleUIEvent;
+}
+
+void LLGameWindow::RemoveHandleUIEvent(wstring eventName)
+{
+	if (eventMap.count(eventName) != 0)
+	{
+		eventMap[eventName] == nullptr;
+	}
+}
+
 LLGameWindow::LLGameWindow()
 {
 	left = 0;
@@ -16,6 +29,11 @@ LLGameWindow::~LLGameWindow()
 	UnregisterClass(className.c_str(), GetModuleHandle(0));
 }
 
+HWND LLGameWindow::GetHWND()
+{
+	return hWnd;
+}
+
 void LLGameWindow::Run()
 {
 	if (OnBeginEvent != nullptr)
@@ -26,11 +44,6 @@ void LLGameWindow::Run()
 	ShowWindow(hWnd, SW_SHOW);
 
 	MSG msg = { 0 };
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -95,6 +108,15 @@ void LLGameWindow::InitWindow()
 
 	//使用系统提供的方法将类指针和hWnd关联起来，可以在窗体处理方法中获得。
 	SetWindowLong(hWnd, GWLP_USERDATA, (LONG)this);
+
+	AddHandleUIEvent(L"OnLeftMouseDown", OnLeftMouseDown);
+	AddHandleUIEvent(L"OnLeftMouseUp", OnLeftMouseUp);
+	AddHandleUIEvent(L"OnRightMouseDown", OnRightMouseDown);
+	AddHandleUIEvent(L"OnRightMouseUp", OnRightMouseUp);
+	AddHandleUIEvent(L"OnMouseOver", OnMouseOver);
+	AddHandleUIEvent(L"OnMouseWheel", OnMouseWheel);
+	AddHandleUIEvent(L"OnGetChar", OnGetChar);
+	AddHandleUIEvent(L"OnKeyDown", OnKeyDown);
 }
 
 LRESULT LLGameWindow::WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)

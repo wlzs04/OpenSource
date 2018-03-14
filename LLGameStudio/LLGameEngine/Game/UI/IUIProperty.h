@@ -19,28 +19,34 @@ public:
 	wstring defaultValue;
 };
 
-class PropertyName :IUIProperty
+class PropertyName :public IUIProperty
 {
 public:
-	PropertyName() :IUIProperty(L"name", L"node") {}
+	PropertyName() :IUIProperty(L"name", L"node") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue()override { return value; };
 	void SetValue(wstring value) { this->value =value; };
 	wstring value;
 };
 
-class PropertyWidth :IUIProperty
+class PropertyWidth :public IUIProperty
 {
 public:
-	PropertyWidth() :IUIProperty(L"width", L"1") {}
+	PropertyWidth() :IUIProperty(L"width", L"1") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue() { return to_wstring(value); };
 	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
 	float value;
 };
 
-class PropertyHeight :IUIProperty
+class PropertyHeight :public IUIProperty
 {
 public:
-	PropertyHeight() :IUIProperty(L"height", L"1") {}
+	PropertyHeight() :IUIProperty(L"height", L"1") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue() { return to_wstring(value); };
 	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
 	float value;
@@ -50,8 +56,6 @@ class AnchorEnum : public EnumBase
 {
 public:
 	AnchorEnum(int i) :EnumBase(i) {}
-
-	unordered_map<wstring, int>& GetEnumMap()override;
 
 	static const int Center = 0;
 	static const int Left = 1;
@@ -63,13 +67,15 @@ public:
 	static const int Right_Bottom = Right | Bottom;
 	static const int Left_Bottom = Left | Bottom;
 private:
-	static unordered_map<wstring, int> anchorEnumMap;
+	unordered_map<wstring, int>& GetEnumMap()override;
 };
 
-class PropertyAnchorEnum :IUIProperty
+class PropertyAnchorEnum :public IUIProperty
 {
 public:
-	PropertyAnchorEnum() :IUIProperty(L"anchorEnum", L"Left_Top") {}
+	PropertyAnchorEnum() :IUIProperty(L"anchorEnum", L"Left_Top") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue() { return value.ToWString(); };
 	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
 	AnchorEnum value = AnchorEnum::Left;
@@ -101,10 +107,12 @@ public :
 	float x=0, y=0;
 };
 
-class PropertyrRotation :IUIProperty
+class PropertyrRotation :public IUIProperty
 {
 public:
-	PropertyrRotation() :IUIProperty(L"rotation", L"{0,0}") {}
+	PropertyrRotation() :IUIProperty(L"rotation", L"{0,0}") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue() { return value.ToWString(); };
 	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
 	Vector2 value;
@@ -160,19 +168,23 @@ public:
 	float left=0, top = 0, right = 0, bottom = 0;
 };
 
-class PropertyrMargin :IUIProperty
+class PropertyrMargin :public IUIProperty
 {
 public:
-	PropertyrMargin() :IUIProperty(L"margin", L"{0}") {}
+	PropertyrMargin() :IUIProperty(L"margin", L"{0}") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue() { return value.ToWString(); };
 	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
 	Rect value;
 };
 
-class PropertyrClipByParent :IUIProperty
+class PropertyrClipByParent :public IUIProperty
 {
 public:
-	PropertyrClipByParent() :IUIProperty(L"clipByParent", L"False") {}
+	PropertyrClipByParent() :IUIProperty(L"clipByParent", L"False") {
+		SetValue(defaultValue);
+	}
 	wstring GetValue() { return value ? L"True" : L"False"; };
 	void SetValue(wstring value) { this->value=WStringHelper::GetBool(value); };
 	bool value;

@@ -4,7 +4,8 @@
 #include "../Common/Config/GameConfig.h"
 #include "../Common/Helper/MessageHelper.h"
 #include "../Common/Helper/SystemHelper.h"
-#include "UI/IUINode.h"
+#include "UI/LLGameScene.h"
+#include "../Common/Graphics/Direct2D/Direct2DApi.h"
 
 class LLGame
 {
@@ -15,19 +16,22 @@ public:
 	void Init();
 	//游戏启动
 	void Start();
-private:
+protected:
 	//初始化窗体
 	void InitWindow();
 	//初始化数据
-	void InitData();
+	virtual void InitData();
 	//加载配置
 	void LoadConfig();
 	//保存配置
 	void SaveConfig();
+
+	void OnRunEvent();
+	void Render();
+
 	wstring currentPath;
 	GameConfig gameConfig;
 	LLGameWindow* gameWindow;
 	bool gameExit = false;
-	wstring startScene = L"Resource\\layout1\\scene1.scene";
-	IUINode* rootNode;
+	LLGameScene* gameScene;
 };

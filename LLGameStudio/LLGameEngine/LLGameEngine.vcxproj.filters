@@ -48,6 +48,18 @@
     <ClCompile Include="Game\UI\IUIProperty.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\UI\LLGameScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Graphics\Direct2D\Direct2DApi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Graphics\GraphicsApi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\UI\LLGameBack.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -78,6 +90,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Common\LLBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\UI\LLGameScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\GraphicsApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\Direct2D\Direct2DApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\UI\LLGameBack.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

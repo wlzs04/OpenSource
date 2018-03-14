@@ -4,7 +4,6 @@ IUIProperty::IUIProperty(wstring name, wstring defaultValue)
 {
 	this->name = name;
 	this->defaultValue = defaultValue;
-	SetValue(defaultValue);
 }
 
 bool IUIProperty::IsDefault()
@@ -14,6 +13,7 @@ bool IUIProperty::IsDefault()
 
 unordered_map<wstring, int>& AnchorEnum::GetEnumMap()
 {
+	static unordered_map<wstring, int> anchorEnumMap;
 	if (anchorEnumMap.size() == 0)
 	{
 		anchorEnumMap[L"Center"] = Center;

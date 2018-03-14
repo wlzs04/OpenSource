@@ -6,6 +6,7 @@ LLGame::LLGame()
 
 LLGame::~LLGame()
 {
+	GraphicsApi::ReleaseGraphicsApi();
 	if (gameWindow)
 	{
 		delete gameWindow;
@@ -40,6 +41,8 @@ void LLGame::LoadConfig()
 		gameConfig.height = rootNode->GetProperty(L"height")->GetValueInt();
 		gameConfig.fullScreen = rootNode->GetProperty(L"fullScreen")->GetValueBool();
 		gameConfig.canMultiGame = rootNode->GetProperty(L"canMultiGame")->GetValueBool();
+		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
+		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
 	}
 	else
 	{
@@ -56,11 +59,26 @@ void LLGame::SaveConfig()
 	node->AddProperty(new LLXMLProperty(L"height", to_wstring(gameConfig.height)));
 	node->AddProperty(new LLXMLProperty(L"fullScreen", to_wstring(gameConfig.fullScreen)));
 	node->AddProperty(new LLXMLProperty(L"canMultiGame", to_wstring(gameConfig.canMultiGame)));
+	node->AddProperty(new LLXMLProperty(L"startScene", gameConfig.startScene));
+	node->AddProperty(new LLXMLProperty(L"graphicsApi", gameConfig.graphicsApi));
 	xmlDocument.SetRootNode(node);
 	if (!xmlDocument.SaveXMLToFile(currentPath + L"\\" + L"Game.xml"))
 	{
 		MessageHelper::ShowMessage(L"配置文件保存失败！");
 	}
+}
+
+void LLGame::OnRunEvent()
+{
+	Render();
+}
+
+void LLGame::Render()
+{
+	GraphicsApi::GetGraphicsApi()->BeginRender();
+	GraphicsApi::GetGraphicsApi()->Clear();
+	gameScene->Render();
+	GraphicsApi::GetGraphicsApi()->EndRender();
 }
 
 void LLGame::InitWindow()
@@ -102,10 +120,20 @@ void LLGame::InitData()
 {
 	if (!gameExit)
 	{
-		rootNode = new IUINode();
-		LLXMLDocument doc;
-		doc.LoadXMLFromFile(startScene);
-		LLXMLNode* node= doc.GetRootNode();
-		int i = 0;
+		GraphicsApi* graphicsApi;
+		if (gameConfig.graphicsApi == L"Direct2D")
+		{
+			graphicsApi = new Direct2DApi(gameWindow->GetHWND());
+			graphicsApi->SetSize(gameConfig.width, gameConfig.height);
+			graphicsApi->Init();
+			GraphicsApi::SetGraphicsApi(graphicsApi);
+		}
+		else
+		{
+			MessageHelper::ShowMessage(L"其它底层图形API正常开发当中！");
+		}
+		gameScene = new LLGameScene();
+		gameScene->LoadSceneFromFile(currentPath + L"\\" + gameConfig.resourcePath + L"\\" + gameConfig.startScene);
+		gameWindow->OnRunEvent = bind(&LLGame::OnRunEvent, this);
 	}
 }

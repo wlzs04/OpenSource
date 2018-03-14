@@ -14,5 +14,8 @@ public:
 	wstring gameName = L"Game";
 	bool fullScreen = false;
 	bool canMultiGame = false;
+	wstring startScene = L"";
+	wstring resourcePath = L"Resource";
+	wstring graphicsApi = L"Direct2D";
 };
 
