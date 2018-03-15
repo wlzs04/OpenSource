@@ -2,7 +2,8 @@
 #include <list>
 #include <unordered_map>
 #include "IUIProperty.h"
-#include "../../Common/Graphics/GraphicsApi.h"
+#include "../../Common/XML/LLXML.h"
+#include "../../Common/Helper/SystemHelper.h"
 
 using namespace std;
 
@@ -14,10 +15,11 @@ public:
 	float GetActualWidth();
 	float GetActualHeight();
 	void SetWidth(float width);
-	void SetProperty(wstring name,wstring value);
+	virtual void SetProperty(wstring name,wstring value);
 	void SetHeight(float height);
 	void AddNode(IUINode* node);
 	void RemoveNode(IUINode* node);
+	void LoadFromXMLNode(LLXMLNode* xmlNode);
 	virtual void Render()=0;
 protected:
 	IUINode* parentNode = nullptr;

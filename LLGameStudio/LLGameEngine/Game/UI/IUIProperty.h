@@ -2,6 +2,7 @@
 #include <string>
 #include "..\..\Common\Helper\WStringHelper.h"
 #include "..\..\Common\LLBase.h"
+#include "../../Common/Graphics/GraphicsApi.h"
 
 using namespace std;
 
@@ -188,4 +189,25 @@ public:
 	wstring GetValue() { return value ? L"True" : L"False"; };
 	void SetValue(wstring value) { this->value=WStringHelper::GetBool(value); };
 	bool value;
+};
+
+class PropertyFilePath :public IUIProperty
+{
+public:
+	PropertyFilePath() :IUIProperty(L"filePath", L"") {}
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class PropertyImage :public IUIProperty
+{
+public:
+	PropertyImage() :IUIProperty(L"image", L"") {}
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) {
+		this->value = value;
+		GraphicsApi::GetGraphicsApi()->AddImage(value);
+	};
+	wstring value;
 };

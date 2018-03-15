@@ -1,5 +1,7 @@
 #include "SystemHelper.h"
 
+wstring SystemHelper::resourcePath = L"Resource";
+
 int SystemHelper::GetScreenWidth()
 {
 	return GetSystemMetrics(SM_CXSCREEN);
@@ -16,4 +18,9 @@ wstring SystemHelper::GetCurrentPath()
 	GetModuleFileName(NULL, currentPath, MAX_PATH);
 	(wcsrchr(currentPath, L'\\'))[0] = 0;
 	return currentPath;
+}
+
+wstring SystemHelper::GetResourceRootPath()
+{
+	return GetCurrentPath() + L"\\" + resourcePath;
 }

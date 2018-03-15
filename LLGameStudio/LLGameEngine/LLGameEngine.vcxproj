@@ -130,10 +130,15 @@
     <ClCompile Include="Common\LLBase.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
+    <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
     <ClCompile Include="Game\UI\IUINode.cpp" />
     <ClCompile Include="Game\UI\IUIProperty.cpp" />
     <ClCompile Include="Game\UI\LLGameBack.cpp" />
+    <ClCompile Include="Game\UI\LLGameCanvas.cpp" />
+    <ClCompile Include="Game\UI\LLGameGrid.cpp" />
+    <ClCompile Include="Game\UI\LLGameImage.cpp" />
+    <ClCompile Include="Game\UI\LLGameLayout.cpp" />
     <ClCompile Include="Game\UI\LLGameScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -147,10 +152,15 @@
     <ClInclude Include="Common\LLBase.h" />
     <ClInclude Include="Common\XML\LLXML.h" />
     <ClInclude Include="Common\Window\LLGameWindow.h" />
+    <ClInclude Include="Game\GameTimer.h" />
     <ClInclude Include="Game\LLGame.h" />
     <ClInclude Include="Game\UI\IUINode.h" />
     <ClInclude Include="Game\UI\IUIProperty.h" />
     <ClInclude Include="Game\UI\LLGameBack.h" />
+    <ClInclude Include="Game\UI\LLGameCanvas.h" />
+    <ClInclude Include="Game\UI\LLGameGrid.h" />
+    <ClInclude Include="Game\UI\LLGameImage.h" />
+    <ClInclude Include="Game\UI\LLGameLayout.h" />
     <ClInclude Include="Game\UI\LLGameScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

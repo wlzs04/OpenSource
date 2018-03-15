@@ -13,4 +13,8 @@ public:
 	static int GetScreenHeight();
 	//获得当前路径。
 	static wstring GetCurrentPath();
+	//获得资源路径。
+	static wstring GetResourceRootPath();
+	//资源文件夹名
+	static wstring resourcePath;
 };

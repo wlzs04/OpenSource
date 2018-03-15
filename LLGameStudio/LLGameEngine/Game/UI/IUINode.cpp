@@ -1,4 +1,7 @@
 #include "IUINode.h"
+#include "LLGameBack.h"
+#include "LLGameLayout.h"
+#include "LLGameImage.h"
 
 IUINode::IUINode()
 {
@@ -53,4 +56,36 @@ void IUINode::RemoveNode(IUINode* node)
 	listNode.remove(node);
 	node->parentNode = nullptr;
 	
+}
+
+void IUINode::LoadFromXMLNode(LLXMLNode * xmlNode)
+{
+	for (auto var : xmlNode->GetPropertyMap())
+	{
+		if (propertyMap.count(var.first) > 0)
+		{
+			SetProperty(var.first, var.second->GetValue());
+		}
+	}
+	for (auto var : xmlNode->GetChildNodeList())
+	{
+		IUINode* uiNode = nullptr;
+		if (var->GetName() == L"LLGameLayout")
+		{
+			uiNode = new LLGameLayout();
+		}
+		else if (var->GetName() == L"LLGameGrid")
+		{
+			uiNode = new LLGameGrid();
+		}
+		else if (var->GetName() == L"LLGameImage")
+		{
+			uiNode = new LLGameImage();
+		}
+		if (uiNode != nullptr)
+		{
+			uiNode->LoadFromXMLNode(var);
+			AddNode(uiNode);
+		}
+	}
 }

@@ -24,11 +24,17 @@ void LLGameScene::LoadSceneFromFile(wstring filePath)
 		if (var->GetName() == L"LLGameBack")
 		{
 			uiNode = new LLGameBack();
-			wstring image = var->GetProperty(L"image")->GetValue();
-			uiNode->SetProperty(L"image", image);
-			GraphicsApi::GetGraphicsApi()->AddImage(image);
-			//uiNode->SetProperty(L"width", var->GetProperty(L"width")->GetValue());
-			//uiNode->SetProperty(L"height", var->GetProperty(L"height")->GetValue());
+			uiNode->LoadFromXMLNode(var);
+		}
+		else if (var->GetName() == L"LLGameCanvas")
+		{
+			uiNode = new LLGameCanvas();
+			uiNode->LoadFromXMLNode(var);
+		}
+		else if (var->GetName() == L"LLGameLayout")
+		{
+			uiNode = new LLGameLayout();
+			uiNode->LoadFromXMLNode(var);
 		}
 		if (uiNode != nullptr)
 		{

@@ -1,11 +1,11 @@
 #pragma once
 #include "IUINode.h"
 
-class LLGameBack : public IUINode
+class LLGameImage : public IUINode
 {
 public:
-	LLGameBack();
-	~LLGameBack() {};
+	LLGameImage();
+	~LLGameImage() {};
 	void Render()override;
 private:
 	PropertyImage propertyImage;

@@ -43,6 +43,7 @@ void LLGame::LoadConfig()
 		gameConfig.canMultiGame = rootNode->GetProperty(L"canMultiGame")->GetValueBool();
 		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
 		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
+		SystemHelper::resourcePath = gameConfig.resourcePath;
 	}
 	else
 	{
@@ -133,7 +134,7 @@ void LLGame::InitData()
 			MessageHelper::ShowMessage(L"其它底层图形API正常开发当中！");
 		}
 		gameScene = new LLGameScene();
-		gameScene->LoadSceneFromFile(currentPath + L"\\" + gameConfig.resourcePath + L"\\" + gameConfig.startScene);
+		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene);
 		gameWindow->OnRunEvent = bind(&LLGame::OnRunEvent, this);
 	}
 }
