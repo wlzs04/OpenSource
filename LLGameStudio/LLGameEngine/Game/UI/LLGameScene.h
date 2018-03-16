@@ -4,7 +4,7 @@
 #include "LLGameLayout.h"
 #include "..\..\Common\XML\LLXML.h"
 
-class LLGameScene : IUINode
+class LLGameScene : public IUINode
 {
 public:
 	LLGameScene();

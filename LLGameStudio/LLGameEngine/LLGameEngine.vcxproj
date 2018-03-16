@@ -124,6 +124,7 @@
     <ClCompile Include="Common\Config\GameConfig.cpp" />
     <ClCompile Include="Common\Graphics\Direct2D\Direct2DApi.cpp" />
     <ClCompile Include="Common\Graphics\GraphicsApi.cpp" />
+    <ClCompile Include="Common\Helper\GameHelper.cpp" />
     <ClCompile Include="Common\Helper\MessageHelper.cpp" />
     <ClCompile Include="Common\Helper\SystemHelper.cpp" />
     <ClCompile Include="Common\Helper\WStringHelper.cpp" />
@@ -135,17 +136,21 @@
     <ClCompile Include="Game\UI\IUINode.cpp" />
     <ClCompile Include="Game\UI\IUIProperty.cpp" />
     <ClCompile Include="Game\UI\LLGameBack.cpp" />
+    <ClCompile Include="Game\UI\LLGameButton.cpp" />
     <ClCompile Include="Game\UI\LLGameCanvas.cpp" />
     <ClCompile Include="Game\UI\LLGameGrid.cpp" />
     <ClCompile Include="Game\UI\LLGameImage.cpp" />
     <ClCompile Include="Game\UI\LLGameLayout.cpp" />
     <ClCompile Include="Game\UI\LLGameScene.cpp" />
+    <ClCompile Include="Game\UI\LLGameText.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
     <ClInclude Include="Common\Graphics\Direct2D\Direct2DApi.h" />
     <ClInclude Include="Common\Graphics\GraphicsApi.h" />
+    <ClInclude Include="Common\Helper\GameHelper.h" />
+    <ClInclude Include="Common\Helper\MathHelper.h" />
     <ClInclude Include="Common\Helper\MessageHelper.h" />
     <ClInclude Include="Common\Helper\SystemHelper.h" />
     <ClInclude Include="Common\Helper\WStringHelper.h" />
@@ -157,11 +162,13 @@
     <ClInclude Include="Game\UI\IUINode.h" />
     <ClInclude Include="Game\UI\IUIProperty.h" />
     <ClInclude Include="Game\UI\LLGameBack.h" />
+    <ClInclude Include="Game\UI\LLGameButton.h" />
     <ClInclude Include="Game\UI\LLGameCanvas.h" />
     <ClInclude Include="Game\UI\LLGameGrid.h" />
     <ClInclude Include="Game\UI\LLGameImage.h" />
     <ClInclude Include="Game\UI\LLGameLayout.h" />
     <ClInclude Include="Game\UI\LLGameScene.h" />
+    <ClInclude Include="Game\UI\LLGameText.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

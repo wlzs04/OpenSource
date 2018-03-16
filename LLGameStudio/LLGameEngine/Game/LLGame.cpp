@@ -26,6 +26,7 @@ void LLGame::Start()
 {
 	if (!gameExit)
 	{
+		gameTimer.Start();
 		gameWindow->Run();
 	}
 }
@@ -71,7 +72,14 @@ void LLGame::SaveConfig()
 
 void LLGame::OnRunEvent()
 {
+	Update();
 	Render();
+}
+
+void LLGame::Update()
+{
+	gameTimer.Tick();
+	gameScene->Update();
 }
 
 void LLGame::Render()
@@ -131,10 +139,17 @@ void LLGame::InitData()
 		}
 		else
 		{
-			MessageHelper::ShowMessage(L"其它底层图形API正常开发当中！");
+			MessageHelper::ShowMessage(L"其它底层图形API正在开发当中！");
+			gameExit = true;
 		}
+
+		GameHelper::SetGameWidth(gameConfig.width);
+		GameHelper::SetGameHeight(gameConfig.height);
+
 		gameScene = new LLGameScene();
 		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene);
 		gameWindow->OnRunEvent = bind(&LLGame::OnRunEvent, this);
+	
+		SystemHelper::SetCursorCenter();
 	}
 }

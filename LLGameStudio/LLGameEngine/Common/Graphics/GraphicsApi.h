@@ -15,7 +15,7 @@ public:
 	virtual void Init() = 0;
 	virtual void AddImage(wstring image) = 0;
 	virtual void DrawImage(wstring image,float x,float y, float width, float height)=0;
-	virtual void DrawText(wstring text, wstring  textFormatName, float x, float y, float width, float height) = 0;
+	virtual void DrawText(wstring text, float x, float y, float width, float height,wstring  textFormatName=L"") = 0;
 	virtual void AddTextFormat(wstring textFormatName, wstring fontFamilyName, float fontSize) = 0;
 	virtual void SetSize(float width,float height);
 	static void SetGraphicsApi(GraphicsApi* currentGraphicsApi);

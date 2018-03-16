@@ -17,7 +17,7 @@ public:
 	virtual void Init() override;
 	virtual void DrawRect(float x, float y, float width, float height) override;
 	virtual void DrawImage(std::wstring image, float x, float y, float width, float height) override;
-	virtual void DrawText(wstring text, wstring  textFormatName, float x, float y, float width, float height) override;
+	virtual void DrawText(wstring text, float x, float y, float width, float height, wstring  textFormatName = L"") override;
 	virtual void AddImage(wstring image) override;
 	virtual void AddTextFormat(wstring textFormatName, wstring fontFamilyName, float fontSize) override;
 	virtual void Clear() override;
@@ -28,7 +28,7 @@ private:
 	Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> d2dRenderTarget;
 	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> d2dBlackBrush;
 	Microsoft::WRL::ComPtr<IWICImagingFactory> wicImageFactory;
-	ID2D1SolidColorBrush* d2dCurrentBrush;
+	ID2D1SolidColorBrush* currentD2DBrush;
 	unordered_map<std::wstring, Microsoft::WRL::ComPtr<ID2D1Bitmap>> imageMap;
 
 	Microsoft::WRL::ComPtr<IDWriteFactory> writeFactory;

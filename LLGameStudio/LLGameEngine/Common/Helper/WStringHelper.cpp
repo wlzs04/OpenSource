@@ -5,12 +5,12 @@ int WStringHelper::GetInt(wstring& value)
 	return _wtoi(value.c_str());
 }
 
-int WStringHelper::GetFloat(wstring& value)
+float WStringHelper::GetFloat(wstring& value)
 {
 	return _wtof(value.c_str());
 }
 
-int WStringHelper::GetBool(wstring& value)
+bool WStringHelper::GetBool(wstring& value)
 {
 	//如果value很长，判断效率会不会比只判断三个false低？还是加上判断吧！
 	if (value.size() > 5)

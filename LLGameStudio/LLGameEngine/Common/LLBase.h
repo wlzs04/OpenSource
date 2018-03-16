@@ -10,6 +10,8 @@ class EnumBase
 public:
 	EnumBase(int i) :value(i) {}
 	bool operator==(const EnumBase &ae) const;
+	int operator&(const EnumBase &ae) const;
+	int operator&(int i) const;
 	wstring ToWString();
 	void GetValueFromWString(wstring ws);
 protected:

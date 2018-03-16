@@ -6,6 +6,7 @@
 #include "../Common/Helper/SystemHelper.h"
 #include "UI/LLGameScene.h"
 #include "../Common/Graphics/Direct2D/Direct2DApi.h"
+#include "GameTimer.h"
 
 class LLGame
 {
@@ -25,13 +26,16 @@ protected:
 	void LoadConfig();
 	//保存配置
 	void SaveConfig();
-
-	void OnRunEvent();
+	//更新
+	void Update();
+	//渲染
 	void Render();
+	void OnRunEvent();
 
 	wstring currentPath;
 	GameConfig gameConfig;
 	LLGameWindow* gameWindow;
 	bool gameExit = false;
 	LLGameScene* gameScene;
+	GameTimer gameTimer;
 };

@@ -75,6 +75,15 @@
     <ClCompile Include="Game\UI\LLGameImage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Helper\GameHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\UI\LLGameButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\UI\LLGameText.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -132,6 +141,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\UI\LLGameImage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Helper\GameHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Helper\MathHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\UI\LLGameButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\UI\LLGameText.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

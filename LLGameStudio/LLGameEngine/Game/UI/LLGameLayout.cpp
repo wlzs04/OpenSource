@@ -34,5 +34,6 @@ void LLGameLayout::LoadLayoutFromFile(wstring filePath)
 	doc.LoadXMLFromFile(SystemHelper::GetResourceRootPath()+L"\\"+ filePath);
 	LLXMLNode* node = doc.GetRootNode();
 	uiGrid = new LLGameGrid();
+	AddNode(uiGrid);
 	uiGrid->LoadFromXMLNode(node);
 }

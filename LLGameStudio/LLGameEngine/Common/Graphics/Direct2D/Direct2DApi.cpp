@@ -1,4 +1,4 @@
-#include "Direct2DApi.h"
+﻿#include "Direct2DApi.h"
 #include "..\..\Helper\SystemHelper.h"
 
 using namespace D2D1;
@@ -24,17 +24,18 @@ void Direct2DApi::Init()
 
 	d2dRenderTarget->CreateSolidColorBrush(D2D1::ColorF(
 		D2D1::ColorF::Black),&d2dBlackBrush);
-	d2dCurrentBrush = d2dBlackBrush.Get();
+	currentD2DBrush = d2dBlackBrush.Get();
 
 	CoInitialize(NULL);
 	CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicImageFactory));
 
 	DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), (IUnknown**)&writeFactory);
+	AddTextFormat(L"", L"宋体",30);
 }
 
 void Direct2DApi::DrawRect(float x, float y, float width, float height)
 {
-	d2dRenderTarget->DrawRectangle(D2D1::RectF(x, y, x+ width, y+height), d2dCurrentBrush);
+	d2dRenderTarget->DrawRectangle(D2D1::RectF(x, y, x+ width, y+height), currentD2DBrush);
 }
 
 void Direct2DApi::DrawImage(std::wstring image, float x, float y, float width, float height)
@@ -42,14 +43,14 @@ void Direct2DApi::DrawImage(std::wstring image, float x, float y, float width, f
 	d2dRenderTarget->DrawBitmap(imageMap[image].Get(), D2D1::RectF(x, y, x + width, y + height));
 }
 
-void Direct2DApi::DrawText(wstring text,wstring  textFormatName,float x, float y,float width, float height)
+void Direct2DApi::DrawText(wstring text, float x, float y, float width, float height, wstring  textFormatName)
 {
-	d2dRenderTarget->DrawTextW(text.c_str(),text.size(), textFormatMap[textFormatName].Get(), D2D1::RectF(x, y, x + width, y + height),d2dCurrentBrush);
+	d2dRenderTarget->DrawTextW(text.c_str(),text.size(), textFormatMap[textFormatName].Get(), D2D1::RectF(x, y, x + width, y + height), currentD2DBrush);
 }
 
 void Direct2DApi::AddImage(wstring image)
 {
-	if (imageMap.count(image) > 0)
+	if (image==L""||imageMap.count(image) > 0)
 	{
 		return;
 	}
@@ -73,6 +74,8 @@ void Direct2DApi::AddTextFormat(wstring textFormatName,wstring fontFamilyName,fl
 {
 	ComPtr<IDWriteTextFormat> writeTextFormat;
 	writeFactory->CreateTextFormat(fontFamilyName.c_str(), NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &writeTextFormat);
+	writeTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	writeTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 	textFormatMap[textFormatName] = writeTextFormat;
 }
 

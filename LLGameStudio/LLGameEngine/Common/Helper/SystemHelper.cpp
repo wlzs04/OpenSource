@@ -24,3 +24,13 @@ wstring SystemHelper::GetResourceRootPath()
 {
 	return GetCurrentPath() + L"\\" + resourcePath;
 }
+
+void SystemHelper::SetCursorPosition(int x, int y)
+{
+	SetCursorPos(x, y);
+}
+
+void SystemHelper::SetCursorCenter()
+{
+	SetCursorPos(GetScreenWidth()/2, GetScreenHeight() / 2);
+}

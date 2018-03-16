@@ -9,47 +9,43 @@ void LLGameScene::LoadSceneFromFile(wstring filePath)
 {
 	propertyFilePath.SetValue(filePath);
 	LLXMLDocument doc;
-	doc.LoadXMLFromFile(filePath);
-	LLXMLNode* node = doc.GetRootNode();
-	for (auto var : node->GetPropertyMap())
+	if (doc.LoadXMLFromFile(filePath))
 	{
-		if (propertyMap.count(var.first) > 0)
+		LLXMLNode* node = doc.GetRootNode();
+		for (auto var : node->GetPropertyMap())
 		{
-			propertyMap[var.first]->SetValue(var.second->GetValue());
+			if (propertyMap.count(var.first) > 0)
+			{
+				propertyMap[var.first]->SetValue(var.second->GetValue());
+			}
 		}
-	}
-	for (auto var : node->GetChildNodeList())
-	{
-		IUINode* uiNode = nullptr;
-		if (var->GetName() == L"LLGameBack")
+		for (auto var : node->GetChildNodeList())
 		{
-			uiNode = new LLGameBack();
-			uiNode->LoadFromXMLNode(var);
+			IUINode* uiNode = nullptr;
+			if (var->GetName() == L"LLGameBack")
+			{
+				uiNode = new LLGameBack();
+			}
+			else if (var->GetName() == L"LLGameCanvas")
+			{
+				uiNode = new LLGameCanvas();
+			}
+			else if (var->GetName() == L"LLGameLayout")
+			{
+				uiNode = new LLGameLayout();
+			}
+			if (uiNode != nullptr)
+			{
+				AddNode(uiNode);
+				uiNode->LoadFromXMLNode(var);
+			}
 		}
-		else if (var->GetName() == L"LLGameCanvas")
-		{
-			uiNode = new LLGameCanvas();
-			uiNode->LoadFromXMLNode(var);
-		}
-		else if (var->GetName() == L"LLGameLayout")
-		{
-			uiNode = new LLGameLayout();
-			uiNode->LoadFromXMLNode(var);
-		}
-		if (uiNode != nullptr)
-		{
-			AddNode(uiNode);
-		}
+		ResetTransform();
 	}
 }
 
 void LLGameScene::Render()
 {
-	
-	actualWidth = propertyWidth.value;
-	actualHeight = propertyHeight.value;
-	
-	GraphicsApi::GetGraphicsApi()->DrawRect(0,0, actualWidth, actualHeight);
 	for (auto var : listNode)
 	{
 		var->Render();
