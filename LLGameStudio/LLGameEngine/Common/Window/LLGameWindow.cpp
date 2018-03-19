@@ -199,9 +199,8 @@ LRESULT LLGameWindow::WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 	{
 		if (OnMouseOver)
 		{
-			OnMouseOver(this, wParam);
+			OnMouseOver(this, lParam);
 		}
-		//OnMouseOver(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	}
 	case WM_MOUSEWHEEL:

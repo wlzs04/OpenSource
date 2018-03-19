@@ -5,9 +5,12 @@
 #include "LLGameButton.h"
 #include "LLGameText.h"
 
+bool IUINode::uiLock = false;
+
 IUINode::IUINode()
 {
 	propertyMap[propertyName.name] = &propertyName;
+	propertyMap[propertyEnable.name] = &propertyEnable;
 	propertyMap[propertyWidth.name] = &propertyWidth;
 	propertyMap[propertyHeight.name] = &propertyHeight;
 	propertyMap[propertyAnchorEnum.name] = &propertyAnchorEnum;
@@ -18,6 +21,11 @@ IUINode::IUINode()
 
 IUINode::~IUINode()
 {
+}
+
+wstring IUINode::GetName()
+{
+	return propertyName.value;
 }
 
 float IUINode::GetActualWidth()
@@ -32,12 +40,12 @@ float IUINode::GetActualHeight()
 
 float IUINode::GetActualLeft()
 {
-	return actualLeft;
+	return actualRect.left;
 }
 
 float IUINode::GetActualTop()
 {
-	return actualTop;
+	return actualRect.top;
 }
 
 void IUINode::SetWidth(float width)
@@ -56,47 +64,48 @@ void IUINode::SetProperty(wstring name, wstring value)
 
 void IUINode::ResetTransform()
 {
-	float parentWidth = parentNode ? parentNode->GetActualWidth() : GameHelper::GetGameWidth();
-	float parentHeight = parentNode ? parentNode->GetActualHeight() : GameHelper::GetGameHeight();
+	float parentWidth = parentNode ? parentNode->GetActualWidth() : GameHelper::width;
+	float parentHeight = parentNode ? parentNode->GetActualHeight() : GameHelper::height;
 	float parentLeft = parentNode ? parentNode->GetActualLeft() : 0;
 	float parentTop = parentNode ? parentNode->GetActualTop() : 0;
 
 	actualWidth = MathHelper::IsRange1To0(propertyWidth.value) ? parentWidth * propertyWidth.value : propertyWidth.value;
 	actualHeight = MathHelper::IsRange1To0(propertyHeight.value) ? parentHeight * propertyHeight.value : propertyHeight.value;
 	
-	actualLeft = MathHelper::IsRange1To0(propertyMargin.value.left) ? parentWidth * propertyMargin.value.left : propertyMargin.value.left;
-	actualTop = MathHelper::IsRange1To0(propertyMargin.value.top) ? parentHeight * propertyMargin.value.top : propertyMargin.value.top;
-	actualRight = MathHelper::IsRange1To0(propertyMargin.value.right) ? parentWidth * propertyMargin.value.right : propertyMargin.value.right;
-	actualBottom = MathHelper::IsRange1To0(propertyMargin.value.bottom) ? parentHeight * propertyMargin.value.bottom : propertyMargin.value.bottom;
+	actualRect.left = MathHelper::IsRange1To0(propertyMargin.value.left) ? parentWidth * propertyMargin.value.left : propertyMargin.value.left;
+	actualRect.top = MathHelper::IsRange1To0(propertyMargin.value.top) ? parentHeight * propertyMargin.value.top : propertyMargin.value.top;
+	actualRect.right = MathHelper::IsRange1To0(propertyMargin.value.right) ? parentWidth * propertyMargin.value.right : propertyMargin.value.right;
+	actualRect.bottom = MathHelper::IsRange1To0(propertyMargin.value.bottom) ? parentHeight * propertyMargin.value.bottom : propertyMargin.value.bottom;
 
 	if ((propertyAnchorEnum.value & AnchorEnum::Left) != 0)
 	{
-		actualLeft = actualLeft;
+		actualRect.left = actualRect.left;
 	}
 	else if ((propertyAnchorEnum.value & AnchorEnum::Right) != 0)
 	{
-		actualLeft = parentWidth - actualRight - actualWidth;
+		actualRect.left = parentWidth - actualRect.right - actualWidth;
 	}
 	else
 	{
-		actualLeft = (parentWidth - actualWidth) / 2;
+		actualRect.left = (parentWidth - actualWidth) / 2;
 	}
 	if ((propertyAnchorEnum.value & AnchorEnum::Top) != 0)
 	{
-		actualTop = actualTop;
+		actualRect.top = actualRect.top;
 	}
 	else if ((propertyAnchorEnum.value & AnchorEnum::Bottom) != 0)
 	{
-		actualTop = parentHeight - actualBottom - actualHeight;
+		actualRect.top = parentHeight - actualRect.bottom - actualHeight;
 	}
 	else
 	{
-		actualTop = (parentHeight - actualHeight) / 2;
+		actualRect.top = (parentHeight - actualHeight) / 2;
 	}
 
-	actualLeft += parentLeft;
-	actualTop += parentTop;
-
+	actualRect.left += parentLeft;
+	actualRect.top += parentTop;
+	actualRect.right = actualRect.left + actualWidth;
+	actualRect.bottom = actualRect.top + actualHeight;
 	for (auto var : listNode)
 	{
 		var->ResetTransform();
@@ -113,6 +122,37 @@ void IUINode::AddNode(IUINode* node)
 {
 	listNode.push_back(node);
 	node->parentNode = this;
+}
+
+IUINode* IUINode::GetNode(wstring nodeName)
+{
+	wstring rootNodeName;
+	wstring realNodeName;
+	int pos = nodeName.find(L"\\");
+	if (pos != -1)
+	{
+		rootNodeName = nodeName.substr(0, pos);
+		realNodeName = nodeName.substr(pos+1);
+		for (auto var : listNode)
+		{
+			if (var->GetName() == rootNodeName)
+			{
+				return var->GetNode(realNodeName);
+			}
+		}
+	}
+	else
+	{
+		for (auto var : listNode)
+		{
+			if (var->GetName() == nodeName)
+			{
+				return var;
+			}
+		}
+	}
+	
+	return nullptr;
 }
 
 void IUINode::RemoveNode(IUINode* node)
@@ -155,5 +195,68 @@ void IUINode::LoadFromXMLNode(LLXMLNode * xmlNode)
 			AddNode(uiNode);
 			uiNode->LoadFromXMLNode(var);
 		}
+	}
+}
+
+bool IUINode::CheckState()
+{
+	for (auto rNode = listNode.rbegin(); rNode != listNode.rend(); rNode++)
+	{
+		(*rNode)->CheckState();
+	}
+	if (propertyEnable.value)
+	{
+		if (GameHelper::IsPointInRect(actualRect))
+		{
+			if (GameHelper::mouseLeftButtonPassed && !uiLock)
+			{
+				if (uiState != UIState::Click)
+				{
+					uiState = UIState::Click;
+					if (OnMouseClick)
+					{
+						OnMouseClick(this,0);
+					}
+					uiLock = true;
+				}
+			}
+			else
+			{
+				if (uiState != UIState::Hovor)
+				{
+					uiState = UIState::Hovor;
+					if (OnMouseEnter)
+					{
+						OnMouseEnter(this, 0);
+					}
+				}
+			}
+			return true;
+		}
+		else
+		{
+			if (uiState == UIState::Hovor)
+			{
+				uiState = UIState::Normal;
+				if (OnMouseLeave)
+				{
+					OnMouseLeave(this, 0);
+				}
+			}
+			return false;
+		}
+	}
+	return false;
+}
+
+void IUINode::Update()
+{
+	if (OnUpdate != nullptr)
+	{
+		OnUpdate(this,0);
+	}
+	for (auto var : listNode)
+	{
+		var->Update();
 	}
 }

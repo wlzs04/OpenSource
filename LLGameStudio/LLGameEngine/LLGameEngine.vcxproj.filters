@@ -84,6 +84,9 @@
     <ClCompile Include="Game\UI\LLGameText.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Helper\MathHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">

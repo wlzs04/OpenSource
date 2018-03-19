@@ -6,15 +6,19 @@ LLGameButton::LLGameButton()
 	propertyMap[propertyText.name] = &propertyText;
 }
 
+void LLGameButton::Update()
+{
+}
+
 void LLGameButton::Render()
 {
 	if (propertyImage.value != L"")
 	{
-		GraphicsApi::GetGraphicsApi()->DrawImage(propertyImage.value, actualLeft, actualTop, actualWidth, actualHeight);
+		GraphicsApi::GetGraphicsApi()->DrawImage(propertyImage.value, actualRect.left, actualRect.top, actualWidth, actualHeight);
 	}
 	else
 	{
-		GraphicsApi::GetGraphicsApi()->DrawRect(actualLeft, actualTop, actualWidth, actualHeight);
+		GraphicsApi::GetGraphicsApi()->DrawRect(actualRect.left, actualRect.top, actualWidth, actualHeight);
 	}
-	GraphicsApi::GetGraphicsApi()->DrawText(propertyText.value,actualLeft, actualTop, actualWidth, actualHeight);
+	GraphicsApi::GetGraphicsApi()->DrawText(propertyText.value, actualRect.left, actualRect.top, actualWidth, actualHeight);
 }

@@ -7,6 +7,7 @@
 #include "UI/LLGameScene.h"
 #include "../Common/Graphics/Direct2D/Direct2DApi.h"
 #include "GameTimer.h"
+#include "../Game/UI/LLGameText.h"
 
 class LLGame
 {
@@ -22,6 +23,8 @@ protected:
 	void InitWindow();
 	//初始化数据
 	virtual void InitData();
+	//初始化自定义数据
+	virtual void InitUserData() {};
 	//加载配置
 	void LoadConfig();
 	//保存配置
@@ -31,6 +34,12 @@ protected:
 	//渲染
 	void Render();
 	void OnRunEvent();
+	void OnLeftMouseDown(void* iuiNode, int i);
+	void OnLeftMouseUp(void* iuiNode, int i);
+	void OnRightMouseDown(void* iuiNode, int i);
+	void OnRightMouseUp(void* iuiNode, int i);
+	void OnMouseOver(void* iuiNode, int i);
+	void OnMouseWheel(void* iuiNode, int i);
 
 	wstring currentPath;
 	GameConfig gameConfig;

@@ -26,6 +26,7 @@ void LLGame::Start()
 {
 	if (!gameExit)
 	{
+		SystemHelper::SetCursorCenter();
 		gameTimer.Start();
 		gameWindow->Run();
 	}
@@ -76,9 +77,48 @@ void LLGame::OnRunEvent()
 	Render();
 }
 
+void LLGame::OnLeftMouseDown(void* iuiNode, int i)
+{
+	GameHelper::mouseLeftButtonPassed = true;
+	gameScene->CheckState();
+}
+
+void LLGame::OnLeftMouseUp(void* iuiNode, int i)
+{
+	GameHelper::mouseLeftButtonPassed = false;
+	gameScene->CheckState();
+	IUINode::uiLock = false;
+}
+
+void LLGame::OnRightMouseDown(void* iuiNode, int i)
+{
+	GameHelper::mouseRightButtonPassed = true;
+	gameScene->CheckState();
+}
+
+void LLGame::OnRightMouseUp(void* iuiNode, int i)
+{
+	GameHelper::mouseRightButtonPassed = false;
+	gameScene->CheckState();
+}
+
+void LLGame::OnMouseOver(void* iuiNode, int i)
+{
+	GameHelper::mousePosition.x = GET_X_LPARAM(i);
+	GameHelper::mousePosition.y = GET_Y_LPARAM(i);
+	gameScene->CheckState();
+}
+
+void LLGame::OnMouseWheel(void * iuiNode, int i)
+{
+	GameHelper::mouseWheelValue += i; 
+	gameScene->CheckState();
+}
+
 void LLGame::Update()
 {
 	gameTimer.Tick();
+	GameHelper::thisTickTime=gameTimer.GetThisTickTime();
 	gameScene->Update();
 }
 
@@ -143,13 +183,19 @@ void LLGame::InitData()
 			gameExit = true;
 		}
 
-		GameHelper::SetGameWidth(gameConfig.width);
-		GameHelper::SetGameHeight(gameConfig.height);
+		GameHelper::width = gameConfig.width;
+		GameHelper::height = gameConfig.height;
 
 		gameScene = new LLGameScene();
 		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene);
+
 		gameWindow->OnRunEvent = bind(&LLGame::OnRunEvent, this);
-	
-		SystemHelper::SetCursorCenter();
+		gameWindow->OnMouseOver = bind(&LLGame::OnMouseOver, this, placeholders::_1, placeholders::_2);
+		gameWindow->OnLeftMouseDown = bind(&LLGame::OnLeftMouseDown, this, placeholders::_1, placeholders::_2);
+		gameWindow->OnLeftMouseUp = bind(&LLGame::OnLeftMouseUp, this, placeholders::_1, placeholders::_2);
+		gameWindow->OnRightMouseDown = bind(&LLGame::OnRightMouseDown, this, placeholders::_1, placeholders::_2);
+		gameWindow->OnRightMouseUp = bind(&LLGame::OnRightMouseUp, this, placeholders::_1, placeholders::_2);
+
+		InitUserData();
 	}
 }

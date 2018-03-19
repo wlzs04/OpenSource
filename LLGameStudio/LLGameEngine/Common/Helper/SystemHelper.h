@@ -17,8 +17,10 @@ public:
 	static wstring GetResourceRootPath();
 	//资源文件夹名
 	static wstring resourcePath;
-	//设置鼠标位置
+	//设置鼠标在屏幕上的位置
 	static void SetCursorPosition(int x, int y);
-	//无参数时设置鼠标位置到中心
+	//无参数时设置鼠标位置到屏幕中心
 	static void SetCursorCenter();
+	//获得鼠标在屏幕上的位置
+	static POINT GetCursorPosition();
 };

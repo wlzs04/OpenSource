@@ -9,6 +9,6 @@ void LLGameBack::Render()
 {
 	if (propertyImage.value != L"")
 	{
-		GraphicsApi::GetGraphicsApi()->DrawImage(propertyImage.value, actualLeft, actualTop, actualWidth, actualHeight);
+		GraphicsApi::GetGraphicsApi()->DrawImage(propertyImage.value, actualRect.left, actualRect.top, actualWidth, actualHeight);
 	}
 }

@@ -1,14 +1,20 @@
 #pragma once
+#include <windows.h>
+#include "MathHelper.h"
+
+class IUINode;
 
 class GameHelper
 {
 public:
-	static void SetGameWidth(float width);
-	static void SetGameHeight(float height);
-	static float GetGameWidth();
-	static float GetGameHeight();
+	static bool IsPointInRect(Rect rect);
 
-private:
 	static float width;
 	static float height;
+	static float thisTickTime; 
+	static IUINode* currentUINode;
+	static POINT mousePosition;
+	static bool mouseLeftButtonPassed;
+	static bool mouseRightButtonPassed;
+	static int mouseWheelValue;
 };

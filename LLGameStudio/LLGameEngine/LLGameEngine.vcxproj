@@ -125,6 +125,7 @@
     <ClCompile Include="Common\Graphics\Direct2D\Direct2DApi.cpp" />
     <ClCompile Include="Common\Graphics\GraphicsApi.cpp" />
     <ClCompile Include="Common\Helper\GameHelper.cpp" />
+    <ClCompile Include="Common\Helper\MathHelper.cpp" />
     <ClCompile Include="Common\Helper\MessageHelper.cpp" />
     <ClCompile Include="Common\Helper\SystemHelper.cpp" />
     <ClCompile Include="Common\Helper\WStringHelper.cpp" />

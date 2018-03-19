@@ -34,3 +34,10 @@ void SystemHelper::SetCursorCenter()
 {
 	SetCursorPos(GetScreenWidth()/2, GetScreenHeight() / 2);
 }
+
+POINT SystemHelper::GetCursorPosition()
+{
+	POINT mousePosition;
+	GetCursorPos(&mousePosition);
+	return mousePosition;
+}

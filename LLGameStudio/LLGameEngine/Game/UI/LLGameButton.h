@@ -6,6 +6,7 @@ class LLGameButton : public IUINode
 public:
 	LLGameButton();
 	~LLGameButton() {};
+	void Update()override;
 	void Render()override;
 private:
 	PropertyImage propertyImage;
