@@ -28,3 +28,15 @@ unordered_map<wstring, int>& AnchorEnum::GetEnumMap()
 	}
 	return anchorEnumMap;
 }
+
+unordered_map<wstring, int>& CheckStateMethod::GetEnumMap()
+{
+	static unordered_map<wstring, int> anchorEnumMap;
+	if (anchorEnumMap.size() == 0)
+	{
+		anchorEnumMap[L"Rect"] = Rect; 
+		anchorEnumMap[L"Alpha"] = Alpha;
+		anchorEnumMap[L"AllowMouseThrough"] = AllowMouseThrough;
+	}
+	return anchorEnumMap;
+}

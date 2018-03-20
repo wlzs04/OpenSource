@@ -42,9 +42,10 @@ void LLGame::LoadConfig()
 		gameConfig.width = rootNode->GetProperty(L"width")->GetValueInt();
 		gameConfig.height = rootNode->GetProperty(L"height")->GetValueInt();
 		gameConfig.fullScreen = rootNode->GetProperty(L"fullScreen")->GetValueBool();
-		gameConfig.canMultiGame = rootNode->GetProperty(L"canMultiGame")->GetValueBool();
+		gameConfig.canMultiGame = rootNode->GetProperty(L"canMultiGame")->GetValueBool(); 
 		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
 		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
+		gameConfig.openNetServer = rootNode->GetProperty(L"openNetServer")->GetValueBool();
 		SystemHelper::resourcePath = gameConfig.resourcePath;
 	}
 	else
@@ -64,6 +65,7 @@ void LLGame::SaveConfig()
 	node->AddProperty(new LLXMLProperty(L"canMultiGame", to_wstring(gameConfig.canMultiGame)));
 	node->AddProperty(new LLXMLProperty(L"startScene", gameConfig.startScene));
 	node->AddProperty(new LLXMLProperty(L"graphicsApi", gameConfig.graphicsApi));
+	node->AddProperty(new LLXMLProperty(L"graphicsApi", to_wstring(gameConfig.openNetServer)));
 	xmlDocument.SetRootNode(node);
 	if (!xmlDocument.SaveXMLToFile(currentPath + L"\\" + L"Game.xml"))
 	{
@@ -182,6 +184,10 @@ void LLGame::InitData()
 			MessageHelper::ShowMessage(L"其它底层图形API正在开发当中！");
 			gameExit = true;
 		}
+
+		SetCursor(::LoadCursor(NULL, IDC_ARROW));
+
+
 
 		GameHelper::width = gameConfig.width;
 		GameHelper::height = gameConfig.height;

@@ -80,31 +80,52 @@ public:
 	AnchorEnum value = AnchorEnum::Left;
 };
 
-class PropertyrRotation :public IUIProperty
+class PropertyRotation :public IUIProperty
 {
 public:
-	PropertyrRotation() :IUIProperty(L"rotation", L"{0,0}") {SetValue(defaultValue);}
+	PropertyRotation() :IUIProperty(L"rotation", L"{0,0}") {SetValue(defaultValue);}
 	wstring GetValue() { return value.ToWString(); };
 	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
 	Vector2 value;
 };
 
-class PropertyrMargin :public IUIProperty
+class PropertyMargin :public IUIProperty
 {
 public:
-	PropertyrMargin() :IUIProperty(L"margin", L"{0}") {SetValue(defaultValue);}
+	PropertyMargin() :IUIProperty(L"margin", L"{0}") {SetValue(defaultValue);}
 	wstring GetValue() { return value.ToWString(); };
 	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
 	Rect value;
 };
 
-class PropertyrClipByParent :public IUIProperty
+class PropertyClipByParent :public IUIProperty
 {
 public:
-	PropertyrClipByParent() :IUIProperty(L"clipByParent", L"False") {SetValue(defaultValue);}
+	PropertyClipByParent() :IUIProperty(L"clipByParent", L"False") {SetValue(defaultValue);}
 	wstring GetValue() { return value ? L"True" : L"False"; };
 	void SetValue(wstring value) { this->value=WStringHelper::GetBool(value); };
 	bool value;
+};
+
+class CheckStateMethod : public EnumBase
+{
+public:
+	CheckStateMethod(int i) :EnumBase(i) {}
+
+	static const int Rect = 0;
+	static const int Alpha = 1;
+	static const int AllowMouseThrough = 2;
+private:
+	unordered_map<wstring, int>& GetEnumMap()override;
+};
+
+class PropertyCheckStateMethod :public IUIProperty
+{
+public:
+	PropertyCheckStateMethod() :IUIProperty(L"checkStateMethod", L"Rect") { SetValue(defaultValue); }
+	wstring GetValue() { return value.ToWString(); };
+	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
+	CheckStateMethod value = CheckStateMethod::Rect;
 };
 
 class PropertyFilePath :public IUIProperty
@@ -135,4 +156,13 @@ public:
 	wstring GetValue()override { return value; };
 	void SetValue(wstring value) {this->value = value;};
 	wstring value;
+};
+
+class PropertyModal :public IUIProperty
+{
+public:
+	PropertyModal() :IUIProperty(L"modal", L"False") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
 };

@@ -5,6 +5,11 @@ bool EnumBase::operator==(const EnumBase & ae) const
 	return this->value == ae.value;
 }
 
+bool EnumBase::operator==(int i) const
+{
+	return value == i;
+}
+
 int EnumBase::operator&(const EnumBase & ae) const
 {
 	return value & ae.value;

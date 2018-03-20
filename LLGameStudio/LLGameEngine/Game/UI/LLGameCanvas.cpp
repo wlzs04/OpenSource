@@ -61,4 +61,11 @@ bool LLGameCanvas::CheckState()
 
 void LLGameCanvas::Render()
 {
+	if (propertyEnable.value)
+	{
+		if (OnRender)
+		{
+			OnRender(this, 0);
+		}
+	}
 }

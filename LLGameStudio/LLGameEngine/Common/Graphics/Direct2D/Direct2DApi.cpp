@@ -33,9 +33,38 @@ void Direct2DApi::Init()
 	AddTextFormat(L"", L"宋体",30);
 }
 
-void Direct2DApi::DrawRect(float x, float y, float width, float height)
+void Direct2DApi::DrawRect(bool fill, float x, float y, float width, float height)
 {
-	d2dRenderTarget->DrawRectangle(D2D1::RectF(x, y, x+ width, y+height), currentD2DBrush);
+	if (fill)
+	{
+		d2dRenderTarget->FillRectangle(D2D1::RectF(x, y, x + width, y + height), currentD2DBrush);
+	}
+	else
+	{
+		d2dRenderTarget->DrawRectangle(D2D1::RectF(x, y, x + width, y + height), currentD2DBrush);
+	}
+}
+
+void Direct2DApi::DrawEllipse(bool fill, float x, float y, float radiusX, float radiusY)
+{
+	D2D1_ELLIPSE ellipse;
+	ellipse.point.x = x;
+	ellipse.point.y = y;
+	ellipse.radiusX = radiusX;
+	ellipse.radiusY = radiusY;
+	if (fill)
+	{
+		d2dRenderTarget->FillEllipse(ellipse, currentD2DBrush);
+	}
+	else
+	{
+		d2dRenderTarget->DrawEllipse(ellipse, currentD2DBrush);
+	}
+}
+
+void Direct2DApi::DrawLine(float x1, float y1, float x2, float y2,float width)
+{
+	d2dRenderTarget->DrawLine(D2D1_POINT_2F{ x1,y1 }, D2D1_POINT_2F{ x2, y2 }, currentD2DBrush, width);
 }
 
 void Direct2DApi::DrawImage(std::wstring image, float x, float y, float width, float height)
@@ -77,6 +106,23 @@ void Direct2DApi::AddTextFormat(wstring textFormatName,wstring fontFamilyName,fl
 	writeTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	writeTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 	textFormatMap[textFormatName] = writeTextFormat;
+}
+
+void* Direct2DApi::CreateColorBrush(float r, float g, float b, float a)
+{
+	ID2D1SolidColorBrush* colorBrush=nullptr;
+	d2dRenderTarget->CreateSolidColorBrush(D2D1::ColorF(r,g,b,a), &colorBrush);
+	return colorBrush;
+}
+
+void Direct2DApi::SetCurrentBrush(void * colorBrush)
+{
+	currentD2DBrush = (ID2D1SolidColorBrush*)colorBrush;
+}
+
+void Direct2DApi::ResetDefaultBrush()
+{
+	currentD2DBrush = d2dBlackBrush.Get();
 }
 
 void Direct2DApi::Clear()

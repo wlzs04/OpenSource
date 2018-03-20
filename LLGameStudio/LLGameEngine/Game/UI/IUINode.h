@@ -28,7 +28,8 @@ public:
 	float GetActualLeft();
 	float GetActualTop();
 	void SetWidth(float width);
-	virtual void SetProperty(wstring name,wstring value);
+	virtual void SetProperty(wstring name,wstring value); 
+	void SetEnable(bool enable);
 	void ResetTransform();
 	void SetHeight(float height);
 	void AddNode(IUINode* node);
@@ -56,9 +57,9 @@ protected:
 	PropertyWidth propertyWidth;
 	PropertyHeight propertyHeight;
 	PropertyAnchorEnum propertyAnchorEnum;
-	PropertyrRotation propertyRotation;
-	PropertyrMargin propertyMargin;
-	PropertyrClipByParent propertyClipByParent;
-
+	PropertyRotation propertyRotation;
+	PropertyMargin propertyMargin;
+	PropertyClipByParent propertyClipByParent;
+	PropertyCheckStateMethod propertyCheckStateMethod;
 	UIState uiState = UIState::Normal;
 };

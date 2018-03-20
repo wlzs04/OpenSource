@@ -17,6 +17,7 @@ IUINode::IUINode()
 	propertyMap[propertyRotation.name] = &propertyRotation;
 	propertyMap[propertyMargin.name] = &propertyMargin;
 	propertyMap[propertyClipByParent.name] = &propertyClipByParent;
+	propertyMap[propertyCheckStateMethod.name] = &propertyCheckStateMethod;
 }
 
 IUINode::~IUINode()
@@ -60,6 +61,11 @@ void IUINode::SetProperty(wstring name, wstring value)
 	{
 		propertyMap[name]->SetValue(value);
 	}
+}
+
+void IUINode::SetEnable(bool enable)
+{
+	propertyEnable.value = enable;
 }
 
 void IUINode::ResetTransform()
@@ -200,51 +206,65 @@ void IUINode::LoadFromXMLNode(LLXMLNode * xmlNode)
 
 bool IUINode::CheckState()
 {
+	if (!propertyEnable.value|| propertyCheckStateMethod.value == CheckStateMethod::AllowMouseThrough)
+	{
+		return false;
+	}
 	for (auto rNode = listNode.rbegin(); rNode != listNode.rend(); rNode++)
 	{
-		(*rNode)->CheckState();
-	}
-	if (propertyEnable.value)
-	{
-		if (GameHelper::IsPointInRect(actualRect))
+		if ((*rNode)->CheckState())
 		{
-			if (GameHelper::mouseLeftButtonPassed && !uiLock)
+			break;
+		}
+	}
+	bool inArea = false;
+	switch (propertyCheckStateMethod.value.value)
+	{
+	case CheckStateMethod::Rect:
+		inArea = GameHelper::IsPointInRect(actualRect);
+		break;
+	case CheckStateMethod::Alpha:
+		inArea = false;
+		break;
+	}
+	if (inArea)
+	{
+		if (GameHelper::mouseLeftButtonPassed && !uiLock)
+		{
+			if (uiState != UIState::Click)
 			{
-				if (uiState != UIState::Click)
+				uiState = UIState::Click;
+				if (OnMouseClick)
 				{
-					uiState = UIState::Click;
-					if (OnMouseClick)
-					{
-						OnMouseClick(this,0);
-					}
-					uiLock = true;
+					OnMouseClick(this, 0);
 				}
+				uiLock = true;
 			}
-			else
-			{
-				if (uiState != UIState::Hovor)
-				{
-					uiState = UIState::Hovor;
-					if (OnMouseEnter)
-					{
-						OnMouseEnter(this, 0);
-					}
-				}
-			}
-			return true;
 		}
 		else
 		{
-			if (uiState == UIState::Hovor)
+			if (uiState != UIState::Hovor)
 			{
-				uiState = UIState::Normal;
-				if (OnMouseLeave)
+				uiState = UIState::Hovor;
+				if (OnMouseEnter)
 				{
-					OnMouseLeave(this, 0);
+					OnMouseEnter(this, 0);
 				}
 			}
-			return false;
 		}
+		return true;
+	}
+	else
+	{
+		if (uiState == UIState::Hovor)
+		{
+			uiState = UIState::Normal;
+			if (OnMouseLeave)
+			{
+				OnMouseLeave(this, 0);
+			}
+		}
+		return false;
 	}
 	return false;
 }

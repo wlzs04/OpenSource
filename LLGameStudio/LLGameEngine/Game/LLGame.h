@@ -8,6 +8,8 @@
 #include "../Common/Graphics/Direct2D/Direct2DApi.h"
 #include "GameTimer.h"
 #include "../Game/UI/LLGameText.h"
+#include "../Game/UI/LLGameButton.h"
+#include "../Game/UI/LLGameImage.h"
 
 class LLGame
 {

@@ -12,3 +12,8 @@ void LLGameImage::Render()
 		GraphicsApi::GetGraphicsApi()->DrawImage(propertyImage.value, actualRect.left, actualRect.top, actualWidth, actualHeight);
 	}
 }
+
+void LLGameImage::SetImage(wstring imagePath)
+{
+	propertyImage.SetValue(imagePath);
+}
