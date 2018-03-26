@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <codecvt>
 
 using namespace std;
 
@@ -13,4 +14,8 @@ public:
 	static wstring ToUpper(wstring value);
 	static wstring ToLower(wstring value);
 	static void Split(wstring ws, wchar_t w, vector<wstring>& v);
+	static string WStringToUTF8Buffer(wstring value);
+	static wstring UTF8BufferToWString(string value);
+private:
+	static wstring_convert<codecvt_utf8<wchar_t>> conv;
 };

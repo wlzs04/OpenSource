@@ -10,6 +10,7 @@
 #include "../Game/UI/LLGameText.h"
 #include "../Game/UI/LLGameButton.h"
 #include "../Game/UI/LLGameImage.h"
+#include "../Common/Net/LLGameNetClient.h"
 
 class LLGame
 {
@@ -49,4 +50,5 @@ protected:
 	bool gameExit = false;
 	LLGameScene* gameScene;
 	GameTimer gameTimer;
+	LLGameNetClient* gameNetClient;
 };

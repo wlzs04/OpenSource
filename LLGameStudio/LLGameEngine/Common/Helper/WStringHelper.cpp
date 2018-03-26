@@ -1,5 +1,7 @@
 ﻿#include "WStringHelper.h"
 
+wstring_convert<codecvt_utf8<wchar_t>> WStringHelper::conv;
+
 int WStringHelper::GetInt(wstring& value)
 {
 	return _wtoi(value.c_str());
@@ -52,4 +54,14 @@ void WStringHelper::Split(wstring ws, wchar_t w,vector<wstring>& v)
 		pos2= ws.find(w, pos1);
 	}
 	v.push_back(ws.substr(pos1));
+}
+
+string WStringHelper::WStringToUTF8Buffer(wstring value)
+{
+	return conv.to_bytes(value);
+}
+
+wstring WStringHelper::UTF8BufferToWString(string value)
+{
+	return conv.from_bytes(value);
 }

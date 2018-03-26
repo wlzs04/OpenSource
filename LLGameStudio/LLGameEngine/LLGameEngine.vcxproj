@@ -130,6 +130,7 @@
     <ClCompile Include="Common\Helper\SystemHelper.cpp" />
     <ClCompile Include="Common\Helper\WStringHelper.cpp" />
     <ClCompile Include="Common\LLBase.cpp" />
+    <ClCompile Include="Common\Net\LLGameNetClient.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
@@ -145,6 +146,8 @@
     <ClCompile Include="Game\UI\LLGameScene.cpp" />
     <ClCompile Include="Game\UI\LLGameText.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyLLGame.cpp" />
+    <ClCompile Include="UserProtocol.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
@@ -156,6 +159,8 @@
     <ClInclude Include="Common\Helper\SystemHelper.h" />
     <ClInclude Include="Common\Helper\WStringHelper.h" />
     <ClInclude Include="Common\LLBase.h" />
+    <ClInclude Include="Common\Net\LLGameNetClient.h" />
+    <ClInclude Include="Common\Net\LLGameProtocol.h" />
     <ClInclude Include="Common\XML\LLXML.h" />
     <ClInclude Include="Common\Window\LLGameWindow.h" />
     <ClInclude Include="Game\GameTimer.h" />
@@ -170,6 +175,8 @@
     <ClInclude Include="Game\UI\LLGameLayout.h" />
     <ClInclude Include="Game\UI\LLGameScene.h" />
     <ClInclude Include="Game\UI\LLGameText.h" />
+    <ClInclude Include="MyLLGame.h" />
+    <ClInclude Include="UserProtocol.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

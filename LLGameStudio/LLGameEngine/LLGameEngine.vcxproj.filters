@@ -87,6 +87,15 @@
     <ClCompile Include="Common\Helper\MathHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Net\LLGameNetClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UserProtocol.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLLGame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -156,6 +165,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\UI\LLGameText.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Net\LLGameProtocol.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Net\LLGameNetClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UserProtocol.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLLGame.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,6 +17,6 @@ public:
 	wstring startScene = L"";
 	wstring resourcePath = L"Resource"; 
 	wstring graphicsApi = L"Direct2D";
-	bool openNetServer = false;
+	bool openNetClient = false;
 };
 
