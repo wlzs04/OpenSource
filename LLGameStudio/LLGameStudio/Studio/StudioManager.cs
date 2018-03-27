@@ -134,7 +134,7 @@ namespace LLGameStudio.Studio
             //菜单区
 
             LLStudioButton createGameButton = new LLStudioButton();
-            createGameButton.SetImage("Resource/新建文件.png");
+            createGameButton.SetImage("Resource/新建文件.png"); 
             createGameButton.ToolTip = "新建游戏";
             createGameButton.ClickHandler += ChooseNewGamePathAndOpen;
             wrapPanelMenuArea.Children.Add(createGameButton);

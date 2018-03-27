@@ -22,7 +22,6 @@
   <backgroundUIAlphaColor>#02252526</backgroundUIAlphaColor>
   <!--UI选择控件四边节点背景颜色：常规-->
   <backgroundSelectBorderColor>#FFFFFFFF</backgroundSelectBorderColor>
-  
   <!--文本框背景颜色：错误-->
   <backgroundTextBoxErrorColor>#FFFF0000</backgroundTextBoxErrorColor>
   <!--下拉框边框颜色：常规-->

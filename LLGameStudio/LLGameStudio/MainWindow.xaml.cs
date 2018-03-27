@@ -20,6 +20,7 @@ using System.IO;
 using LLGameStudio.Studio;
 using LLGameStudio.Game;
 using LLGameStudio.Studio.Control;
+using LLGameStudio.Studio.Window;
 
 namespace LLGameStudio
 {
@@ -191,6 +192,9 @@ namespace LLGameStudio
         private void imageHelp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.ShowStudioHelpInfo();
+            FontEditWindow fontEditWindow = new FontEditWindow();
+            fontEditWindow.Init();
+            fontEditWindow.Show();
         }
         
         /// <summary>

@@ -1,0 +1,13 @@
+﻿<Window xmlns:Control="clr-namespace:LLGameStudio.Studio.Control"  x:Class="LLGameStudio.Studio.Window.FontEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LLGameStudio.Studio.Window"
+        mc:Ignorable="d"
+        Title="FontEditWindow" Height="450" Width="800" WindowStyle="None" ResizeMode="NoResize" Background="{x:Null}" FontFamily="Microsoft YaHei">
+    <Grid Background="#FF292929">
+        <Control:LLStudioButton x:Name="buttonClose" HorizontalAlignment="Right" VerticalAlignment="Top" Width="40" Height="40"/>
+        <StackPanel x:Name="listBoxFont" Width="600" Background="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+    </Grid>
+</Window>

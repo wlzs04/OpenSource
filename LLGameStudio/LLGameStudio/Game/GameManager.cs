@@ -131,6 +131,9 @@ namespace LLGameStudio.Game
                 LoadConfig();
                 gameLoaded = true;
                 gameResourcePath = gamePath + @"\" + "Resource";
+
+                FontManager.LoadFontConfig(gamePath + @"\" + "Font.xml");
+
                 return true;
             }
             return false;

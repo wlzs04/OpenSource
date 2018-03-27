@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="LLGameStudio.Studio.Control.LLStudioFontEdit"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LLGameStudio.Studio.Control"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="600" FontFamily="Microsoft YaHei">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="textBoxName" Grid.Column="0" Text="名称" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,3" KeyUp="textBoxName_KeyUp" LostFocus="textBoxName_LostFocus"/>
+        <TextBox x:Name="textBoxFamilyName" Grid.Column="1" Text="种类" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,3" KeyUp="textBoxAttribute_KeyUp" LostFocus="textBoxAttribute_LostFocus"/>
+        <TextBox x:Name="textBoxColor" Grid.Column="2" Text="颜色" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,3" KeyUp="textBoxAttribute_KeyUp" LostFocus="textBoxAttribute_LostFocus"/>
+        <TextBox x:Name="textBoxSize" Grid.Column="3" Text="大小" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,3" KeyUp="textBoxAttribute_KeyUp" LostFocus="textBoxAttribute_LostFocus" FontFamily="Microsoft YaHei"/>
+        <TextBox x:Name="textBoxTest" Grid.Column="4" Text="测试文字" Background="{x:Null}"  BorderBrush="{x:Null}" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,3" KeyUp="textBoxAttribute_KeyUp" LostFocus="textBoxAttribute_LostFocus"/>
+        <local:LLStudioButton x:Name="buttonDelete" Grid.Column="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,3"/>
+    </Grid>
+</UserControl>
