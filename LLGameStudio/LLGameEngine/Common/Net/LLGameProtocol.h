@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 
 using namespace std;
 
@@ -16,12 +17,13 @@ public:
 		return content.length();
 	}
 
-	void SetContent(wstring content)
+	virtual void SetContent(wstring content)
 	{
 		this->content = content;
 	}
 
 	virtual void Process(void* ptr) {};
-private:
+
+protected:
 	wstring content;
 };

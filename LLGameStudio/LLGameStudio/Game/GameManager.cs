@@ -255,6 +255,7 @@ public enum GameUIFileEnum
     Folder,//文件夹
     Scene,//场景
     Layout,//布局
+    Particle,//粒子
     Unknown,//未知
 }
 

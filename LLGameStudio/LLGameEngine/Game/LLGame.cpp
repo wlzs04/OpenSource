@@ -46,6 +46,7 @@ void LLGame::LoadConfig()
 		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
 		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
 		gameConfig.openNetClient = rootNode->GetProperty(L"openNetClient")->GetValueBool();
+		gameConfig.defaultCursor = rootNode->GetProperty(L"defaultCursor")->GetValue();
 		SystemHelper::resourcePath = gameConfig.resourcePath;
 	}
 	else
@@ -66,6 +67,7 @@ void LLGame::SaveConfig()
 	node->AddProperty(new LLXMLProperty(L"startScene", gameConfig.startScene));
 	node->AddProperty(new LLXMLProperty(L"graphicsApi", gameConfig.graphicsApi));
 	node->AddProperty(new LLXMLProperty(L"openNetClient", to_wstring(gameConfig.openNetClient)));
+	node->AddProperty(new LLXMLProperty(L"defaultCursor", gameConfig.defaultCursor));
 	xmlDocument.SetRootNode(node);
 	if (!xmlDocument.SaveXMLToFile(currentPath + L"\\" + L"Game.xml"))
 	{
@@ -185,12 +187,15 @@ void LLGame::InitData()
 			gameExit = true;
 		}
 
-		SetCursor(LoadCursor(NULL, IDC_ARROW));
-
-		if (gameConfig.openNetClient)
+		if (gameConfig.defaultCursor==L"")
 		{
-			gameNetClient = new LLGameNetClient();
+			SetCursor(LoadCursor(GetModuleHandle(0), IDC_ARROW));
 		}
+		else
+		{
+			SetCursor(LoadCursor(GetModuleHandle(0), gameConfig.defaultCursor.c_str()));
+		}
+		
 
 		GameHelper::width = gameConfig.width;
 		GameHelper::height = gameConfig.height;

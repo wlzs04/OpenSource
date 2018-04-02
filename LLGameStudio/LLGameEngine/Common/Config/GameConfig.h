@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <windows.h>
 
 using namespace std;
 
@@ -18,5 +19,6 @@ public:
 	wstring resourcePath = L"Resource"; 
 	wstring graphicsApi = L"Direct2D";
 	bool openNetClient = false;
+	wstring defaultCursor = L"";
 };
 

@@ -72,6 +72,8 @@
     <Compile Include="Common\Helper\LLMath.cs" />
     <Compile Include="Common\Standard.cs" />
     <Compile Include="Game\FontManager.cs" />
+    <Compile Include="Game\Particle\ParticleEmitter.cs" />
+    <Compile Include="Game\Particle\ParticleSystem.cs" />
     <Compile Include="Game\UI\IUINode.cs" />
     <Compile Include="Game\UI\IUIProperty.cs" />
     <Compile Include="Game\UI\LLGameCanvas.cs" />
@@ -110,6 +112,9 @@
     <Compile Include="Studio\StudioManager.cs" />
     <Compile Include="Studio\Window\FontEditWindow.xaml.cs">
       <DependentUpon>FontEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Studio\Window\ParticleWindow.xaml.cs">
+      <DependentUpon>ParticleWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Game\UI\UIControl.xaml">
       <SubType>Designer</SubType>
@@ -160,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Window\FontEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Window\ParticleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

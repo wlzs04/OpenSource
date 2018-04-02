@@ -29,7 +29,6 @@ namespace LLGameStudio.Studio.Control
         double gridOtherHeight = 0;
 
         public IUINode currentUINode;
-        //private CanvasManager canvasManager;
         private StudioManager studioManager;
 
         public LLStudioPropertyListBox(StudioManager studioManager)
@@ -73,7 +72,7 @@ namespace LLGameStudio.Studio.Control
             grid.VerticalAlignment = VerticalAlignment.Top;
             grid.Margin = new Thickness(0, gridHeight, 0, 0);
             grid.Height = everyItemHeight;
-
+            
             ColumnDefinition columnDefinition1 = new ColumnDefinition();
             columnDefinition1.Width = new GridLength(0.4,GridUnitType.Star);
             columnDefinition1.MinWidth = everyItemNameMinWidth;

@@ -2,9 +2,23 @@
 
 void MyLLGame::ProcessProtocol(LLGameProtocol protocol)
 {
-	if (protocol.GetContent() == L"SStartGameProtocol")
+	wstring content = protocol.GetContent();
+	vector<wstring> vecWs;
+	WStringHelper::Split(content,L' ',vecWs);
+	if (vecWs[0] == L"SStartGameProtocol")
 	{
 		SStartGameProtocol gp;
+		gp.Process(this);
+	}
+	else if(vecWs[0] == L"SPutQiziProtocol")
+	{
+		SPutQiziProtocol protocol(WStringHelper::GetBool(vecWs[1]),
+			WStringHelper::GetInt(vecWs[2]),WStringHelper::GetInt(vecWs[3]));
+		protocol.Process(this);
+	}
+	else if(vecWs[0] == L"SGetQipanProtocol")
+	{
+		SGetQipanProtocol gp;
 		gp.Process(this);
 	}
 }
@@ -17,9 +31,11 @@ void MyLLGame::InitUserData()
 	nodeTextTurnNumber = (LLGameText*)gameScene->GetNode(L"showTurnNumberLayout\\grid1\\textTurnNumber");
 	nodeTextNetState = (LLGameText*)gameScene->GetNode(L"showTurnNumberLayout\\grid1\\textNetState");
 
+	nodeTextNetState->SetText(L"开始连接！");
+
 	nodeCanvas = (LLGameCanvas*)gameScene->GetNode(L"canvas");
 	nodeCanvas->OnMouseMove = bind(&MyLLGame::MoveQizi, this, placeholders::_1, placeholders::_2);
-	nodeCanvas->OnMouseClick = bind(&MyLLGame::PutQizi, this, placeholders::_1, placeholders::_2);
+	nodeCanvas->OnMouseClick = bind(&MyLLGame::OnPutQizi, this, placeholders::_1, placeholders::_2);
 	nodeCanvas->OnRender = bind(&MyLLGame::RenderQizi, this, placeholders::_1, placeholders::_2);
 
 	youResultLayout = new LLGameLayout();
@@ -54,11 +70,31 @@ void MyLLGame::MoveQizi(void * iuiNode, int i)
 	}
 }
 
-void MyLLGame::PutQizi(void* iuiNode, int i)
+void MyLLGame::OnPutQizi(void* iuiNode, int i)
 {
 	if (gameStart)
 	{
-		if (qiziArray[currentQiziPositionX][currentQiziPositionY] == 0)
+		CPutQiziProtocol cpp(blackTurn, currentQiziPositionX, currentQiziPositionY);
+		cpp.SetContent(L"CPutQiziProtocol "+to_wstring(blackTurn) +L" "+ to_wstring(currentQiziPositionX) + L" "+ to_wstring(currentQiziPositionY));
+		gameNetClient->SendProtocol(cpp);
+
+		nodeTextNetState->SetText(L"等待服务器协议！");
+	}
+}
+
+void MyLLGame :: GetQipanFromServer(int qipan[17][17])
+{
+	if (gameStart)
+	{
+
+	}
+}
+
+void MyLLGame::PutQiziFromServer(bool isBlack, int x, int y)
+{
+	if (gameStart)
+	{
+		if (qiziArray[x][y] == 0)
 		{
 			if (turnNumber >= 3)
 			{
@@ -67,7 +103,7 @@ void MyLLGame::PutQizi(void* iuiNode, int i)
 				return;
 			}
 			OnAddTurnNumber();
-			qiziArray[currentQiziPositionX][currentQiziPositionY] = blackTurn ? 1 : 2;
+			qiziArray[x][y] = isBlack ? 1 : 2;
 			blackTurn = !blackTurn;
 		}
 	}
@@ -128,6 +164,7 @@ void MyLLGame::OnStartGame(void * iuiNode, int i)
 	CStartGameProtocol csp;
 	csp.SetContent(L"CStartGameProtocol");
 	gameNetClient->SendProtocol(csp);
+	nodeTextNetState->SetText(L"等待服务器协议！");
 }
 
 void MyLLGame::StartGameFromServer()
@@ -135,6 +172,8 @@ void MyLLGame::StartGameFromServer()
 	gameStart = true;
 	gameScene->RemoveNode(startButtonLayout);
 	OnAddTurnNumber();
+	nodeTextNetState->SetText(L"游戏开始！");
+
 }
 
 void MyLLGame::OnAddTurnNumber()

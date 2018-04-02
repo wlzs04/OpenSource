@@ -83,13 +83,7 @@ namespace LLGameStudio
             borderBackground.Width = Width;
             borderBackground.Height = Height;
         }
-
-        private void borderTitleArea_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            studioManager.MoveStudio();
-            imageMaximizeWindow.ToolTip = "最大化";
-        }
-
+        
         /// <summary>
         /// 获得窗体画布对象
         /// </summary>
@@ -270,6 +264,19 @@ namespace LLGameStudio
                 studioManager.ScaleCanvas(rate);
             }
         }
-        
+
+        /// <summary>
+        /// 移动窗体。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void borderTitleArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                studioManager.MoveStudio();
+                imageMaximizeWindow.ToolTip = "最大化";
+            }
+        }
     }
 }

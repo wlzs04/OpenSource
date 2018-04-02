@@ -1,14 +1,18 @@
 ﻿#pragma once
 #include "Game/LLGame.h"
 #include "UserProtocol.h"
+#include <vector>
 
+//一个棋子类游戏，仅用来测试功能，因缺少一台电脑用来传输网络协议而暂停。
 class MyLLGame :public LLGame
 {
 public:
 	void ProcessProtocol(LLGameProtocol protocol);
 	void InitUserData()override;
 	void MoveQizi(void* iuiNode, int i);
-	void PutQizi(void* iuiNode, int i);
+	void OnPutQizi(void* iuiNode, int i);
+	void GetQipanFromServer(int qipan[17][17]);
+	void PutQiziFromServer(bool isBlack, int x, int y);
 	void RenderQizi(void* iuiNode, int i);
 	void OnStartGame(void* iuiNode, int i);
 	void StartGameFromServer();

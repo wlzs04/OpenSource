@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using LLGameStudio.Game.UI;
+using LLGameStudio.Studio.Window;
 
 namespace LLGameStudio.Studio
 {
@@ -707,6 +708,11 @@ namespace LLGameStudio.Studio
                 case GameUIFileEnum.Layout:
                     OpenFile();
                     window.RestoreCanvas();
+                    break;
+                case GameUIFileEnum.Particle:
+                    ParticleWindow particleWindow = new ParticleWindow(currentFilePath);
+                    particleWindow.Owner = window;
+                    particleWindow.Show();
                     break;
                 case GameUIFileEnum.Unknown:
                     ShowStatusInfo("未知文件无法打开！");

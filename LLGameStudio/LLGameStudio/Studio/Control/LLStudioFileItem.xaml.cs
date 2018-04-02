@@ -52,6 +52,10 @@ namespace LLGameStudio.Studio.Control
                         gameUIFileEnum = GameUIFileEnum.Layout;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
                         break;
+                    case ".particle":
+                        gameUIFileEnum = GameUIFileEnum.Particle;
+                        uri = new Uri(Environment.CurrentDirectory + @"\Resource\粒子.png");
+                        break;
                     default:
                         gameUIFileEnum = GameUIFileEnum.Unknown;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");

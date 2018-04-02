@@ -59,6 +59,7 @@ void LLGameNetClient::AcceptProtocol()
 			if (netState > 0)
 			{
 				LLGameProtocol protocol;
+
 				protocol.SetContent(WStringHelper::UTF8BufferToWString(string(szBuffer,0,netState)));
 				if (OnProcessProtocolHandle)
 				{
