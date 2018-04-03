@@ -37,27 +37,35 @@
                 <ColumnDefinition Width="80*" MinWidth="30"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" BorderThickness="3" CornerRadius="5" BorderBrush="#FF646464" Margin="0,0,3,0">
-                <Grid x:Name="gridMaterialDisplay" Background="#FF191919">
-                    <ScrollViewer x:Name="scrollViewer_MateriaalDisplay" Margin="0" VerticalScrollBarVisibility="Auto">
+                <Grid Background="#FF191919">
+                    <ScrollViewer Margin="0" VerticalScrollBarVisibility="Auto">
                         <Grid Margin="0,2,0,0">
                             <Grid Margin="0,0,0,0" Height="30" VerticalAlignment="Top">
                                 <Label Height="30" Content="名称：" VerticalAlignment="Center" FontSize="14.667" Padding="5,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
                                 <TextBox x:Name="textBoxParticleName" IsReadOnly="True" Height="30" Margin="50,0,2,0" VerticalAlignment="Top" Text="asdasd" TextDecorations="{x:Null}"/>
                             </Grid>
-                            <StackPanel Background="#FF191919" Margin="0,30,0,0">
-                                <Expander Header="基础">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="50*" MinWidth="15" MaxWidth="300"/>
-                                            <ColumnDefinition Width="50*" MinWidth="15" MaxWidth="300"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Label Grid.Column="0">生命周期：</Label>
-                                        <Control:LLStudioNumberTextBox  Grid.Column="1"/>
-                                    </Grid>
-                                </Expander>
-                                <Expander Header="发射器">
-                                </Expander>
-                            </StackPanel>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30*" MinHeight="30"/>
+                                    <RowDefinition Height="70*" MinHeight="30"/>
+                                </Grid.RowDefinitions>
+                                <Canvas x:Name="canvas" Grid.Row="0"></Canvas>
+                                <GridSplitter Grid.Row="0" Height="3" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
+                                <StackPanel Grid.Row="1" Background="#FF191919">
+                                    <Expander Header="基础">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="50*" MinWidth="15" MaxWidth="300"/>
+                                                <ColumnDefinition Width="50*" MinWidth="15" MaxWidth="300"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0">生命周期：</Label>
+                                            <Control:LLStudioNumberTextBox  Grid.Column="1"/>
+                                        </Grid>
+                                    </Expander>
+                                    <Expander Header="发射器">
+                                    </Expander>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
                     </ScrollViewer>
                 </Grid>

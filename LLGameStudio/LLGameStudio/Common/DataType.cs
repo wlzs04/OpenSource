@@ -15,6 +15,7 @@ namespace LLGameStudio.Common
         /// </summary>
         public struct Vector2 : IConvertStringClass
         {
+            public Vector2(double x,double y) { this.x = x; this.y = y; }
             double x,y;
 
             public double X { get => x; set => x = value; }

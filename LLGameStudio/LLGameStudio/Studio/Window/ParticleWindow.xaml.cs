@@ -28,8 +28,9 @@ namespace LLGameStudio.Studio.Window
         {
             InitializeComponent();
             this.filePath = filePath;
-            particleSystem = new ParticleSystem();
+            
             textBoxParticleName.Text=System.IO.Path.GetFileNameWithoutExtension(filePath);
+            particleSystem = new ParticleSystem(textBoxParticleName.Text, canvas);
         }
 
         /// <summary>
@@ -75,6 +76,5 @@ namespace LLGameStudio.Studio.Window
             Close();
         }
 
-        
     }
 }
