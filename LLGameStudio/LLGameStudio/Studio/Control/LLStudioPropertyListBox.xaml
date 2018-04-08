@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ListBox Background="#FF191919" BorderThickness="0,0,3,0" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Background="#FF191919">
             <Expander Header="变换" IsExpanded="True">
                 <Grid x:Name="gridTransform"/>
             </Expander>
@@ -17,6 +17,6 @@
             <Expander Header="其他" IsExpanded="True">
                 <Grid x:Name="gridOther"/>
             </Expander>
-        </ListBox>
+        </StackPanel>
     </Grid>
 </UserControl>

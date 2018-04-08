@@ -98,6 +98,9 @@
     <Compile Include="Studio\Control\LLStudioNumberTextBox.xaml.cs">
       <DependentUpon>LLStudioNumberTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Control\LLStudioParticleEmitterEdit.xaml.cs">
+      <DependentUpon>LLStudioParticleEmitterEdit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Control\LLStudioPropertyListBox.xaml.cs">
       <DependentUpon>LLStudioPropertyListBox.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Control\LLStudioNumberTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioParticleEmitterEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

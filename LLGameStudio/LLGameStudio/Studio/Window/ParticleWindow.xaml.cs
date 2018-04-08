@@ -1,4 +1,5 @@
 ﻿using LLGameStudio.Game.Particle;
+using LLGameStudio.Studio.Control;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +24,7 @@ namespace LLGameStudio.Studio.Window
     {
         string filePath = "";
         ParticleSystem particleSystem;
+        List<ParticleEmitter> particleEmitters=new List<ParticleEmitter>();
 
         public ParticleWindow(string filePath)
         {
@@ -31,6 +33,13 @@ namespace LLGameStudio.Studio.Window
             
             textBoxParticleName.Text=System.IO.Path.GetFileNameWithoutExtension(filePath);
             particleSystem = new ParticleSystem(textBoxParticleName.Text, canvas);
+
+            ContextMenu gridContextMenu = new ContextMenu();
+            MenuItem addParticleEmitter = new MenuItem();
+            addParticleEmitter.Header = "添加发射器";
+            addParticleEmitter.Click += AddParticleEmitter;
+            gridContextMenu.Items.Add(addParticleEmitter);
+            gridEmitters.ContextMenu = gridContextMenu;
         }
 
         /// <summary>
@@ -76,5 +85,31 @@ namespace LLGameStudio.Studio.Window
             Close();
         }
 
+        /// <summary>
+        /// 添加粒子发射器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void AddParticleEmitter(object sender, RoutedEventArgs e)
+        {
+            ParticleEmitter emitter = new ParticleEmitter(particleSystem,canvas);
+            particleEmitters.Add(emitter);
+            particleSystem.AddEmitter(emitter);
+            emitter.StartPlay();
+
+            LLStudioParticleEmitterEdit emitterEdit = new LLStudioParticleEmitterEdit(emitter);
+            stackPanelEmitters.Children.Add(emitterEdit);
+        }
+
+        private void canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            particleSystem.Update();
+            particleSystem.Render();
+        }
+
+        private void canvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            particleSystem.SetPosition(canvas.Margin.Left+canvas.ActualWidth/2, canvas.Margin.Top + canvas.ActualHeight / 2);
+        }
     }
 }

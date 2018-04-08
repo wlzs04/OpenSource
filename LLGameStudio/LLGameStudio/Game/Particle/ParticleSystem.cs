@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LLGameStudio.Common.DataType;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,18 +8,30 @@ using System.Windows.Controls;
 
 namespace LLGameStudio.Game.Particle
 {
-    class ParticleSystem
+    public class ParticleSystem
     {
         Canvas canvas;
         bool enable = true;
         string name = "";
         bool isLoop = true;
         List<ParticleEmitter> paticleEmitters = new List<ParticleEmitter>();
+        Vector2 postion=new Vector2();
 
         public ParticleSystem(string name,Canvas canvas)
         {
             this.name = name;
             this.canvas = canvas;
+        }
+
+        public void SetPosition(double x,double y)
+        {
+            postion.X = x;
+            postion.Y = y;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return postion;
         }
 
         public void AddEmitter(ParticleEmitter emitter)
