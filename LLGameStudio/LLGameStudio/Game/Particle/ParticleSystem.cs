@@ -1,20 +1,22 @@
 ﻿using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace LLGameStudio.Game.Particle
 {
-    public class ParticleSystem
+    public class ParticleSystem : IXMLClass
     {
         Canvas canvas;
         bool enable = true;
         string name = "";
         bool isLoop = true;
-        List<ParticleEmitter> paticleEmitters = new List<ParticleEmitter>();
+        public List<ParticleEmitter> paticleEmitters = new List<ParticleEmitter>();
         Vector2 postion=new Vector2();
 
         public ParticleSystem(string name,Canvas canvas)
@@ -39,7 +41,7 @@ namespace LLGameStudio.Game.Particle
             paticleEmitters.Add(emitter);
         }
 
-        public void Update()
+        public void Update(double thisTickTime)
         {
             if(!enable)
             {
@@ -47,7 +49,7 @@ namespace LLGameStudio.Game.Particle
             }
             foreach (var item in paticleEmitters)
             {
-                item.Update();
+                item.Update(thisTickTime);
             }
         }
 
@@ -61,6 +63,35 @@ namespace LLGameStudio.Game.Particle
             {
                 item.Render();
             }
+        }
+
+        public void LoadContentFromXML(XElement element)
+        {
+            foreach (var item in element.Elements())
+            {
+                if(item.Name.ToString()=="ParticleEmitter")
+                {
+                    ParticleEmitter particleEmitter = new ParticleEmitter(this,null);
+                    particleEmitter.LoadContentFromXML(item);
+                    AddEmitter(particleEmitter);
+                }
+            }
+        }
+
+        public XElement ExportContentToXML()
+        {
+            XElement element = new XElement("ParticleSystem");
+            ExportAttrbuteToXML(element);
+            foreach (var item in paticleEmitters)
+            {
+                element.Add(item.ExportContentToXML());
+            }
+            return element;
+        }
+
+        void ExportAttrbuteToXML(XElement element)
+        {
+            
         }
     }
 }

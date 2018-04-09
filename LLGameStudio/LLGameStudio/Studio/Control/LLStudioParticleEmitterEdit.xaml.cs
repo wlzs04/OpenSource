@@ -42,8 +42,15 @@ namespace LLGameStudio.Studio.Control
                 AddProperty(item.Value);
             }
 
-            Timer timer = new Timer();
-            //timer.
+            Timer timer = new Timer(41);//每秒24帧
+            timer.Elapsed += UpdateAndRender;
+            timer.Enabled = true;
+        }
+
+        void UpdateAndRender(object sender, ElapsedEventArgs e)
+        {
+            particleEmitter.Update(0.041);
+            Dispatcher.Invoke(new Action(()=> { particleEmitter.Render();}));
         }
 
         /// <summary>

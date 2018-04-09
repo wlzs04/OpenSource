@@ -1,4 +1,5 @@
-﻿using LLGameStudio.Game.Particle;
+﻿using LLGameStudio.Common;
+using LLGameStudio.Game.Particle;
 using LLGameStudio.Studio.Control;
 using System;
 using System.Collections.Generic;
@@ -29,10 +30,12 @@ namespace LLGameStudio.Studio.Window
         public ParticleWindow(string filePath)
         {
             InitializeComponent();
+
             this.filePath = filePath;
-            
             textBoxParticleName.Text=System.IO.Path.GetFileNameWithoutExtension(filePath);
             particleSystem = new ParticleSystem(textBoxParticleName.Text, canvas);
+
+            LoadParticleFromFile();
 
             ContextMenu gridContextMenu = new ContextMenu();
             MenuItem addParticleEmitter = new MenuItem();
@@ -40,6 +43,8 @@ namespace LLGameStudio.Studio.Window
             addParticleEmitter.Click += AddParticleEmitter;
             gridContextMenu.Items.Add(addParticleEmitter);
             gridEmitters.ContextMenu = gridContextMenu;
+
+            //添加定时方法。
         }
 
         /// <summary>
@@ -95,21 +100,45 @@ namespace LLGameStudio.Studio.Window
             ParticleEmitter emitter = new ParticleEmitter(particleSystem,canvas);
             particleEmitters.Add(emitter);
             particleSystem.AddEmitter(emitter);
-            emitter.StartPlay();
 
             LLStudioParticleEmitterEdit emitterEdit = new LLStudioParticleEmitterEdit(emitter);
             stackPanelEmitters.Children.Add(emitterEdit);
+            emitter.StartPlay();
         }
 
-        private void canvas_MouseMove(object sender, MouseEventArgs e)
+        void LoadParticleFromFile()
         {
-            particleSystem.Update();
-            particleSystem.Render();
+            LLConvert.LoadContentFromXML(filePath, particleSystem);
+            AddEmitterEditForParticleSystem();
+        }
+
+        /// <summary>
+        /// 为粒子添加发射器的编辑窗体，只有在从文件中读取粒子内容后使用一次。
+        /// </summary>
+        void AddEmitterEditForParticleSystem()
+        {
+            foreach (var item in particleSystem.paticleEmitters)
+            {
+                particleEmitters.Add(item);
+                LLStudioParticleEmitterEdit emitterEdit = new LLStudioParticleEmitterEdit(item);
+                stackPanelEmitters.Children.Add(emitterEdit);
+                item.StartPlay();
+            }
+        }
+
+        void SaveParticleToFile()
+        {
+            LLConvert.ExportContentToXML(filePath, particleSystem);
         }
 
         private void canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             particleSystem.SetPosition(canvas.Margin.Left+canvas.ActualWidth/2, canvas.Margin.Top + canvas.ActualHeight / 2);
+        }
+
+        private void imageSaveParticle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            SaveParticleToFile();
         }
     }
 }

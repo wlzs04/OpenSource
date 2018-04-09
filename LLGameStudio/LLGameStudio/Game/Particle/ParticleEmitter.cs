@@ -73,6 +73,7 @@ namespace LLGameStudio.Game.Particle
 
         public Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
         public Property.IsLoop isLoop = new Property.IsLoop();
+        public Property.LoopTime loopTime = new Property.LoopTime();
         public Property.ParticleType particleType = new Property.ParticleType();
         public Property.MaxNumber maxNumber = new Property.MaxNumber();
         public Property.StartNumber startNumber = new Property.StartNumber();
@@ -93,8 +94,8 @@ namespace LLGameStudio.Game.Particle
         string particleImagePath = "";//粒子图片
         int row = 1;//粒子类别为序列图时拥有的行数
         int column = 1;//粒子类别为序列图时拥有的行数
-        double particleLoopTime = 0;//粒子动画每次循环的时间，0代表不循环
-        
+        double currentPlayTime = 0;//粒子当前已经播放的时间，每循环一次重新计时。
+
         List<Particle> particleList = new List<Particle>();
         Canvas canvas;
         Random random = new Random();
@@ -127,15 +128,11 @@ namespace LLGameStudio.Game.Particle
 
         void InitParticle()
         {
-            particleList.Clear();
+            ResetParticle();
             canvas.Children.Clear();
             switch (particleType.Value)
             {
                 case ParticleType.Point:
-                    for (int i = 0; i < startNumber.Value; i++)
-                    {
-                        AddParticle();
-                    }
                     for (int i = 0; i < maxNumber.Value; i++)
                     {
                         Ellipse ellipse = new Ellipse();
@@ -164,6 +161,11 @@ namespace LLGameStudio.Game.Particle
         public void SetProperty(string name,string value)
         {
             propertyDictionary[name].Value = value;
+            if(name=="color"|| name=="maxNumber")
+            {
+                InitParticle();
+                currentPlayTime = 0;
+            }
         }
 
         void AddParticle()
@@ -172,10 +174,10 @@ namespace LLGameStudio.Game.Particle
             {
                 return;
             }
-            double x = random.NextDouble() * positionError.Value.X;
-            double y = random.NextDouble() * positionError.Value.Y;
+            double x = position.Value.X + random.NextDouble() * positionError.Value.X;
+            double y = position.Value.Y + random.NextDouble() * positionError.Value.Y;
             double radius = (radiusError.Value-2*random.NextDouble()* radiusError.Value) + this.radius.Value;
-            double angle = (random.NextDouble() * angleRange.Value / 180);
+            double angle =((1 - 2 * random.NextDouble()) * angleRange.Value / 180 * Math.PI);
             double dx = direction.Value.X * Math.Cos(angle) - direction.Value.Y * Math.Sin(angle);
             double dy = direction.Value.X * Math.Sin(angle) + direction.Value.Y * Math.Cos(angle);
             double vx = dx * (velocity.Value + random.NextDouble() * velocityError.Value);
@@ -184,24 +186,63 @@ namespace LLGameStudio.Game.Particle
             particleList.Add(particle);
         }
 
+        /// <summary>
+        /// 开始播放粒子动画
+        /// </summary>
         public void StartPlay()
         {
             InitParticle();
             play = true;
+            currentPlayTime = 0;
         }
 
-        public void StopPlay()
+        /// <summary>
+        /// 暂停粒子动画
+        /// </summary>
+        public void PausePlay()
         {
             play = false;
         }
 
-        public void Update()
+        /// <summary>
+        /// 停止粒子动画
+        /// </summary>
+        public void StopPlay()
+        {
+            play = false;
+            currentPlayTime = 0;
+        }
+
+        /// <summary>
+        /// 将所有粒子重置为最初状态。
+        /// </summary>
+        void ResetParticle()
+        {
+            particleList.Clear();
+            for (int i = 0; i < startNumber.Value; i++)
+            {
+                AddParticle();
+            }
+        }
+
+        /// <summary>
+        /// 更新位置等信息
+        /// </summary>
+        /// <param name="thisTickTime"></param>
+        public void Update(double thisTickTime)
         {
             if(!enable||!play)
             {
                 return;
             }
-            double thisTickTime = 0.016;
+
+            if (isLoop.Value && currentPlayTime > loopTime.Value)
+            {
+                ResetParticle();
+                currentPlayTime = 0;
+            }
+
+            currentPlayTime += thisTickTime;
             double particleCreateNumberThisTickTime = thisTickTime * createNumberBySecond.Value;
             int addNumber = (int)particleCreateNumberThisTickTime;
             if (random.NextDouble() < particleCreateNumberThisTickTime - addNumber)
@@ -270,12 +311,35 @@ namespace LLGameStudio.Game.Particle
 
         public void LoadContentFromXML(XElement element)
         {
-            throw new NotImplementedException();
+            LoadAttrbuteFromXML(element);
+        }
+
+        void LoadAttrbuteFromXML(XElement element)
+        {
+            XAttribute xAttribute;
+            foreach (var item in propertyDictionary)
+            {
+                xAttribute = element.Attribute(item.Key);
+                if (xAttribute != null) { item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
+            }
         }
 
         public XElement ExportContentToXML()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("ParticleEmitter");
+            ExportAttrbuteToXML(element);
+            return element;
+        }
+
+        void ExportAttrbuteToXML(XElement element)
+        {
+            foreach (var item in propertyDictionary)
+            {
+                if (!item.Value.IsDefault)
+                {
+                    element.Add(new XAttribute(item.Value.Name, item.Value.Value));
+                }
+            }
         }
     }
 
@@ -286,6 +350,11 @@ namespace LLGameStudio.Game.Particle
             public IsLoop() : base("isLoop", typeof(bool), UIPropertyEnum.Common, "是否循环。", "True") { }
         }
 
+        public class LoopTime : IUIProperty
+        {
+            public LoopTime() : base("loopTime", typeof(double), UIPropertyEnum.Common, "粒子动画每次循环的时间。", "5") { }
+        }
+
         public class ParticleType : IUIProperty
         {
             public ParticleType() : base("particleType", typeof(Game.Particle.ParticleType), UIPropertyEnum.Common, "粒子类型。", "Point") { }
@@ -293,18 +362,17 @@ namespace LLGameStudio.Game.Particle
 
         public class MaxNumber : IUIProperty
         {
-            public MaxNumber() : base("MaxNumber", typeof(int), UIPropertyEnum.Common, "粒子最大数量。", "10") { }
+            public MaxNumber() : base("maxNumber", typeof(int), UIPropertyEnum.Common, "粒子最大数量。", "10") { }
         }
-        
 
         public class StartNumber : IUIProperty
         {
-            public StartNumber() : base("StartNumber", typeof(int), UIPropertyEnum.Common, "粒子开始时的数量。", "1") { }
+            public StartNumber() : base("startNumber", typeof(int), UIPropertyEnum.Common, "粒子开始时的数量。", "0") { }
         }
 
         public class CreateNumberBySecond : IUIProperty
         {
-            public CreateNumberBySecond() : base("createNumberBySecond", typeof(int), UIPropertyEnum.Common, "粒子每秒创建数量。", "1") { }
+            public CreateNumberBySecond() : base("createNumberBySecond", typeof(int), UIPropertyEnum.Common, "粒子每秒创建数量。", "2") { }
         }
 
         public class Radius : IUIProperty

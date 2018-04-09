@@ -70,12 +70,12 @@ namespace LLGameStudio.Common
         /// </summary>
         /// <param name="filepath"></param>
         /// <param name="iXMLClass"></param>
-        public static void ExportContentToXML(string filepath, IXMLClass iXMLClass)
+        public static void ExportContentToXML(string filePath, IXMLClass iXMLClass)
         {
             XDocument doc = new XDocument();
             XElement root = iXMLClass.ExportContentToXML();
             doc.Add(root);
-            doc.Save(filepath);
+            doc.Save(filePath);
         }
     }
 }

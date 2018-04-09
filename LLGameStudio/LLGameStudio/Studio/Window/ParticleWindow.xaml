@@ -27,6 +27,7 @@
     <Grid Background="#FF191919">
         <Grid x:Name="gridTitle" VerticalAlignment="Top" Background="#FF191919" Height="30" MouseMove="gridTitle_MouseMove">
             <Label VerticalAlignment="Top" HorizontalAlignment="Center" Content="粒子编辑器" FontSize="21.333" Height="30"/>
+            <Image x:Name="imageSaveParticle" Margin="0,0,0,0" ToolTip="保存" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/保存.png" MouseLeftButtonDown="imageSaveParticle_MouseLeftButtonDown"/>
             <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Margin="0,0,100,0" ToolTip="最小化" Source="/LLGameStudio;component/bin/Debug/Resource/最小化.png" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
             <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Margin="0,0,50,0" ToolTip="最大化" Source="/LLGameStudio;component/bin/Debug/Resource/最小化.png" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
             <Image x:Name="imageExitWindow" HorizontalAlignment="Right" ToolTip="退出" Source="/LLGameStudio;component/bin/Debug/Resource/退出.png" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
@@ -49,7 +50,7 @@
                                     <RowDefinition Height="30*" MinHeight="30"/>
                                     <RowDefinition Height="70*" MinHeight="30"/>
                                 </Grid.RowDefinitions>
-                                <Canvas x:Name="canvas" Grid.Row="0" MouseMove="canvas_MouseMove" Background="#FF191919" SizeChanged="canvas_SizeChanged"></Canvas>
+                                <Canvas x:Name="canvas" Grid.Row="0" Background="#FF191919" SizeChanged="canvas_SizeChanged"></Canvas>
                                 <GridSplitter Grid.Row="0" Height="3" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
                                 <StackPanel Grid.Row="1" Background="#FF191919">
                                     <Expander Header="基础">

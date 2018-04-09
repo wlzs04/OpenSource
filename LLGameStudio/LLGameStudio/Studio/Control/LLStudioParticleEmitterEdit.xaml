@@ -25,9 +25,9 @@
         </Style>
     </UserControl.Resources>
     <Grid Background="#FF191919">
-        <Canvas x:Name="canvas" VerticalAlignment="Top" Height="150" Background="#FF191919"></Canvas>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="0,150,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <Canvas x:Name="canvas" VerticalAlignment="Top" Height="150" Background="#FF191919" ClipToBounds="True"></Canvas>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,150,0,0">
+            <StackPanel Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Expander Header="变换" IsExpanded="True">
                     <Grid x:Name="gridTransform"/>
                 </Expander>
