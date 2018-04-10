@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 
@@ -17,10 +18,10 @@ namespace LLGameStudio.Game.Particle
 {
     enum ParticleType
     {
-        Point,
-        Star,
-        Image,
-        Sequence
+        Point,//点
+        Star,//星
+        Image,//图片
+        Sequence//序列图
     }
     
     class Particle
@@ -87,14 +88,16 @@ namespace LLGameStudio.Game.Particle
         public Property.AngleRange angleRange = new Property.AngleRange();
         public Property.Position position = new Property.Position();
         public Property.PositionError positionError = new Property.PositionError();
-        
+        public Property.ImagePath imagePath = new Property.ImagePath();
+        public Property.Row row = new Property.Row();
+        public Property.Column column = new Property.Column();
+
         bool enable = true;
         bool play = true;
-        
-        string particleImagePath = "";//粒子图片
-        int row = 1;//粒子类别为序列图时拥有的行数
-        int column = 1;//粒子类别为序列图时拥有的行数
         double currentPlayTime = 0;//粒子当前已经播放的时间，每循环一次重新计时。
+        int currentImageIndex = 0;//粒子类型为序列图时，当前播放的是第几帧。
+        ImageBrush imageBrush;
+        List<ImageSource> imageSequenceList = new List<ImageSource>();
 
         List<Particle> particleList = new List<Particle>();
         Canvas canvas;
@@ -104,8 +107,9 @@ namespace LLGameStudio.Game.Particle
         {
             this.particleSystem = particleSystem;
             this.canvas = canvas;
-
+            
             AddProperty(isLoop);
+            AddProperty(loopTime);
             AddProperty(particleType);
             AddProperty(maxNumber);
             AddProperty(startNumber);
@@ -117,13 +121,21 @@ namespace LLGameStudio.Game.Particle
             AddProperty(velocityError);
             AddProperty(direction);
             AddProperty(angleRange);
-            AddProperty(position);
+            AddProperty(position); 
             AddProperty(positionError);
+            AddProperty(imagePath);
+            AddProperty(row);
+            AddProperty(column);
         }
 
         public void SetCanvas(Canvas canvas)
         {
             this.canvas = canvas;
+        }
+
+        public Canvas GetCanvas()
+        {
+            return canvas;
         }
 
         void InitParticle()
@@ -143,10 +155,73 @@ namespace LLGameStudio.Game.Particle
                     }
                     break;
                 case ParticleType.Star:
+                    for (int i = 0; i < maxNumber.Value; i++)
+                    {
+                        Polygon polygon = new Polygon();
+                        polygon.Fill = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color.Value));
+                        polygon.FillRule = FillRule.Nonzero;
+                        PointCollection myPointCollection = new PointCollection();
+                        myPointCollection.Add(new System.Windows.Point(10, 100));
+                        myPointCollection.Add(new System.Windows.Point(50, 0));
+                        myPointCollection.Add(new System.Windows.Point(90, 100));
+                        myPointCollection.Add(new System.Windows.Point(0, 35));
+                        myPointCollection.Add(new System.Windows.Point(100, 35));
+                        polygon.Points = myPointCollection;
+                        polygon.Width = 100;
+                        polygon.Height = 100;
+                        polygon.RenderTransform = new ScaleTransform(0, 0);
+                        canvas.Children.Add(polygon);
+                    }
                     break;
                 case ParticleType.Image:
+                    imageBrush = new ImageBrush();
+                    if (imagePath.Value != "")
+                    {
+                        imageBrush.ImageSource = new BitmapImage(new Uri(imagePath.Value, UriKind.Absolute));
+                    }
+                    else
+                    {
+                        imageBrush.ImageSource = null;
+                    }
+                    for (int i = 0; i < maxNumber.Value; i++)
+                    {
+                        System.Windows.Controls.Image ellipse = new System.Windows.Controls.Image();
+                        ellipse.Source = imageBrush.ImageSource;
+                        ellipse.Width = 0;
+                        ellipse.Height = 0;
+                        canvas.Children.Add(ellipse);
+                    }
                     break;
                 case ParticleType.Sequence:
+                    imageSequenceList.Clear();
+                    BitmapSource bitmap = new BitmapImage(new Uri(imagePath.Value, UriKind.Absolute));
+                    double imageWidth = bitmap.PixelWidth;
+                    int everyWidth = (int)(imageWidth / column.Value);
+                    double imageHeight = bitmap.PixelHeight;
+                    int everyHeight = (int)(imageHeight / row.Value);
+                    for (int i = 0; i < row.Value; i++)
+                    {
+                        for (int j = 0; j < column.Value; j++)
+                        {
+                            ////定义切割矩形
+                            //var cut = new Int32Rect(j* everyWidth, i* everyHeight, everyWidth, everyHeight);
+                            ////计算Stride
+                            //var stride = bitmap.Format.BitsPerPixel * cut.Width / 8;
+                            ////声明字节数组
+                            //int[] data = new int[cut.Height * stride];
+                            ////调用CopyPixels
+                            //bitmap.CopyPixels(cut, data, stride, 0);
+                            ImageBrush imageBrush = new ImageBrush(); 
+                            imageSequenceList.Add(new CroppedBitmap(bitmap, new Int32Rect(j * everyWidth, i * everyHeight, everyWidth, everyHeight)));
+                        }
+                    }
+                    for (int i = 0; i < maxNumber.Value; i++)
+                    {
+                        System.Windows.Controls.Image ellipse = new System.Windows.Controls.Image();
+                        ellipse.Width = 0;
+                        ellipse.Height = 0;
+                        canvas.Children.Add(ellipse);
+                    }
                     break;
                 default:
                     break;
@@ -161,7 +236,13 @@ namespace LLGameStudio.Game.Particle
         public void SetProperty(string name,string value)
         {
             propertyDictionary[name].Value = value;
-            if(name=="color"|| name=="maxNumber")
+            if(name=="color"
+                || name=="maxNumber"
+                ||name== "particleType"
+                || name == "imagePath"
+                || name == "row"
+                || name == "column"
+                )
             {
                 InitParticle();
                 currentPlayTime = 0;
@@ -240,6 +321,7 @@ namespace LLGameStudio.Game.Particle
             {
                 ResetParticle();
                 currentPlayTime = 0;
+                currentImageIndex = 0;
             }
 
             currentPlayTime += thisTickTime;
@@ -253,6 +335,16 @@ namespace LLGameStudio.Game.Particle
             for (int i = 0; i < addNumber; i++)
             {
                 AddParticle();
+            }
+
+            if(particleType.Value==ParticleType.Sequence)
+            {
+                currentImageIndex = (int)((currentPlayTime / loopTime.Value) * row.Value * column.Value);
+
+                if (currentImageIndex>=row.Value*column.Value)
+                {
+                    currentImageIndex= row.Value * column.Value-1;
+                }
             }
 
             //粒子移动和移除。
@@ -275,11 +367,11 @@ namespace LLGameStudio.Game.Particle
             {
                 return;
             }
+            int y = 0;
+            int particleCount = particleList.Count;
             switch (particleType.Value)
             {
                 case ParticleType.Point:
-                    int y = 0;
-                    int particleCount = particleList.Count;
                     foreach (Ellipse item in canvas.Children)
                     {
                         if(y<particleCount)
@@ -299,10 +391,60 @@ namespace LLGameStudio.Game.Particle
                     }
                     break;
                 case ParticleType.Star:
+                    foreach (Polygon item in canvas.Children)
+                    {
+                        if (y < particleCount)
+                        {
+                            Particle particle = particleList[y];
+                            Vector2 parentPosition = particleSystem.GetPosition();
+                            item.Margin = new Thickness(parentPosition.X + particle.x, parentPosition.Y + particle.y, 0, 0);
+                            item.RenderTransform = new ScaleTransform(particle.radius * 2/100, particle.radius * 2 / 100);
+                        }
+                        else
+                        {
+                            item.RenderTransform = new ScaleTransform(0, 0);
+                        }
+                        y++;
+                    }
                     break;
                 case ParticleType.Image:
+                    foreach (System.Windows.Controls.Image item in canvas.Children)
+                    {
+                        if (y < particleCount)
+                        {
+                            Particle particle = particleList[y];
+                            Vector2 parentPosition = particleSystem.GetPosition();
+                            item.Margin = new Thickness(parentPosition.X + particle.x, parentPosition.Y + particle.y, 0, 0);
+                            item.Width = particle.radius * 2;
+                            item.Height = particle.radius * 2;
+                        }
+                        else
+                        {
+                            item.Width = 0;
+                            item.Height = 0;
+                        }
+                        y++;
+                    }
                     break;
                 case ParticleType.Sequence:
+                    foreach (System.Windows.Controls.Image item in canvas.Children)
+                    {
+                        if (y < particleCount)
+                        {
+                            Particle particle = particleList[y];
+                            Vector2 parentPosition = particleSystem.GetPosition();
+                            item.Margin = new Thickness(parentPosition.X + particle.x, parentPosition.Y + particle.y, 0, 0);
+                            item.Width = particle.radius * 2;
+                            item.Height = particle.radius * 2;
+                            item.Source = imageSequenceList[currentImageIndex];
+                        }
+                        else
+                        {
+                            item.Width = 0;
+                            item.Height = 0;
+                        }
+                        y++;
+                    }
                     break;
                 default:
                     break;
@@ -418,6 +560,21 @@ namespace LLGameStudio.Game.Particle
         public class PositionError : IUIProperty
         {
             public PositionError() : base("positionError", typeof(Vector2), UIPropertyEnum.Transform, "粒子发射位置误差。", "{0,0}") { }
+        }
+
+        public class ImagePath : IUIProperty
+        {
+            public ImagePath() : base("imagePath", typeof(string), UIPropertyEnum.Common, "粒子图片。", "") { }
+        }
+
+        public class Row : IUIProperty
+        {
+            public Row() : base("row", typeof(int), UIPropertyEnum.Common, "//粒子类别为序列图时拥有的行数.", "1") { }
+        }
+
+        public class Column : IUIProperty
+        {
+            public Column() : base("column", typeof(int), UIPropertyEnum.Common, "粒子类别为序列图时拥有的列数。", "1") { }
         }
     }
 }

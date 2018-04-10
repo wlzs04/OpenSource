@@ -14,6 +14,9 @@ namespace LLGameStudio.Common
         public static float StandardDpiX = 96;
         public static float StandardDpiY = 96;
 
+        public static float CurrentDpiX = 96;
+        public static float CurrentDpiY = 96;
+
         public static float ScaleX = 1;
         public static float ScaleY = 1;
     }

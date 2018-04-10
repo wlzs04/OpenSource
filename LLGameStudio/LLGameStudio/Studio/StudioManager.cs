@@ -56,6 +56,8 @@ namespace LLGameStudio.Studio
         public StudioManager(MainWindow window)
         {
             System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
+            Common.Standard.CurrentDpiX = g.DpiX;
+            Common.Standard.CurrentDpiY = g.DpiY;
             Common.Standard.ScaleX = Common.Standard.StandardDpiX / g.DpiX;
             Common.Standard.ScaleY = Common.Standard.StandardDpiY / g.DpiY;
 

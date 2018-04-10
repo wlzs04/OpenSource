@@ -41,7 +41,6 @@ namespace LLGameStudio.Studio.Control
             {
                 AddProperty(item.Value);
             }
-
             Timer timer = new Timer(41);//每秒24帧
             timer.Elapsed += UpdateAndRender;
             timer.Enabled = true;

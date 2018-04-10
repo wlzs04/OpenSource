@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -43,8 +44,6 @@ namespace LLGameStudio.Studio.Window
             addParticleEmitter.Click += AddParticleEmitter;
             gridContextMenu.Items.Add(addParticleEmitter);
             gridEmitters.ContextMenu = gridContextMenu;
-
-            //添加定时方法。
         }
 
         /// <summary>
@@ -106,6 +105,9 @@ namespace LLGameStudio.Studio.Window
             emitter.StartPlay();
         }
 
+        /// <summary>
+        /// 从文件中加载粒子。
+        /// </summary>
         void LoadParticleFromFile()
         {
             LLConvert.LoadContentFromXML(filePath, particleSystem);
@@ -126,6 +128,9 @@ namespace LLGameStudio.Studio.Window
             }
         }
 
+        /// <summary>
+        /// 保存粒子到文件。
+        /// </summary>
         void SaveParticleToFile()
         {
             LLConvert.ExportContentToXML(filePath, particleSystem);
