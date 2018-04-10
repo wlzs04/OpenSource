@@ -716,6 +716,11 @@ namespace LLGameStudio.Studio
                     particleWindow.Owner = window;
                     particleWindow.Show();
                     break;
+                case GameUIFileEnum.Actor:
+                    ActorWindow actorWindow = new ActorWindow(currentFilePath);
+                    actorWindow.Owner = window;
+                    actorWindow.Show();
+                    break;
                 case GameUIFileEnum.Unknown:
                     ShowStatusInfo("未知文件无法打开！");
                     break;

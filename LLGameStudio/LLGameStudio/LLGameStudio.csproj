@@ -71,6 +71,8 @@
     <Compile Include="Common\Helper\LLConvert.cs" />
     <Compile Include="Common\Helper\LLMath.cs" />
     <Compile Include="Common\Standard.cs" />
+    <Compile Include="Game\Actor\Actor.cs" />
+    <Compile Include="Game\Actor\Bone.cs" />
     <Compile Include="Game\FontManager.cs" />
     <Compile Include="Game\Particle\ParticleEmitter.cs" />
     <Compile Include="Game\Particle\ParticleSystem.cs" />
@@ -113,6 +115,9 @@
     <Compile Include="Studio\Control\LLStudioTreeViewItem.cs" />
     <Compile Include="Studio\ThemeManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
+    <Compile Include="Studio\Window\ActorWindow.xaml.cs">
+      <DependentUpon>ActorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Window\FontEditWindow.xaml.cs">
       <DependentUpon>FontEditWindow.xaml</DependentUpon>
     </Compile>
@@ -168,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Control\LLStudioTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Window\ActorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

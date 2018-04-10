@@ -256,6 +256,8 @@ public enum GameUIFileEnum
     Scene,//场景
     Layout,//布局
     Particle,//粒子
+    Actor,//角色
+    Action,//角色动画
     Unknown,//未知
 }
 

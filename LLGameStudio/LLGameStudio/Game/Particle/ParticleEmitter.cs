@@ -59,6 +59,11 @@ namespace LLGameStudio.Game.Particle
             this.leftTime = leftTime;
         }
 
+        /// <summary>
+        /// 粒子移动给定时间,计算移动后的位置。
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public bool MoveByTime(double time)
         {
             x += particleDirection.X * time;
@@ -133,11 +138,9 @@ namespace LLGameStudio.Game.Particle
             this.canvas = canvas;
         }
 
-        public Canvas GetCanvas()
-        {
-            return canvas;
-        }
-
+        /// <summary>
+        /// 初始化粒子
+        /// </summary>
         void InitParticle()
         {
             ResetParticle();
@@ -203,14 +206,6 @@ namespace LLGameStudio.Game.Particle
                     {
                         for (int j = 0; j < column.Value; j++)
                         {
-                            ////定义切割矩形
-                            //var cut = new Int32Rect(j* everyWidth, i* everyHeight, everyWidth, everyHeight);
-                            ////计算Stride
-                            //var stride = bitmap.Format.BitsPerPixel * cut.Width / 8;
-                            ////声明字节数组
-                            //int[] data = new int[cut.Height * stride];
-                            ////调用CopyPixels
-                            //bitmap.CopyPixels(cut, data, stride, 0);
                             ImageBrush imageBrush = new ImageBrush(); 
                             imageSequenceList.Add(new CroppedBitmap(bitmap, new Int32Rect(j * everyWidth, i * everyHeight, everyWidth, everyHeight)));
                         }
@@ -228,11 +223,20 @@ namespace LLGameStudio.Game.Particle
             }
         }
 
+        /// <summary>
+        /// 添加属性
+        /// </summary>
+        /// <param name="property"></param>
         void AddProperty(IUIProperty property)
         {
             propertyDictionary.Add(property.Name, property);
         }
 
+        /// <summary>
+        /// 设置属性
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         public void SetProperty(string name,string value)
         {
             propertyDictionary[name].Value = value;
@@ -249,6 +253,9 @@ namespace LLGameStudio.Game.Particle
             }
         }
 
+        /// <summary>
+        /// 添加粒子
+        /// </summary>
         void AddParticle()
         {
             if(particleList.Count>maxNumber.Value)

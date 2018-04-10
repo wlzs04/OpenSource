@@ -61,7 +61,6 @@ namespace LLGameStudio.Common
         {
             XDocument doc = XDocument.Load(filepath);
             XElement root = doc.Root;
-
             iXMLClass.LoadContentFromXML(root);
         }
 
