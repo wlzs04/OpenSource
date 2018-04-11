@@ -11,7 +11,6 @@ namespace LLGameStudio.Game.Actor
     class Actor:IXMLClass
     {
         public string name="";
-        int boneNumber = 0;
         public Bone rootBone;
 
         public Actor(string name)
