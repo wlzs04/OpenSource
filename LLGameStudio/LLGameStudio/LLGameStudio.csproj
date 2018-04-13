@@ -282,6 +282,9 @@
     <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="bin\Debug\Resource\平移.png" />
+    <Resource Include="bin\Debug\Resource\旋转.png" />
+    <Resource Include="bin\Debug\Resource\粒子.png" />
     <Resource Include="bin\Debug\Config\Theme.xml">
       <SubType>Designer</SubType>
     </Resource>

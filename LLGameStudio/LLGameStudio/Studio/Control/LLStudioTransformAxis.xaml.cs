@@ -1,4 +1,5 @@
 ﻿using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,13 @@ using System.Windows.Shapes;
 
 namespace LLGameStudio.Studio.Control
 {
+    public enum TransformType
+    {
+        Tranlation,//平移
+        Rotation,//旋转
+        Scale//缩放
+    }
+
     /// <summary>
     /// LLStudioTransformAxis.xaml 的交互逻辑
     /// </summary>
@@ -25,12 +33,17 @@ namespace LLGameStudio.Studio.Control
 
         public DragEvent DragAxisEvent;
 
+        TransformType transformType= TransformType.Tranlation;
+
         Point axisCenterPoint;
         Point lastMousePoint;
 
         bool isXAxisClicked = false;
         bool isYAxisClicked = false;
         bool isXYAxisClicked = false;
+
+        bool isRAxisClicked = false;
+
         Canvas canvas;
 
         public LLStudioTransformAxis(Canvas canvas)
@@ -59,12 +72,6 @@ namespace LLGameStudio.Studio.Control
             if(isXAxisClicked)
             {
                 Point currentMousePoint = e.GetPosition(canvas);
-                if(currentMousePoint.X<=0)
-                {
-                    //需要判断，让坐标轴不要移动到父容器范围外。
-                    //LLStudioBone和LLStudioTransformAxis的SetPosition应统一，并添加是否超过父容器的判断。
-                    return;
-                }
                 Vector2 moveVector = new Vector2(currentMousePoint.X - lastMousePoint.X, 0);
                 DragAxisEvent?.Invoke(this, moveVector);
                 lastMousePoint = currentMousePoint;
@@ -92,10 +99,6 @@ namespace LLGameStudio.Studio.Control
             if(isYAxisClicked)
             {
                 Point currentMousePoint = e.GetPosition(canvas);
-                if (currentMousePoint.Y <= 0)
-                {
-                    return;
-                }
                 Vector2 moveVector = new Vector2(0, currentMousePoint.Y - lastMousePoint.Y);
                 DragAxisEvent?.Invoke(this, moveVector);
                 lastMousePoint = currentMousePoint;
@@ -105,17 +108,17 @@ namespace LLGameStudio.Studio.Control
 
         private void rectangleAxis_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            rectangleAxis.CaptureMouse();
+            rectangleXYAxis.CaptureMouse();
             lastMousePoint = e.GetPosition(canvas);
             isXYAxisClicked = true;
-            rectangleAxis.Stroke = new SolidColorBrush(Colors.Blue);
+            rectangleXYAxis.Stroke = new SolidColorBrush(Colors.Blue);
         }
 
         private void rectangleAxis_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            rectangleAxis.ReleaseMouseCapture();
+            rectangleXYAxis.ReleaseMouseCapture();
             isXYAxisClicked = false;
-            rectangleAxis.Stroke = null;
+            rectangleXYAxis.Stroke = null;
         }
 
         private void rectangleAxis_MouseMove(object sender, MouseEventArgs e)
@@ -123,14 +126,43 @@ namespace LLGameStudio.Studio.Control
             if(isXYAxisClicked)
             {
                 Point currentMousePoint = e.GetPosition(canvas);
-                if (currentMousePoint.Y <= 0 || currentMousePoint.Y <= 0)
-                {
-                    return;
-                }
                 Vector2 moveVector = new Vector2(currentMousePoint.X - lastMousePoint.X, currentMousePoint.Y - lastMousePoint.Y);
                 DragAxisEvent?.Invoke(this, moveVector);
                 lastMousePoint = currentMousePoint;
-                SetPosition(axisCenterPoint.X+ moveVector.X, axisCenterPoint.Y + moveVector.Y);
+                SetPosition(axisCenterPoint.X + moveVector.X, axisCenterPoint.Y + moveVector.Y);
+            }
+        }
+
+        private void pathRAxis_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            pathRAxis.CaptureMouse();
+            lastMousePoint = e.GetPosition(canvas);
+            isRAxisClicked = true;
+            pathRAxis.Stroke = new SolidColorBrush(Colors.Yellow); ;
+        }
+
+        private void pathRAxis_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            pathRAxis.ReleaseMouseCapture();
+            isRAxisClicked = false;
+            pathRAxis.Stroke = null;
+        }
+
+        private void pathRAxis_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isRAxisClicked)
+            {
+                Point currentMousePoint = e.GetPosition(canvas);
+
+                Vector2 v1 = LLMath.GetVector2BetweenPoints(axisCenterPoint, lastMousePoint);
+                Vector2 v2 = LLMath.GetVector2BetweenPoints(axisCenterPoint, currentMousePoint);
+                v1=LLMath.GetNormalVector2(v1);
+                v2 = LLMath.GetNormalVector2(v2);
+                double angle = LLMath.GetAngleBetweenVectors(v1,v2);
+
+                Vector2 moveVector = new Vector2(angle, angle);
+                DragAxisEvent?.Invoke(this, moveVector);
+                lastMousePoint = currentMousePoint;
             }
         }
 
@@ -149,8 +181,72 @@ namespace LLGameStudio.Studio.Control
         /// </summary>
         public void SetPosition(Point point)
         {
-            axisCenterPoint = point;
-            Margin = new Thickness(point.X - 0.25 * ActualWidth, point.Y - 0.75 * ActualHeight, 0, 0);
+            SetPosition(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// 获得坐标轴类型
+        /// </summary>
+        /// <returns></returns>
+        public TransformType GetTransformType()
+        {
+            return transformType;
+        }
+
+        /// <summary>
+        /// 设置坐标轴种类
+        /// </summary>
+        /// <param name="type"></param>
+        public void SetTransformType(TransformType type)
+        {
+            ClearState();
+            transformType = type;
+            switch (transformType)
+            {
+                case TransformType.Tranlation:
+                    gridTranslation.Visibility = Visibility.Visible;
+                    gridRotation.Visibility = Visibility.Hidden;
+                    gridScale.Visibility = Visibility.Hidden;
+                    break;
+                case TransformType.Rotation:
+                    gridTranslation.Visibility = Visibility.Hidden;
+                    gridRotation.Visibility = Visibility.Visible;
+                    gridScale.Visibility = Visibility.Hidden;
+                    break;
+                case TransformType.Scale:
+                    gridTranslation.Visibility = Visibility.Hidden;
+                    gridRotation.Visibility = Visibility.Hidden;
+                    gridScale.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 清除坐标轴中已保存的信息
+        /// </summary>
+        void ClearState()
+        {
+            gridTranslation.Visibility = Visibility.Hidden;
+            gridRotation.Visibility = Visibility.Hidden;
+            gridScale.Visibility = Visibility.Hidden;
+            gridRotation.Visibility = Visibility.Hidden;
+
+            polygonXAxis.ReleaseMouseCapture();
+            polygonYAxis.ReleaseMouseCapture();
+            rectangleXYAxis.ReleaseMouseCapture();
+            pathRAxis.ReleaseMouseCapture();
+
+            polygonXAxis.Stroke = null;
+            polygonYAxis.Stroke = null;
+            rectangleXYAxis.Stroke = null;
+            pathRAxis.Stroke = null;
+
+            isXAxisClicked = false;
+            isYAxisClicked = false;
+            isXYAxisClicked = false;
+            isRAxisClicked = false;
         }
     }
 }

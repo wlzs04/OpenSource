@@ -16,7 +16,6 @@ namespace LLGameStudio.Game.Actor
         public Actor(string name)
         {
             this.name = name;
-            SetRootBone(new Bone("rootBone"));
         }
 
         public void LoadContentFromXML(XElement element)
@@ -25,7 +24,7 @@ namespace LLGameStudio.Game.Actor
             {
                 if (item.Name.ToString() == "Bone")
                 {
-                    Bone bone = new Bone("temp");
+                    Bone bone = new Bone();
                     bone.LoadContentFromXML(item);
                     SetRootBone(bone);
                 }
@@ -34,7 +33,15 @@ namespace LLGameStudio.Game.Actor
 
         public XElement ExportContentToXML()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("Actor");
+            ExportAttrbuteToXML(element);
+            element.Add(rootBone.ExportContentToXML());
+            return element;
+        }
+
+        void ExportAttrbuteToXML(XElement element)
+        {
+
         }
 
         public void SetRootBone(Bone bone)

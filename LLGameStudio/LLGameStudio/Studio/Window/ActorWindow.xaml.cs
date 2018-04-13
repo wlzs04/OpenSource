@@ -1,9 +1,11 @@
 ﻿using LLGameStudio.Common;
 using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.Helper;
 using LLGameStudio.Game.Actor;
 using LLGameStudio.Studio.Control;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +30,8 @@ namespace LLGameStudio.Studio.Window
         Actor actor;
         Point currentMouseSelectPosition;
         bool isAddBoneToParentBone = false;
-        LLStudioBone lastSelectBoneControl = null;
+        LLStudioBone rootBoneControl = null;
+        LLStudioBone currentSelectBoneControl = null;
         LLStudioTransformAxis transformAxis = null;
 
         public ActorWindow(string filePath)
@@ -39,12 +42,45 @@ namespace LLGameStudio.Studio.Window
             actor = new Actor(textBoxParticleName.Text);
             transformAxis = new LLStudioTransformAxis(canvas);
             transformAxis.DragAxisEvent += DragAxisEvent;
+            transformAxis.SetTransformType(TransformType.Tranlation);
         }
 
+        /// <summary>
+        /// 坐标轴的拖拽事件。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="moveVector"></param>
         void DragAxisEvent(object sender, Vector2 moveVector)
         {
-            Point point = lastSelectBoneControl.GetStartPoint();
-            lastSelectBoneControl.SetPostion(point.X+moveVector.X, point.Y + moveVector.Y);
+            switch (transformAxis.GetTransformType())
+            {
+                case TransformType.Tranlation:
+                    Point point = currentSelectBoneControl.GetStartPoint();
+                    point.X += moveVector.X;
+                    point.Y += moveVector.Y;
+                    if (currentSelectBoneControl.parentBoneControl != null)
+                    {
+                        currentSelectBoneControl.parentBoneControl.ChangeTransformByChildBone(point);
+                        foreach (var item in currentSelectBoneControl.parentBoneControl.listBoneControl)
+                        {
+                            item.SetPostion(point);
+                            item.ResetBoneAngleByBoneControlAngle();
+                        }
+                    }
+                    else
+                    {
+                        currentSelectBoneControl.SetPostion(point);
+                    }
+                    break;
+                case TransformType.Rotation:
+                    double angle = moveVector.X;
+                    currentSelectBoneControl.SetBoneAngle(currentSelectBoneControl.GetBoneAngle() + angle);
+                    break;
+                case TransformType.Scale:
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -54,9 +90,11 @@ namespace LLGameStudio.Studio.Window
         /// <param name="e"></param>
         void AddBone(object sender, RoutedEventArgs e)
         {
-            Bone bone = new Bone("bone");
-            bone.position.X = currentMouseSelectPosition.X / canvas.ActualWidth;
-            bone.position.Y = currentMouseSelectPosition.Y / canvas.ActualHeight;
+            AddBoneToCanvas(new Bone());
+        }
+
+        LLStudioBone AddBoneToCanvas(Bone bone)
+        {
             LLStudioBone boneControl = new LLStudioBone(bone);
             canvas.Children.Add(boneControl);
             canvas.UpdateLayout();
@@ -69,6 +107,20 @@ namespace LLGameStudio.Studio.Window
             addBoneToParentItem.Click += AddBoneToParentBone;
             boneContextMenu.Items.Add(addBoneToParentItem);
             boneControl.ContextMenu = boneContextMenu;
+
+            foreach (var item in bone.listBone)
+            {
+                LLStudioBone childBoneControl = AddBoneToCanvas(item);
+                boneControl.listBoneControl.Add(childBoneControl);
+                childBoneControl.parentBoneControl = boneControl;
+            }
+            if(currentSelectBoneControl!=null)
+            {
+                currentSelectBoneControl.CancelSelectState();
+            }
+            currentSelectBoneControl = boneControl;
+            currentSelectBoneControl.SetSelectState();
+            return boneControl;
         }
 
         /// <summary>
@@ -78,7 +130,12 @@ namespace LLGameStudio.Studio.Window
         /// <param name="e"></param>
         void AddBoneToParentBone(object sender, RoutedEventArgs e)
         {
-            lastSelectBoneControl = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as LLStudioBone;
+            if (currentSelectBoneControl != null)
+            {
+                currentSelectBoneControl.CancelSelectState();
+            }
+            currentSelectBoneControl = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as LLStudioBone;
+            currentSelectBoneControl.SetSelectState();
             isAddBoneToParentBone = true;
         }
 
@@ -89,11 +146,12 @@ namespace LLGameStudio.Studio.Window
         {
             treeViewUILayer.Items.Clear();
 
-            TreeViewItem treeViewItem = new TreeViewItem();
+            LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
             treeViewItem.IsExpanded = true;
             treeViewItem.MouseDoubleClick += SelectBoneByTreeView;
-            treeViewItem.Header = actor.rootBone.name;
-            AddNodeToTree(actor.rootBone, treeViewItem);
+            treeViewItem.SetUINodeItem(rootBoneControl);
+            treeViewItem.Header = rootBoneControl.bone.name.Value;
+            AddNodeToTree(rootBoneControl, treeViewItem);
             treeViewUILayer.Items.Add(treeViewItem);
         }
 
@@ -102,14 +160,15 @@ namespace LLGameStudio.Studio.Window
         /// </summary>
         /// <param name="bone"></param>
         /// <param name="rootItem"></param>
-        void AddNodeToTree(Bone bone, TreeViewItem rootItem)
+        void AddNodeToTree(LLStudioBone boneControl, LLStudioTreeViewItem rootItem)
         {
-            foreach (var item in bone.listBone)
+            foreach (var item in boneControl.listBoneControl)
             {
-                TreeViewItem treeViewItem = new TreeViewItem();
+                LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
                 treeViewItem.IsExpanded = true;
                 treeViewItem.MouseDoubleClick += SelectBoneByTreeView;
-                treeViewItem.Header = item.name;
+                treeViewItem.SetUINodeItem(item);
+                treeViewItem.Header = item.bone.name.Value;
                 AddNodeToTree(item, treeViewItem);
                 rootItem.Items.Add(treeViewItem);
             }
@@ -122,7 +181,11 @@ namespace LLGameStudio.Studio.Window
         /// <param name="e"></param>
         void SelectBoneByTreeView(object sender, MouseButtonEventArgs e)
         {
-
+            LLStudioTreeViewItem treeViewItem = sender as LLStudioTreeViewItem;
+            if (treeViewItem == treeViewUILayer.SelectedItem)
+            {
+                SelectBone(treeViewItem.GetUINode() as LLStudioBone);
+            }
         }
 
         /// <summary>
@@ -132,21 +195,61 @@ namespace LLGameStudio.Studio.Window
         /// <param name="e"></param>
         void SelectBoneByControl(object sender, MouseButtonEventArgs e)
         {
-            LLStudioBone boneControl = (sender as LLStudioBone);
-            if(isAddBoneToParentBone)
+            SelectBone((sender as LLStudioBone));
+            SelectUINodeToTree();
+        }
+
+        /// <summary>
+        /// 将选中的骨骼节点同步到UI层级树中。
+        /// </summary>
+        /// <param name="currentUINode"></param>
+        /// <param name="treeView"></param>
+        public void SelectUINodeToTree(LLStudioTreeViewItem treeView = null)
+        {
+            ItemCollection itemCollection;
+            if (treeView == null)
             {
-                Bone bone = boneControl.bone;
-                bone.AddBone(lastSelectBoneControl.bone);
-                lastSelectBoneControl.SetPostion(boneControl.GetBoneEndPosition());
+                itemCollection = treeViewUILayer.Items;
+            }
+            else
+            {
+                itemCollection = treeView.Items;
+            }
+            foreach (LLStudioTreeViewItem item in itemCollection)
+            {
+                if (item.GetUINode() == currentSelectBoneControl)
+                {
+                    item.IsSelected = true;
+                    LLStudioTreeViewItem parentTreeViewItem = item.Parent as LLStudioTreeViewItem;
+                    while (parentTreeViewItem != null)
+                    {
+                        parentTreeViewItem.IsExpanded = true;
+                        parentTreeViewItem = parentTreeViewItem.Parent as LLStudioTreeViewItem;
+                    }
+                    return;
+                }
+                SelectUINodeToTree(item);
+            }
+        }
+
+        void SelectBone(LLStudioBone boneControl)
+        {
+            if (isAddBoneToParentBone)
+            {
+                currentSelectBoneControl.SetPostion(boneControl.GetBoneEndPosition());
+                boneControl.AddBoneControl(currentSelectBoneControl);
+                transformAxis.SetPosition(boneControl.GetBoneEndPosition());
                 isAddBoneToParentBone = false;
             }
             else
             {
                 transformAxis.Visibility = Visibility.Visible;
-                Panel.SetZIndex(transformAxis,1);
+                Panel.SetZIndex(transformAxis, 1);
                 transformAxis.SetPosition(boneControl.GetStartPoint());
+                currentSelectBoneControl.CancelSelectState();
+                currentSelectBoneControl = boneControl;
+                currentSelectBoneControl.SetSelectState();
             }
-            lastSelectBoneControl = boneControl;
         }
 
         /// <summary>
@@ -202,18 +305,26 @@ namespace LLGameStudio.Studio.Window
             SaveActorToFile();
         }
 
+        private void imageTranslation_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            transformAxis.SetTransformType(TransformType.Tranlation);
+        }
+
+        private void imageRotation_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            transformAxis.SetTransformType(TransformType.Rotation);
+        }
+
         /// <summary>
         /// 从文件中读取角色信息
         /// </summary>
         void LoadActorFromFile()
         {
             LLConvert.LoadContentFromXML(filePath, actor);
+            rootBoneControl=AddBoneToCanvas(actor.rootBone);
 
-            LLStudioBone boneControl = new LLStudioBone(actor.rootBone);
-            canvas.Children.Add(boneControl);
-            canvas.UpdateLayout();
-            boneControl.SetPostion(canvas.ActualWidth / 2, canvas.ActualHeight / 2);
-            boneControl.MouseLeftButtonDown += SelectBoneByControl;
+            rootBoneControl.ResetBoneControlAngleByBoneAngle();
+            rootBoneControl.SetPostion(canvas.ActualWidth / 2, canvas.ActualHeight / 2);
         }
 
         /// <summary>
@@ -221,7 +332,7 @@ namespace LLGameStudio.Studio.Window
         /// </summary>
         void SaveActorToFile()
         {
-
+            LLConvert.ExportContentToXML(filePath, actor);
         }
 
         private void gridActor_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -249,6 +360,21 @@ namespace LLGameStudio.Studio.Window
 
             canvas.Children.Add(transformAxis);
             transformAxis.Visibility = Visibility.Hidden;
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.W:
+                    transformAxis.SetTransformType(TransformType.Tranlation);
+                    break;
+                case Key.E:
+                    transformAxis.SetTransformType(TransformType.Rotation);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -1,24 +1,51 @@
 ﻿using LLGameStudio.Common.DataType;
 using LLGameStudio.Common.XML;
+using LLGameStudio.Game.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Linq;
 
 namespace LLGameStudio.Game.Actor
 {
-    public class Bone:IXMLClass
+    public class Bone : IXMLClass
     {
-        public string name="";
         public Bone parentBone = null;
         public List<Bone> listBone = new List<Bone>();
-        public Vector2 position;
 
-        public Bone(string name)
+        public Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
+        public Property.Name name = new Property.Name();
+        public Property.Length length = new Property.Length();
+        public Property.Angle angle = new Property.Angle();
+
+
+        public Bone()
         {
-            this.name = name;
+            AddProperty(name);
+            AddProperty(length);
+            AddProperty(angle);
+        }
+
+        /// <summary>
+        /// 添加属性
+        /// </summary>
+        /// <param name="property"></param>
+        void AddProperty(IUIProperty property)
+        {
+            propertyDictionary.Add(property.Name, property);
+        }
+
+        /// <summary>
+        /// 设置属性
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void SetProperty(string name, string value)
+        {
+            propertyDictionary[name].Value = value;
         }
 
         /// <summary>
@@ -42,7 +69,24 @@ namespace LLGameStudio.Game.Actor
 
         public XElement ExportContentToXML()
         {
-            throw new NotImplementedException();
+            XElement element = new XElement("Bone");
+            ExportAttrbuteToXML(element);
+            return element;
+        }
+
+        void ExportAttrbuteToXML(XElement element)
+        {
+            foreach (var item in propertyDictionary)
+            {
+                if (!item.Value.IsDefault)
+                {
+                    element.Add(new XAttribute(item.Value.Name, item.Value.Value));
+                }
+            }
+            foreach (var item in listBone)
+            {
+                element.Add(item.ExportContentToXML());
+            }
         }
 
         public void LoadContentFromXML(XElement element)
@@ -52,7 +96,7 @@ namespace LLGameStudio.Game.Actor
             {
                 if (item.Name.ToString() == "Bone")
                 {
-                    Bone bone = new Bone("temp");
+                    Bone bone = new Bone();
                     bone.LoadContentFromXML(item);
                     AddBone(bone);
                 }
@@ -62,12 +106,29 @@ namespace LLGameStudio.Game.Actor
         void LoadAttrbuteFromXML(XElement element)
         {
             XAttribute xAttribute;
-            xAttribute = element.Attribute("name");
-            if (xAttribute != null)
+            foreach (var item in propertyDictionary)
             {
-                name = xAttribute.Value;
+                xAttribute = element.Attribute(item.Key);
+                if (xAttribute != null) { item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
             }
-            
+        }
+    }
+
+    namespace Property
+    {
+        public class Length : IUIProperty
+        {
+            public Length() : base("length", typeof(double), UIPropertyEnum.Transform, "骨骼长度。", "90") { }
+        }
+
+        public class Angle : IUIProperty
+        {
+            public Angle() : base("angle", typeof(double), UIPropertyEnum.Transform, "骨骼旋转角度。", "0") { }
+        }
+
+        public class Name : IUIProperty
+        {
+            public Name() : base("name", typeof(string), UIPropertyEnum.Common, "骨骼名称。", "bone") { }
         }
     }
 }

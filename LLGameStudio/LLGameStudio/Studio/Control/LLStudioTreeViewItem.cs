@@ -10,14 +10,13 @@ namespace LLGameStudio.Studio.Control
 {
     public class LLStudioTreeViewItem : TreeViewItem
     {
-        IUINode uiNode;
-        public void SetUINodeItem(IUINode uiNode)
+        object uiNode;
+        public void SetUINodeItem(object uiNode)
         {
             this.uiNode = uiNode;
-            Header = uiNode.name.Value;
         }
 
-        public IUINode GetUINode()
+        public object GetUINode()
         {
             return uiNode;
         }

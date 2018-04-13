@@ -395,6 +395,7 @@ namespace LLGameStudio.Studio
                 {
                     LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
                     treeViewItem.SetUINodeItem(item);
+                    treeViewItem.Header = item.name.Value;
                     treeViewItem.IsExpanded = true;
                     treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
                     if (!(item is LLGameLayout))
@@ -417,6 +418,7 @@ namespace LLGameStudio.Studio
             {
                 LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
                 treeViewItem.SetUINodeItem(item);
+                treeViewItem.Header = item.name.Value;
                 treeViewItem.IsExpanded = true;
                 treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
                 if(!(item is LLGameLayout))
@@ -437,8 +439,9 @@ namespace LLGameStudio.Studio
             LLStudioTreeViewItem treeViewItem = sender as LLStudioTreeViewItem;
             if (treeViewItem == treeViewUILayer.SelectedItem)
             {
-                canvasManager.SelectUINode(treeViewItem.GetUINode());
-                gameManager.currentSelectUINode = treeViewItem.GetUINode();
+                IUINode node = treeViewItem.GetUINode() as IUINode;
+                canvasManager.SelectUINode(node);
+                gameManager.currentSelectUINode = node;
             }
             ShowPropertyToEditorArea(gameManager.currentSelectUINode);
         }

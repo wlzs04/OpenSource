@@ -1,4 +1,6 @@
-﻿using LLGameStudio.Game.Actor;
+﻿using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.Helper;
+using LLGameStudio.Game.Actor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +25,26 @@ namespace LLGameStudio.Studio.Control
     {
         public Bone bone;
         Point boneStartPosition;
-        double boneLength = 100;
+        double boneControlAngle = 0;//相对于画布的旋转角度，用于显示。
+        public LLStudioBone parentBoneControl = null;
+        public List<LLStudioBone> listBoneControl = new List<LLStudioBone>();
 
         public LLStudioBone(Bone bone)
         {
             InitializeComponent();
             this.bone = bone;
+            SetBoneLength(bone.length.Value);
+        }
+
+        /// <summary>
+        /// 添加骨骼
+        /// </summary>
+        /// <param name="boneControl"></param>
+        public void AddBoneControl(LLStudioBone boneControl)
+        {
+            listBoneControl.Add(boneControl);
+            boneControl.parentBoneControl = this;
+            bone.AddBone(boneControl.bone);
         }
 
         /// <summary>
@@ -39,6 +55,10 @@ namespace LLGameStudio.Studio.Control
             boneStartPosition.X = x;
             boneStartPosition.Y = y;
             Margin = new Thickness(x- ellipseBoneJoint.ActualWidth / 2, y - ellipseBoneJoint.ActualHeight / 2, 0, 0);
+            foreach (var item in listBoneControl)
+            {
+                item.ChangeTransformByParent();
+            }
         }
 
         /// <summary>
@@ -46,31 +66,152 @@ namespace LLGameStudio.Studio.Control
         /// </summary>
         public void SetPostion(Point point)
         {
-            boneStartPosition = point;
-            Margin = new Thickness(point.X - ellipseBoneJoint.ActualWidth / 2, point.Y - ellipseBoneJoint.ActualHeight / 2, 0, 0);
+            SetPostion(point.X, point.Y);
         }
 
+        /// <summary>
+        /// 获得显示的真实的角度
+        /// </summary>
+        /// <returns></returns>
+        public double GetBoneControlAngle()
+        {
+            return boneControlAngle;
+        }
+
+        /// <summary>
+        /// 获得骨骼自身的角度
+        /// </summary>
+        /// <returns></returns>
+        public double GetBoneAngle()
+        {
+            return bone.angle.Value;
+        }
+
+        /// <summary>
+        /// 设置骨骼自身的旋转角度
+        /// </summary>
+        /// <param name="angle"></param>
+        public void SetBoneAngle(double angle)
+        {
+            bone.angle.Value = angle;
+            double parentBoneControlAngle =
+                parentBoneControl != null? 
+                parentBoneControl.GetBoneControlAngle(): 0;
+
+            boneControlAngle = bone.angle.Value + parentBoneControlAngle;
+
+            RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
+            foreach (var item in listBoneControl)
+            {
+                item.ChangeTransformByParent();
+            }
+        }
+
+        /// <summary>
+        /// 获得骨骼开始节点位置。
+        /// </summary>
+        /// <returns></returns>
         public Point GetStartPoint()
         {
             return boneStartPosition;
         }
 
+        /// <summary>
+        /// 获得骨骼尾节点位置。
+        /// </summary>
+        /// <returns></returns>
         public Point GetBoneEndPosition()
         {
+            double x = bone.length.Value * Math.Sin(boneControlAngle);
+            double y = bone.length.Value * Math.Cos(boneControlAngle);
             Point p = new Point();
-            p.X = boneStartPosition.X;
-            p.Y = boneStartPosition.Y+ boneLength;
+            p.X = boneStartPosition.X - x;
+            p.Y = boneStartPosition.Y + y;
             return p;
         }
 
         /// <summary>
-        /// 设置骨骼长度
+        /// 获得骨骼长度。
         /// </summary>
-        /// <param name="d"></param>
-        public void SetBoneLength(double d)
+        /// <returns></returns>
+        public double GetBoneLength()
         {
-            polygonBone.Points[2] = new Point(10,d);
-            boneLength = d;
+            return bone.length.Value;
+        }
+
+        /// <summary>
+        /// 更改骨骼长度时调整控件中心点等信息，仅类内部使用。
+        /// </summary>
+        /// <param name="length"></param>
+        void SetBoneLength(double length)
+        {
+            bone.length.Value = length;
+            polygonBone.Points[2] = new Point(10, bone.length.Value);
+            RenderTransformOrigin = new Point(0.5, 10 / (10 + bone.length.Value));
+        }
+
+        /// <summary>
+        /// 由父骨骼调用，通过传递自身位置坐标和旋转度数让子骨骼变换。
+        /// </summary>
+        public void ChangeTransformByParent()
+        {
+            double parentBoneControlAngle =
+                parentBoneControl != null ?
+                parentBoneControl.GetBoneControlAngle() : 0;
+
+            boneControlAngle = bone.angle.Value + parentBoneControlAngle;
+            SetPostion(parentBoneControl.GetBoneEndPosition());
+            RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
+        }
+
+        /// <summary>
+        /// 由子骨骼调用，通过传递子骨骼位置坐标让父骨骼变换
+        /// </summary>
+        /// <param name="childBonePoint"></param>
+        public void ChangeTransformByChildBone(Point childBonePoint)
+        {
+            SetBoneLength(LLMath.GetPointsLength(childBonePoint, boneStartPosition));
+            
+            Vector2 boneDirction = LLMath.GetNormalVector2( new Vector2(childBonePoint.X- boneStartPosition.X, childBonePoint.Y - boneStartPosition.Y));
+            boneControlAngle = LLMath.GetAngleBetweenVectors(new Vector2(0, 1), boneDirction);
+            
+            ResetBoneAngleByBoneControlAngle();
+            RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
+        }
+
+        /// <summary>
+        /// 通过骨骼显示的旋转角度和父骨骼旋转角度计算骨骼旋转角度
+        /// </summary>
+        public void ResetBoneAngleByBoneControlAngle()
+        {
+            double parentBoneControlAngle = parentBoneControl != null ?
+                parentBoneControl.GetBoneControlAngle() : 0;
+            bone.angle.Value = boneControlAngle - parentBoneControlAngle;
+        }
+
+        /// <summary>
+        /// 通过自身的旋转角度和父骨骼旋转角度计算显示的旋转角度
+        /// </summary>
+        public void ResetBoneControlAngleByBoneAngle()
+        {
+            boneControlAngle = bone.angle.Value;
+            RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
+        }
+
+        /// <summary>
+        /// 设置选中状态
+        /// </summary>
+        public void SetSelectState()
+        {
+            polygonBone.Stroke = new SolidColorBrush(Colors.Green);
+        }
+
+        /// <summary>
+        /// 取消选中状态
+        /// </summary>
+        public void CancelSelectState()
+        {
+            polygonBone.Stroke = null;
         }
     }
 }

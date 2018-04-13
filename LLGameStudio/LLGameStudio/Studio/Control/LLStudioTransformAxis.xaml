@@ -7,8 +7,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="40">
     <Grid>
-        <Polygon x:Name="polygonXAxis" Points="28,38 38,30 28,22 30,27 15,29 15,31 30,33" Fill="#FFEA4821" MouseLeftButtonDown="polygonXAxis_MouseLeftButtonDown" MouseLeftButtonUp="polygonXAxis_MouseLeftButtonUp" MouseMove="polygonXAxis_MouseMove" StrokeThickness="2"/>
-        <Polygon x:Name="polygonYAxis" Points="2,12 10,2 18,12 13,10 11,25 9,25 7,10" Fill="#FF18BE18" MouseLeftButtonDown="polygonYAxis_MouseLeftButtonDown" MouseLeftButtonUp="polygonYAxis_MouseLeftButtonUp" MouseMove="polygonYAxis_MouseMove" StrokeThickness="2"/>
-        <Rectangle x:Name="rectangleAxis" Width="10" Height="10" Margin="5,25,25,5" Fill="#FFEEFF00" MouseLeftButtonDown="rectangleAxis_MouseLeftButtonDown" MouseLeftButtonUp="rectangleAxis_MouseLeftButtonUp" MouseMove="rectangleAxis_MouseMove" StrokeThickness="2"></Rectangle>
+        <Grid x:Name="gridTranslation" Visibility="Hidden">
+            <Polygon x:Name="polygonXAxis" Points="28,38 38,30 28,22 30,27 15,29 15,31 30,33" Fill="#FFEA4821" MouseLeftButtonDown="polygonXAxis_MouseLeftButtonDown" MouseLeftButtonUp="polygonXAxis_MouseLeftButtonUp" MouseMove="polygonXAxis_MouseMove" StrokeThickness="2"/>
+            <Polygon x:Name="polygonYAxis" Points="2,12 10,2 18,12 13,10 11,25 9,25 7,10" Fill="#FF18BE18" MouseLeftButtonDown="polygonYAxis_MouseLeftButtonDown" MouseLeftButtonUp="polygonYAxis_MouseLeftButtonUp" MouseMove="polygonYAxis_MouseMove" StrokeThickness="2"/>
+            <Rectangle x:Name="rectangleXYAxis" Width="10" Height="10" Margin="5,25,25,5" Fill="#FFEEFF00" MouseLeftButtonDown="rectangleAxis_MouseLeftButtonDown" MouseLeftButtonUp="rectangleAxis_MouseLeftButtonUp" MouseMove="rectangleAxis_MouseMove" StrokeThickness="2"></Rectangle>
+        </Grid>
+        <Grid x:Name="gridRotation">
+            <Path x:Name="pathRAxis" Data="M 22,13 L 20,18 30,10 20,2 22,7 A 10,15,90,1,0 30,35 A 2,3,100,1,1 22,13 Z" Fill="#FF1199D8" MouseLeftButtonDown="pathRAxis_MouseLeftButtonDown" MouseLeftButtonUp="pathRAxis_MouseLeftButtonUp" MouseMove="pathRAxis_MouseMove" />
+        </Grid>
+        <Grid x:Name="gridScale">
+
+        </Grid>
     </Grid>
 </UserControl>
