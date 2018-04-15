@@ -87,6 +87,9 @@
       <DependentUpon>UIControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game\UI\LLGameGrid.cs" />
+    <Compile Include="Studio\Control\LLStudioActionItem.xaml.cs">
+      <DependentUpon>LLStudioActionItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Control\LLStudioBone.xaml.cs">
       <DependentUpon>LLStudioBone.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,9 @@
     <Compile Include="Studio\Control\LLStudioTextBox.xaml.cs">
       <DependentUpon>LLStudioTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Control\LLStudioTimeline.xaml.cs">
+      <DependentUpon>LLStudioTimeline.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Control\LLStudioTransformAxis.xaml.cs">
       <DependentUpon>LLStudioTransformAxis.xaml</DependentUpon>
     </Compile>
@@ -131,6 +137,10 @@
       <DependentUpon>ParticleWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Game\UI\UIControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioActionItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -183,6 +193,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Control\LLStudioTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioTimeline.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -34,6 +34,8 @@ namespace LLGameStudio.Studio.Window
         LLStudioBone currentSelectBoneControl = null;
         LLStudioTransformAxis transformAxis = null;
 
+        bool isEditBone = true;//界面打开时默认编辑骨骼，false情况下为编辑骨骼动画。
+
         public ActorWindow(string filePath)
         {
             InitializeComponent();
@@ -305,6 +307,33 @@ namespace LLGameStudio.Studio.Window
             SaveActorToFile();
         }
 
+        /// <summary>
+        /// 点击设置骨骼默认姿势按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageSetDefaultPosture_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 点击添加动作按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageAddAction_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            LLStudioActionItem actionItem = new LLStudioActionItem("action1");
+            actionItem.MouseDoubleClick += LLStudioActionItem_MouseDoubleClick;
+            stackPanelActionArea.Children.Add(actionItem);
+        }
+
+        private void LLStudioActionItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            LoadActionToCanvas();
+        }
+
         private void imageTranslation_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             transformAxis.SetTransformType(TransformType.Tranlation);
@@ -324,7 +353,7 @@ namespace LLGameStudio.Studio.Window
             rootBoneControl=AddBoneToCanvas(actor.rootBone);
 
             rootBoneControl.ResetBoneControlAngleByBoneAngle();
-            rootBoneControl.SetPostion(canvas.ActualWidth / 2, canvas.ActualHeight / 2);
+            rootBoneControl.SetPostion(canvas.ActualWidth *0.5, canvas.ActualHeight *0.8);
         }
 
         /// <summary>
@@ -333,11 +362,6 @@ namespace LLGameStudio.Studio.Window
         void SaveActorToFile()
         {
             LLConvert.ExportContentToXML(filePath, actor);
-        }
-
-        private void gridActor_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            currentMouseSelectPosition = e.GetPosition(canvas);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -356,10 +380,12 @@ namespace LLGameStudio.Studio.Window
             addParticleEmitter.Header = "添加骨骼";
             addParticleEmitter.Click += AddBone;
             gridContextMenu.Items.Add(addParticleEmitter);
-            gridActor.ContextMenu = gridContextMenu;
+            canvas.ContextMenu = gridContextMenu;
 
             canvas.Children.Add(transformAxis);
-            transformAxis.Visibility = Visibility.Hidden;
+            canvas.UpdateLayout();
+            SelectBone(rootBoneControl);
+            SelectUINodeToTree();
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -375,6 +401,25 @@ namespace LLGameStudio.Studio.Window
                 default:
                     break;
             }
+        }
+
+        private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            currentMouseSelectPosition = e.GetPosition(canvas);
+        }
+
+        /// <summary>
+        /// 将骨骼动画加载到画布中，开始编辑骨骼动画。
+        /// </summary>
+        void LoadActionToCanvas()
+        {
+            isEditBone = false;
+            LLStudioTimeline timeLine = new LLStudioTimeline();
+
+            gridTimeLine.Children.Add(timeLine);
+            gridTimeLine.UpdateLayout();
+            timeLine.InitTimeLine();
+            timeLine.ResetTimeLine();
         }
     }
 }

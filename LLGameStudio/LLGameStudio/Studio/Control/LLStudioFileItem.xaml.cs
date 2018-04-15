@@ -58,7 +58,7 @@ namespace LLGameStudio.Studio.Control
                         break;
                     case ".actor":
                         gameUIFileEnum = GameUIFileEnum.Actor;
-                        uri = new Uri(Environment.CurrentDirectory + @"\Resource\粒子.png");
+                        uri = new Uri(Environment.CurrentDirectory + @"\Resource\行动者.png");
                         break;
                     default:
                         gameUIFileEnum = GameUIFileEnum.Unknown;

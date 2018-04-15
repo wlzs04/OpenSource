@@ -30,4 +30,6 @@
   <backgroundComboBoxColor>#FF646464</backgroundComboBoxColor>
   <!--字体颜色：常规-->
   <fontColor>#FFD5D5D5</fontColor>
+  <!--时间轴刻度线颜色：常规-->
+  <timeLineScaleColor>#FF68E882</timeLineScaleColor>
 </Theme>
