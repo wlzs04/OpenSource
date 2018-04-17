@@ -45,6 +45,7 @@ namespace LLGameStudio.Studio.Window
             transformAxis = new LLStudioTransformAxis(canvas);
             transformAxis.DragAxisEvent += DragAxisEvent;
             transformAxis.SetTransformType(TransformType.Tranlation);
+            gridTimeLineArea.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -329,6 +330,11 @@ namespace LLGameStudio.Studio.Window
             stackPanelActionArea.Children.Add(actionItem);
         }
 
+        private void imageReturnBoneEdit_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            EnterBoneEdit();
+        }
+
         private void LLStudioActionItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             LoadActionToCanvas();
@@ -386,6 +392,12 @@ namespace LLGameStudio.Studio.Window
             canvas.UpdateLayout();
             SelectBone(rootBoneControl);
             SelectUINodeToTree();
+            
+            LLStudioTimeline timeLine = new LLStudioTimeline();
+            gridTimeLineArea.Children.Add(timeLine);
+            gridTimeLineArea.UpdateLayout();
+            timeLine.InitTimeLine();
+            timeLine.ResetTimeLine();
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -413,13 +425,19 @@ namespace LLGameStudio.Studio.Window
         /// </summary>
         void LoadActionToCanvas()
         {
-            isEditBone = false;
-            LLStudioTimeline timeLine = new LLStudioTimeline();
+            EnterActionEdit();
+        }
 
-            gridTimeLine.Children.Add(timeLine);
-            gridTimeLine.UpdateLayout();
-            timeLine.InitTimeLine();
-            timeLine.ResetTimeLine();
+        void EnterActionEdit()
+        {
+            isEditBone = false;
+            gridTimeLineArea.Visibility = Visibility.Visible;
+        }
+
+        void EnterBoneEdit()
+        {
+            isEditBone = true;
+            gridTimeLineArea.Visibility = Visibility.Hidden;
         }
     }
 }

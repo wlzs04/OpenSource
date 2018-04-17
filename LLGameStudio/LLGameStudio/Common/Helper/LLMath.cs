@@ -81,5 +81,16 @@ namespace LLGameStudio.Common.Helper
         {
             return new Vector2(point2.X - point1.X, point2.Y - point1.Y);
         }
+
+        /// <summary>
+        /// 返回限制在两数中的值。
+        /// </summary>
+        /// <param name="minNumber"></param>
+        /// <param name="maxNumber"></param>
+        /// <returns></returns>
+        public static double Clamp(double inputNumber, double minNumber, double maxNumber)
+        {
+            return inputNumber < minNumber ? minNumber : (inputNumber > maxNumber ? maxNumber : inputNumber);
+        }
     }
 }

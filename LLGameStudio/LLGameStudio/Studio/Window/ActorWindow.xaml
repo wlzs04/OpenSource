@@ -33,6 +33,7 @@
             <Image x:Name="imageSaveActor" Margin="0,0,0,0" ToolTip="保存" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/保存.png" MouseLeftButtonDown="imageSaveActor_MouseLeftButtonDown"/>
             <Image x:Name="imageSetDefaultPosture" Margin="30,0,0,0" ToolTip="设置骨骼默认姿势" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/编译成功.png" MouseLeftButtonDown="imageSetDefaultPosture_MouseLeftButtonDown"/>
             <Image x:Name="imageAddAction" Margin="60,0,0,0" ToolTip="添加动作" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/新建文件.png" MouseLeftButtonDown="imageAddAction_MouseLeftButtonDown"/>
+            <Image x:Name="imageReturnBoneEdit" Margin="90,0,0,0" ToolTip="返回到骨骼编辑模式" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/上一步.png" MouseLeftButtonDown="imageReturnBoneEdit_MouseLeftButtonDown"/>
             <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Margin="0,0,100,0" ToolTip="最小化" Source="/LLGameStudio;component/bin/Debug/Resource/最小化.png" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
             <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Margin="0,0,50,0" ToolTip="最大化" Source="/LLGameStudio;component/bin/Debug/Resource/最小化.png" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
             <Image x:Name="imageExitWindow" HorizontalAlignment="Right" ToolTip="退出" Source="/LLGameStudio;component/bin/Debug/Resource/退出.png" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
@@ -76,27 +77,8 @@
                         <Canvas x:Name="canvas" ClipToBounds="True" Margin="0,30,0,0" MouseRightButtonDown="canvas_MouseRightButtonDown" Background="#FF3E3E40"></Canvas>
                     </Grid>
                     <GridSplitter Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderBrush="#FF686868"/>
-                    <Grid Grid.Row="1" Background="#FF252526">
-                        <Grid Height="80" VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30*" MinWidth="30" MaxWidth="300"/>
-                                <ColumnDefinition Width="70*" MinWidth="30"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="50*" MinWidth="50"/>
-                                    <ColumnDefinition Width="25*" MinWidth="50"/>
-                                    <ColumnDefinition Width="25*" MinWidth="50"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" ToolTip="在当期时间点生成帧" Source="/LLGameStudio;component/bin/Debug/Resource/下一步.png"></Image>
-                                <Image Grid.Column="1" ToolTip="播放" Source="/LLGameStudio;component/bin/Debug/Resource/开始.png"></Image>
-                                <Image Grid.Column="2" ToolTip="停止" Source="/LLGameStudio;component/bin/Debug/Resource/结束.png"></Image>
-                            </Grid>
-                            <Grid x:Name="gridTimeLine" Grid.Column="1">
-                                
-
-                            </Grid>
-                        </Grid>
+                    <Grid x:Name="gridTimeLineArea"  Grid.Row="1" Background="#FF252526">
+                        
                     </Grid>
                 </Grid>
             </Border>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LLGameStudio.Common.DataType;
+using LLGameStudio.Common.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,22 +25,89 @@ namespace LLGameStudio.Studio.Control
         double timeLimit = 24;//时间(刻度)上限。
         int scaleNumber = 4;//一级刻度数量。
         int secondScaleNumber = 6;//二级刻度数量。
-        double minMoveUnit = 1;//时间轴内最小移动单位。
 
         double startEndScaleHeight = 50;//起止刻度的高度。
         double scaleHeight = 40;//一级刻度的高度。
         double secondScaleHeight = 20; //二级刻度的高度。
+        double timeBlockHeight = 30; //时间滑块的高度。
         double lineWidth = 2;//绘制线的宽度。
         double numberFontSize = 10;//数字字体大小。
+        double timeBlockWidth = 10;
         double padLeftRight = 5;//起止刻度距离控件左右边缘间隔。
         double padTop = 20;//起止刻度距离控件上边缘间隔。
 
+        bool isTimeBlockClicked = false;
+        int currentTimeBlackScale = 0;//当前时间滑块在第几个刻度上。
+
+        double moveLength = 0;//临时保存鼠标移动长度。
+
+        Rectangle timeBlock;//时间滑块。
         Brush lineBrush = null;
+
+        Point lastMousePoint;
+
+        public delegate void DragEvent(int scale);
+        public DragEvent DragTimeBlackEvent;
 
         public LLStudioTimeline()
         {
             InitializeComponent();
-            lineBrush= ThemeManager.GetBrushByName("timeLineScaleColor");
+            timeBlock = new Rectangle();
+            lineBrush = ThemeManager.GetBrushByName("timeLineScaleColor");
+            timeBlock.MouseLeftButtonDown += timeBlock_MouseLeftButtonDown;
+            timeBlock.MouseLeftButtonUp += timeBlock_MouseLeftButtonUp;
+            timeBlock.MouseMove += timeBlock_MouseMove;
+        }
+
+        private void timeBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            timeBlock.CaptureMouse();
+            lastMousePoint = e.GetPosition(canvas);
+            isTimeBlockClicked = true;
+            timeBlock.Stroke = ThemeManager.GetBrushByName("timeBlockSelectColor");
+            moveLength = 0;
+        }
+
+        private void timeBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            timeBlock.ReleaseMouseCapture();
+            isTimeBlockClicked = false;
+            timeBlock.Stroke = null;
+            moveLength = 0;
+        }
+
+        private void timeBlock_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isTimeBlockClicked)
+            {
+                Point currentMousePoint = e.GetPosition(canvas);
+                currentMousePoint.X = LLMath.Clamp(currentMousePoint.X,0,canvas.ActualWidth);
+                
+                moveLength += currentMousePoint.X - lastMousePoint.X;
+                
+                if(Math.Abs(moveLength)>timeBlockWidth)
+                {
+                    int moveScale = (int)(moveLength / timeBlockWidth);
+                    moveLength -= moveScale * timeBlockWidth;
+
+                    SetTimeBlockToScale(currentTimeBlackScale + moveScale);
+                }
+                lastMousePoint = currentMousePoint;
+            }
+        }
+
+        /// <summary>
+        /// 将时间滑块设置第几个刻度上。
+        /// </summary>
+        public void SetTimeBlockToScale(int scale)
+        {
+            scale = (int)LLMath.Clamp(scale, 0, timeLimit);
+            if (currentTimeBlackScale != scale)
+            {
+                currentTimeBlackScale = scale;
+                timeBlock.Margin = new Thickness(currentTimeBlackScale * timeBlockWidth, timeBlock.Margin.Top, 0, 0);
+                DragTimeBlackEvent?.Invoke(scale);
+            }
         }
 
         public void SetTimeLimit(double timeLimit)
@@ -76,8 +145,10 @@ namespace LLGameStudio.Studio.Control
 
         public void InitTimeLine()
         {
-            double realWidth = ActualWidth - 2 * padLeftRight;
-            double realHeight = ActualHeight;
+            padLeftRight = canvas.ActualWidth / (timeLimit + 1)/2;
+
+            double realWidth = canvas.ActualWidth - 2 * padLeftRight;
+            double realHeight = canvas.ActualHeight;
 
             Line startLine = new Line();
             startLine.Stroke = lineBrush;
@@ -88,7 +159,9 @@ namespace LLGameStudio.Studio.Control
 
             TextBlock textBlockStart = new TextBlock();
             textBlockStart.Text = "0";
-            textBlockStart.Margin = new Thickness(0);
+            textBlockStart.FontSize = numberFontSize;
+            textBlockStart.Foreground = lineBrush;
+            textBlockStart.Margin = new Thickness(padLeftRight,0,0,0);
             canvas.Children.Add(textBlockStart);
 
             Line endLine = new Line();
@@ -100,6 +173,8 @@ namespace LLGameStudio.Studio.Control
 
             TextBlock textBlockEnd = new TextBlock();
             textBlockEnd.Text = timeLimit+"";
+            textBlockEnd.FontSize = numberFontSize;
+            textBlockEnd.Foreground = lineBrush;
             textBlockEnd.Margin = new Thickness(padLeftRight + realWidth,0,0,0);
             canvas.Children.Add(textBlockEnd);
 
@@ -109,12 +184,21 @@ namespace LLGameStudio.Studio.Control
             baseLine.X1 = padLeftRight; baseLine.Y1 = padTop + startEndScaleHeight;
             baseLine.X2 = padLeftRight + realWidth; baseLine.Y2 = padTop + startEndScaleHeight;
             canvas.Children.Add(baseLine);
+
+            timeBlock.StrokeThickness = 2;
+            timeBlock.Fill = ThemeManager.GetBrushByName("timeBlockColor");
+            timeBlock.Width = realWidth / timeLimit;
+            timeBlock.Height = timeBlockHeight;
+            timeBlock.Margin = new Thickness(startLine.X1- timeBlock.Width/2, padTop + startEndScaleHeight-timeBlockHeight, 0,0);
+            canvas.Children.Add(timeBlock);
+
+            timeBlockWidth = timeBlock.Width;
         }
 
         public void ResetTimeLine()
         {
-            double realWidth = ActualWidth - 2 * padLeftRight;
-            double realHeight = ActualHeight;
+            double realWidth = canvas.ActualWidth - 2 * padLeftRight;
+            double realHeight = canvas.ActualHeight;
 
             int allScaleNumber = scaleNumber * secondScaleNumber;
             double scaleSpace = realWidth/ allScaleNumber;
@@ -139,6 +223,8 @@ namespace LLGameStudio.Studio.Control
 
                 TextBlock textBlock = new TextBlock();
                 textBlock.Text = i + "";
+                textBlock.FontSize = numberFontSize;
+                textBlock.Foreground = lineBrush;
                 textBlock.Margin = new Thickness(padLeftRight + i * scaleSpace, 0, 0, 0);
                 canvas.Children.Add(textBlock);
             }

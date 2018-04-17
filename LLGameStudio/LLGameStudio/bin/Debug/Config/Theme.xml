@@ -32,4 +32,10 @@
   <fontColor>#FFD5D5D5</fontColor>
   <!--时间轴刻度线颜色：常规-->
   <timeLineScaleColor>#FF68E882</timeLineScaleColor>
+  <!--时间滑块颜色：常规-->
+  <timeBlockColor>#FF7787CD</timeBlockColor>
+  <!--时间滑块边框颜色：鼠标悬浮-->
+  <timeBlockHoverColor>#FF26A465</timeBlockHoverColor>
+  <!--时间滑块边框颜色：选中-->
+  <timeBlockSelectColor>#FF4A81B8</timeBlockSelectColor>
 </Theme>
