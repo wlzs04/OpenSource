@@ -103,6 +103,9 @@
     <Compile Include="Studio\Control\LLStudioFontEdit.xaml.cs">
       <DependentUpon>LLStudioFontEdit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Control\LLStudioKeyItem.xaml.cs">
+      <DependentUpon>LLStudioKeyItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Control\LLStudioNumberTextBox.xaml.cs">
       <DependentUpon>LLStudioNumberTextBox.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Control\LLStudioFontEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Control\LLStudioKeyItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

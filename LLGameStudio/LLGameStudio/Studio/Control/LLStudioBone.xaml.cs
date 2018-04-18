@@ -33,7 +33,7 @@ namespace LLGameStudio.Studio.Control
         {
             InitializeComponent();
             this.bone = bone;
-            SetBoneLength(bone.length.Value);
+            SetBoneLength(bone.length);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace LLGameStudio.Studio.Control
         /// <returns></returns>
         public double GetBoneAngle()
         {
-            return bone.angle.Value;
+            return bone.angle;
         }
 
         /// <summary>
@@ -93,12 +93,12 @@ namespace LLGameStudio.Studio.Control
         /// <param name="angle"></param>
         public void SetBoneAngle(double angle)
         {
-            bone.angle.Value = angle;
+            bone.angle = angle;
             double parentBoneControlAngle =
                 parentBoneControl != null? 
                 parentBoneControl.GetBoneControlAngle(): 0;
 
-            boneControlAngle = bone.angle.Value + parentBoneControlAngle;
+            boneControlAngle = bone.angle + parentBoneControlAngle;
 
             RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
             foreach (var item in listBoneControl)
@@ -122,8 +122,8 @@ namespace LLGameStudio.Studio.Control
         /// <returns></returns>
         public Point GetBoneEndPosition()
         {
-            double x = bone.length.Value * Math.Sin(boneControlAngle);
-            double y = bone.length.Value * Math.Cos(boneControlAngle);
+            double x = bone.length * Math.Sin(boneControlAngle);
+            double y = bone.length * Math.Cos(boneControlAngle);
             Point p = new Point();
             p.X = boneStartPosition.X - x;
             p.Y = boneStartPosition.Y + y;
@@ -136,7 +136,7 @@ namespace LLGameStudio.Studio.Control
         /// <returns></returns>
         public double GetBoneLength()
         {
-            return bone.length.Value;
+            return bone.length;
         }
 
         /// <summary>
@@ -145,9 +145,9 @@ namespace LLGameStudio.Studio.Control
         /// <param name="length"></param>
         void SetBoneLength(double length)
         {
-            bone.length.Value = length;
-            polygonBone.Points[2] = new Point(10, bone.length.Value);
-            RenderTransformOrigin = new Point(0.5, 10 / (10 + bone.length.Value));
+            bone.length = length;
+            polygonBone.Points[2] = new Point(10, bone.length);
+            RenderTransformOrigin = new Point(0.5, 10 / (10 + bone.length));
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace LLGameStudio.Studio.Control
                 parentBoneControl != null ?
                 parentBoneControl.GetBoneControlAngle() : 0;
 
-            boneControlAngle = bone.angle.Value + parentBoneControlAngle;
+            boneControlAngle = bone.angle + parentBoneControlAngle;
             SetPostion(parentBoneControl.GetBoneEndPosition());
             RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
         }
@@ -186,7 +186,7 @@ namespace LLGameStudio.Studio.Control
         {
             double parentBoneControlAngle = parentBoneControl != null ?
                 parentBoneControl.GetBoneControlAngle() : 0;
-            bone.angle.Value = boneControlAngle - parentBoneControlAngle;
+            bone.angle = boneControlAngle - parentBoneControlAngle;
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace LLGameStudio.Studio.Control
         /// </summary>
         public void ResetBoneControlAngleByBoneAngle()
         {
-            boneControlAngle = bone.angle.Value;
+            boneControlAngle = bone.angle;
             RenderTransform = new RotateTransform(boneControlAngle * 180 / Math.PI);
         }
 

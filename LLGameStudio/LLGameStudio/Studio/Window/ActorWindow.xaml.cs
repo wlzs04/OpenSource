@@ -33,6 +33,9 @@ namespace LLGameStudio.Studio.Window
         LLStudioBone rootBoneControl = null;
         LLStudioBone currentSelectBoneControl = null;
         LLStudioTransformAxis transformAxis = null;
+        LLStudioTimeline timeLine = null;
+
+        Dictionary<string,LLStudioKeyItem> keyItemMap = new Dictionary<string, LLStudioKeyItem>();
 
         bool isEditBone = true;//界面打开时默认编辑骨骼，false情况下为编辑骨骼动画。
 
@@ -96,6 +99,11 @@ namespace LLGameStudio.Studio.Window
             AddBoneToCanvas(new Bone());
         }
 
+        /// <summary>
+        /// 添加骨骼到画布中
+        /// </summary>
+        /// <param name="bone"></param>
+        /// <returns></returns>
         LLStudioBone AddBoneToCanvas(Bone bone)
         {
             LLStudioBone boneControl = new LLStudioBone(bone);
@@ -235,6 +243,10 @@ namespace LLGameStudio.Studio.Window
             }
         }
 
+        /// <summary>
+        /// 选中骨骼
+        /// </summary>
+        /// <param name="boneControl"></param>
         void SelectBone(LLStudioBone boneControl)
         {
             if (isAddBoneToParentBone)
@@ -315,7 +327,7 @@ namespace LLGameStudio.Studio.Window
         /// <param name="e"></param>
         private void imageSetDefaultPosture_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            actor.SetDefaultPosture();
         }
 
         /// <summary>
@@ -329,15 +341,37 @@ namespace LLGameStudio.Studio.Window
             actionItem.MouseDoubleClick += LLStudioActionItem_MouseDoubleClick;
             stackPanelActionArea.Children.Add(actionItem);
         }
-
-        private void imageReturnBoneEdit_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        
+        /// <summary>
+        /// 点击进入骨骼编辑模式按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageEnterBoneEdit_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             EnterBoneEdit();
         }
 
+        /// <summary>
+        /// 点击进入动作编辑模式按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageEnterActionEdit_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            EnterActionEdit();
+        }
+
         private void LLStudioActionItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            LoadActionToCanvas();
+            if(isEditBone)
+            {
+                
+            }
+            else
+            {
+                LoadActionToCanvas();
+            }
         }
 
         private void imageTranslation_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -392,12 +426,10 @@ namespace LLGameStudio.Studio.Window
             canvas.UpdateLayout();
             SelectBone(rootBoneControl);
             SelectUINodeToTree();
-            
-            LLStudioTimeline timeLine = new LLStudioTimeline();
+
+            timeLine = new LLStudioTimeline();
             gridTimeLineArea.Children.Add(timeLine);
             gridTimeLineArea.UpdateLayout();
-            timeLine.InitTimeLine();
-            timeLine.ResetTimeLine();
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -425,19 +457,61 @@ namespace LLGameStudio.Studio.Window
         /// </summary>
         void LoadActionToCanvas()
         {
-            EnterActionEdit();
+            timeLine.ResetTimeLine();
         }
 
-        void EnterActionEdit()
+        /// <summary>
+        /// 将骨骼及其子骨骼添加到时间轴中
+        /// </summary>
+        /// <param name="boneControl"></param>
+        /// <param name="level"></param>
+        void AddBoneAddToTimeLine(LLStudioBone boneControl,int level)
         {
-            isEditBone = false;
-            gridTimeLineArea.Visibility = Visibility.Visible;
+            LLStudioKeyItem keyItem = new LLStudioKeyItem(boneControl.bone.name.Value, level);
+            keyItem.MouseLeftButtonDown += SelectKeyItem;
+            timeLine.AddKeyItem(keyItem);
+            keyItemMap.Add(boneControl.bone.name.Value, keyItem);
+            foreach (var item in boneControl.listBoneControl)
+            {
+                AddBoneAddToTimeLine(item, level + 1);
+            }
         }
 
+        /// <summary>
+        /// 选中某项同时取消其他项的选中状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void SelectKeyItem(object sender, MouseButtonEventArgs e)
+        {
+            foreach (var item in keyItemMap)
+            {
+                item.Value.CancelSelectState();
+            }
+            (sender as LLStudioKeyItem).SetSelectState();
+        }
+
+        /// <summary>
+        /// 进入骨骼编辑模式
+        /// </summary>
         void EnterBoneEdit()
         {
             isEditBone = true;
             gridTimeLineArea.Visibility = Visibility.Hidden;
+            timeLine.RemoveAllKeyItem();
+            keyItemMap.Clear();
+            labelEditState.Content = "骨骼编辑";
+        }
+
+        /// <summary>
+        /// 进入动作编辑模式
+        /// </summary>
+        void EnterActionEdit()
+        {
+            isEditBone = false;
+            gridTimeLineArea.Visibility = Visibility.Visible;
+            AddBoneAddToTimeLine(rootBoneControl, 1);
+            labelEditState.Content= "动作编辑";
         }
     }
 }

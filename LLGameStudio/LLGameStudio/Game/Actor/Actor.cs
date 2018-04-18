@@ -41,12 +41,16 @@ namespace LLGameStudio.Game.Actor
 
         void ExportAttrbuteToXML(XElement element)
         {
-
         }
 
         public void SetRootBone(Bone bone)
         {
             rootBone = bone;
+        }
+
+        public void SetDefaultPosture()
+        {
+            rootBone.SetDefaultPosture();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -17,12 +18,20 @@ using System.Windows.Shapes;
 
 namespace LLGameStudio.Studio.Control
 {
+    enum TimeState
+    {
+        Start,//开始
+        Pause,//暂停
+        Stop//停止
+    }
+
     /// <summary>
     /// LLStudioTimeline.xaml 的交互逻辑
     /// </summary>
     public partial class LLStudioTimeline : UserControl
     {
-        double timeLimit = 24;//时间(刻度)上限。
+        double timeLimit = 4;//时间上限（秒）。
+        double scaleLimit = 24;//刻度上限。
         int scaleNumber = 4;//一级刻度数量。
         int secondScaleNumber = 6;//二级刻度数量。
 
@@ -38,16 +47,21 @@ namespace LLGameStudio.Studio.Control
 
         bool isTimeBlockClicked = false;
         int currentTimeBlackScale = 0;//当前时间滑块在第几个刻度上。
-
+        double currentTime = 0;//当前时间轴代表的时间（秒）。
         double moveLength = 0;//临时保存鼠标移动长度。
 
         Rectangle timeBlock;//时间滑块。
+        Line timeBlockLine;//时间滑块下方的线。
         Brush lineBrush = null;
 
         Point lastMousePoint;
+        TimeState timeState = TimeState.Stop;
 
         public delegate void DragEvent(int scale);
         public DragEvent DragTimeBlackEvent;
+
+        Timer timer = new Timer(41);//每秒24帧
+        DateTime lastDataTime;
 
         public LLStudioTimeline()
         {
@@ -57,35 +71,43 @@ namespace LLGameStudio.Studio.Control
             timeBlock.MouseLeftButtonDown += timeBlock_MouseLeftButtonDown;
             timeBlock.MouseLeftButtonUp += timeBlock_MouseLeftButtonUp;
             timeBlock.MouseMove += timeBlock_MouseMove;
+
+            timer.Elapsed += MoveTimeBlockByTimer;
         }
 
         private void timeBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            timeBlock.CaptureMouse();
-            lastMousePoint = e.GetPosition(canvas);
-            isTimeBlockClicked = true;
-            timeBlock.Stroke = ThemeManager.GetBrushByName("timeBlockSelectColor");
-            moveLength = 0;
+            if (timeState == TimeState.Stop)
+            {
+                timeBlock.CaptureMouse();
+                lastMousePoint = e.GetPosition(canvas);
+                isTimeBlockClicked = true;
+                timeBlock.Stroke = ThemeManager.GetBrushByName("timeBlockSelectColor");
+                moveLength = 0;
+            }
         }
 
         private void timeBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            timeBlock.ReleaseMouseCapture();
-            isTimeBlockClicked = false;
-            timeBlock.Stroke = null;
-            moveLength = 0;
+            if (timeState == TimeState.Stop)
+            {
+                timeBlock.ReleaseMouseCapture();
+                isTimeBlockClicked = false;
+                timeBlock.Stroke = null;
+                moveLength = 0;
+            }
         }
 
         private void timeBlock_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isTimeBlockClicked)
+            if (timeState == TimeState.Stop && isTimeBlockClicked)
             {
                 Point currentMousePoint = e.GetPosition(canvas);
-                currentMousePoint.X = LLMath.Clamp(currentMousePoint.X,0,canvas.ActualWidth);
-                
+                currentMousePoint.X = LLMath.Clamp(currentMousePoint.X, 0, canvas.ActualWidth);
+
                 moveLength += currentMousePoint.X - lastMousePoint.X;
-                
-                if(Math.Abs(moveLength)>timeBlockWidth)
+
+                if (Math.Abs(moveLength) > timeBlockWidth)
                 {
                     int moveScale = (int)(moveLength / timeBlockWidth);
                     moveLength -= moveScale * timeBlockWidth;
@@ -101,7 +123,7 @@ namespace LLGameStudio.Studio.Control
         /// </summary>
         public void SetTimeBlockToScale(int scale)
         {
-            scale = (int)LLMath.Clamp(scale, 0, timeLimit);
+            scale = (int)LLMath.Clamp(scale, 0, scaleLimit);
             if (currentTimeBlackScale != scale)
             {
                 currentTimeBlackScale = scale;
@@ -110,15 +132,15 @@ namespace LLGameStudio.Studio.Control
             }
         }
 
-        public void SetTimeLimit(double timeLimit)
+        public void SetScaleLimit(double scaleLimit)
         {
-            this.timeLimit = timeLimit;
+            this.scaleLimit = scaleLimit;
             ResetTimeLine();
         }
 
-        public double GetTimeLimit()
+        public double GetScaleLimit()
         {
-            return timeLimit;
+            return scaleLimit;
         }
 
         public void SetScaleNumber(int scaleNumber)
@@ -143,9 +165,14 @@ namespace LLGameStudio.Studio.Control
             return secondScaleNumber;
         }
 
-        public void InitTimeLine()
+        /// <summary>
+        /// 重新设置时间轴
+        /// </summary>
+        public void ResetTimeLine()
         {
-            padLeftRight = canvas.ActualWidth / (timeLimit + 1)/2;
+            canvas.Children.Clear();
+
+            padLeftRight = canvas.ActualWidth / (scaleLimit + 1) / 2;
 
             double realWidth = canvas.ActualWidth - 2 * padLeftRight;
             double realHeight = canvas.ActualHeight;
@@ -161,7 +188,7 @@ namespace LLGameStudio.Studio.Control
             textBlockStart.Text = "0";
             textBlockStart.FontSize = numberFontSize;
             textBlockStart.Foreground = lineBrush;
-            textBlockStart.Margin = new Thickness(padLeftRight,0,0,0);
+            textBlockStart.Margin = new Thickness(padLeftRight, 0, 0, 0);
             canvas.Children.Add(textBlockStart);
 
             Line endLine = new Line();
@@ -172,10 +199,10 @@ namespace LLGameStudio.Studio.Control
             canvas.Children.Add(endLine);
 
             TextBlock textBlockEnd = new TextBlock();
-            textBlockEnd.Text = timeLimit+"";
+            textBlockEnd.Text = scaleLimit + "";
             textBlockEnd.FontSize = numberFontSize;
             textBlockEnd.Foreground = lineBrush;
-            textBlockEnd.Margin = new Thickness(padLeftRight + realWidth,0,0,0);
+            textBlockEnd.Margin = new Thickness(padLeftRight + realWidth, 0, 0, 0);
             canvas.Children.Add(textBlockEnd);
 
             Line baseLine = new Line();
@@ -184,21 +211,22 @@ namespace LLGameStudio.Studio.Control
             baseLine.X1 = padLeftRight; baseLine.Y1 = padTop + startEndScaleHeight;
             baseLine.X2 = padLeftRight + realWidth; baseLine.Y2 = padTop + startEndScaleHeight;
             canvas.Children.Add(baseLine);
-
+            
             timeBlock.StrokeThickness = 2;
             timeBlock.Fill = ThemeManager.GetBrushByName("timeBlockColor");
-            timeBlock.Width = realWidth / timeLimit;
+            timeBlock.Width = realWidth / scaleLimit;
             timeBlock.Height = timeBlockHeight;
-            timeBlock.Margin = new Thickness(startLine.X1- timeBlock.Width/2, padTop + startEndScaleHeight-timeBlockHeight, 0,0);
+            timeBlock.Margin = new Thickness(startLine.X1 - timeBlock.Width / 2, padTop + startEndScaleHeight - timeBlockHeight, 0, 0);
             canvas.Children.Add(timeBlock);
+            Panel.SetZIndex(timeBlock, 1);
 
-            timeBlockWidth = timeBlock.Width;
-        }
+            timeBlockLine.Stroke = lineBrush;
+            timeBlockLine.StrokeThickness = lineWidth;
+            timeBlockLine.X1 = startLine.X1 - timeBlock.Width / 2; timeBlockLine.Y1 = padTop + startEndScaleHeight;
+            timeBlockLine.X2 = startLine.X1 - timeBlock.Width / 2; timeBlockLine.Y2 = padTop + startEndScaleHeight;
+            canvas.Children.Add(timeBlockLine); 
 
-        public void ResetTimeLine()
-        {
-            double realWidth = canvas.ActualWidth - 2 * padLeftRight;
-            double realHeight = canvas.ActualHeight;
+             timeBlockWidth = timeBlock.Width;
 
             int allScaleNumber = scaleNumber * secondScaleNumber;
             double scaleSpace = realWidth/ allScaleNumber;
@@ -228,6 +256,87 @@ namespace LLGameStudio.Studio.Control
                 textBlock.Margin = new Thickness(padLeftRight + i * scaleSpace, 0, 0, 0);
                 canvas.Children.Add(textBlock);
             }
+
+            SetTimeBlockToScale(0);
+        }
+
+        private void imageKey_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Key();
+        }
+
+        private void imageStartOrPause_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(timeState!=TimeState.Start)
+            {
+                Start();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+
+        private void imageStop_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(timeState!= TimeState.Stop)
+            {
+                Stop();
+            }
+        }
+
+        public void Key()
+        {
+            
+        }
+
+        public void Start()
+        {
+            imageStartOrPause.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + @"\Resource\暂停.png"));
+            imageStartOrPause.ToolTip = "暂停";
+            timeState = TimeState.Start;
+            timer.Enabled = true;
+            lastDataTime = DateTime.Now;
+        }
+
+        public void Pause()
+        {
+            imageStartOrPause.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + @"\Resource\开始.png"));
+            imageStartOrPause.ToolTip = "继续";
+            timeState = TimeState.Pause;
+            timer.Enabled = false;
+        }
+
+        public void Stop()
+        {
+            timeState = TimeState.Stop;
+            imageStartOrPause.Source = new BitmapImage(new Uri(Environment.CurrentDirectory + @"\Resource\开始.png"));
+            imageStartOrPause.ToolTip = "开始";
+            timer.Enabled = false;
+            SetTimeBlockToScale(0);
+            currentTime = 0;
+        }
+
+        void MoveTimeBlockByTimer(object sender, ElapsedEventArgs e)
+        {
+            TimeSpan timeSpan = e.SignalTime - lastDataTime;
+            currentTime += timeSpan.TotalMilliseconds / 1000;
+            if (currentTime > timeLimit)
+            {
+                currentTime = 0;
+            }
+            Dispatcher.Invoke(new Action(() => { SetTimeBlockToScale((int)(scaleLimit * (currentTime / timeLimit))); }));
+            lastDataTime = e.SignalTime;
+        }
+
+        public void RemoveAllKeyItem()
+        {
+            stackPanelKeyItems.Children.Clear();
+        }
+
+        public void AddKeyItem(LLStudioKeyItem keyItem)
+        {
+            stackPanelKeyItems.Children.Add(keyItem);
         }
     }
 }

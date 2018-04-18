@@ -6,23 +6,30 @@
              xmlns:local="clr-namespace:LLGameStudio.Studio.Control"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="800" MinHeight="80">
-    <Grid Height="80" VerticalAlignment="Top">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30*" MinWidth="30" MaxWidth="300"/>
-            <ColumnDefinition Width="70*" MinWidth="30"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+    <Grid>
+        <Grid Height="80" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50*" MinWidth="50"/>
-                <ColumnDefinition Width="25*" MinWidth="50"/>
-                <ColumnDefinition Width="25*" MinWidth="50"/>
+                <ColumnDefinition Width="30*" MinWidth="30" MaxWidth="300"/>
+                <ColumnDefinition Width="70*" MinWidth="30"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" ToolTip="在当期时间点生成帧" Source="/LLGameStudio;component/bin/Debug/Resource/下一步.png"></Image>
-            <Image Grid.Column="1" ToolTip="播放" Source="/LLGameStudio;component/bin/Debug/Resource/开始.png"></Image>
-            <Image Grid.Column="2" ToolTip="停止" Source="/LLGameStudio;component/bin/Debug/Resource/结束.png"></Image>
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition MinWidth="50"/>
+                    <ColumnDefinition MinWidth="50"/>
+                </Grid.ColumnDefinitions>
+                <Image x:Name="imageKey" Grid.Column="0" ToolTip="在当期时间点生成帧" Source="/LLGameStudio;component/bin/Debug/Resource/下一步.png" MouseLeftButtonDown="imageKey_MouseLeftButtonDown"></Image>
+                <Image x:Name="imageStartOrPause" Grid.Column="1" ToolTip="播放" Source="/LLGameStudio;component/bin/Debug/Resource/开始.png" MouseLeftButtonDown="imageStartOrPause_MouseLeftButtonDown"></Image>
+                <Image x:Name="imageStop" Grid.Column="2" ToolTip="停止" Source="/LLGameStudio;component/bin/Debug/Resource/结束.png" MouseLeftButtonDown="imageStop_MouseLeftButtonDown"></Image>
+            </Grid>
+            <Grid x:Name="gridTimeLine" Grid.Column="1">
+                <Canvas x:Name="canvas" ClipToBounds="True"/>
+            </Grid>
         </Grid>
-        <Grid x:Name="gridTimeLine" Grid.Column="1">
-            <Canvas x:Name="canvas" ClipToBounds="True"/>
+        <Grid Margin="0,80,0,0">
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" Margin="0,0,0,0">
+                <StackPanel x:Name="stackPanelKeyItems" ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+            </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>

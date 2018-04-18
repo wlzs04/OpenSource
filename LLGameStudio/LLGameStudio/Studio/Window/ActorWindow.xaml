@@ -33,7 +33,8 @@
             <Image x:Name="imageSaveActor" Margin="0,0,0,0" ToolTip="保存" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/保存.png" MouseLeftButtonDown="imageSaveActor_MouseLeftButtonDown"/>
             <Image x:Name="imageSetDefaultPosture" Margin="30,0,0,0" ToolTip="设置骨骼默认姿势" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/编译成功.png" MouseLeftButtonDown="imageSetDefaultPosture_MouseLeftButtonDown"/>
             <Image x:Name="imageAddAction" Margin="60,0,0,0" ToolTip="添加动作" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/新建文件.png" MouseLeftButtonDown="imageAddAction_MouseLeftButtonDown"/>
-            <Image x:Name="imageReturnBoneEdit" Margin="90,0,0,0" ToolTip="返回到骨骼编辑模式" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/上一步.png" MouseLeftButtonDown="imageReturnBoneEdit_MouseLeftButtonDown"/>
+            <Image x:Name="imageEnterBoneEdit" Margin="90,0,0,0" ToolTip="进入骨骼编辑模式" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/上一步.png" MouseLeftButtonDown="imageEnterBoneEdit_MouseLeftButtonDown"/>
+            <Image x:Name="imageEnterActionEdit" Margin="120,0,0,0" ToolTip="进入动画编辑模式" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/下一步.png" MouseLeftButtonDown="imageEnterActionEdit_MouseLeftButtonDown"/>
             <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Margin="0,0,100,0" ToolTip="最小化" Source="/LLGameStudio;component/bin/Debug/Resource/最小化.png" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
             <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Margin="0,0,50,0" ToolTip="最大化" Source="/LLGameStudio;component/bin/Debug/Resource/最小化.png" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
             <Image x:Name="imageExitWindow" HorizontalAlignment="Right" ToolTip="退出" Source="/LLGameStudio;component/bin/Debug/Resource/退出.png" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
@@ -73,6 +74,7 @@
                         <Grid VerticalAlignment="Top" Height="30" Background="#FF191919">
                             <Image x:Name="imageTranslation" Margin="0,0,0,0" ToolTip="平移(W)" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/平移.png" MouseLeftButtonDown="imageTranslation_MouseLeftButtonDown"/>
                             <Image x:Name="imageRotation" Margin="30,0,0,0" ToolTip="旋转(E)" HorizontalAlignment="Left" Source="/LLGameStudio;component/bin/Debug/Resource/旋转.png" MouseLeftButtonDown="imageRotation_MouseLeftButtonDown"/>
+                            <Label x:Name="labelEditState" HorizontalAlignment="Center" Content="骨骼编辑" VerticalAlignment="Center" FontSize="20" Padding="0" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </Grid>
                         <Canvas x:Name="canvas" ClipToBounds="True" Margin="0,30,0,0" MouseRightButtonDown="canvas_MouseRightButtonDown" Background="#FF3E3E40"></Canvas>
                     </Grid>

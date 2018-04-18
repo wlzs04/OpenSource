@@ -18,15 +18,30 @@ namespace LLGameStudio.Game.Actor
 
         public Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
         public Property.Name name = new Property.Name();
-        public Property.Length length = new Property.Length();
-        public Property.Angle angle = new Property.Angle();
+        Property.Length defaultLength = new Property.Length();
+        Property.Angle defaultAngle = new Property.Angle();
 
+        public double length = 0;
+        public double angle = 0;
 
         public Bone()
         {
             AddProperty(name);
-            AddProperty(length);
-            AddProperty(angle);
+            AddProperty(defaultLength);
+            AddProperty(defaultAngle);
+        }
+
+        /// <summary>
+        /// 将当前骨骼及其子骨骼的长度和角度信息设为默认值。
+        /// </summary>
+        public void SetDefaultPosture()
+        {
+            defaultLength.Value = length;
+            defaultAngle.Value = angle;
+            foreach (var item in listBone)
+            {
+                item.SetDefaultPosture();
+            }
         }
 
         /// <summary>
@@ -111,6 +126,8 @@ namespace LLGameStudio.Game.Actor
                 xAttribute = element.Attribute(item.Key);
                 if (xAttribute != null) { item.Value.Value = xAttribute.Value; xAttribute.Remove(); }
             }
+            length = defaultLength.Value;
+            angle = defaultAngle.Value;
         }
     }
 
