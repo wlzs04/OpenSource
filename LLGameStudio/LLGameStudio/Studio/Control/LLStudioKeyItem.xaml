@@ -13,7 +13,7 @@
                 <ColumnDefinition Width="70*" MinWidth="30"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="textBlockKeyName" Grid.Column="0" VerticalAlignment="Center"/>
-            <Canvas x:Name="canvas"></Canvas>
+            <Canvas x:Name="canvas" Grid.Column="1"></Canvas>
         </Grid>
     </Border>
 </UserControl>

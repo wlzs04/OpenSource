@@ -21,13 +21,14 @@ namespace LLGameStudio.Studio.Control
     public partial class LLStudioKeyItem : UserControl
     {
         bool isSelect = false;
-        double keyFlagHeight = 40;
-        double keyFlagWidth = 10;
         string name;
+        Dictionary<int, Rectangle> flagMap = new Dictionary<int, Rectangle>();
+        LLStudioTimeline timeLine;
 
-        public LLStudioKeyItem(string name,int level)
+        public LLStudioKeyItem(LLStudioTimeline timeLine, string name,int level)
         {
             InitializeComponent();
+            this.timeLine = timeLine;
             this.name = name;
             for (int i = 0; i < level; i++)
             {
@@ -35,7 +36,10 @@ namespace LLGameStudio.Studio.Control
             }
             textBlockKeyName.Text += name;
         }
-
+        
+        /// <summary>
+        /// 设置选中状态
+        /// </summary>
         public void SetSelectState()
         {
             if(!isSelect)
@@ -45,6 +49,9 @@ namespace LLGameStudio.Studio.Control
             }
         }
 
+        /// <summary>
+        /// 取消选择状态
+        /// </summary>
         public void CancelSelectState()
         {
             if (isSelect)
@@ -57,14 +64,40 @@ namespace LLGameStudio.Studio.Control
         /// <summary>
         /// 添加Key标记
         /// </summary>
-        /// <param name="x"></param>
-        public void AddKeyFlag(double x)
+        /// <param name="scale">在哪一个刻度上添加标记</param>
+        /// <param name="x">在哪一个位置上添加标记</param>
+        public void AddKeyFlag(int scale)
         {
+            double x = timeLine.GetScalePositionX(scale);
             Rectangle rectangle = new Rectangle();
-            rectangle.Width = keyFlagWidth;
-            rectangle.Height = keyFlagHeight;
-            rectangle.Margin = new Thickness(x - keyFlagWidth / 2, (canvas.ActualHeight-keyFlagHeight)/2, 0, 0);
+            rectangle.Width = timeLine.GetScaleSpace()*0.8;
+            rectangle.Height = canvas.ActualHeight*0.8;
+            rectangle.Fill = ThemeManager.GetBrushByName("keyFlagColor");
+            rectangle.Margin = new Thickness(x - rectangle.Width/2, canvas.ActualHeight*0.1, 0, 0);
             canvas.Children.Add(rectangle);
+            flagMap[scale] = rectangle;
+        }
+
+        /// <summary>
+        /// 移除指定位置上的标记
+        /// </summary>
+        /// <param name="scale"></param>
+        public void RemoveFlag(int scale)
+        {
+            if(flagMap.ContainsKey(scale))
+            {
+                canvas.Children.Remove(flagMap[scale]);
+                flagMap.Remove(scale);
+            }
+        }
+
+        /// <summary>
+        /// 移除所有标记
+        /// </summary>
+        public void RemoveAllFlag()
+        {
+            canvas.Children.Clear();
+            flagMap.Clear();
         }
 
         /// <summary>

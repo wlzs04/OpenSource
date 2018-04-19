@@ -8,10 +8,11 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.Actor
 {
-    class Actor:IXMLClass
+    class Actor : IXMLClass
     {
-        public string name="";
+        public string name = "";
         public Bone rootBone;
+        public List<Action> listAction = new List<Action>();
 
         public Actor(string name)
         {
@@ -27,6 +28,23 @@ namespace LLGameStudio.Game.Actor
                     Bone bone = new Bone();
                     bone.LoadContentFromXML(item);
                     SetRootBone(bone);
+                }
+                else if(item.Name.ToString() == "Actions")
+                {
+                    LoadActionFromXML(item);
+                }
+            }
+        }
+
+        public void LoadActionFromXML(XElement element)
+        {
+            foreach (var item in element.Elements())
+            {
+                if (item.Name.ToString() == "Action")
+                {
+                    Action action = new Action();
+                    action.LoadContentFromXML(item);
+                    AddAction(action);
                 }
             }
         }
@@ -51,6 +69,11 @@ namespace LLGameStudio.Game.Actor
         public void SetDefaultPosture()
         {
             rootBone.SetDefaultPosture();
+        }
+
+        public void AddAction(Action action)
+        {
+            listAction.Add(action);
         }
     }
 }

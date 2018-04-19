@@ -38,4 +38,6 @@
   <timeBlockHoverColor>#FF26A465</timeBlockHoverColor>
   <!--时间滑块边框颜色：选中-->
   <timeBlockSelectColor>#FF4A81B8</timeBlockSelectColor>
+  <!--帧标记颜色：常规-->
+  <keyFlagColor>#FF00FF00</keyFlagColor>
 </Theme>

@@ -31,7 +31,7 @@ namespace LLGameStudio.Studio.Control
     public partial class LLStudioTimeline : UserControl
     {
         double timeLimit = 4;//时间上限（秒）。
-        double scaleLimit = 24;//刻度上限。
+        int scaleLimit = 24;//刻度上限。
         int scaleNumber = 4;//一级刻度数量。
         int secondScaleNumber = 6;//二级刻度数量。
 
@@ -44,6 +44,7 @@ namespace LLGameStudio.Studio.Control
         double timeBlockWidth = 10;
         double padLeftRight = 5;//起止刻度距离控件左右边缘间隔。
         double padTop = 20;//起止刻度距离控件上边缘间隔。
+        double scaleSpace = 10;//刻度之间的间隔。
 
         bool isTimeBlockClicked = false;
         int currentTimeBlackScale = 0;//当前时间滑块在第几个刻度上。
@@ -62,6 +63,8 @@ namespace LLGameStudio.Studio.Control
 
         Timer timer = new Timer(41);//每秒24帧
         DateTime lastDataTime;
+
+        List<LLStudioKeyItem> listKeyItem=new List<LLStudioKeyItem>();
 
         public LLStudioTimeline()
         {
@@ -132,10 +135,11 @@ namespace LLGameStudio.Studio.Control
             }
         }
 
-        public void SetScaleLimit(double scaleLimit)
+        public void SetScaleLimit(int scaleLimit)
         {
             this.scaleLimit = scaleLimit;
-            ResetTimeLine();
+            secondScaleNumber = scaleLimit / scaleNumber;
+
         }
 
         public double GetScaleLimit()
@@ -146,7 +150,7 @@ namespace LLGameStudio.Studio.Control
         public void SetScaleNumber(int scaleNumber)
         {
             this.scaleNumber = scaleNumber;
-            ResetTimeLine();
+            secondScaleNumber = scaleLimit / scaleNumber;
         }
 
         public int GetScaleNumber()
@@ -154,15 +158,24 @@ namespace LLGameStudio.Studio.Control
             return scaleNumber;
         }
 
-        public void SetSecondScaleNumber(int secondScaleNumber)
-        {
-            this.secondScaleNumber = secondScaleNumber;
-            ResetTimeLine();
-        }
-
         public int GetSecondScaleNumber()
         {
             return secondScaleNumber;
+        }
+
+        public void SetTimeLimit(double timeLimit)
+        {
+            this.timeLimit = timeLimit;
+        }
+
+        public double GetTimeLimit()
+        {
+            return timeLimit;
+        }
+
+        public double GetScaleSpace()
+        {
+            return scaleSpace;
         }
 
         /// <summary>
@@ -176,6 +189,8 @@ namespace LLGameStudio.Studio.Control
 
             double realWidth = canvas.ActualWidth - 2 * padLeftRight;
             double realHeight = canvas.ActualHeight;
+
+            scaleSpace = realWidth / scaleLimit;
 
             Line startLine = new Line();
             startLine.Stroke = lineBrush;
@@ -214,23 +229,23 @@ namespace LLGameStudio.Studio.Control
             
             timeBlock.StrokeThickness = 2;
             timeBlock.Fill = ThemeManager.GetBrushByName("timeBlockColor");
-            timeBlock.Width = realWidth / scaleLimit;
+            timeBlock.Width = scaleSpace;
             timeBlock.Height = timeBlockHeight;
             timeBlock.Margin = new Thickness(startLine.X1 - timeBlock.Width / 2, padTop + startEndScaleHeight - timeBlockHeight, 0, 0);
             canvas.Children.Add(timeBlock);
             Panel.SetZIndex(timeBlock, 1);
 
+            timeBlockLine = new Line();
             timeBlockLine.Stroke = lineBrush;
             timeBlockLine.StrokeThickness = lineWidth;
             timeBlockLine.X1 = startLine.X1 - timeBlock.Width / 2; timeBlockLine.Y1 = padTop + startEndScaleHeight;
             timeBlockLine.X2 = startLine.X1 - timeBlock.Width / 2; timeBlockLine.Y2 = padTop + startEndScaleHeight;
             canvas.Children.Add(timeBlockLine); 
 
-             timeBlockWidth = timeBlock.Width;
+            timeBlockWidth = timeBlock.Width;
 
             int allScaleNumber = scaleNumber * secondScaleNumber;
-            double scaleSpace = realWidth/ allScaleNumber;
-
+            
             for (int i = 1; i < allScaleNumber; i++)
             {
                 Line line = new Line();
@@ -260,6 +275,15 @@ namespace LLGameStudio.Studio.Control
             SetTimeBlockToScale(0);
         }
 
+        /// <summary>
+        /// 获得某一刻度下的X坐标
+        /// </summary>
+        /// <param name="scale"></param>
+        public double GetScalePositionX(int scale)
+        {
+            return padLeftRight + scale * scaleSpace;
+        }
+        
         private void imageKey_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Key();
@@ -332,11 +356,34 @@ namespace LLGameStudio.Studio.Control
         public void RemoveAllKeyItem()
         {
             stackPanelKeyItems.Children.Clear();
+            listKeyItem.Clear();
         }
 
         public void AddKeyItem(LLStudioKeyItem keyItem)
         {
             stackPanelKeyItems.Children.Add(keyItem);
+            listKeyItem.Add(keyItem);
+        }
+
+        /// <summary>
+        /// 移除所有KeyItem上所有的标记
+        /// </summary>
+        public void RemoveAllKeyItemFlag()
+        {
+            foreach (var item in listKeyItem)
+            {
+                item.RemoveAllFlag();
+            }
+        }
+
+        public LLStudioKeyItem GetKeyItemByBoneName(string name)
+        {
+            return listKeyItem.Where(keyItem => keyItem.GetName() == name).First();
+        }
+
+        public void GetCurrentFrameContent(int scale)
+        {
+
         }
     }
 }

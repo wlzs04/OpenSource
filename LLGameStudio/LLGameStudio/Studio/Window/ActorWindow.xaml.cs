@@ -34,6 +34,7 @@ namespace LLGameStudio.Studio.Window
         LLStudioBone currentSelectBoneControl = null;
         LLStudioTransformAxis transformAxis = null;
         LLStudioTimeline timeLine = null;
+        Game.Actor.Action currentAction = null;
 
         Dictionary<string,LLStudioKeyItem> keyItemMap = new Dictionary<string, LLStudioKeyItem>();
 
@@ -337,7 +338,9 @@ namespace LLGameStudio.Studio.Window
         /// <param name="e"></param>
         private void imageAddAction_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            LLStudioActionItem actionItem = new LLStudioActionItem("action1");
+            Game.Actor.Action action = new Game.Actor.Action();
+            actor.AddAction(action);
+            LLStudioActionItem actionItem = new LLStudioActionItem(action);
             actionItem.MouseDoubleClick += LLStudioActionItem_MouseDoubleClick;
             stackPanelActionArea.Children.Add(actionItem);
         }
@@ -370,7 +373,7 @@ namespace LLGameStudio.Studio.Window
             }
             else
             {
-                LoadActionToCanvas();
+                LoadActionToCanvas((sender as LLStudioActionItem).GetAction());
             }
         }
 
@@ -428,8 +431,43 @@ namespace LLGameStudio.Studio.Window
             SelectUINodeToTree();
 
             timeLine = new LLStudioTimeline();
+            timeLine.DragTimeBlackEvent += DragTimeBlackEvent;
             gridTimeLineArea.Children.Add(timeLine);
             gridTimeLineArea.UpdateLayout();
+        }
+
+        void DragTimeBlackEvent(int scale)
+        {
+            Game.Actor.Frame frame = currentAction.GetFrameByNumber(scale);
+
+            if (frame != null)
+            {
+                foreach (var item in frame.listBone)
+                {
+                    LLStudioBone boneControl = GetBoneControlByName(rootBoneControl, item.name.Value);
+                    boneControl.SetBoneAngle(item.angle);
+                }
+            }
+        }
+
+        public LLStudioBone GetBoneControlByName(LLStudioBone boneControl,string name)
+        {
+            foreach (var item in boneControl.listBoneControl)
+            {
+                if(item.bone.name.Value== name)
+                {
+                    return item;
+                }
+                else
+                {
+                    LLStudioBone bonecontrol = GetBoneControlByName(item, name);
+                    if(bonecontrol!=null)
+                    {
+                        return bonecontrol;
+                    }
+                }
+            }
+            return null;
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -455,9 +493,21 @@ namespace LLGameStudio.Studio.Window
         /// <summary>
         /// 将骨骼动画加载到画布中，开始编辑骨骼动画。
         /// </summary>
-        void LoadActionToCanvas()
-        {
+        void LoadActionToCanvas(Game.Actor.Action action)
+        { 
+            currentAction=action;
+            timeLine.SetTimeLimit(action.totalTime.Value);
+            timeLine.SetScaleLimit(action.totalFrameNumber.Value);
             timeLine.ResetTimeLine();
+            timeLine.RemoveAllKeyItemFlag();
+            foreach (var frame in action.listFrame)
+            {
+                foreach (var bone in frame.listBone)
+                {
+                    LLStudioKeyItem keyItem = timeLine.GetKeyItemByBoneName(bone.name.Value);
+                    keyItem.AddKeyFlag(frame.frameNumber.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -467,7 +517,7 @@ namespace LLGameStudio.Studio.Window
         /// <param name="level"></param>
         void AddBoneAddToTimeLine(LLStudioBone boneControl,int level)
         {
-            LLStudioKeyItem keyItem = new LLStudioKeyItem(boneControl.bone.name.Value, level);
+            LLStudioKeyItem keyItem = new LLStudioKeyItem(timeLine,boneControl.bone.name.Value, level);
             keyItem.MouseLeftButtonDown += SelectKeyItem;
             timeLine.AddKeyItem(keyItem);
             keyItemMap.Add(boneControl.bone.name.Value, keyItem);
@@ -501,6 +551,7 @@ namespace LLGameStudio.Studio.Window
             timeLine.RemoveAllKeyItem();
             keyItemMap.Clear();
             labelEditState.Content = "骨骼编辑";
+            stackPanelActionArea.Children.Clear();
         }
 
         /// <summary>
@@ -512,6 +563,13 @@ namespace LLGameStudio.Studio.Window
             gridTimeLineArea.Visibility = Visibility.Visible;
             AddBoneAddToTimeLine(rootBoneControl, 1);
             labelEditState.Content= "动作编辑";
+
+            foreach (var item in actor.listAction)
+            {
+                LLStudioActionItem actionItem = new LLStudioActionItem(item);
+                actionItem.MouseDoubleClick += LLStudioActionItem_MouseDoubleClick;
+                stackPanelActionArea.Children.Add(actionItem);
+            }
         }
     }
 }

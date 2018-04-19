@@ -22,11 +22,13 @@ namespace LLGameStudio.Studio.Control
     {
         private bool isSelect;
         string name;
+        Game.Actor.Action action = null;
 
-        public LLStudioActionItem(string name)
+        public LLStudioActionItem(Game.Actor.Action action)
         {
             InitializeComponent();
-            this.name = name;
+            this.name = action.name.Value;
+            this.action = action;
             textBox.IsReadOnly = true;
             textBox.Text = name;
             border.Background = ThemeManager.GetBrushByName("backgroundAlphaColor");
@@ -87,6 +89,11 @@ namespace LLGameStudio.Studio.Control
         public string GetName()
         {
             return name;
+        }
+
+        public Game.Actor.Action GetAction()
+        {
+            return action;
         }
     }
 }
