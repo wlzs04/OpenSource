@@ -61,10 +61,16 @@ namespace LLGameStudio.Studio.Control
         public delegate void DragEvent(int scale);
         public DragEvent DragTimeBlackEvent;
 
+        public delegate void KeyEvent(int scale);
+        public KeyEvent KeyFrameEvent;
+
+        public delegate void TimeEvent(double time);
+        public TimeEvent TimeRunEvent;
+
         Timer timer = new Timer(41);//每秒24帧
         DateTime lastDataTime;
 
-        List<LLStudioKeyItem> listKeyItem=new List<LLStudioKeyItem>();
+        public List<LLStudioKeyItem> listKeyItem=new List<LLStudioKeyItem>();
 
         public LLStudioTimeline()
         {
@@ -251,7 +257,7 @@ namespace LLGameStudio.Studio.Control
                 Line line = new Line();
                 line.Stroke = lineBrush;
                 line.StrokeThickness = lineWidth;
-                if(i% scaleNumber==0)
+                if(i% secondScaleNumber == 0)
                 {
                     line.Y1 = padTop + startEndScaleHeight - scaleHeight;
                 }
@@ -309,9 +315,19 @@ namespace LLGameStudio.Studio.Control
             }
         }
 
+        /// <summary>
+        /// Key帧
+        /// </summary>
         public void Key()
         {
-            
+            foreach (var item in listKeyItem)
+            {
+                if(!item.HaveKeyFlag(currentTimeBlackScale))
+                {
+                    item.AddKeyFlag(currentTimeBlackScale);
+                }
+            }
+            KeyFrameEvent?.Invoke(currentTimeBlackScale);
         }
 
         public void Start()
@@ -349,6 +365,7 @@ namespace LLGameStudio.Studio.Control
             {
                 currentTime = 0;
             }
+            TimeRunEvent?.Invoke(currentTime);
             Dispatcher.Invoke(new Action(() => { SetTimeBlockToScale((int)(scaleLimit * (currentTime / timeLimit))); }));
             lastDataTime = e.SignalTime;
         }
@@ -381,9 +398,13 @@ namespace LLGameStudio.Studio.Control
             return listKeyItem.Where(keyItem => keyItem.GetName() == name).First();
         }
 
-        public void GetCurrentFrameContent(int scale)
+        /// <summary>
+        /// 获得KeyItem的数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetKeyItemNumber()
         {
-
+            return listKeyItem.Count;
         }
     }
 }

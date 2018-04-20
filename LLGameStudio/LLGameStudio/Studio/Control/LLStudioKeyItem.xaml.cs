@@ -24,6 +24,7 @@ namespace LLGameStudio.Studio.Control
         string name;
         Dictionary<int, Rectangle> flagMap = new Dictionary<int, Rectangle>();
         LLStudioTimeline timeLine;
+        object sender;
 
         public LLStudioKeyItem(LLStudioTimeline timeLine, string name,int level)
         {
@@ -37,6 +38,24 @@ namespace LLGameStudio.Studio.Control
             textBlockKeyName.Text += name;
         }
         
+        /// <summary>
+        /// 设置关联物
+        /// </summary>
+        /// <param name="sender"></param>
+        public void SetRelation(object sender)
+        {
+            this.sender = sender;
+        }
+
+        /// <summary>
+        /// 获得关联物
+        /// </summary>
+        /// <returns></returns>
+        public object GetRelation()
+        {
+            return sender;
+        }
+
         /// <summary>
         /// 设置选中状态
         /// </summary>
@@ -98,6 +117,16 @@ namespace LLGameStudio.Studio.Control
         {
             canvas.Children.Clear();
             flagMap.Clear();
+        }
+
+        /// <summary>
+        /// 返回某刻度下是否有标记
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
+        public bool HaveKeyFlag(int scale)
+        {
+            return flagMap.ContainsKey(scale);
         }
 
         /// <summary>

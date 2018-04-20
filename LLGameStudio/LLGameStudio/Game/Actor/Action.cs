@@ -16,7 +16,7 @@ namespace LLGameStudio.Game.Actor
         public ActionProperty.TotalFrameNumber totalFrameNumber = new ActionProperty.TotalFrameNumber();
         public ActionProperty.TotalTime totalTime = new ActionProperty.TotalTime();
 
-        public List<Frame> listFrame = new List<Frame>();
+        public SortedList<int,Frame> sortedListFrame = new SortedList<int,Frame>();
 
         public Action()
         {
@@ -48,9 +48,9 @@ namespace LLGameStudio.Game.Actor
         {
             XElement element = new XElement("Action");
             ExportAttrbuteToXML(element);
-            foreach (var item in listFrame)
+            foreach (var item in sortedListFrame)
             {
-                element.Add(item.ExportContentToXML());
+                element.Add(item.Value.ExportContentToXML());
             }
             return element;
         }
@@ -75,7 +75,7 @@ namespace LLGameStudio.Game.Actor
                 {
                     Frame frame = new Frame();
                     frame.LoadContentFromXML(item);
-                    listFrame.Add(frame);
+                    sortedListFrame.Add(frame.frameNumber.Value,frame);
                 }
             }
         }
@@ -90,16 +90,150 @@ namespace LLGameStudio.Game.Actor
             }
         }
 
+        /// <summary>
+        /// 获得指定帧的内容
+        /// </summary>
+        /// <param name="frameNumber"></param>
+        /// <returns></returns>
         public Frame GetFrameByNumber(int frameNumber)
         {
-            foreach (var item in listFrame)
+            if (sortedListFrame.ContainsKey(frameNumber))
             {
-                if(item.frameNumber.Value== frameNumber)
-                {
-                    return item;
-                }
+                return sortedListFrame[frameNumber];
             }
             return null;
+        }
+
+        /// <summary>
+        /// 获得指定帧前一帧的内容
+        /// </summary>
+        /// <param name="frameNumber"></param>
+        /// <returns></returns>
+        Frame GetPreFrameByNumber(int frameNumber)
+        {
+            int index = -1;
+            foreach (var item in sortedListFrame.Keys)
+            {
+                if (item < frameNumber)
+                {
+                    index = item;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if(index>-1)
+            {
+                return sortedListFrame[index];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获得指定帧后一帧的内容
+        /// </summary>
+        /// <param name="frameNumber"></param>
+        /// <returns></returns>
+        Frame GetNextFrameByNumber(int frameNumber)
+        {
+            int index = -1;
+            foreach (var item in sortedListFrame.Keys)
+            {
+                if (item > frameNumber)
+                {
+                    index = item;
+                    break;
+                }
+            }
+
+            if (index > -1)
+            {
+                return sortedListFrame[index];
+            }
+            return null;
+        }
+
+        static object obj = new object();
+
+        /// <summary>
+        /// 通过时间计算,骨骼的实际状态，以帧的形式返回
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public Frame CalculateFrameByTime(double time)
+        {
+            lock (obj)
+            {
+                int preFrameNumber = (int)Math.Floor(time / (totalTime.Value * totalFrameNumber.Value));
+                int nextFrameNumber = (int)Math.Ceiling(time / (totalTime.Value * totalFrameNumber.Value));
+
+                Frame preFrame = GetFrameByNumber(preFrameNumber);
+                if (preFrame == null)
+                {
+                    preFrame = GetPreFrameByNumber(preFrameNumber);
+                }
+                Frame nextFrame = GetFrameByNumber(nextFrameNumber);
+                if (nextFrame == null)
+                {
+                    nextFrame = GetNextFrameByNumber(nextFrameNumber);
+                }
+                Frame frame = new Frame();
+                if (preFrame != null && nextFrame != null)
+                {
+                    double preFrameTime = totalTime.Value * preFrame.frameNumber.Value / totalFrameNumber.Value;
+                    double nextFrameTime = totalTime.Value * nextFrame.frameNumber.Value / totalFrameNumber.Value;
+                    double preRate = 1 - (time - preFrameTime) / (nextFrameTime - preFrameTime);
+                    double nextRate = 1 - (nextFrameTime - time) / (nextFrameTime - preFrameTime);
+
+                    for (int i = 0; i < preFrame.listBone.Count; i++)
+                    {
+                        Bone bone = new Bone();
+                        bone.name.Value = preFrame.listBone[i].name.Value;
+                        bone.angle = (preRate * preFrame.listBone[i].angle + nextRate * nextFrame.listBone[i].angle);
+                        frame.listBone.Add(bone);
+                    }
+                }
+                return frame;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 通过帧数计算,骨骼的实际状态，以帧的形式返回
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public Frame CalculateFrameByFrameNumber(int frameNumber)
+        {
+            Frame preFrame = GetPreFrameByNumber(frameNumber);
+            Frame nextFrame = GetNextFrameByNumber(frameNumber);
+
+            Frame frame = new Frame();
+
+            if(preFrame!=null && nextFrame!=null)
+            {
+                double preFrameNumber = preFrame.frameNumber.Value;
+                double nextFrameNumber = nextFrame.frameNumber.Value;
+                double preRate = 1-(frameNumber - preFrameNumber)/(nextFrameNumber - preFrameNumber);
+                double nextRate = 1-(nextFrameNumber - frameNumber) / (nextFrameNumber - preFrameNumber);
+
+                for (int i = 0; i < preFrame.listBone.Count; i++)
+                {
+                    Bone bone = new Bone();
+                    bone.name.Value = preFrame.listBone[i].name.Value;
+                    bone.angle = (preRate*preFrame.listBone[i].angle + nextRate*nextFrame.listBone[i].angle);
+                    frame.listBone.Add(bone);
+                }
+            }
+
+            return frame;
+        }
+
+        public void AddFrame(Frame frame)
+        {
+            sortedListFrame[frame.frameNumber.Value] = frame;
         }
     }
 

@@ -82,6 +82,17 @@ namespace LLGameStudio.Game.Actor
             parentBone = bone;
         }
 
+        /// <summary>
+        /// 仅用于记录骨骼动作使用，不能使用此方法设置骨骼真实内容。
+        /// </summary>
+        /// <param name="bone"></param>
+        public void RecordActionByBone(Bone bone)
+        {
+            name.Value = bone.name.Value;
+            defaultAngle.Value = bone.angle;
+            angle = bone.angle;
+        }
+
         public XElement ExportContentToXML()
         {
             XElement element = new XElement("Bone");

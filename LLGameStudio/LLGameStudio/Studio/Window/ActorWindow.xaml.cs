@@ -432,6 +432,8 @@ namespace LLGameStudio.Studio.Window
 
             timeLine = new LLStudioTimeline();
             timeLine.DragTimeBlackEvent += DragTimeBlackEvent;
+            timeLine.KeyFrameEvent += KeyFrameEvent;
+            timeLine.TimeRunEvent += TimeRunEvent;
             gridTimeLineArea.Children.Add(timeLine);
             gridTimeLineArea.UpdateLayout();
         }
@@ -440,31 +442,56 @@ namespace LLGameStudio.Studio.Window
         {
             Game.Actor.Frame frame = currentAction.GetFrameByNumber(scale);
 
-            if (frame != null)
+            if (frame == null)
             {
-                foreach (var item in frame.listBone)
-                {
-                    LLStudioBone boneControl = GetBoneControlByName(rootBoneControl, item.name.Value);
-                    boneControl.SetBoneAngle(item.angle);
-                }
+                frame = currentAction.CalculateFrameByFrameNumber(scale);
+            }
+            foreach (var item in frame.listBone)
+            {
+                LLStudioBone boneControl = GetBoneControlByName(rootBoneControl, item.name.Value);
+                boneControl.SetBoneAngle(item.angle);
+            }
+        }
+
+        void KeyFrameEvent(int scale)
+        {
+            Game.Actor.Frame frame = new Game.Actor.Frame();
+            frame.frameNumber.Value = scale;
+
+            foreach (var item in timeLine.listKeyItem)
+            {
+                Bone bone = new Bone();
+                bone.RecordActionByBone(((LLStudioBone)item.GetRelation()).bone);
+                frame.listBone.Add(bone);
+            }
+
+            currentAction.AddFrame(frame);
+        }
+
+        void TimeRunEvent(double time)
+        {
+            Game.Actor.Frame frame = currentAction.CalculateFrameByTime(time);
+
+            foreach (var item in frame.listBone)
+            {
+                LLStudioBone boneControl = GetBoneControlByName(rootBoneControl, item.name.Value);
+                Dispatcher.Invoke(new System.Action(()=> { boneControl.SetBoneAngle(item.angle); }));
             }
         }
 
         public LLStudioBone GetBoneControlByName(LLStudioBone boneControl,string name)
         {
+            if (boneControl.bone.name.Value == name)
+            {
+                return boneControl;
+            }
             foreach (var item in boneControl.listBoneControl)
             {
-                if(item.bone.name.Value== name)
+                
+                LLStudioBone bonecontrol = GetBoneControlByName(item, name);
+                if (bonecontrol!=null)
                 {
-                    return item;
-                }
-                else
-                {
-                    LLStudioBone bonecontrol = GetBoneControlByName(item, name);
-                    if(bonecontrol!=null)
-                    {
-                        return bonecontrol;
-                    }
+                    return bonecontrol;
                 }
             }
             return null;
@@ -500,12 +527,12 @@ namespace LLGameStudio.Studio.Window
             timeLine.SetScaleLimit(action.totalFrameNumber.Value);
             timeLine.ResetTimeLine();
             timeLine.RemoveAllKeyItemFlag();
-            foreach (var frame in action.listFrame)
+            foreach (var frame in action.sortedListFrame)
             {
-                foreach (var bone in frame.listBone)
+                foreach (var bone in frame.Value.listBone)
                 {
                     LLStudioKeyItem keyItem = timeLine.GetKeyItemByBoneName(bone.name.Value);
-                    keyItem.AddKeyFlag(frame.frameNumber.Value);
+                    keyItem.AddKeyFlag(frame.Key);
                 }
             }
         }
@@ -518,6 +545,7 @@ namespace LLGameStudio.Studio.Window
         void AddBoneAddToTimeLine(LLStudioBone boneControl,int level)
         {
             LLStudioKeyItem keyItem = new LLStudioKeyItem(timeLine,boneControl.bone.name.Value, level);
+            keyItem.SetRelation(boneControl);
             keyItem.MouseLeftButtonDown += SelectKeyItem;
             timeLine.AddKeyItem(keyItem);
             keyItemMap.Add(boneControl.bone.name.Value, keyItem);
@@ -546,12 +574,15 @@ namespace LLGameStudio.Studio.Window
         /// </summary>
         void EnterBoneEdit()
         {
-            isEditBone = true;
-            gridTimeLineArea.Visibility = Visibility.Hidden;
-            timeLine.RemoveAllKeyItem();
-            keyItemMap.Clear();
-            labelEditState.Content = "骨骼编辑";
-            stackPanelActionArea.Children.Clear();
+            if(!isEditBone)
+            {
+                isEditBone = true;
+                gridTimeLineArea.Visibility = Visibility.Hidden;
+                timeLine.RemoveAllKeyItem();
+                keyItemMap.Clear();
+                labelEditState.Content = "骨骼编辑";
+                stackPanelActionArea.Children.Clear();
+            }
         }
 
         /// <summary>
@@ -559,16 +590,19 @@ namespace LLGameStudio.Studio.Window
         /// </summary>
         void EnterActionEdit()
         {
-            isEditBone = false;
-            gridTimeLineArea.Visibility = Visibility.Visible;
-            AddBoneAddToTimeLine(rootBoneControl, 1);
-            labelEditState.Content= "动作编辑";
-
-            foreach (var item in actor.listAction)
+            if(isEditBone)
             {
-                LLStudioActionItem actionItem = new LLStudioActionItem(item);
-                actionItem.MouseDoubleClick += LLStudioActionItem_MouseDoubleClick;
-                stackPanelActionArea.Children.Add(actionItem);
+                isEditBone = false;
+                gridTimeLineArea.Visibility = Visibility.Visible;
+                AddBoneAddToTimeLine(rootBoneControl, 1);
+                labelEditState.Content = "动作编辑";
+
+                foreach (var item in actor.listAction)
+                {
+                    LLStudioActionItem actionItem = new LLStudioActionItem(item);
+                    actionItem.MouseDoubleClick += LLStudioActionItem_MouseDoubleClick;
+                    stackPanelActionArea.Children.Add(actionItem);
+                }
             }
         }
     }

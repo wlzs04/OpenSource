@@ -54,6 +54,12 @@ namespace LLGameStudio.Game.Actor
             XElement element = new XElement("Actor");
             ExportAttrbuteToXML(element);
             element.Add(rootBone.ExportContentToXML());
+            XElement actionsElement = new XElement("Actions");
+            foreach (var item in listAction)
+            {
+                actionsElement.Add(item.ExportContentToXML());
+            }
+            element.Add(actionsElement);
             return element;
         }
 
@@ -74,6 +80,14 @@ namespace LLGameStudio.Game.Actor
         public void AddAction(Action action)
         {
             listAction.Add(action);
+        }
+
+        /// <summary>
+        /// 返回当前角色的骨骼数量
+        /// </summary>
+        public int GetBoneNumber()
+        {
+            return 1;
         }
     }
 }
