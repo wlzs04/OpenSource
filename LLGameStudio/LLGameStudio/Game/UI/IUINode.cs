@@ -421,9 +421,14 @@ namespace LLGameStudio.Game.UI
             public FilePath() : base("filePath", typeof(String), UIPropertyEnum.Common, "当前节点文件路径。", "") { }
         }
 
+        public class Image : IUIProperty
+        {
+            public Image() : base("image", typeof(String), UIPropertyEnum.Common, "图片文件路径。", "") { }
+        }
+
         public class Margin : IUIProperty
         {
-            public Margin() : base("margin", typeof(Rect), UIPropertyEnum.Transform, "当前节点文件路径。", "{0}") { }
+            public Margin() : base("margin", typeof(Rect), UIPropertyEnum.Transform, "当前节点相对父容器位置。", "{0}") { }
         }
 
         public class ClipByParent : IUIProperty

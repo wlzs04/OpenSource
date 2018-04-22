@@ -62,7 +62,7 @@ namespace LLGameStudio.Game
             StopGame();
             if (!gameLoaded)
             {
-                System.Windows.MessageBox.Show("当前未加载游戏！");
+                MessageBox.Show("当前未加载游戏！");
                 return;
             }
             ShowStatusInfo("游戏：" + GameName + "正在启动。");

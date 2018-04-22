@@ -155,8 +155,6 @@ namespace LLGameStudio.Game.Actor
             return null;
         }
 
-        static object obj = new object();
-
         /// <summary>
         /// 通过时间计算,骨骼的实际状态，以帧的形式返回
         /// </summary>
@@ -164,40 +162,47 @@ namespace LLGameStudio.Game.Actor
         /// <returns></returns>
         public Frame CalculateFrameByTime(double time)
         {
-            lock (obj)
+            lock (this)
             {
-                int preFrameNumber = (int)Math.Floor(time / (totalTime.Value * totalFrameNumber.Value));
-                int nextFrameNumber = (int)Math.Ceiling(time / (totalTime.Value * totalFrameNumber.Value));
+                int preFrameNumber = (int)Math.Floor(time * (totalTime.Value * totalFrameNumber.Value));
+                int nextFrameNumber = (int)Math.Ceiling(time * (totalTime.Value * totalFrameNumber.Value));
 
                 Frame preFrame = GetFrameByNumber(preFrameNumber);
                 if (preFrame == null)
                 {
                     preFrame = GetPreFrameByNumber(preFrameNumber);
                 }
-                Frame nextFrame = GetFrameByNumber(nextFrameNumber);
-                if (nextFrame == null)
-                {
-                    nextFrame = GetNextFrameByNumber(nextFrameNumber);
-                }
-                Frame frame = new Frame();
-                if (preFrame != null && nextFrame != null)
-                {
-                    double preFrameTime = totalTime.Value * preFrame.frameNumber.Value / totalFrameNumber.Value;
-                    double nextFrameTime = totalTime.Value * nextFrame.frameNumber.Value / totalFrameNumber.Value;
-                    double preRate = 1 - (time - preFrameTime) / (nextFrameTime - preFrameTime);
-                    double nextRate = 1 - (nextFrameTime - time) / (nextFrameTime - preFrameTime);
 
-                    for (int i = 0; i < preFrame.listBone.Count; i++)
+                if (preFrameNumber != nextFrameNumber)
+                {
+                    Frame nextFrame = GetFrameByNumber(nextFrameNumber);
+                    if (nextFrame == null)
                     {
-                        Bone bone = new Bone();
-                        bone.name.Value = preFrame.listBone[i].name.Value;
-                        bone.angle = (preRate * preFrame.listBone[i].angle + nextRate * nextFrame.listBone[i].angle);
-                        frame.listBone.Add(bone);
+                        nextFrame = GetNextFrameByNumber(nextFrameNumber);
                     }
+                    Frame frame = new Frame();
+                    if (preFrame != null && nextFrame != null)
+                    {
+                        double preFrameTime = totalTime.Value * preFrame.frameNumber.Value / totalFrameNumber.Value;
+                        double nextFrameTime = totalTime.Value * nextFrame.frameNumber.Value / totalFrameNumber.Value;
+                        double preRate = 1 - (time - preFrameTime) / (nextFrameTime - preFrameTime);
+                        double nextRate = 1 - (nextFrameTime - time) / (nextFrameTime - preFrameTime);
+
+                        for (int i = 0; i < preFrame.listBone.Count; i++)
+                        {
+                            Bone bone = new Bone();
+                            bone.name.Value = preFrame.listBone[i].name.Value;
+                            bone.angle = (preRate * preFrame.listBone[i].angle + nextRate * nextFrame.listBone[i].angle);
+                            frame.listBone.Add(bone);
+                        }
+                    }
+                    return frame;
                 }
-                return frame;
+                else
+                {
+                    return preFrame;
+                }
             }
-            return null;
         }
 
         /// <summary>

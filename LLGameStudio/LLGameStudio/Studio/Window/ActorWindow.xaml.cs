@@ -440,16 +440,19 @@ namespace LLGameStudio.Studio.Window
 
         void DragTimeBlackEvent(int scale)
         {
-            Game.Actor.Frame frame = currentAction.GetFrameByNumber(scale);
+            if (timeLine.GetTimeState() != TimeState.Start)
+            {
+                Game.Actor.Frame frame = currentAction.GetFrameByNumber(scale);
 
-            if (frame == null)
-            {
-                frame = currentAction.CalculateFrameByFrameNumber(scale);
-            }
-            foreach (var item in frame.listBone)
-            {
-                LLStudioBone boneControl = GetBoneControlByName(rootBoneControl, item.name.Value);
-                boneControl.SetBoneAngle(item.angle);
+                if (frame == null)
+                {
+                    frame = currentAction.CalculateFrameByFrameNumber(scale);
+                }
+                foreach (var item in frame.listBone)
+                {
+                    LLStudioBone boneControl = GetBoneControlByName(rootBoneControl, item.name.Value);
+                    boneControl.SetBoneAngle(item.angle);
+                }
             }
         }
 

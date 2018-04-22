@@ -18,11 +18,11 @@ namespace LLGameStudio.Game.UI
     /// </summary>
     class LLGameImage : IUINode
     {
-        public Property.FilePath filePath = new Property.FilePath();
+        public Property.Image image = new Property.Image();
 
         public LLGameImage()
         {
-            AddProperty(filePath);
+            AddProperty(image);
         }
 
         public override XElement ExportContentToXML()
@@ -40,7 +40,7 @@ namespace LLGameStudio.Game.UI
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();
-            gridContent.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + filePath.Value, UriKind.Relative)));
+            gridContent.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + image.Value, UriKind.Relative)));
         }
     }
 }

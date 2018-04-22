@@ -18,7 +18,7 @@ using System.Windows.Shapes;
 
 namespace LLGameStudio.Studio.Control
 {
-    enum TimeState
+    public enum TimeState
     {
         Start,//开始
         Pause,//暂停
@@ -355,6 +355,14 @@ namespace LLGameStudio.Studio.Control
             timer.Enabled = false;
             SetTimeBlockToScale(0);
             currentTime = 0;
+        }
+
+        /// <summary>
+        /// 获得时间轴当前状态
+        /// </summary>
+        public TimeState GetTimeState()
+        {
+            return timeState;
         }
 
         void MoveTimeBlockByTimer(object sender, ElapsedEventArgs e)
