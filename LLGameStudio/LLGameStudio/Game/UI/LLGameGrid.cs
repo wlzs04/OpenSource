@@ -35,7 +35,14 @@ namespace LLGameStudio.Game.UI
                     case "LLGameImage":
                         AddNode(new LLGameImage());
                         listNode[listNode.Count - 1].LoadContentFromXML(item);
-                        
+                        break;
+                    case "LLGameButton":
+                        AddNode(new LLGameButton());
+                        listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        break;
+                    case "LLGameText":
+                        AddNode(new LLGameText());
+                        listNode[listNode.Count - 1].LoadContentFromXML(item);
                         break;
                     default:
                         break;

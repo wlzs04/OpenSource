@@ -435,6 +435,11 @@ namespace LLGameStudio.Game.UI
         {
             public ClipByParent() : base("clipByParent", typeof(bool), UIPropertyEnum.Common, "是否被父容器剪切。", "False") { }
         }
+
+        public class Text : IUIProperty
+        {
+            public Text() : base("text", typeof(string), UIPropertyEnum.Common, "显示文字。", "") { }
+        }
     }
     
 

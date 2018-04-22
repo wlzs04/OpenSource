@@ -80,11 +80,13 @@
     <Compile Include="Game\Particle\ParticleSystem.cs" />
     <Compile Include="Game\UI\IUINode.cs" />
     <Compile Include="Game\UI\IUIProperty.cs" />
+    <Compile Include="Game\UI\LLGameButton.cs" />
     <Compile Include="Game\UI\LLGameCanvas.cs" />
     <Compile Include="Game\UI\LLGameImage.cs" />
     <Compile Include="Game\UI\LLGameLayout.cs" />
     <Compile Include="Game\UI\LLGameBack.cs" />
     <Compile Include="Game\UI\LLGameScene.cs" />
+    <Compile Include="Game\UI\LLGameText.cs" />
     <Compile Include="Game\UI\UIControl.xaml.cs">
       <DependentUpon>UIControl.xaml</DependentUpon>
     </Compile>
