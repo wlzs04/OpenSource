@@ -135,6 +135,7 @@
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
+    <ClCompile Include="Game\Physics\PhysicsManager.cpp" />
     <ClCompile Include="Game\UI\IUINode.cpp" />
     <ClCompile Include="Game\UI\IUIProperty.cpp" />
     <ClCompile Include="Game\UI\LLGameBack.cpp" />
@@ -166,6 +167,14 @@
     <ClInclude Include="Common\Window\LLGameWindow.h" />
     <ClInclude Include="Game\GameTimer.h" />
     <ClInclude Include="Game\LLGame.h" />
+    <ClInclude Include="Game\Physics\IPhysObject.h" />
+    <ClInclude Include="Game\Physics\PhysCircle.h" />
+    <ClInclude Include="Game\Physics\PhysEllipse.h" />
+    <ClInclude Include="Game\Physics\PhysicsManager.h" />
+    <ClInclude Include="Game\Physics\PhysicsWorld.h" />
+    <ClInclude Include="Game\Physics\PhysPolygon.h" />
+    <ClInclude Include="Game\Physics\PhysRectangle.h" />
+    <ClInclude Include="Game\Physics\PhysTriangle.h" />
     <ClInclude Include="Game\UI\IUINode.h" />
     <ClInclude Include="Game\UI\IUIProperty.h" />
     <ClInclude Include="Game\UI\LLGameBack.h" />
