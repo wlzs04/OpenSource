@@ -4,4 +4,7 @@
 class PhysTriangle :public IPhysObject
 {
 public:
+	PhysTriangle();
+protected:
+	virtual void CreateBoundingVolume() override;
 };

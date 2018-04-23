@@ -135,7 +135,13 @@
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
+    <ClCompile Include="Game\Physics\IPhysObject.cpp" />
+    <ClCompile Include="Game\Physics\PhysCircle.cpp" />
+    <ClCompile Include="Game\Physics\PhysEllipse.cpp" />
     <ClCompile Include="Game\Physics\PhysicsManager.cpp" />
+    <ClCompile Include="Game\Physics\PhysicsWorld.cpp" />
+    <ClCompile Include="Game\Physics\PhysRectangle.cpp" />
+    <ClCompile Include="Game\Physics\PhysTriangle.cpp" />
     <ClCompile Include="Game\UI\IUINode.cpp" />
     <ClCompile Include="Game\UI\IUIProperty.cpp" />
     <ClCompile Include="Game\UI\LLGameBack.cpp" />

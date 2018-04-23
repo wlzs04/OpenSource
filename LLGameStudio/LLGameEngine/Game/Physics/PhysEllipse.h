@@ -4,4 +4,7 @@
 class PhysEllipse :public IPhysObject
 {
 public:
+	PhysEllipse();
+protected:
+	virtual void CreateBoundingVolume() override;
 };

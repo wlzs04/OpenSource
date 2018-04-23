@@ -17,3 +17,8 @@ int MathHelper::RoundFloat(float f)
 {
 	return f+0.5f;
 }
+
+float MathHelper::GetLengthBetweenPoints(Vector2 p1, Vector2 p2)
+{
+	return sqrtf((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
+}

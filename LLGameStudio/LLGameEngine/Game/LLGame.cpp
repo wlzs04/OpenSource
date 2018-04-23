@@ -124,6 +124,7 @@ void LLGame::Update()
 	gameTimer.Tick();
 	GameHelper::thisTickTime=gameTimer.GetThisTickTime();
 	gameScene->Update();
+	UpdateUserData();
 }
 
 void LLGame::Render()

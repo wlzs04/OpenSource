@@ -7,6 +7,12 @@ using namespace std;
 struct Vector2
 {
 public:
+	Vector2(float px, float py)
+	{
+		x = px;
+		y = py;
+	}
+
 	wstring ToWString()
 	{
 		return L"{" + to_wstring(x) + L"," + to_wstring(y) + L"}";
@@ -88,4 +94,10 @@ public:
 	static bool IsPointInRect(Vector2 vector2, Rect rect);
 	//返回浮点数的四舍五入值。
 	static int RoundFloat(float f);
+	//获得两点之间的距离。
+	static float GetLengthBetweenPoints(Vector2 p1, Vector2 p2);
+
+
+
+	//GJK 算法 https://blog.csdn.net/heyuchang666/article/details/55192932
 };

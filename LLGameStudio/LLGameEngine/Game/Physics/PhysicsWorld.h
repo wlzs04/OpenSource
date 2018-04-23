@@ -8,4 +8,6 @@ public:
 	~PhysicsWorld();
 	void AddObject(IPhysObject* object);
 	void Update(double time);
+
+	vector<IPhysObject*> vectorIPhysObject;
 };

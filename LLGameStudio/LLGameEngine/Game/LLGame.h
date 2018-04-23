@@ -11,6 +11,7 @@
 #include "../Game/UI/LLGameButton.h"
 #include "../Game/UI/LLGameImage.h"
 #include "../Common/Net/LLGameNetClient.h"
+#include "Physics/PhysicsManager.h"
 
 class LLGame
 {
@@ -34,6 +35,8 @@ protected:
 	void SaveConfig();
 	//更新
 	void Update();
+	//更新自定义数据
+	virtual void UpdateUserData() {};
 	//渲染
 	void Render();
 	void OnRunEvent();
@@ -49,6 +52,7 @@ protected:
 	LLGameWindow* gameWindow;
 	bool gameExit = false;
 	LLGameScene* gameScene;
+	PhysicsManager* physicsManager = nullptr;
 	GameTimer gameTimer;
-	LLGameNetClient* gameNetClient;
+	LLGameNetClient* gameNetClient = nullptr;
 };
