@@ -1,5 +1,10 @@
 #include "IPhysObject.h"
 
+void IPhysObject::SetPosition(Vector2 position)
+{
+	this->position = position;
+}
+
 void IPhysObject::SetPosition(float x, float y)
 {
 	position.x = x;

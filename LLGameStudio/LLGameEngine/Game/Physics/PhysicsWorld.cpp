@@ -20,7 +20,22 @@ void PhysicsWorld::AddObject(IPhysObject * object)
 
 void PhysicsWorld::Update(double time)
 {
+	vector<IPhysObject*> newvectorIPhysObject;
 	for (auto var1 : vectorIPhysObject)
+	{
+		if (var1->IsDynamic())
+		{
+			for (auto var2 : newvectorIPhysObject)
+			{
+				if (var1 != var2 && var1->IsCollision(var2))
+				{
+					var1->DoCollision(var2);
+				}
+			}
+		}
+		newvectorIPhysObject.push_back(var1);
+	}
+	/*for (auto var1 : vectorIPhysObject)
 	{
 		if (var1->IsDynamic())
 		{
@@ -32,7 +47,7 @@ void PhysicsWorld::Update(double time)
 				}
 			}
 		}
-	}
+	}*/
 
 	for (auto var : vectorIPhysObject)
 	{

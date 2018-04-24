@@ -14,7 +14,10 @@ enum class PhysicsType
 class IPhysObject
 {
 public:
+	IPhysObject() {};
+	~IPhysObject() {};
 	//设置位置
+	void SetPosition(Vector2 position);
 	void SetPosition(float x,float y);
 	Vector2 GetPosition();
 	//设置旋转
