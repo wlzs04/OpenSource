@@ -14,7 +14,7 @@ enum class PhysicsType
 class IPhysObject
 {
 public:
-	IPhysObject() {};
+	IPhysObject();
 	~IPhysObject() {};
 	//设置位置
 	void SetPosition(Vector2 position);
@@ -25,7 +25,10 @@ public:
 	//设置速度
 	void SetVelocity(Vector2 velocity);
 	void SetVelocity(float x, float y);
+	void SetMass(float mass);
+	float GetMass();
 	Vector2 GetVelocity();
+	float GetEnergy();
 	PhysicsType GetPhysicsType();
 	//检测两个物体是否发生碰撞。
 	virtual bool IsCollision(IPhysObject* iPhysObject) = 0;
@@ -37,10 +40,14 @@ public:
 protected:
 	//创建包围体
 	virtual void CreateBoundingVolume() = 0;
+	void ResetEnergy();
 	Vector2 position;
-	float angle = 0;
 	PhysicsType physicsType = PhysicsType::Polygon;
-	float energy = 0;
-	Vector2 velocity;
+	float angle = 0;//旋转角度
+	float angularVelocity = 0;//角速度
+	float energy = 0;//动能
+	float mass=1;//质量
+	Vector2 velocity;//速度
 	bool isDynamic = true;
+	float maxVelocity = 5;
 };

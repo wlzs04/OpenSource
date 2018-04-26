@@ -50,6 +50,22 @@ public:
 		return v1;
 	};
 
+	Vector2 operator *(const float& i)
+	{
+		Vector2 v1;
+		v1.x = x * i;
+		v1.y = y * i;
+		return v1;
+	};
+
+	Vector2 operator /(const float& i)
+	{
+		Vector2 v1;
+		v1.x = x / i;
+		v1.y = y / i;
+		return v1;
+	};
+
 	float x = 0, y = 0;
 };
 
@@ -131,4 +147,8 @@ public:
 	static float GetDotMultiply(Vector2 v1, Vector2 v2);
 	//将单位向量扩大到指定长度
 	static Vector2 GetVector2SetLength(Vector2 v1, float length);
+	//获得以v1方向为轴，映射长度为length的真正标准轴向量
+	static Vector2 GetRealVector2ByMapVector2AndLength(Vector2 v1, float length);
+	//获得某向量经过某点的法向量
+	static Vector2 GetNormalVector2AndPoint(Vector2 v1);
 };

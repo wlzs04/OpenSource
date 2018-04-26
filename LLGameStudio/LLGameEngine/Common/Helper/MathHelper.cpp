@@ -67,3 +67,18 @@ Vector2 MathHelper::GetVector2SetLength(Vector2 v1, float length)
 {
 	return Vector2(v1.x*length, v1.y*length);
 }
+
+Vector2 MathHelper::GetRealVector2ByMapVector2AndLength(Vector2 v1, float length)
+{
+
+	return Vector2();
+}
+
+Vector2 MathHelper::GetNormalVector2AndPoint(Vector2 v1)
+{
+
+	Vector2 v2;
+	v2.x = sqrtf(v1.y*v1.y / v1.x*v1.x + v1.y*v1.y);
+	v2.y = sqrtf(v1.x*v1.x / v1.x*v1.x + v1.y*v1.y);
+	return v2;
+}

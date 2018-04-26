@@ -1,8 +1,13 @@
 #include "IPhysObject.h"
 
+IPhysObject::IPhysObject()
+{
+	ResetEnergy();
+}
+
 void IPhysObject::SetPosition(Vector2 position)
 {
-	this->position = position;
+	SetPosition(position.x, position.y);
 }
 
 void IPhysObject::SetPosition(float x, float y)
@@ -23,18 +28,35 @@ void IPhysObject::SetAngle(float angle)
 
 void IPhysObject::SetVelocity(Vector2 velocity)
 {
-	this->velocity = velocity;
+	SetVelocity(velocity.x, velocity.y);
 }
 
 void IPhysObject::SetVelocity(float x, float y)
 {
-	velocity.x = x;
-	velocity.y = y;
+	velocity.x = x < maxVelocity ? x : maxVelocity;
+	velocity.y = y<maxVelocity ? y : maxVelocity;
+	ResetEnergy();
+}
+
+void IPhysObject::SetMass(float mass)
+{
+	this->mass = mass;
+	ResetEnergy();
+}
+
+float IPhysObject::GetMass()
+{
+	return mass;
 }
 
 Vector2 IPhysObject::GetVelocity()
 {
 	return velocity;
+}
+
+float IPhysObject::GetEnergy()
+{
+	return energy;
 }
 
 PhysicsType IPhysObject::GetPhysicsType()
@@ -55,4 +77,9 @@ void IPhysObject::SetStatic()
 bool IPhysObject::IsDynamic()
 {
 	return isDynamic;
+}
+
+void IPhysObject::ResetEnergy()
+{
+	energy = 0.5*mass*(velocity.x*velocity.x + velocity.y*velocity.y);
 }

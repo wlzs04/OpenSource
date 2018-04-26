@@ -26,27 +26,31 @@ void TestLLGame::InitUserData()
 	physicsWorld->AddObject(bottomRectangle);
 	vectorRectangle.push_back(bottomRectangle);
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		/*PhysCircle* circle = physicsManager->CreateCircle(i * 10 + 10);
+		PhysCircle* circle = physicsManager->CreateCircle(i * 10 + 10);
 		circle->SetPosition(30 + i * 90, 100);
-		circle->SetVelocity(MathHelper::GetNormalVector2(Vector2(1 - 2 * (rand() / (float)RAND_MAX), 1 - 2 * (rand() / (float)RAND_MAX))));
-		physicsWorld->AddObject(circle);
-		vectorCircle.push_back(circle);*/
-
-		PhysCircle* circle = physicsManager->CreateCircle(30);
+		circle->SetMass(2*i);
+		circle->SetVelocity(MathHelper::GetNormalVector2(Vector2(1 - 2 * (rand() / (float)RAND_MAX), 1 - 2 * (rand() / (float)RAND_MAX))) * 3);
 		physicsWorld->AddObject(circle);
 		vectorCircle.push_back(circle);
-		if (i==0)
+
+		/*PhysCircle* circle = physicsManager->CreateCircle(30);
+
+		physicsWorld->AddObject(circle);
+		vectorCircle.push_back(circle);
+		if (i == 0)
 		{
-			circle->SetPosition(30 + i * 90, 100);
-			circle->SetVelocity(MathHelper::GetNormalVector2(Vector2(1 - 2 * (rand() / (float)RAND_MAX), 1 - 2 * (rand() / (float)RAND_MAX))));
+			circle->SetMass(1);
+			circle->SetPosition(100, 90);
+			circle->SetVelocity(1, 0);
 		}
 		else if (i == 1)
 		{
-			circle->SetPosition(30 + i * 90, 100);
-			circle->SetVelocity(MathHelper::GetNormalVector2(Vector2(1 - 2 * (rand() / (float)RAND_MAX), 1 - 2 * (rand() / (float)RAND_MAX))));
-		}
+			circle->SetMass(1);
+			circle->SetPosition(400, 200);
+			circle->SetVelocity(0, -1);
+		}*/
 	}
 	whiteBrush = GraphicsApi::GetGraphicsApi()->CreateColorBrush(1, 1, 1, 1);
 	nodeCanvas = (LLGameCanvas*)gameScene->GetNode(L"canvas");
