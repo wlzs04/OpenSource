@@ -20,10 +20,15 @@ float GameTimer::GetThisTickTime() const
 	return secondPerTick;
 }
 
+float GameTimer::GetRunTime()
+{
+	return runCount / countPerSecond;
+}
+
 void GameTimer::Reset()
 {
 	stop = false;
-	countPerSecond = 0; baseCount = 0; lastStopCount = 0; lastStartCount = 0; lastTickCount = 0; countPerTick = 0; secondPerTick = 0;
+	countPerSecond = 0; baseCount = 0; lastStopCount = 0; lastStartCount = 0; lastTickCount = 0; countPerTick = 0; secondPerTick = 0; runCount = 0;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&countPerSecond);
 	QueryPerformanceCounter((LARGE_INTEGER*)&baseCount);
 }
@@ -53,6 +58,7 @@ void GameTimer::Tick()
 	__int64 tempCount;
 	QueryPerformanceCounter((LARGE_INTEGER*)&tempCount);
 	countPerTick = tempCount - lastTickCount;
+	runCount += countPerTick;
 	secondPerTick = (float)countPerTick / (double)countPerSecond;
 	lastTickCount = tempCount;
 }

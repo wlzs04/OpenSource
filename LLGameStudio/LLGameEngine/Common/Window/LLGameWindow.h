@@ -15,6 +15,7 @@ class LLGameWindow
 public:
 	LLGameWindow();
 	~LLGameWindow();
+	void InitWindow();
 	HWND GetHWND();
 	void Run();
 	void SetPosition(double left,double top);
@@ -22,6 +23,9 @@ public:
 	void SetTitle(wstring title);
 	void SetMaximize();
 	void SetMinimize();
+	//只有初始化窗体之前调用有效
+	void SetIcon(HICON icon);
+	void SetDefaultCursor(HCURSOR cursor);
 	void AddHandleUIEvent(wstring eventName, HandleUIEvent handleUIEvent);
 	void RemoveHandleUIEvent(wstring eventName);
 	static const wstring className;
@@ -52,7 +56,6 @@ public:
 	//键盘点击
 	HandleUIEvent OnKeyDown = nullptr;
 private:
-	void InitWindow();
 	LRESULT WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	//对于窗体的处理方法要求是静态的，但可以通过特殊方法处理。
 	static LRESULT CALLBACK WndProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -64,5 +67,7 @@ private:
 	double height;
 	wstring title;
 	unordered_map<wstring, HandleUIEvent> eventMap;
+	HCURSOR defaultCursor;
+	HICON icon;
 };
 

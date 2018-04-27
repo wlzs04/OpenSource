@@ -21,7 +21,6 @@ LLGameWindow::LLGameWindow()
 	top = 0;
 	width = 800;
 	height = 600;
-	InitWindow();
 }
 
 LLGameWindow::~LLGameWindow()
@@ -95,6 +94,17 @@ void LLGameWindow::SetMinimize()
 	ShowWindow(hWnd, SW_MINIMIZE);
 }
 
+void LLGameWindow::SetIcon(HICON icon)
+{
+	this->icon = icon;
+}
+
+void LLGameWindow::SetDefaultCursor(HCURSOR cursor)
+{
+	defaultCursor = cursor;
+	SetCursor(defaultCursor);
+}
+
 void LLGameWindow::InitWindow()
 {
 	WNDCLASSEX wc = {};
@@ -103,6 +113,8 @@ void LLGameWindow::InitWindow()
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.hInstance = GetModuleHandle(0);
 	wc.lpszClassName = className.c_str();
+	wc.hIcon = icon;
+	wc.hIconSm = icon;
 	RegisterClassEx(&wc);
 	hWnd = CreateWindow(className.c_str(), L"", WS_POPUP, 0, 0, 800, 600, 0, 0, GetModuleHandle(0), 0);
 
@@ -210,6 +222,10 @@ LRESULT LLGameWindow::WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 			OnMouseWheel(this, GET_WHEEL_DELTA_WPARAM(wParam));
 		}
 		return 0;
+	}
+	case WM_SETCURSOR:
+	{
+		SetCursor(defaultCursor);
 	}
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);

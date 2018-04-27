@@ -33,8 +33,8 @@ void IPhysObject::SetVelocity(Vector2 velocity)
 
 void IPhysObject::SetVelocity(float x, float y)
 {
-	velocity.x = x < maxVelocity ? x : maxVelocity;
-	velocity.y = y<maxVelocity ? y : maxVelocity;
+	velocity.x = x;
+	velocity.y = y;
 	ResetEnergy();
 }
 

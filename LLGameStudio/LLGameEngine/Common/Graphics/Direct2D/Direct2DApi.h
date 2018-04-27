@@ -23,8 +23,10 @@ public:
 	virtual void AddImage(wstring image) override;
 	virtual void AddTextFormat(wstring textFormatName, wstring fontFamilyName, float fontSize) override;
 	virtual void* CreateColorBrush(float r, float g, float b, float a)override;
+	virtual void* CreateColorBrush(wstring colorValue)override;
 	virtual void SetCurrentBrush(void* colorBrush) override;
 	virtual void ResetDefaultBrush() override;
+	virtual void SetModalCurrentBrush() override;
 	virtual void Clear() override;
 	virtual void BeginRender() override;
 	virtual void EndRender() override;
@@ -32,6 +34,7 @@ private:
 	Microsoft::WRL::ComPtr<ID2D1Factory> d2dFactory; 
 	Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> d2dRenderTarget;
 	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> d2dBlackBrush;
+	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> d2dModalBrush;
 	Microsoft::WRL::ComPtr<IWICImagingFactory> wicImageFactory;
 	ID2D1SolidColorBrush* currentD2DBrush;
 	unordered_map<std::wstring, Microsoft::WRL::ComPtr<ID2D1Bitmap>> imageMap;

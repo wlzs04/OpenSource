@@ -10,7 +10,9 @@ void LLGameLayout::Render()
 {
 	if (propertyModal.value)
 	{
+		GraphicsApi::GetGraphicsApi()->SetModalCurrentBrush();
 		GraphicsApi::GetGraphicsApi()->DrawRect(true, 0, 0, GameHelper::width, GameHelper::height);
+		GraphicsApi::GetGraphicsApi()->ResetDefaultBrush();
 	}
 	uiGrid->Render();
 }

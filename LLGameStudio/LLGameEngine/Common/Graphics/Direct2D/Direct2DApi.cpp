@@ -26,6 +26,9 @@ void Direct2DApi::Init()
 		D2D1::ColorF::Black),&d2dBlackBrush);
 	currentD2DBrush = d2dBlackBrush.Get();
 
+	d2dRenderTarget->CreateSolidColorBrush(D2D1::ColorF(
+		D2D1::ColorF(0,0,0,0.5)), &d2dModalBrush);
+
 	CoInitialize(NULL);
 	CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&wicImageFactory));
 
@@ -115,6 +118,11 @@ void* Direct2DApi::CreateColorBrush(float r, float g, float b, float a)
 	return colorBrush;
 }
 
+void* Direct2DApi::CreateColorBrush(wstring colorValue)
+{
+	return nullptr;
+}
+
 void Direct2DApi::SetCurrentBrush(void * colorBrush)
 {
 	currentD2DBrush = (ID2D1SolidColorBrush*)colorBrush;
@@ -123,6 +131,11 @@ void Direct2DApi::SetCurrentBrush(void * colorBrush)
 void Direct2DApi::ResetDefaultBrush()
 {
 	currentD2DBrush = d2dBlackBrush.Get();
+}
+
+void Direct2DApi::SetModalCurrentBrush()
+{
+	currentD2DBrush = d2dModalBrush.Get();
 }
 
 void Direct2DApi::Clear()

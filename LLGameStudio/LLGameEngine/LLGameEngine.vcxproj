@@ -154,6 +154,7 @@
     <ClCompile Include="Game\UI\LLGameText.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyLLGame.cpp" />
+    <ClCompile Include="TestGame\TableHockeyGame.cpp" />
     <ClCompile Include="TestGame\TestLLGame.cpp" />
     <ClCompile Include="UserProtocol.cpp" />
   </ItemGroup>
@@ -192,6 +193,7 @@
     <ClInclude Include="Game\UI\LLGameScene.h" />
     <ClInclude Include="Game\UI\LLGameText.h" />
     <ClInclude Include="MyLLGame.h" />
+    <ClInclude Include="TestGame\TableHockeyGame.h" />
     <ClInclude Include="TestGame\TestLLGame.h" />
     <ClInclude Include="UserProtocol.h" />
   </ItemGroup>

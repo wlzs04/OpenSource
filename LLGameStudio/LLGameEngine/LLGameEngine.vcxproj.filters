@@ -120,6 +120,9 @@
     <ClCompile Include="Game\Physics\PhysicsWorld.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TestGame\TableHockeyGame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -228,6 +231,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Physics\PhysPolygon.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGame\TableHockeyGame.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

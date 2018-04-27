@@ -55,4 +55,5 @@ protected:
 	PhysicsManager* physicsManager = nullptr;
 	GameTimer gameTimer;
 	LLGameNetClient* gameNetClient = nullptr;
+	HCURSOR defaultCursor;
 };

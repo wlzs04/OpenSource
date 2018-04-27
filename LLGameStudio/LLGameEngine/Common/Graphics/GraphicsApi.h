@@ -19,8 +19,10 @@ public:
 	virtual void DrawImage(wstring image,float x,float y, float width, float height)=0;
 	virtual void DrawText(wstring text, float x, float y, float width, float height,wstring  textFormatName=L"") = 0;
 	virtual void* CreateColorBrush(float r, float g, float b, float a) = 0;
+	virtual void* CreateColorBrush(wstring colorValue) = 0;
 	virtual void SetCurrentBrush(void* colorBrush) = 0;
 	virtual void ResetDefaultBrush() = 0;
+	virtual void SetModalCurrentBrush() = 0;
 	virtual void AddTextFormat(wstring textFormatName, wstring fontFamilyName, float fontSize) = 0;
 	virtual void SetSize(float width,float height);
 	static void SetGraphicsApi(GraphicsApi* currentGraphicsApi);

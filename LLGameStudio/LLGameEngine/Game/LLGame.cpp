@@ -26,7 +26,6 @@ void LLGame::Start()
 {
 	if (!gameExit)
 	{
-		SystemHelper::SetCursorCenter();
 		gameTimer.Start();
 		gameWindow->Run();
 	}
@@ -46,6 +45,7 @@ void LLGame::LoadConfig()
 		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
 		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
 		gameConfig.openNetClient = rootNode->GetProperty(L"openNetClient")->GetValueBool();
+		gameConfig.icon = rootNode->GetProperty(L"icon")->GetValue();
 		gameConfig.defaultCursor = rootNode->GetProperty(L"defaultCursor")->GetValue();
 		SystemHelper::resourcePath = gameConfig.resourcePath;
 	}
@@ -67,6 +67,7 @@ void LLGame::SaveConfig()
 	node->AddProperty(new LLXMLProperty(L"startScene", gameConfig.startScene));
 	node->AddProperty(new LLXMLProperty(L"graphicsApi", gameConfig.graphicsApi));
 	node->AddProperty(new LLXMLProperty(L"openNetClient", to_wstring(gameConfig.openNetClient)));
+	node->AddProperty(new LLXMLProperty(L"icon", gameConfig.icon));
 	node->AddProperty(new LLXMLProperty(L"defaultCursor", gameConfig.defaultCursor));
 	xmlDocument.SetRootNode(node);
 	if (!xmlDocument.SaveXMLToFile(currentPath + L"\\" + L"Game.xml"))
@@ -153,6 +154,11 @@ void LLGame::InitWindow()
 		}
 	}
 	gameWindow = new LLGameWindow();
+	if (gameConfig.icon != L"")
+	{
+		gameWindow->SetIcon((HICON)LoadImage(GetModuleHandle(0), (SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.icon).c_str(), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE));
+	}
+	gameWindow->InitWindow();
 	int screenWidth = SystemHelper::GetScreenWidth();
 	int screenHeight = SystemHelper::GetScreenHeight();
 
@@ -168,6 +174,14 @@ void LLGame::InitWindow()
 		gameWindow->SetSize(gameConfig.width, gameConfig.height);
 		gameWindow->SetTitle(gameConfig.gameName);
 	}
+
+	//注册事件
+	gameWindow->OnActivate = [&]() {
+		gameTimer.Start();
+	};
+	gameWindow->OnInActivate = [&]() {
+		gameTimer.Stop();
+	};
 }
 
 void LLGame::InitData()
@@ -190,13 +204,13 @@ void LLGame::InitData()
 
 		if (gameConfig.defaultCursor==L"")
 		{
-			SetCursor(LoadCursor(GetModuleHandle(0), IDC_ARROW));
+			defaultCursor = LoadCursor(GetModuleHandle(0), IDC_ARROW);
 		}
 		else
 		{
-			SetCursor(LoadCursor(GetModuleHandle(0), gameConfig.defaultCursor.c_str()));
+			defaultCursor = LoadCursorFromFile((SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.defaultCursor).c_str());
 		}
-		
+		gameWindow->SetDefaultCursor(defaultCursor);
 
 		GameHelper::width = gameConfig.width;
 		GameHelper::height = gameConfig.height;

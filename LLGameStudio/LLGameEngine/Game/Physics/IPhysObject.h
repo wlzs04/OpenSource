@@ -49,5 +49,4 @@ protected:
 	float mass=1;//质量
 	Vector2 velocity;//速度
 	bool isDynamic = true;
-	float maxVelocity = 5;
 };

@@ -19,6 +19,7 @@ public:
 	wstring resourcePath = L"Resource"; 
 	wstring graphicsApi = L"Direct2D";
 	bool openNetClient = false;
+	wstring icon = L"";
 	wstring defaultCursor = L"";
 };
 
