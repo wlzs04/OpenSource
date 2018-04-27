@@ -2,7 +2,7 @@
 
 PhysTriangle::PhysTriangle()
 {
-	physicsType = PhysicsType::Triangle;
+	physicsShapeType = PhysicsShapeType::Triangle;
 }
 
 void PhysTriangle::CreateBoundingVolume()

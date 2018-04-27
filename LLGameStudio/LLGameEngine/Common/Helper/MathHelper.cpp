@@ -23,6 +23,11 @@ float MathHelper::GetLengthBetweenPoints(Vector2 p1, Vector2 p2)
 	return sqrtf((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
 }
 
+Vector2 MathHelper::GetNormalVector2ByPoints(Vector2 vstart, Vector2 vend)
+{
+	return MathHelper::GetNormalVector2(Vector2(vend.x- vstart.x, vend.y - vstart.y));
+}
+
 Vector2 MathHelper::GetNormalVector2(Vector2 v1)
 {
 	double length = GetVector2Length(v1);

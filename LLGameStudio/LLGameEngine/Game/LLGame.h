@@ -29,6 +29,7 @@ protected:
 	virtual void InitData();
 	//初始化自定义数据
 	virtual void InitUserData() {};
+	
 	//加载配置
 	void LoadConfig();
 	//保存配置
@@ -39,6 +40,7 @@ protected:
 	virtual void UpdateUserData() {};
 	//渲染
 	void Render();
+
 	void OnRunEvent();
 	void OnLeftMouseDown(void* iuiNode, int i);
 	void OnLeftMouseUp(void* iuiNode, int i);
@@ -52,8 +54,14 @@ protected:
 	LLGameWindow* gameWindow;
 	bool gameExit = false;
 	LLGameScene* gameScene;
-	PhysicsManager* physicsManager = nullptr;
 	GameTimer gameTimer;
 	LLGameNetClient* gameNetClient = nullptr;
-	HCURSOR defaultCursor;
+	PhysicsManager* physicsManager = nullptr;
+private:
+	//初始化绘图功能
+	void InitGraphics();
+	//初始化网络功能
+	void InitNetClient();
+	//初始化物理功能
+	void InitPhysics();
 };

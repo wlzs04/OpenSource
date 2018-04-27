@@ -4,7 +4,7 @@
 
 PhysCircle::PhysCircle()
 {
-	physicsType = PhysicsType::Circle;
+	physicsShapeType = PhysicsShapeType::Circle;
 }
 
 void PhysCircle::SetRedius(float radius)
@@ -19,14 +19,14 @@ float PhysCircle::GetRedius()
 
 bool PhysCircle::IsCollision(IPhysObject * iPhysObject)
 {
-	switch (iPhysObject->GetPhysicsType())
+	switch (iPhysObject->GetPhysicsShapeType())
 	{
-	case PhysicsType::Circle:
+	case PhysicsShapeType::Circle:
 	{
 		float length = MathHelper::GetLengthBetweenPoints(position,iPhysObject->GetPosition());
 		return length < radius + ((PhysCircle*)iPhysObject)->GetRedius();
 	}
-	case PhysicsType::Rectangle:
+	case PhysicsShapeType::Rectangle:
 	{
 		PhysRectangle* rect = (PhysRectangle*)iPhysObject;
 		Vector2 vp = rect->GetPosition();
@@ -43,9 +43,9 @@ bool PhysCircle::IsCollision(IPhysObject * iPhysObject)
 
 void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 {
-	switch (iPhysObject->GetPhysicsType())
+	switch (iPhysObject->GetPhysicsShapeType())
 	{
-	case PhysicsType::Circle:
+	case PhysicsShapeType::Circle:
 	{
 		//将相交的物体分离
 		{
@@ -54,21 +54,21 @@ void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 			float moveLength = superpositionLength / 2;
 			Vector2 vp1 = position - iPhysObject->GetPosition();
 			Vector2 vp2 = iPhysObject->GetPosition() - position;
-			if (isDynamic&&iPhysObject->IsDynamic())
+			if (IsCanMove()&&iPhysObject->IsCanMove())
 			{
 				SetPosition(MathHelper::GetPointMoveByVelocityAndLength(position, vp1, moveLength));
 				iPhysObject->SetPosition(MathHelper::GetPointMoveByVelocityAndLength(iPhysObject->GetPosition(), vp2, moveLength));
 			}
-			else if (isDynamic)
+			else if (IsCanMove())
 			{
 				SetPosition(MathHelper::GetPointMoveByVelocityAndLength(position, vp1, superpositionLength));
 			}
-			else if (iPhysObject->IsDynamic())
+			else if (iPhysObject->IsCanMove())
 			{
 				iPhysObject->SetPosition(MathHelper::GetPointMoveByVelocityAndLength(iPhysObject->GetPosition(), vp2, superpositionLength));
 			}
 		}
-		float tempEnerg = energy + iPhysObject->GetEnergy();
+
 		//计算碰撞物体之后的自身运动
 		float m1 = mass;//圆1的质量
 		float m2 = iPhysObject->GetMass();//圆2的质量
@@ -110,15 +110,10 @@ void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 			iPhysObject->SetVelocity(vzl2 + vzn2);
 		}
 
-		float afterTempEnerg = energy + iPhysObject->GetEnergy();
 		break;
 	}
-	case PhysicsType::Rectangle:
+	case PhysicsShapeType::Rectangle:
 	{
-		if (mass == 0)
-		{
-			int y = 0;
-		}
 		PhysRectangle* rect = (PhysRectangle*)iPhysObject;
 
 		//将相交的物体分离
@@ -142,22 +137,22 @@ void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 			xLength = 0;
 		}
 
-		if (isDynamic&&iPhysObject->IsDynamic())
+		if (IsCanMove()&&iPhysObject->IsCanMove())
 		{
 			SetPosition(MathHelper::GetPointMoveByVelocityAndLength(position, Vector2(xzf*(-xLength), yzf*(-yLength)), moveLength /2));
 			iPhysObject->SetPosition(MathHelper::GetPointMoveByVelocityAndLength(iPhysObject->GetPosition(), Vector2(xzf*xLength, yzf*yLength), moveLength / 2));
 		}
-		else if (isDynamic)
+		else if (IsCanMove())
 		{
 			SetPosition(MathHelper::GetPointMoveByVelocityAndLength(position, Vector2(xzf*(-xLength), yzf*(-yLength)), moveLength));
 		}
-		else if (iPhysObject->IsDynamic())
+		else if (iPhysObject->IsCanMove())
 		{
 			iPhysObject->SetPosition(MathHelper::GetPointMoveByVelocityAndLength(iPhysObject->GetPosition(), Vector2(xzf*xLength, yzf*yLength), moveLength));
 		}
 
 		//计算碰撞物体之后的自身运动
-		if (isDynamic)
+		if (IsDynamic())
 		{
 			Vector2 newVelocity = MathHelper::GetReflectByNormalVector2(velocity, Vector2(xzf*(-xLength), yzf*(-yLength)));
 			newVelocity = MathHelper::GetVector2SetLength(newVelocity, MathHelper::GetVector2Length(velocity));

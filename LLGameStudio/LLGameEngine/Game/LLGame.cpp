@@ -45,6 +45,7 @@ void LLGame::LoadConfig()
 		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
 		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
 		gameConfig.openNetClient = rootNode->GetProperty(L"openNetClient")->GetValueBool();
+		gameConfig.openPhysics = rootNode->GetProperty(L"openPhysics")->GetValueBool();
 		gameConfig.icon = rootNode->GetProperty(L"icon")->GetValue();
 		gameConfig.defaultCursor = rootNode->GetProperty(L"defaultCursor")->GetValue();
 		SystemHelper::resourcePath = gameConfig.resourcePath;
@@ -67,6 +68,7 @@ void LLGame::SaveConfig()
 	node->AddProperty(new LLXMLProperty(L"startScene", gameConfig.startScene));
 	node->AddProperty(new LLXMLProperty(L"graphicsApi", gameConfig.graphicsApi));
 	node->AddProperty(new LLXMLProperty(L"openNetClient", to_wstring(gameConfig.openNetClient)));
+	node->AddProperty(new LLXMLProperty(L"openPhysics", to_wstring(gameConfig.openPhysics)));
 	node->AddProperty(new LLXMLProperty(L"icon", gameConfig.icon));
 	node->AddProperty(new LLXMLProperty(L"defaultCursor", gameConfig.defaultCursor));
 	xmlDocument.SetRootNode(node);
@@ -182,49 +184,70 @@ void LLGame::InitWindow()
 	gameWindow->OnInActivate = [&]() {
 		gameTimer.Stop();
 	};
+
+	gameWindow->OnRunEvent = bind(&LLGame::OnRunEvent, this);
+	gameWindow->OnMouseOver = bind(&LLGame::OnMouseOver, this, placeholders::_1, placeholders::_2);
+	gameWindow->OnLeftMouseDown = bind(&LLGame::OnLeftMouseDown, this, placeholders::_1, placeholders::_2);
+	gameWindow->OnLeftMouseUp = bind(&LLGame::OnLeftMouseUp, this, placeholders::_1, placeholders::_2);
+	gameWindow->OnRightMouseDown = bind(&LLGame::OnRightMouseDown, this, placeholders::_1, placeholders::_2);
+	gameWindow->OnRightMouseUp = bind(&LLGame::OnRightMouseUp, this, placeholders::_1, placeholders::_2);
 }
 
 void LLGame::InitData()
 {
 	if (!gameExit)
 	{
-		GraphicsApi* graphicsApi;
-		if (gameConfig.graphicsApi == L"Direct2D")
-		{
-			graphicsApi = new Direct2DApi(gameWindow->GetHWND());
-			graphicsApi->SetSize(gameConfig.width, gameConfig.height);
-			graphicsApi->Init();
-			GraphicsApi::SetGraphicsApi(graphicsApi);
-		}
-		else
-		{
-			MessageHelper::ShowMessage(L"其它底层图形API正在开发当中！");
-			gameExit = true;
-		}
-
-		if (gameConfig.defaultCursor==L"")
-		{
-			defaultCursor = LoadCursor(GetModuleHandle(0), IDC_ARROW);
-		}
-		else
-		{
-			defaultCursor = LoadCursorFromFile((SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.defaultCursor).c_str());
-		}
-		gameWindow->SetDefaultCursor(defaultCursor);
-
 		GameHelper::width = gameConfig.width;
 		GameHelper::height = gameConfig.height;
 
+		//设置默认光标
+		{
+			HCURSOR defaultCursor;
+			if (gameConfig.defaultCursor == L"")
+			{
+				defaultCursor = LoadCursor(GetModuleHandle(0), IDC_ARROW);
+			}
+			else
+			{
+				defaultCursor = LoadCursorFromFile((SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.defaultCursor).c_str());
+			}
+			gameWindow->SetDefaultCursor(defaultCursor);
+		}
+
+		InitGraphics();
+		if (gameConfig.openNetClient){InitNetClient();}
+		if (gameConfig.openPhysics){InitPhysics();}
+		
 		gameScene = new LLGameScene();
 		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene);
 
-		gameWindow->OnRunEvent = bind(&LLGame::OnRunEvent, this);
-		gameWindow->OnMouseOver = bind(&LLGame::OnMouseOver, this, placeholders::_1, placeholders::_2);
-		gameWindow->OnLeftMouseDown = bind(&LLGame::OnLeftMouseDown, this, placeholders::_1, placeholders::_2);
-		gameWindow->OnLeftMouseUp = bind(&LLGame::OnLeftMouseUp, this, placeholders::_1, placeholders::_2);
-		gameWindow->OnRightMouseDown = bind(&LLGame::OnRightMouseDown, this, placeholders::_1, placeholders::_2);
-		gameWindow->OnRightMouseUp = bind(&LLGame::OnRightMouseUp, this, placeholders::_1, placeholders::_2);
-
 		InitUserData();
 	}
+}
+
+void LLGame::InitGraphics()
+{
+	GraphicsApi* graphicsApi;
+	if (gameConfig.graphicsApi == L"Direct2D")
+	{
+		graphicsApi = new Direct2DApi(gameWindow->GetHWND());
+		graphicsApi->SetSize(gameConfig.width, gameConfig.height);
+		graphicsApi->Init();
+		GraphicsApi::SetGraphicsApi(graphicsApi);
+	}
+	else
+	{
+		MessageHelper::ShowMessage(L"其它底层图形API正在开发当中！");
+		gameExit = true;
+	}
+}
+
+void LLGame::InitNetClient()
+{
+	gameNetClient = new LLGameNetClient();
+}
+
+void LLGame::InitPhysics()
+{
+	physicsManager = new PhysicsManager();
 }

@@ -2,6 +2,24 @@
 
 void TableHockeyGame::InitUserData()
 {
+	InitLayout();
+	InitObject();
+	//InitConnectNet();
+	
+	physicsWorld->OnCollisionEvent = bind(&TableHockeyGame::CollisionEvent, this, placeholders::_1, placeholders::_2);
+	gameWindow->OnKeyDown = bind(&TableHockeyGame::KeyDownEvent, this, placeholders::_1, placeholders::_2);
+	
+	handBallConstraintPoint.x = gameConfig.width / 2;
+	handBallConstraintPoint.y = gameConfig.height-holeWidth/2;
+
+	PhysicsConstraint* myHandBallConstraint = new PhysicsConstraint(myHandBallPhys);
+	myHandBallConstraint->SetPointConstrain(handBallConstraintPoint, handBallMaxLength);
+	//physicsWorld->AddConstraint(myHandBallConstraint);
+}
+
+void TableHockeyGame::InitLayout()
+{
+	//结果界面
 	youResultLayout = new LLGameLayout();
 	youResultLayout->SetProperty(L"name", L"resultLayout");
 	youResultLayout->SetProperty(L"modal", L"True");
@@ -10,75 +28,108 @@ void TableHockeyGame::InitUserData()
 	nodeRestartButton = (LLGameButton*)youResultLayout->GetNode(L"grid1\\buttonRestart");
 	nodeRestartButton->OnMouseClick = bind(&TableHockeyGame::OnRestartGame, this, placeholders::_1, placeholders::_2);
 
+	//开始界面
 	startLayout = (LLGameLayout*)gameScene->GetNode(L"startButtonLayout");
-	startButton= (LLGameButton*)startLayout->GetNode(L"grid1\\buttonStart");
+	startButton = (LLGameButton*)startLayout->GetNode(L"grid1\\buttonStart");
 	startButton->OnMouseClick = bind(&TableHockeyGame::OnStartGame, this, placeholders::_1, placeholders::_2);
-	physicsManager = new PhysicsManager();
+
+	//计分界面
+	gameRecordLayout = (LLGameLayout*)gameScene->GetNode(L"gameRecordLayout");
+	textMyRecord = (LLGameText*)gameRecordLayout->GetNode(L"grid1\\textMyRecord");
+	textMyRecord->SetText(L"我的得分：" + to_wstring(myRecord));
+	textOpponentRecord = (LLGameText*)gameRecordLayout->GetNode(L"grid1\\textOpponentRecord");
+	textOpponentRecord->SetText(L"对手得分：" + to_wstring(opponentRecord));
+
+	//倒计时界面
+	gameCountDownLayout = new LLGameLayout();
+	gameCountDownLayout->SetProperty(L"name", L"resultLayout");
+	gameCountDownLayout->LoadLayoutFromFile(L"layout\\gameCountDownLayout.layout");
+	textCountDown = (LLGameText*)gameCountDownLayout->GetNode(L"grid1\\textCountDown");
+
+	//画布界面
+	nodeCanvas = (LLGameCanvas*)gameScene->GetNode(L"canvas");
+	nodeCanvas->OnRender = bind(&TableHockeyGame::RenderCanvas, this, placeholders::_1, placeholders::_2);
+}
+
+void TableHockeyGame::InitObject()
+{
+	//当physicsManager为NULL时不会报错，因为CreatePhysicsWorld方法没有用到physicsManager本身的内容。
 	physicsWorld = physicsManager->CreatePhysicsWorld();
 
 	//添加边缘碰撞体
-	PhysRectangle* leftRectangle = physicsManager->CreateRectangle(40, gameConfig.height);
+	PhysRectangle* leftRectangle = physicsManager->CreateRectangle(blockWidth, gameConfig.height);
 	leftRectangle->SetStatic();
 	leftRectangle->SetPosition(0, gameConfig.height / 2);
 	physicsWorld->AddObject(leftRectangle);
 	vectorRectangle.push_back(leftRectangle);
-	PhysRectangle* topRectangle = physicsManager->CreateRectangle(gameConfig.width, 40);
+	PhysRectangle* topRectangle = physicsManager->CreateRectangle(gameConfig.width, blockWidth);
 	topRectangle->SetStatic();
 	topRectangle->SetPosition(gameConfig.width / 2, 0);
 	physicsWorld->AddObject(topRectangle);
 	vectorRectangle.push_back(topRectangle);
-	PhysRectangle* rightRectangle = physicsManager->CreateRectangle(40, gameConfig.height);
+	PhysRectangle* rightRectangle = physicsManager->CreateRectangle(blockWidth, gameConfig.height);
 	rightRectangle->SetStatic();
 	rightRectangle->SetPosition(gameConfig.width, gameConfig.height / 2);
 	physicsWorld->AddObject(rightRectangle);
 	vectorRectangle.push_back(rightRectangle);
-	PhysRectangle* bottomRectangle = physicsManager->CreateRectangle(gameConfig.width, 40);
+	PhysRectangle* bottomRectangle = physicsManager->CreateRectangle(gameConfig.width, blockWidth);
 	bottomRectangle->SetStatic();
 	bottomRectangle->SetPosition(gameConfig.width / 2, gameConfig.height);
 	physicsWorld->AddObject(bottomRectangle);
 	vectorRectangle.push_back(bottomRectangle);
 
 	//添加冰球
-
-	iceBallPhys = physicsManager->CreateCircle(40);
+	iceBallPhys = physicsManager->CreateCircle(ballRadius);
 	iceBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height / 2);
-
 	physicsWorld->AddObject(iceBallPhys);
 
 	//添加我方内容
-
-	myHandBallPhys = physicsManager->CreateCircle(40);
+	myHandBallPhys = physicsManager->CreateCircle(ballRadius);
 	myHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.75);
+	myHandBallPhys->SetActive();
 	physicsWorld->AddObject(myHandBallPhys);
 	vectorCircle.push_back(myHandBallPhys);
 
-	myHolePhys = physicsManager->CreateRectangle(gameConfig.width*0.5, 80);
+	myHolePhys = physicsManager->CreateRectangle(gameConfig.width*0.5, holeWidth);
 	myHolePhys->SetPosition(gameConfig.width / 2, gameConfig.height);
 	myHolePhys->SetStatic();
 	physicsWorld->AddObject(myHolePhys);
 
 	//添加对方内容
-
-	opponentHandBallPhys = physicsManager->CreateCircle(40);
+	opponentHandBallPhys = physicsManager->CreateCircle(ballRadius);
 	opponentHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.25);
+	opponentHandBallPhys->SetActive();
 	physicsWorld->AddObject(opponentHandBallPhys);
 	vectorCircle.push_back(opponentHandBallPhys);
 
-	opponentHolePhys = physicsManager->CreateRectangle(gameConfig.width*0.5, 80);
+	opponentHolePhys = physicsManager->CreateRectangle(gameConfig.width*0.5, holeWidth);
 	opponentHolePhys->SetPosition(gameConfig.width / 2, 0);
 	opponentHolePhys->SetStatic();
 	physicsWorld->AddObject(opponentHolePhys);
 
+	//添加画刷
 	iceBallBrush = GraphicsApi::GetGraphicsApi()->CreateColorBrush(0.9, 0.8, 0.8, 1);
 	handBallBrush = GraphicsApi::GetGraphicsApi()->CreateColorBrush(0.7, 0.4, 0.2, 1);
 	blockBrush = GraphicsApi::GetGraphicsApi()->CreateColorBrush(0.8, 0.6, 0.6, 1);
 	holeBrush = GraphicsApi::GetGraphicsApi()->CreateColorBrush(0.9, 0.1, 0.1, 1);
+}
 
-	nodeCanvas = (LLGameCanvas*)gameScene->GetNode(L"canvas");
-	nodeCanvas->OnRender = bind(&TableHockeyGame::RenderCanvas, this, placeholders::_1, placeholders::_2);
+void TableHockeyGame::InitConnectNet()
+{
+	gameNetClient->OnConnectSuccessHandle = [&]() {
+		MessageHelper::ShowMessage(L"连接服务器成功！"); };
+	gameNetClient->OnConnectFailHandle = [&]() {
+		MessageHelper::ShowMessage(L"连接服务器失败！"); };
+	gameNetClient->OnDisconnectHandle = [&]() {
+		MessageHelper::ShowMessage(L"与服务器断开连接！"); };
+	gameNetClient->OnProcessProtocolHandle = [&](LLGameProtocol protocol) {ProcessProtocol(protocol); };
 
-	physicsWorld->OnCollisionEvent = bind(&TableHockeyGame::CollisionEvent, this, placeholders::_1, placeholders::_2);
-	gameWindow->OnKeyDown = bind(&TableHockeyGame::KeyDownEvent, this, placeholders::_1, placeholders::_2);
+	gameNetClient->StartConnect(ip, port);
+}
+
+void TableHockeyGame::ProcessProtocol(LLGameProtocol protocol)
+{
+	protocol.Process(this);
 }
 
 void TableHockeyGame::KeyDownEvent(void * sender, int key)
@@ -88,47 +139,65 @@ void TableHockeyGame::KeyDownEvent(void * sender, int key)
 		gameExit = true;
 		SendMessage(gameWindow->GetHWND(), WM_DESTROY, 0, 0);
 	}
+	if (key == VK_SPACE)
+	{
+		OnRestartGame(NULL,0);
+	}
 	//(GetAsyncKeyState(key) & 0x8000);
 }
 
 void TableHockeyGame::CollisionEvent(IPhysObject * object1, IPhysObject * object2)
 {
-	int y = 0;
 	if (object1 == iceBallPhys)
 	{
 		if (object2 == myHolePhys)
 		{
-			nodeResultImage->SetImage(L"texture\\youLost.jpg");
-			gameScene->AddNode(youResultLayout);
-			youResultLayout->ResetTransform();
-			gameStart = false;
-			physicsWorld->Stop();
+			OnLost();
 		}
 		else if (object2 == opponentHolePhys)
 		{
-			nodeResultImage->SetImage(L"texture\\youWin.jpg");
-			gameScene->AddNode(youResultLayout);
-			youResultLayout->ResetTransform();
-			gameStart = false;
-			physicsWorld->Stop();
+			OnWin();
 		}
 	}
 }
 
 void TableHockeyGame::UpdateUserData()
 {
-	POINT currentMousePosition = GameHelper::mousePosition;
+	//判断是否开始游戏
+	if (!gameStart)
+	{
+		return;
+	}
 
 	float tickTime = gameTimer.GetThisTickTime();
-	Vector2 handBallVelocity;
-	handBallVelocity.x = (currentMousePosition.x - lastMousePosition.x) / tickTime;
-	handBallVelocity.y = (currentMousePosition.y - lastMousePosition.y) / tickTime;
 
-	myHandBallPhys->SetPosition(lastMousePosition.x, lastMousePosition.y);
+	//倒计时
+	if (isCountDownState)
+	{
+		realCountDown -= tickTime;
+		textCountDown->SetText(to_wstring((int)realCountDown));
+		if (realCountDown < 0)
+		{
+			gameScene->RemoveNode(gameCountDownLayout);
+			isCountDownState = false;
+			ServeBall();
+		}
+		lastMousePosition = GameHelper::mousePosition;
+		return;
+	}
+
+	POINT currentMousePosition = GameHelper::mousePosition;
+	Vector2 currentMouseVector = Vector2(currentMousePosition.x, currentMousePosition.y);
+	
+	Vector2 handBallVelocity;
+	handBallVelocity.x = (currentMouseVector.x - lastMousePosition.x) / tickTime;
+	handBallVelocity.y = (currentMouseVector.y - lastMousePosition.y) / tickTime;
+	
+	myHandBallPhys->SetPosition(currentMouseVector);
 	myHandBallPhys->SetVelocity(handBallVelocity);
 	lastMousePosition = GameHelper::mousePosition;
 
-	physicsWorld->Update(gameTimer.GetThisTickTime());
+	physicsWorld->Update(tickTime);
 }
 
 void TableHockeyGame::RenderCanvas(void * iuiNode, int i)
@@ -170,11 +239,38 @@ void TableHockeyGame::RenderCanvas(void * iuiNode, int i)
 	GraphicsApi::GetGraphicsApi()->ResetDefaultBrush();
 }
 
+void TableHockeyGame::OnWin()
+{
+	nodeResultImage->SetImage(L"texture\\youWin.jpg");
+	gameScene->AddNode(youResultLayout);
+	youResultLayout->ResetTransform();
+	gameStart = false;
+	physicsWorld->Stop();
+	myRecord++;
+	textMyRecord->SetText(L"我的得分：" + to_wstring(myRecord));
+}
+
+void TableHockeyGame::OnLost()
+{
+	nodeResultImage->SetImage(L"texture\\youLost.jpg");
+	gameScene->AddNode(youResultLayout);
+	youResultLayout->ResetTransform();
+	gameStart = false;
+	physicsWorld->Stop();
+	opponentRecord++;
+	textOpponentRecord->SetText(L"对手得分：" + to_wstring(opponentRecord));
+}
+
 void TableHockeyGame::OnStartGame(void * sender, int e)
 {
 	gameScene->RemoveNode(startLayout);
 	gameStart = true;
 	physicsWorld->Start();
+	isCountDownState = true;
+	gameScene->AddNode(gameCountDownLayout);
+	gameCountDownLayout->ResetTransform();
+	realCountDown = serveCountDown;
+	textCountDown->SetText(to_wstring(realCountDown));
 }
 
 void TableHockeyGame::OnRestartGame(void * sender, int e)
@@ -188,4 +284,14 @@ void TableHockeyGame::OnRestartGame(void * sender, int e)
 	myHandBallPhys->SetVelocity(0, 0);
 	opponentHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.25);
 	opponentHandBallPhys->SetVelocity(0, 0);
+	isCountDownState = true;
+	gameScene->AddNode(gameCountDownLayout);
+	gameCountDownLayout->ResetTransform();
+	realCountDown = serveCountDown;
+	textCountDown->SetText(to_wstring(realCountDown));
+}
+
+void TableHockeyGame::ServeBall()
+{
+	iceBallPhys->SetVelocity(MathHelper::GetNormalVector2(Vector2(1 - 2 * (rand() / (float)RAND_MAX), 1 - 2 * (rand() / (float)RAND_MAX))) * 300);
 }

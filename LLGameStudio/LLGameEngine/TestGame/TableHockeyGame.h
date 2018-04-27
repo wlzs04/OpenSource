@@ -7,13 +7,25 @@ class TableHockeyGame : public LLGame
 {
 public:
 	void InitUserData()override;
+	void InitLayout();
+	void InitObject();
+	void InitConnectNet();
+	void ProcessProtocol(LLGameProtocol protocol);
 	void KeyDownEvent(void* sender, int key);
 	void CollisionEvent(IPhysObject* object1, IPhysObject* object2);
 	void UpdateUserData()override;
 	void RenderCanvas(void* iuiNode, int i);
 	
+	//我赢了。
+	void OnWin();
+	//我输了。
+	void OnLost();
+	//开始游戏
 	void OnStartGame(void* sender, int e);
+	//重新开始游戏
 	void OnRestartGame(void* sender, int e);
+	//发球
+	void ServeBall();
 
 	LLGameCanvas* nodeCanvas = nullptr;
 	vector<PhysCircle*> vectorCircle;
@@ -34,11 +46,32 @@ public:
 
 	POINT lastMousePosition;
 
-	LLGameLayout* youResultLayout=nullptr;
+	LLGameLayout* youResultLayout = nullptr;
 	LLGameImage* nodeResultImage = nullptr;
 	LLGameButton* nodeRestartButton = nullptr;
+
 	LLGameLayout* startLayout = nullptr;
 	LLGameButton* startButton = nullptr;
 
+	LLGameLayout* gameRecordLayout = nullptr;
+	LLGameText* textMyRecord = nullptr;
+	LLGameText* textOpponentRecord = nullptr;
+
+	LLGameLayout* gameCountDownLayout = nullptr;
+	LLGameText* textCountDown = nullptr;
+
 	bool gameStart = false;
+	float blockWidth = 40;
+	float holeWidth = 80;
+	float ballRadius = 40;
+	Vector2 handBallConstraintPoint;;//手球的约束点。
+	float handBallMaxLength = 200;//手球相对于约束点，最大移动距离。
+	float serveCountDown = 3;//开球倒计时。
+	float realCountDown = 0;//开球倒计时。
+	bool isCountDownState = false;
+	int myRecord = 0;
+	int opponentRecord = 0;
+
+	wstring ip = L"169.254.52.76";
+	int port = 1234;
 };

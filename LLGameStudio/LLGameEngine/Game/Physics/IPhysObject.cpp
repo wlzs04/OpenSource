@@ -59,24 +59,39 @@ float IPhysObject::GetEnergy()
 	return energy;
 }
 
-PhysicsType IPhysObject::GetPhysicsType()
+PhysicsShapeType IPhysObject::GetPhysicsShapeType()
 {
-	return physicsType;
+	return physicsShapeType;
 }
 
 void IPhysObject::SetDynamic()
 {
-	isDynamic = true;
+	physicsStateType = PhysicsStateType::Dynamic;
 }
 
 void IPhysObject::SetStatic()
 {
-	isDynamic = false;
+	physicsStateType = PhysicsStateType::Static;
+}
+
+void IPhysObject::SetActive()
+{
+	physicsStateType = PhysicsStateType::Active;
+}
+
+PhysicsStateType IPhysObject::GetPhysicsStateType()
+{
+	return physicsStateType;
 }
 
 bool IPhysObject::IsDynamic()
 {
-	return isDynamic;
+	return physicsStateType== PhysicsStateType::Dynamic;
+}
+
+bool IPhysObject::IsCanMove()
+{
+	return physicsStateType == PhysicsStateType::Dynamic|| physicsStateType == PhysicsStateType::Active;
 }
 
 void IPhysObject::ResetEnergy()

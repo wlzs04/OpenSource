@@ -2,7 +2,7 @@
 
 PhysRectangle::PhysRectangle()
 {
-	physicsType = PhysicsType::Rectangle;
+	physicsShapeType = PhysicsShapeType::Rectangle;
 }
 
 void PhysRectangle::SetRect(float width, float height)

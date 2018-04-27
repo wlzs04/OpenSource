@@ -2,7 +2,7 @@
 
 PhysEllipse::PhysEllipse()
 {
-	physicsType = PhysicsType::Ellipse;
+	physicsShapeType = PhysicsShapeType::Ellipse;
 }
 
 void PhysEllipse::CreateBoundingVolume()

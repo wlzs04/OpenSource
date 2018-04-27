@@ -123,6 +123,9 @@
     <ClCompile Include="TestGame\TableHockeyGame.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Physics\PhysicsConstraint.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -215,9 +218,6 @@
     <ClInclude Include="Game\Physics\PhysicsWorld.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Physics\IPhysObject.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Physics\PhysRectangle.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -234,6 +234,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TestGame\TableHockeyGame.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Physics\IPhysObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Physics\PhysicsConstraint.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

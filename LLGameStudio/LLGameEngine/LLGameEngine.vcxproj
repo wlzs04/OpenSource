@@ -138,6 +138,7 @@
     <ClCompile Include="Game\Physics\IPhysObject.cpp" />
     <ClCompile Include="Game\Physics\PhysCircle.cpp" />
     <ClCompile Include="Game\Physics\PhysEllipse.cpp" />
+    <ClCompile Include="Game\Physics\PhysicsConstraint.cpp" />
     <ClCompile Include="Game\Physics\PhysicsManager.cpp" />
     <ClCompile Include="Game\Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Game\Physics\PhysRectangle.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Game\Physics\IPhysObject.h" />
     <ClInclude Include="Game\Physics\PhysCircle.h" />
     <ClInclude Include="Game\Physics\PhysEllipse.h" />
+    <ClInclude Include="Game\Physics\PhysicsConstraint.h" />
     <ClInclude Include="Game\Physics\PhysicsManager.h" />
     <ClInclude Include="Game\Physics\PhysicsWorld.h" />
     <ClInclude Include="Game\Physics\PhysPolygon.h" />
