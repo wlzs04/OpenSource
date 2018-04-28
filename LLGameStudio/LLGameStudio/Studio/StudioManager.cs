@@ -238,6 +238,16 @@ namespace LLGameStudio.Studio
             mi2.Click += CreateNewLayoutToCurrrentDirectory;
             contextMenu.Items.Add(mi2);
 
+            MenuItem mi3 = new MenuItem();
+            mi3.Header = "新建particle";
+            mi3.Click += CreateNewParticleToCurrrentDirectory;
+            contextMenu.Items.Add(mi3);
+
+            MenuItem mi4 = new MenuItem();
+            mi4.Header = "新建actor";
+            mi4.Click += CreateNewActorToCurrrentDirectory;
+            contextMenu.Items.Add(mi4);
+
             wrapPanelFileArea.ContextMenu = contextMenu;
 
             //属性编辑区
@@ -381,6 +391,26 @@ namespace LLGameStudio.Studio
         private void CreateNewLayoutToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
             CreateNewFileToCurrrentDirectory(GameUIFileEnum.Layout);
+        }
+
+        /// <summary>
+        /// 新建粒子文件到当前文件夹下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateNewParticleToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Particle);
+        }
+
+        /// <summary>
+        /// 新建角色文件到当前文件夹下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateNewActorToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Actor);
         }
 
         /// <summary>

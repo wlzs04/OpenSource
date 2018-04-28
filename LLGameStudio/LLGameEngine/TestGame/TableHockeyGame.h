@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "..\Game\LLGame.h"
-#include "..\Game\Particle\ParticleSystem.h"
 
 //用来测试物理碰撞游戏功能的类。
 //桌上冰球游戏
@@ -62,6 +61,8 @@ public:
 	LLGameText* textCountDown = nullptr;
 
 	ParticleSystem* particleSystem = nullptr;
+
+	Actor* actor = nullptr;
 
 	bool gameStart = false;
 	float blockWidth = 40;

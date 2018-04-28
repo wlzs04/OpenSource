@@ -55,6 +55,10 @@ void TableHockeyGame::InitLayout()
 	particleSystem->ResetTransform();
 	particleSystem->StartPlay();
 	particleSystem->SetEnable(false);
+
+	actor = new Actor();
+	actor->LoadActorFromFile(L"actor\\actor1.actor");
+	int y = 0;
 }
 
 void TableHockeyGame::InitObject()

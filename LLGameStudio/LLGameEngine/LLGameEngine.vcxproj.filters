@@ -132,6 +132,18 @@
     <ClCompile Include="Game\Particle\ParticleEmitter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Actor\Bone.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Actor\Frame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Actor\Action.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Actor\Actor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -252,6 +264,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Particle\ParticleEmitter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Actor\Actor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Actor\Action.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Actor\Bone.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Actor\Frame.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

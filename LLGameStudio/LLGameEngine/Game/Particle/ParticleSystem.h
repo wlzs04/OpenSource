@@ -16,6 +16,5 @@ public:
 	virtual void Render() override;
 
 private:
-	unordered_map<wstring, IUIProperty*> propertyMap;
 	vector<ParticleEmitter*> paticleEmitters;
 };

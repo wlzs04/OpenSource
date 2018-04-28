@@ -346,3 +346,50 @@ public:
 	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
 	int value;
 };
+
+//骨骼系统属性
+
+class PropertyLength :public IUIProperty
+{
+public:
+	PropertyLength() :IUIProperty(L"length", L"90") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyAngle :public IUIProperty
+{
+public:
+	PropertyAngle() :IUIProperty(L"angle", L"0") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyFrameNumber :public IUIProperty
+{
+public:
+	PropertyFrameNumber() :IUIProperty(L"frameNumber", L"0") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};
+
+class PropertyTotalFrameNumber :public IUIProperty
+{
+public:
+	PropertyTotalFrameNumber() :IUIProperty(L"totalFrameNumber", L"24") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};
+
+class PropertyTotalTime :public IUIProperty
+{
+public:
+	PropertyTotalTime() :IUIProperty(L"totalTime", L"4") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};

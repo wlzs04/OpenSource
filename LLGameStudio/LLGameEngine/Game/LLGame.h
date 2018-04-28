@@ -12,6 +12,8 @@
 #include "../Game/UI/LLGameImage.h"
 #include "../Common/Net/LLGameNetClient.h"
 #include "Physics/PhysicsManager.h"
+#include "Particle\ParticleSystem.h"
+#include "Actor\Actor.h"
 
 class LLGame
 {

@@ -133,6 +133,10 @@
     <ClCompile Include="Common\Net\LLGameNetClient.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
+    <ClCompile Include="Game\Actor\Action.cpp" />
+    <ClCompile Include="Game\Actor\Actor.cpp" />
+    <ClCompile Include="Game\Actor\Bone.cpp" />
+    <ClCompile Include="Game\Actor\Frame.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
     <ClCompile Include="Game\Particle\ParticleEmitter.cpp" />
@@ -175,6 +179,10 @@
     <ClInclude Include="Common\Net\LLGameProtocol.h" />
     <ClInclude Include="Common\XML\LLXML.h" />
     <ClInclude Include="Common\Window\LLGameWindow.h" />
+    <ClInclude Include="Game\Actor\Action.h" />
+    <ClInclude Include="Game\Actor\Actor.h" />
+    <ClInclude Include="Game\Actor\Bone.h" />
+    <ClInclude Include="Game\Actor\Frame.h" />
     <ClInclude Include="Game\GameTimer.h" />
     <ClInclude Include="Game\LLGame.h" />
     <ClInclude Include="Game\Particle\ParticleEmitter.h" />
