@@ -135,6 +135,8 @@
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
+    <ClCompile Include="Game\Particle\ParticleEmitter.cpp" />
+    <ClCompile Include="Game\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Game\Physics\IPhysObject.cpp" />
     <ClCompile Include="Game\Physics\PhysCircle.cpp" />
     <ClCompile Include="Game\Physics\PhysEllipse.cpp" />
@@ -175,6 +177,8 @@
     <ClInclude Include="Common\Window\LLGameWindow.h" />
     <ClInclude Include="Game\GameTimer.h" />
     <ClInclude Include="Game\LLGame.h" />
+    <ClInclude Include="Game\Particle\ParticleEmitter.h" />
+    <ClInclude Include="Game\Particle\ParticleSystem.h" />
     <ClInclude Include="Game\Physics\IPhysObject.h" />
     <ClInclude Include="Game\Physics\PhysCircle.h" />
     <ClInclude Include="Game\Physics\PhysEllipse.h" />

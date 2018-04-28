@@ -70,9 +70,28 @@ void Direct2DApi::DrawLine(float x1, float y1, float x2, float y2,float width)
 	d2dRenderTarget->DrawLine(D2D1_POINT_2F{ x1,y1 }, D2D1_POINT_2F{ x2, y2 }, currentD2DBrush, width);
 }
 
+void Direct2DApi::DrawPolygon(void* polygon, bool fill, float x, float y, float width, float height)
+{
+	d2dRenderTarget->FillGeometry((ID2D1Geometry*)polygon, currentD2DBrush);
+}
+
+void* Direct2DApi::CreatePolygon()
+{
+	ID2D1PathGeometry* polygon;
+	d2dFactory->CreatePathGeometry(&polygon);
+	return polygon;
+}
+
 void Direct2DApi::DrawImage(std::wstring image, float x, float y, float width, float height)
 {
 	d2dRenderTarget->DrawBitmap(imageMap[image].Get(), D2D1::RectF(x, y, x + width, y + height));
+}
+
+void Direct2DApi::DrawImagePart(wstring image, float x, float y, float width, float height, float xO, float yO, float widthO, float heightO)
+{
+	float imageWidth = imageMap[image].Get()->GetSize().width;
+	float imageHeight = imageMap[image].Get()->GetSize().height;
+	d2dRenderTarget->DrawBitmap(imageMap[image].Get(), D2D1::RectF(x, y, x + width, y + height), 1, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1::RectF(xO*imageWidth, yO*imageHeight, (xO + widthO)*imageWidth, (yO + heightO)* imageHeight));
 }
 
 void Direct2DApi::DrawText(wstring text, float x, float y, float width, float height, wstring  textFormatName)

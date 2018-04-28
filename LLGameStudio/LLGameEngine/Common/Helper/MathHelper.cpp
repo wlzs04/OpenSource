@@ -1,5 +1,7 @@
 ﻿#include "MathHelper.h"
 
+const float MathHelper::PI = 3.14159265358979323846;
+
 bool MathHelper::IsRange1To0(double d)
 {
 	return d > 0 && d <= 1;
@@ -86,4 +88,14 @@ Vector2 MathHelper::GetNormalVector2AndPoint(Vector2 v1)
 	v2.x = sqrtf(v1.y*v1.y / v1.x*v1.x + v1.y*v1.y);
 	v2.y = sqrtf(v1.x*v1.x / v1.x*v1.x + v1.y*v1.y);
 	return v2;
+}
+
+int MathHelper::RandInt(int start, int end)
+{
+	return start+(int)((end-start)*MathHelper::RandFloat());
+}
+
+float MathHelper::RandFloat()
+{
+	return rand() / (float)RAND_MAX;
 }

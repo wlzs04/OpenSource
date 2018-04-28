@@ -132,6 +132,7 @@ public:
 	static float GetLengthBetweenPoints(Vector2 p1, Vector2 p2);
 
 	//GJK 算法 https://blog.csdn.net/heyuchang666/article/details/55192932
+	
 	//获得两点间的单位向量
 	static Vector2 GetNormalVector2ByPoints(Vector2 vstart, Vector2 vend);
 	//获得单位向量
@@ -152,4 +153,11 @@ public:
 	static Vector2 GetRealVector2ByMapVector2AndLength(Vector2 v1, float length);
 	//获得某向量经过某点的法向量
 	static Vector2 GetNormalVector2AndPoint(Vector2 v1);
+	//数学常量：π
+	static const float PI;
+	//获得随机整数，范围start到end
+	static int RandInt(int start, int end);
+	//获得随机小数，范围0到1
+	static float RandFloat();
 };
+

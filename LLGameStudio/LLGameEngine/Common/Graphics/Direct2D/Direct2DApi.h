@@ -17,8 +17,11 @@ public:
 	virtual void Init() override;
 	virtual void DrawRect(bool fill, float x, float y, float width, float height) override;
 	virtual void DrawEllipse(bool fill, float x, float y, float radiusX, float radiusY) override;
-	virtual void DrawLine(float x1, float y1, float x2, float y2,float width=1) override;
+	virtual void DrawLine(float x1, float y1, float x2, float y2, float width = 1) override;
+	virtual void DrawPolygon(void* polygon,bool fill, float x, float y, float width, float height) override;
+	virtual void* CreatePolygon();
 	virtual void DrawImage(std::wstring image, float x, float y, float width, float height) override;
+	virtual void DrawImagePart(wstring image, float x, float y, float width, float height, float xO, float yO, float widthO, float heightO) override;
 	virtual void DrawText(wstring text, float x, float y, float width, float height, wstring  textFormatName = L"") override;
 	virtual void AddImage(wstring image) override;
 	virtual void AddTextFormat(wstring textFormatName, wstring fontFamilyName, float fontSize) override;

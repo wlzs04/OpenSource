@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "..\..\Common\Helper\MathHelper.h"
 #include "..\..\Common\LLBase.h"
 #include "../../Common/Graphics/GraphicsApi.h"
@@ -165,4 +165,184 @@ public:
 	wstring GetValue() { return value ? L"True" : L"False"; };
 	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
 	bool value;
+};
+
+//粒子系统属性
+
+class ParticleType : public EnumBase
+{
+public:
+	ParticleType(int i) :EnumBase(i) {}
+
+	static const int Point = 0;//点
+	static const int Star = 1;//星
+	static const int Image = 2;//图片
+	static const int Sequence = 3;//序列图
+private:
+	unordered_map<wstring, int>& GetEnumMap()override;
+};
+
+class PropertyParticleType :public IUIProperty
+{
+public:
+	PropertyParticleType() :IUIProperty(L"particleType", L"Point") { SetValue(defaultValue); }
+	wstring GetValue() { return value.ToWString(); };
+	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
+	ParticleType value = ParticleType::Point;
+};
+
+class PropertyIsLoop :public IUIProperty
+{
+public:
+	PropertyIsLoop() :IUIProperty(L"isLoop", L"True") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
+};
+
+class PropertyLoopTime :public IUIProperty
+{
+public:
+	PropertyLoopTime() :IUIProperty(L"loopTime", L"5") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyMaxNumber :public IUIProperty
+{
+public:
+	PropertyMaxNumber() :IUIProperty(L"maxNumber", L"10") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};
+
+class PropertyStartNumber :public IUIProperty
+{
+public:
+	PropertyStartNumber() :IUIProperty(L"startNumber", L"1") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};
+
+class PropertyCreateNumberBySecond :public IUIProperty
+{
+public:
+	PropertyCreateNumberBySecond() :IUIProperty(L"createNumberBySecond", L"2") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};
+
+class PropertyRadius :public IUIProperty
+{
+public:
+	PropertyRadius() :IUIProperty(L"radius", L"3") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyRadiusError :public IUIProperty
+{
+public:
+	PropertyRadiusError() :IUIProperty(L"radiusError", L"1") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+}; 
+
+class PropertyColor :public IUIProperty
+{
+public:
+	PropertyColor() :IUIProperty(L"color", L"#FFFFFFFF") { SetValue(defaultValue); }
+	wstring GetValue() { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class PropertyVelocity :public IUIProperty
+{
+public:
+	PropertyVelocity() :IUIProperty(L"velocity", L"20") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+}; 
+
+class PropertyVelocityError :public IUIProperty
+{
+public:
+	PropertyVelocityError() :IUIProperty(L"velocityError", L"2") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyDirection :public IUIProperty
+{
+public:
+	PropertyDirection() :IUIProperty(L"direction", L"{0,-1}") { SetValue(defaultValue); }
+	wstring GetValue() { return value.ToWString(); };
+	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
+	Vector2 value;
+};
+
+class PropertyAngleRange :public IUIProperty
+{
+public:
+	PropertyAngleRange() :IUIProperty(L"angleRange", L"30") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyPosition :public IUIProperty
+{
+public:
+	PropertyPosition() :IUIProperty(L"position", L"{0,0}") { SetValue(defaultValue); }
+	wstring GetValue() { return value.ToWString(); };
+	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
+	Vector2 value;
+};
+
+class PropertyPositionError :public IUIProperty
+{
+public:
+	PropertyPositionError() :IUIProperty(L"positionError", L"{0,0}") { SetValue(defaultValue); }
+	wstring GetValue() { return value.ToWString(); };
+	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
+	Vector2 value;
+};
+
+class PropertyImagePath :public IUIProperty
+{
+public:
+	PropertyImagePath() :IUIProperty(L"imagePath", L"") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) {
+		this->value = value;
+		GraphicsApi::GetGraphicsApi()->AddImage(value);
+	};
+	wstring value;
+};
+
+class PropertyRow :public IUIProperty
+{
+public:
+	PropertyRow() :IUIProperty(L"row", L"1") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
+};
+
+class PropertyColumn :public IUIProperty
+{
+public:
+	PropertyColumn() :IUIProperty(L"column", L"1") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
+	int value;
 };

@@ -4,6 +4,7 @@
 #include "LLGameImage.h"
 #include "LLGameButton.h"
 #include "LLGameText.h"
+#include "../Particle/ParticleSystem.h"
 
 bool IUINode::uiLock = false;
 
@@ -195,6 +196,10 @@ void IUINode::LoadFromXMLNode(LLXMLNode * xmlNode)
 		else if (var->GetName() == L"LLGameText")
 		{
 			uiNode = new LLGameText();
+		}
+		else if (var->GetName() == L"ParticleSystem")
+		{
+			uiNode = new ParticleSystem();
 		}
 		if (uiNode != nullptr)
 		{

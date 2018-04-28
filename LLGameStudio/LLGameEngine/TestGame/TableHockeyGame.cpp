@@ -14,7 +14,7 @@ void TableHockeyGame::InitUserData()
 
 	PhysicsConstraint* myHandBallConstraint = new PhysicsConstraint(myHandBallPhys);
 	myHandBallConstraint->SetPointConstrain(handBallConstraintPoint, handBallMaxLength);
-	//physicsWorld->AddConstraint(myHandBallConstraint);
+	physicsWorld->AddConstraint(myHandBallConstraint);
 }
 
 void TableHockeyGame::InitLayout()
@@ -24,7 +24,7 @@ void TableHockeyGame::InitLayout()
 	youResultLayout->SetProperty(L"name", L"resultLayout");
 	youResultLayout->SetProperty(L"modal", L"True");
 	youResultLayout->LoadLayoutFromFile(L"layout\\youResultLayout.layout");
-	nodeResultImage = (LLGameImage*)youResultLayout->GetNode(L"grid1\\resultImage");
+	nodeResultImage = (LLGameImage*)youResultLayout->GetNode(L"grid1\\resultImage");	
 	nodeRestartButton = (LLGameButton*)youResultLayout->GetNode(L"grid1\\buttonRestart");
 	nodeRestartButton->OnMouseClick = bind(&TableHockeyGame::OnRestartGame, this, placeholders::_1, placeholders::_2);
 
@@ -49,6 +49,12 @@ void TableHockeyGame::InitLayout()
 	//画布界面
 	nodeCanvas = (LLGameCanvas*)gameScene->GetNode(L"canvas");
 	nodeCanvas->OnRender = bind(&TableHockeyGame::RenderCanvas, this, placeholders::_1, placeholders::_2);
+
+	particleSystem = new ParticleSystem();
+	particleSystem->LoadParticleFromFile(L"particle\\particle1.particle");
+	particleSystem->ResetTransform();
+	particleSystem->StartPlay();
+	particleSystem->SetEnable(false);
 }
 
 void TableHockeyGame::InitObject()
@@ -163,6 +169,8 @@ void TableHockeyGame::CollisionEvent(IPhysObject * object1, IPhysObject * object
 
 void TableHockeyGame::UpdateUserData()
 {
+	particleSystem->Update();
+
 	//判断是否开始游戏
 	if (!gameStart)
 	{
@@ -236,6 +244,8 @@ void TableHockeyGame::RenderCanvas(void * iuiNode, int i)
 		}
 	}
 
+	particleSystem->Render();
+
 	GraphicsApi::GetGraphicsApi()->ResetDefaultBrush();
 }
 
@@ -248,6 +258,7 @@ void TableHockeyGame::OnWin()
 	physicsWorld->Stop();
 	myRecord++;
 	textMyRecord->SetText(L"我的得分：" + to_wstring(myRecord));
+	particleSystem->SetEnable(true);
 }
 
 void TableHockeyGame::OnLost()
@@ -289,6 +300,7 @@ void TableHockeyGame::OnRestartGame(void * sender, int e)
 	gameCountDownLayout->ResetTransform();
 	realCountDown = serveCountDown;
 	textCountDown->SetText(to_wstring(realCountDown));
+	particleSystem->SetEnable(false);
 }
 
 void TableHockeyGame::ServeBall()

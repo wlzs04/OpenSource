@@ -35,7 +35,7 @@ public:
 	void AddNode(IUINode* node);
 	IUINode* GetNode(wstring nodeName);
 	void RemoveNode(IUINode* node);
-	void LoadFromXMLNode(LLXMLNode* xmlNode);
+	virtual void LoadFromXMLNode(LLXMLNode* xmlNode);
 	virtual bool CheckState();
 	virtual void Update();
 	virtual void Render() = 0;

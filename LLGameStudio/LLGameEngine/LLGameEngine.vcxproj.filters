@@ -126,6 +126,12 @@
     <ClCompile Include="Game\Physics\PhysicsConstraint.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Particle\ParticleSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Particle\ParticleEmitter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -240,6 +246,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Physics\PhysicsConstraint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Particle\ParticleSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Particle\ParticleEmitter.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

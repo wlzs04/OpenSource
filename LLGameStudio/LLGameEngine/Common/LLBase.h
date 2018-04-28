@@ -19,3 +19,12 @@ public:
 protected:
 	virtual unordered_map<wstring, int>& GetEnumMap()=0;
 };
+
+struct Color
+{
+	void GetValueFromWString(wstring ws);
+	float a;
+	float r;
+	float g;
+	float b;
+};

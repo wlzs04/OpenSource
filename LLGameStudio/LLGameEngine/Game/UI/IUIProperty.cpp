@@ -40,3 +40,16 @@ unordered_map<wstring, int>& CheckStateMethod::GetEnumMap()
 	}
 	return anchorEnumMap;
 }
+
+unordered_map<wstring, int>& ParticleType::GetEnumMap()
+{
+	static unordered_map<wstring, int> anchorEnumMap;
+	if (anchorEnumMap.size() == 0)
+	{
+		anchorEnumMap[L"Point"] = Point;
+		anchorEnumMap[L"Star"] = Star;
+		anchorEnumMap[L"Image"] = Image;
+		anchorEnumMap[L"Sequence"] = Sequence;
+	}
+	return anchorEnumMap;
+}
