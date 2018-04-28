@@ -1,0 +1,4 @@
+﻿<LLGameGrid name="grid1">
+  <LLGameText name="textNetState" anchorEnum="Left_Top" width="0.3" height="0.1"/>
+  <LLGameText name="textTurnNumber" anchorEnum="Top" text="0" width="0.3" height="0.1"/>
+</LLGameGrid>

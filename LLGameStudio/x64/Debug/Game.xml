@@ -1,0 +1,12 @@
+<Game 
+	width='600' 
+	height='800' 
+	fullScreen='false' 
+	gameName='桌上冰球' 
+	canMultiGame="false" 
+	startScene="layout/StartScene.scene" 
+	graphicsApi="Direct2D" 
+	openNetClient="False"
+	openPhysics="True"
+	icon="texture\iceBall.ico" 
+	defaultCursor="texture\忙.cur"/>

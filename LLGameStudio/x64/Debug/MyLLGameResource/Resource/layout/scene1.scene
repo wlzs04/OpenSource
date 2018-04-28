@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LLGameScene name="scene1">
+  <LLGameBack name="back" image="layout1\qipan.jpg"/>
+  <LLGameCanvas name="canvas" />
+  <LLGameLayout name="layout1" anchorEnum="Left_Bottom" width="0.5" height="0.5" filePath="layout1\layout1.layout" />
+  <LLGameLayout name="layout2" anchorEnum="Right_Top" width="0.5" height="0.5" filePath="layout1\layout2.layout" />
+</LLGameScene>

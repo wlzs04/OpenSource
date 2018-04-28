@@ -1,0 +1,6 @@
+﻿<LLGameScene name="startScene">
+  <LLGameBack name="back" image="texture\qipan.jpg"/>
+  <LLGameCanvas name="canvas" />
+  <LLGameLayout name="showTurnNumberLayout" anchorEnum="Top" height="0.1" filePath="layout\showTurnNumberLayout.layout" checkStateMethod="AllowMouseThrough"/>
+  <LLGameLayout name="startButtonLayout" anchorEnum="Center" width="0.3" height="0.1" filePath="layout\startButtonLayout.layout"/>
+</LLGameScene>

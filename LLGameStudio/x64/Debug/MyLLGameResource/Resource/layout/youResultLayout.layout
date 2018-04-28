@@ -1,0 +1,4 @@
+﻿<LLGameGrid name="grid1">
+  <LLGameImage name="resultImage" width="0.3" height="0.1" anchorEnum="Top" margin="{0,0.3}" image="texture\youWin.jpg" />
+  <LLGameButton name="buttonRestart" anchorEnum="Top" width="0.3" height="0.1" margin="{0,0.5}" image="texture\start.jpg" />
+</LLGameGrid>
