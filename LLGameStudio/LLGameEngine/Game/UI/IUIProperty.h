@@ -390,6 +390,6 @@ class PropertyTotalTime :public IUIProperty
 public:
 	PropertyTotalTime() :IUIProperty(L"totalTime", L"4") { SetValue(defaultValue); }
 	wstring GetValue() { return to_wstring(value); };
-	void SetValue(wstring value) { this->value = WStringHelper::GetInt(value); };
-	int value;
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
 };

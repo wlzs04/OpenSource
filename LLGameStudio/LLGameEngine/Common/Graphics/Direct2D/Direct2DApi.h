@@ -23,6 +23,8 @@ public:
 	virtual void DrawImage(std::wstring image, float x, float y, float width, float height) override;
 	virtual void DrawImagePart(wstring image, float x, float y, float width, float height, float xO, float yO, float widthO, float heightO) override;
 	virtual void DrawText(wstring text, float x, float y, float width, float height, wstring  textFormatName = L"") override;
+	virtual void SetTransform(float angle, float x, float y) override;
+	virtual void ResetTransform() override;
 	virtual void AddImage(wstring image) override;
 	virtual void AddTextFormat(wstring textFormatName, wstring fontFamilyName, float fontSize) override;
 	virtual void* CreateColorBrush(float r, float g, float b, float a)override;

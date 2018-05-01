@@ -21,7 +21,7 @@ namespace LLGameStudio.Game.Actor
         BoneProperty.Length defaultLength = new BoneProperty.Length();
         BoneProperty.Angle defaultAngle = new BoneProperty.Angle();
 
-        public double length = 0;
+        public double length = 90;
         public double angle = 0;
 
         public Bone()

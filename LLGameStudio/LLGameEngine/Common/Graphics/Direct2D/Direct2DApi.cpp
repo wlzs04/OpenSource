@@ -99,6 +99,19 @@ void Direct2DApi::DrawText(wstring text, float x, float y, float width, float he
 	d2dRenderTarget->DrawTextW(text.c_str(),text.size(), textFormatMap[textFormatName].Get(), D2D1::RectF(x, y, x + width, y + height), currentD2DBrush);
 }
 
+void Direct2DApi::SetTransform(float angle, float x, float y)
+{
+	d2dRenderTarget->SetTransform(
+		D2D1::Matrix3x2F::Rotation(
+			angle,
+			D2D1::Point2F(x, y)));
+}
+
+void Direct2DApi::ResetTransform()
+{
+	d2dRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+}
+
 void Direct2DApi::AddImage(wstring image)
 {
 	if (image==L""||imageMap.count(image) > 0)

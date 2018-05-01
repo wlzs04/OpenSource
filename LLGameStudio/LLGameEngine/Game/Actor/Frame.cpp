@@ -29,3 +29,8 @@ void Frame::SetProperty(wstring name, wstring value)
 		propertyMap[name]->SetValue(value);
 	}
 }
+
+int Frame::GetFrameNumber()
+{
+	return propertyFrameNumber.value;
+}

@@ -10,6 +10,7 @@ public:
 	Frame();
 	void LoadFromXMLNode(LLXMLNode* xmlNode);
 	void SetProperty(wstring name, wstring value);
+	int GetFrameNumber();
 	vector<Bone*> listBone;
 
 private:

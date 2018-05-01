@@ -58,6 +58,9 @@ void TableHockeyGame::InitLayout()
 
 	actor = new Actor();
 	actor->LoadActorFromFile(L"actor\\actor1.actor");
+	actor->SetPosition(gameConfig.width / 2, gameConfig.height*0.7);
+	actor->SetCurrentAction(L"测试");
+	actor->Start();
 	int y = 0;
 }
 
@@ -175,6 +178,8 @@ void TableHockeyGame::UpdateUserData()
 {
 	particleSystem->Update();
 
+	actor->Update();
+
 	//判断是否开始游戏
 	if (!gameStart)
 	{
@@ -250,7 +255,10 @@ void TableHockeyGame::RenderCanvas(void * iuiNode, int i)
 
 	particleSystem->Render();
 
+	actor->Render();
+
 	GraphicsApi::GetGraphicsApi()->ResetDefaultBrush();
+
 }
 
 void TableHockeyGame::OnWin()

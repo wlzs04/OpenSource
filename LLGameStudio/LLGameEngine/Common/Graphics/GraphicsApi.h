@@ -21,6 +21,8 @@ public:
 	virtual void DrawImage(wstring image, float x, float y, float width, float height) = 0;
 	virtual void DrawImagePart(wstring image, float x, float y, float width, float height, float xO, float yO, float widthO, float heightO) = 0;
 	virtual void DrawText(wstring text, float x, float y, float width, float height,wstring  textFormatName=L"") = 0;
+	virtual void SetTransform(float angle, float x, float y) = 0;
+	virtual void ResetTransform() = 0;
 	virtual void* CreateColorBrush(float r, float g, float b, float a) = 0;
 	virtual void* CreateColorBrush(wstring colorValue) = 0;
 	virtual void SetCurrentBrush(void* colorBrush) = 0;

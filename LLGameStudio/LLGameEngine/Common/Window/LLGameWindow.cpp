@@ -119,8 +119,7 @@ void LLGameWindow::InitWindow()
 	hWnd = CreateWindow(className.c_str(), L"", WS_POPUP, 0, 0, 800, 600, 0, 0, GetModuleHandle(0), 0);
 
 	//使用系统提供的方法将类指针和hWnd关联起来，可以在窗体处理方法中获得。
-	SetWindowLong(hWnd, GWLP_USERDATA, (LONG)this);
-
+	SetWindowLongPtr(hWnd, GWLP_USERDATA, (long long)this);
 	AddHandleUIEvent(L"OnLeftMouseDown", OnLeftMouseDown);
 	AddHandleUIEvent(L"OnLeftMouseUp", OnLeftMouseUp);
 	AddHandleUIEvent(L"OnRightMouseDown", OnRightMouseDown);
@@ -139,14 +138,14 @@ LRESULT LLGameWindow::WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 	{
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
-			if (OnInActivate)
+			if (OnInActivate!=NULL)
 			{
 				OnInActivate();
 			}
 		}
 		else
 		{
-			if (OnActivate)
+			if (OnActivate != NULL)
 			{
 				OnActivate();
 			}
@@ -233,8 +232,10 @@ LRESULT LLGameWindow::WindowProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 
 LRESULT LLGameWindow::WndProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	//64位：GWLP_USERDATA 、32位：GWL_USERDATA
-	LLGameWindow* gameWindow=(LLGameWindow*)GetWindowLong(hwnd, GWLP_USERDATA);
+	//函数：64位：GetWindowLongPtr 、32位：GetWindowLong
+	//参数：64位：GWLP_USERDATA 、32位：GWL_USERDATA
+	//原因是long和指针类型长度变化。
+	LLGameWindow* gameWindow=(LLGameWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 	if (gameWindow)
 	{
 		return gameWindow->WindowProcess(hwnd, msg, wParam, lParam);

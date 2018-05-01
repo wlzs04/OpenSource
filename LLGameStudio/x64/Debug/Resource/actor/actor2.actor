@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Actor>
-  <Bone name="根骨骼" length="110" angle="-3.1415926535897931">
-    <Bone angle="6.2615927379278418" />
+  <Bone name="根骨骼" length="128.14803939194704" angle="-3.7157433293029443">
+    <Bone length="115.49119901843682" angle="1.3257321532305131">
+      <Bone length="90" angle="0" />
+    </Bone>
   </Bone>
   <Actions />
 </Actor>

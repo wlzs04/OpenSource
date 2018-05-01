@@ -164,8 +164,8 @@ namespace LLGameStudio.Game.Actor
         {
             lock (this)
             {
-                int preFrameNumber = (int)Math.Floor(time * (totalTime.Value * totalFrameNumber.Value));
-                int nextFrameNumber = (int)Math.Ceiling(time * (totalTime.Value * totalFrameNumber.Value));
+                int preFrameNumber = (int)Math.Floor(time / totalTime.Value * totalFrameNumber.Value);
+                int nextFrameNumber = (int)Math.Ceiling(time / totalTime.Value * totalFrameNumber.Value);
 
                 Frame preFrame = GetFrameByNumber(preFrameNumber);
                 if (preFrame == null)
