@@ -30,15 +30,19 @@ namespace LLGameStudio.Studio.Window
         Actor actor;
         Point currentMouseSelectPosition;
         bool isAddBoneToParentBone = false;
+        bool isAddIKFromBoneToParentBone = false;
         LLStudioBone rootBoneControl = null;
         LLStudioBone currentSelectBoneControl = null;
         LLStudioTransformAxis transformAxis = null;
         LLStudioTimeline timeLine = null;
         Game.Actor.Action currentAction = null;
+        Dictionary<string, LLStudioKeyItem> keyItemMap = new Dictionary<string, LLStudioKeyItem>();
 
-        Dictionary<string,LLStudioKeyItem> keyItemMap = new Dictionary<string, LLStudioKeyItem>();
+        Dictionary<LLStudioBone, LLStudioBone> ikMap=new Dictionary<LLStudioBone, LLStudioBone>();
 
         bool isEditBone = true;//界面打开时默认编辑骨骼，false情况下为编辑骨骼动画。
+
+        int ikCyclicNumber = 3;
 
         public ActorWindow(string filePath)
         {
@@ -65,18 +69,48 @@ namespace LLGameStudio.Studio.Window
                     Point point = currentSelectBoneControl.GetStartPoint();
                     point.X += moveVector.X;
                     point.Y += moveVector.Y;
-                    if (currentSelectBoneControl.parentBoneControl != null)
+
+                    if (ikMap.ContainsKey(currentSelectBoneControl))
                     {
-                        currentSelectBoneControl.parentBoneControl.ChangeTransformByChildBone(point);
-                        foreach (var item in currentSelectBoneControl.parentBoneControl.listBoneControl)
+                        point = Mouse.GetPosition(canvas);
+                        
+                        for (int i = 0; i < ikCyclicNumber; i++)
                         {
-                            item.SetPostion(point);
-                            item.ResetBoneAngleByBoneControlAngle();
+                            LLStudioBone tempBoneControl = currentSelectBoneControl;
+                            while (tempBoneControl != null)
+                            {
+                                double tempAngle = tempBoneControl.GetBoneControlAngle();
+                                Point tempPoint = tempBoneControl.GetStartPoint();
+                                Point sPoint = currentSelectBoneControl.GetBoneEndPosition();
+                                Vector2 dv = new Vector2(point.X - tempPoint.X, point.Y - tempPoint.Y);
+                                Vector2 sv =new Vector2(sPoint.X - tempPoint.X, sPoint.Y - tempPoint.Y);
+
+                                double vectorAngle = LLMath.GetAngleBetweenVectors(sv, dv);
+                                
+                                tempBoneControl.SetBoneAngle(tempBoneControl.GetBoneAngle() + vectorAngle);
+                                if(tempBoneControl == ikMap[currentSelectBoneControl])
+                                {
+                                    break;
+                                }
+                                tempBoneControl = tempBoneControl.parentBoneControl;
+                            }
                         }
                     }
                     else
                     {
-                        currentSelectBoneControl.SetPostion(point);
+                        if (currentSelectBoneControl.parentBoneControl != null)
+                        {
+                            currentSelectBoneControl.parentBoneControl.ChangeTransformByChildBone(point);
+                            foreach (var item in currentSelectBoneControl.parentBoneControl.listBoneControl)
+                            {
+                                item.SetPostion(point);
+                                item.ResetBoneAngleByBoneControlAngle();
+                            }
+                        }
+                        else
+                        {
+                            currentSelectBoneControl.SetPostion(point);
+                        }
                     }
                     break;
                 case TransformType.Rotation:
@@ -100,6 +134,32 @@ namespace LLGameStudio.Studio.Window
             AddBoneToCanvas(new Bone());
         }
 
+        void AddIK(object sender, RoutedEventArgs e)
+        {
+            if (currentSelectBoneControl != null)
+            {
+                currentSelectBoneControl.CancelSelectState();
+            }
+            currentSelectBoneControl = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as LLStudioBone;
+            currentSelectBoneControl.SetSelectState();
+            isAddIKFromBoneToParentBone = true;
+        }
+
+        void RemoveIK(object sender, RoutedEventArgs e)
+        {
+            if (currentSelectBoneControl != null)
+            {
+                currentSelectBoneControl.CancelSelectState();
+            }
+            currentSelectBoneControl = ((sender as MenuItem).Parent as ContextMenu).PlacementTarget as LLStudioBone;
+            currentSelectBoneControl.SetSelectState();
+            if (ikMap.ContainsKey(currentSelectBoneControl))
+            {
+                ikMap.Remove(currentSelectBoneControl);
+                actor.RemoveIK(currentSelectBoneControl.bone);
+            }
+        }
+
         /// <summary>
         /// 添加骨骼到画布中
         /// </summary>
@@ -114,10 +174,22 @@ namespace LLGameStudio.Studio.Window
             boneControl.MouseLeftButtonDown += SelectBoneByControl;
 
             ContextMenu boneContextMenu = new ContextMenu();
+
             MenuItem addBoneToParentItem = new MenuItem();
             addBoneToParentItem.Header = "附加到父骨骼";
             addBoneToParentItem.Click += AddBoneToParentBone;
             boneContextMenu.Items.Add(addBoneToParentItem);
+
+            MenuItem addIKMenuItem = new MenuItem();
+            addIKMenuItem.Header = "添加IK解算";
+            addIKMenuItem.Click += AddIK;
+            boneContextMenu.Items.Add(addIKMenuItem);
+
+            MenuItem removeIKMenuItem = new MenuItem();
+            removeIKMenuItem.Header = "删除IK解算";
+            removeIKMenuItem.Click += RemoveIK;
+            boneContextMenu.Items.Add(removeIKMenuItem);
+
             boneControl.ContextMenu = boneContextMenu;
 
             foreach (var item in bone.listBone)
@@ -256,6 +328,17 @@ namespace LLGameStudio.Studio.Window
                 boneControl.AddBoneControl(currentSelectBoneControl);
                 transformAxis.SetPosition(boneControl.GetBoneEndPosition());
                 isAddBoneToParentBone = false;
+            }
+            else if(isAddIKFromBoneToParentBone)
+            {
+                if(boneControl.IsMyChildBoneControl(currentSelectBoneControl))
+                {
+                    ikMap[currentSelectBoneControl] = boneControl;
+
+                    actor.AddIK(currentSelectBoneControl.bone, boneControl.bone);
+                }
+
+                isAddIKFromBoneToParentBone = false;
             }
             else
             {
@@ -397,6 +480,11 @@ namespace LLGameStudio.Studio.Window
 
             rootBoneControl.ResetBoneControlAngleByBoneAngle();
             rootBoneControl.SetPostion(canvas.ActualWidth *0.5, canvas.ActualHeight *0.8);
+            ikMap.Clear();
+            foreach (var item in actor.ikMap)
+            {
+                ikMap[GetBoneControlByName(rootBoneControl, item.Key.name.Value)] = GetBoneControlByName(rootBoneControl, item.Value.name.Value);
+            }
         }
 
         /// <summary>
@@ -419,10 +507,12 @@ namespace LLGameStudio.Studio.Window
             gridBoneLayer.Children.Add(treeViewUILayer);
 
             ContextMenu gridContextMenu = new ContextMenu();
-            MenuItem addParticleEmitter = new MenuItem();
-            addParticleEmitter.Header = "添加骨骼";
-            addParticleEmitter.Click += AddBone;
-            gridContextMenu.Items.Add(addParticleEmitter);
+
+            MenuItem addBoneMenuItem = new MenuItem();
+            addBoneMenuItem.Header = "添加骨骼";
+            addBoneMenuItem.Click += AddBone;
+            gridContextMenu.Items.Add(addBoneMenuItem);
+            
             canvas.ContextMenu = gridContextMenu;
 
             canvas.Children.Add(transformAxis);
@@ -599,7 +689,7 @@ namespace LLGameStudio.Studio.Window
                 gridTimeLineArea.Visibility = Visibility.Visible;
                 AddBoneAddToTimeLine(rootBoneControl, 1);
                 labelEditState.Content = "动作编辑";
-
+                stackPanelActionArea.Children.Clear();
                 foreach (var item in actor.listAction)
                 {
                     LLStudioActionItem actionItem = new LLStudioActionItem(item);

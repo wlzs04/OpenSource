@@ -13,6 +13,7 @@ namespace LLGameStudio.Game.Actor
         public string name = "";
         public Bone rootBone;
         public List<Action> listAction = new List<Action>();
+        public Dictionary<Bone,Bone> ikMap=new Dictionary<Bone, Bone>();
 
         public Actor(string name)
         {
@@ -29,9 +30,27 @@ namespace LLGameStudio.Game.Actor
                     bone.LoadContentFromXML(item);
                     SetRootBone(bone);
                 }
+                else if(item.Name.ToString() == "IKs")
+                {
+                    LoadIKsFromXML(item);
+                }
                 else if(item.Name.ToString() == "Actions")
                 {
                     LoadActionFromXML(item);
+                }
+            }
+        }
+
+        public void LoadIKsFromXML(XElement element)
+        {
+            foreach (var item in element.Elements())
+            {
+                if (item.Name.ToString() == "IK")
+                {
+                    XAttribute attributeEndBone= item.Attribute("endBone");
+                    XAttribute attributeStartBone = item.Attribute("startBone");
+                    
+                    ikMap[GetBoneByName(rootBone,attributeEndBone.Value)] = GetBoneByName(rootBone, attributeStartBone.Value);
                 }
             }
         }
@@ -54,6 +73,15 @@ namespace LLGameStudio.Game.Actor
             XElement element = new XElement("Actor");
             ExportAttrbuteToXML(element);
             element.Add(rootBone.ExportContentToXML());
+            XElement iksElement = new XElement("IKs");
+            foreach (var item in ikMap)
+            {
+                XElement ikElement = new XElement("IK");
+                ikElement.Add(new XAttribute("endBone", item.Key.name.Value));
+                ikElement.Add(new XAttribute("startBone", item.Value.name.Value));
+                iksElement.Add(ikElement);
+            }
+            element.Add(iksElement);
             XElement actionsElement = new XElement("Actions");
             foreach (var item in listAction)
             {
@@ -88,6 +116,37 @@ namespace LLGameStudio.Game.Actor
         public int GetBoneNumber()
         {
             return 1;
+        }
+
+        public Bone GetBoneByName(Bone bone,string name)
+        {
+            if(bone.name.Value==name)
+            {
+                return bone;
+            }
+            foreach (var item in bone.listBone)
+            {
+                Bone childBone = null;
+                childBone = GetBoneByName(item, name);
+                if (childBone!=null)
+                {
+                    return childBone;
+                }
+            }
+            return null;
+        }
+
+        public void AddIK(Bone endBone,Bone startBone)
+        {
+            ikMap[endBone] = startBone;
+        }
+
+        public void RemoveIK(Bone endBone)
+        {
+            if (ikMap.ContainsKey(endBone))
+            {
+                ikMap.Remove(endBone);
+            }
         }
     }
 }

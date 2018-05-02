@@ -7,6 +7,14 @@ Bone::Bone()
 	propertyMap[propertyAngle.name] = &propertyAngle;
 }
 
+Bone::~Bone()
+{
+	for (auto var : listBone)
+	{
+		delete var;
+	}
+}
+
 void Bone::LoadFromXMLNode(LLXMLNode * xmlNode)
 {
 	for (auto var : xmlNode->GetPropertyMap())
@@ -40,6 +48,7 @@ void Bone::SetPosition(float x, float y)
 
 Vector2 Bone::GetBoneEndPosition()
 {
+	GetRealAngle();
 	double x = propertyLength.value * sin(realAngle);
 	double y = propertyLength.value * cos(realAngle);
 	return Vector2(position.x - x, position.y + y);
@@ -52,6 +61,10 @@ void Bone::SetAngle(float angle)
 
 Vector2 Bone::GetPosition()
 {
+	if (parentBone)
+	{
+		position = parentBone->GetBoneEndPosition();
+	}
 	return position;
 }
 

@@ -99,3 +99,11 @@ float MathHelper::RandFloat()
 {
 	return rand() / (float)RAND_MAX;
 }
+
+float MathHelper::GetAngleBetweenVectors(Vector2 v1, Vector2 v2)
+{
+	double length1 = GetVector2Length(v1);
+	double length2 = GetVector2Length(v2);
+	double cross = v1.x * v2.x + v1.y * v2.y;
+	return atan2(v2.y, v2.x) - atan2(v1.y, v1.x);
+}

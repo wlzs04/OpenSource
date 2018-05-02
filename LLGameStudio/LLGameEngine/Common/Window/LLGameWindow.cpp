@@ -234,7 +234,7 @@ LRESULT LLGameWindow::WndProcess(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 {
 	//函数：64位：GetWindowLongPtr 、32位：GetWindowLong
 	//参数：64位：GWLP_USERDATA 、32位：GWL_USERDATA
-	//原因是long和指针类型长度变化。
+	//原因是long和指针类型长度变化,之前没有出现问题是因为指针有效值没有超过32位。
 	LLGameWindow* gameWindow=(LLGameWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 	if (gameWindow)
 	{

@@ -63,6 +63,7 @@ public:
 	ParticleSystem* particleSystem = nullptr;
 
 	Actor* actor = nullptr;
+	Bone* myHandbone = nullptr;
 
 	bool gameStart = false;
 	float blockWidth = 40;

@@ -73,9 +73,9 @@ namespace LLGameStudio.Studio.Control
             {
                 Point currentMousePoint = e.GetPosition(canvas);
                 Vector2 moveVector = new Vector2(currentMousePoint.X - lastMousePoint.X, 0);
-                DragAxisEvent?.Invoke(this, moveVector);
                 lastMousePoint = currentMousePoint;
                 SetPosition(axisCenterPoint.X + moveVector.X, axisCenterPoint.Y);
+                DragAxisEvent?.Invoke(this, moveVector);
             }
         }
 
@@ -100,9 +100,9 @@ namespace LLGameStudio.Studio.Control
             {
                 Point currentMousePoint = e.GetPosition(canvas);
                 Vector2 moveVector = new Vector2(0, currentMousePoint.Y - lastMousePoint.Y);
-                DragAxisEvent?.Invoke(this, moveVector);
                 lastMousePoint = currentMousePoint;
                 SetPosition(axisCenterPoint.X, axisCenterPoint.Y+ moveVector.Y);
+                DragAxisEvent?.Invoke(this, moveVector);
             }
         }
 
@@ -127,9 +127,9 @@ namespace LLGameStudio.Studio.Control
             {
                 Point currentMousePoint = e.GetPosition(canvas);
                 Vector2 moveVector = new Vector2(currentMousePoint.X - lastMousePoint.X, currentMousePoint.Y - lastMousePoint.Y);
-                DragAxisEvent?.Invoke(this, moveVector);
                 lastMousePoint = currentMousePoint;
                 SetPosition(axisCenterPoint.X + moveVector.X, axisCenterPoint.Y + moveVector.Y);
+                DragAxisEvent?.Invoke(this, moveVector);
             }
         }
 

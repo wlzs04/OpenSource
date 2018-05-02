@@ -19,7 +19,7 @@
     </Bone>
   </Bone>
   <Actions>
-    <Action name="测试" totalTime="4">
+    <Action name="测试" totalTime="1">
       <Frame>
         <Bone name="根骨骼" angle="-3.1415926535897931" />
         <Bone name="bone1" angle="1.7014603329153242" />

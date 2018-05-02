@@ -159,5 +159,8 @@ public:
 	static int RandInt(int start, int end);
 	//获得随机小数，范围0到1
 	static float RandFloat();
+
+	//获得两向量之间的角度,顺时针时返回正值，向量参数需要提前标准化。
+	static float GetAngleBetweenVectors(Vector2 v1, Vector2 v2);
 };
 

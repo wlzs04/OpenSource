@@ -5,6 +5,14 @@ Frame::Frame()
 	propertyMap[propertyFrameNumber.name] = &propertyFrameNumber;
 }
 
+Frame::~Frame()
+{
+	for (auto var : listBone)
+	{
+		delete var;
+	}
+}
+
 void Frame::LoadFromXMLNode(LLXMLNode * xmlNode)
 {
 	for (auto var : xmlNode->GetPropertyMap())

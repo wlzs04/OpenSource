@@ -57,11 +57,11 @@ void TableHockeyGame::InitLayout()
 	particleSystem->SetEnable(false);
 
 	actor = new Actor();
-	actor->LoadActorFromFile(L"actor\\actor1.actor");
-	actor->SetPosition(gameConfig.width / 2, gameConfig.height*0.7);
-	actor->SetCurrentAction(L"测试");
-	actor->Start();
-	int y = 0;
+	actor->LoadActorFromFile(L"actor\\actor2.actor");
+	actor->SetPosition(gameConfig.width / 2, gameConfig.height);
+	myHandbone = actor->GetBoneByName(actor->rootBone,L"上骨骼");
+	//actor->SetCurrentAction(L"测试");
+	//actor->Start();
 }
 
 void TableHockeyGame::InitObject()
@@ -178,13 +178,13 @@ void TableHockeyGame::UpdateUserData()
 {
 	particleSystem->Update();
 
-	actor->Update();
+	//actor->Update();
 
 	//判断是否开始游戏
-	if (!gameStart)
+	/*if (!gameStart)
 	{
 		return;
-	}
+	}*/
 
 	float tickTime = gameTimer.GetThisTickTime();
 
@@ -199,8 +199,8 @@ void TableHockeyGame::UpdateUserData()
 			isCountDownState = false;
 			ServeBall();
 		}
-		lastMousePosition = GameHelper::mousePosition;
-		return;
+		//lastMousePosition = GameHelper::mousePosition;
+		//return;
 	}
 
 	POINT currentMousePosition = GameHelper::mousePosition;
@@ -213,6 +213,10 @@ void TableHockeyGame::UpdateUserData()
 	myHandBallPhys->SetPosition(currentMouseVector);
 	myHandBallPhys->SetVelocity(handBallVelocity);
 	lastMousePosition = GameHelper::mousePosition;
+
+	actor->SetBoneTrandformByIK(myHandbone, currentMouseVector);
+
+	actor->Update();
 
 	physicsWorld->Update(tickTime);
 }
@@ -254,11 +258,9 @@ void TableHockeyGame::RenderCanvas(void * iuiNode, int i)
 	}
 
 	particleSystem->Render();
-
 	actor->Render();
 
 	GraphicsApi::GetGraphicsApi()->ResetDefaultBrush();
-
 }
 
 void TableHockeyGame::OnWin()

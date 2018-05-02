@@ -8,6 +8,7 @@ class Frame
 {
 public:
 	Frame();
+	~Frame();
 	void LoadFromXMLNode(LLXMLNode* xmlNode);
 	void SetProperty(wstring name, wstring value);
 	int GetFrameNumber();

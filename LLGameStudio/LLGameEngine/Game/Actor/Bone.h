@@ -7,6 +7,7 @@ class Bone :public IUINode
 {
 public:
 	Bone();
+	~Bone();
 	virtual void LoadFromXMLNode(LLXMLNode* xmlNode) override;
 	virtual void Update() override;
 	virtual void Render() override;

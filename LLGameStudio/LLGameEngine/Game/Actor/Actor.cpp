@@ -23,9 +23,26 @@ void Actor::LoadFromXMLNode(LLXMLNode * xmlNode)
 			rootBone->actor = this;
 			rootBone->LoadFromXMLNode(var);
 		}
+		if (var->GetName() == L"IKs")
+		{
+			LoadIKsFromXML(var);
+		}
 		if (var->GetName() == L"Actions")
 		{
 			LoadActionFromXML(var);
+		}
+	}
+}
+
+void Actor::LoadIKsFromXML(LLXMLNode* xmlNode)
+{
+	for (auto var : xmlNode->GetChildNodeList())
+	{
+		if (var->GetName() == L"IK")
+		{
+			LLXMLProperty* endBone = var->GetProperty(L"endBone");
+			LLXMLProperty* startBone = var->GetProperty(L"startBone");
+			ikMap[GetBoneByName(rootBone, endBone->GetValue())] = GetBoneByName(rootBone, startBone->GetValue());
 		}
 	}
 }
@@ -45,7 +62,7 @@ void Actor::LoadActionFromXML(LLXMLNode* xmlNode)
 
 void Actor::Update()
 {
-	if (playAction)
+	if (playAction&&currentAction != nullptr)
 	{
 		float time = GameHelper::thisTickTime;
 		actionPlayTime += time;
@@ -62,6 +79,7 @@ void Actor::Update()
 				bone->SetAngle(var->GetAngle());
 			}
 		}
+		delete frame;
 	}
 	
 	rootBone->Update();
@@ -122,4 +140,30 @@ Bone* Actor::GetBoneByName(Bone* bone, wstring actionName)
 		}
 	}
 	return nullptr;
+}
+
+void Actor::SetBoneTrandformByIK(Bone* moveBone, Vector2 newPosition)
+{
+	//POINT currentMousePosition = GameHelper::mousePosition;
+	for (int i = 0; i < ikCyclicNumber; i++)
+	{
+		Bone* tempBone = moveBone;
+		while (tempBone)
+		{
+			double tempAngle = tempBone->GetRealAngle();
+			Vector2 tempPoint = tempBone->GetPosition();
+			Vector2 sPoint = moveBone->GetBoneEndPosition();
+			Vector2 dv(newPosition.x - tempPoint.x, newPosition.y - tempPoint.y);
+			Vector2 sv(sPoint.x - tempPoint.x, sPoint.y - tempPoint.y);
+
+			double vectorAngle = MathHelper::GetAngleBetweenVectors(sv, dv);
+
+			tempBone->SetAngle(tempBone->GetAngle() + vectorAngle);
+			if (tempBone == ikMap[moveBone])
+			{
+				break;
+			}
+			tempBone = tempBone->parentBone;
+		}
+	}
 }

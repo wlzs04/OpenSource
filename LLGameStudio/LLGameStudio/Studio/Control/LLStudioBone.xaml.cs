@@ -213,5 +213,29 @@ namespace LLGameStudio.Studio.Control
         {
             polygonBone.Stroke = null;
         }
+
+        /// <summary>
+        /// 判断传入的骨骼控件是否为当前骨骼的子骨骼
+        /// </summary>
+        /// <param name="boneControl"></param>
+        /// <returns></returns>
+        public bool IsMyChildBoneControl(LLStudioBone boneControl)
+        {
+            if(boneControl!=this)
+            {
+                foreach (var item in listBoneControl)
+                {
+                    if(item== boneControl)
+                    {
+                        return true;
+                    }
+                    if(item.IsMyChildBoneControl(boneControl))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
