@@ -1,6 +1,5 @@
 ﻿#include "PhysCircle.h"
 #include "PhysRectangle.h"
-//class PhysRectangle;
 
 PhysCircle::PhysCircle()
 {
@@ -30,10 +29,11 @@ bool PhysCircle::IsCollision(IPhysObject * iPhysObject)
 	{
 		PhysRectangle* rect = (PhysRectangle*)iPhysObject;
 		Vector2 vp = rect->GetPosition();
-		float xLength = abs(vp.x - position.x);
-		float yLength = abs(vp.y - position.y);
+		Vector2 v(abs(position.x - vp.x), abs(position.y - vp.y));
+		Vector2 h(rect->GetWidth()/2, rect->GetHeight()/2);
+		Vector2 u(v.x - h.x < 0 ? 0 : v.x - h.x, v.y - h.y < 0 ? 0 : v.y - h.y);
 
-		return xLength - radius - rect->GetWidth()/2 < 0 && yLength - radius - rect->GetHeight()/2 < 0;
+		return MathHelper::GetVector2Length(u) < radius;
 	}
 	default:
 		break;
@@ -118,6 +118,12 @@ void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 
 		//将相交的物体分离
 		Vector2 vp = rect->GetPosition();
+
+		Vector2 v(abs(position.x - vp.x), abs(position.y - vp.y));
+		Vector2 h(rect->GetWidth() / 2, rect->GetHeight() / 2);
+		Vector2 u(v.x - h.x < 0 ? 0 : v.x - h.x, v.y - h.y < 0 ? 0 : v.y - h.y);
+		float moveLength = radius - MathHelper::GetVector2Length(u);
+		
 		float xLength = abs(vp.x - position.x);
 		int xzf = vp.x - position.x > 0 ? 1 : -1;
 		float yLength = abs(vp.y - position.y);
@@ -125,15 +131,13 @@ void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 
 		xLength = radius + rect->GetWidth() / 2 - xLength;
 		yLength = radius + rect->GetHeight() / 2 - yLength;
-		float moveLength = 0;
+		
 		if (xLength <= yLength)
 		{
-			moveLength = xLength;
 			yLength = 0;
 		}
 		else
 		{
-			moveLength = yLength;
 			xLength = 0;
 		}
 
