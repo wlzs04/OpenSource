@@ -16,6 +16,9 @@ using System.Xml.Linq;
 
 namespace LLGameStudio.Game.Particle
 {
+    /// <summary>
+    /// 粒子类型
+    /// </summary>
     enum ParticleType
     {
         Point,//点

@@ -140,6 +140,9 @@
     <Compile Include="Studio\Window\FontEditWindow.xaml.cs">
       <DependentUpon>FontEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Window\GameConfigWindow.xaml.cs">
+      <DependentUpon>GameConfigWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Window\ParticleWindow.xaml.cs">
       <DependentUpon>ParticleWindow.xaml</DependentUpon>
     </Compile>
@@ -220,6 +223,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Window\FontEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Window\GameConfigWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -307,6 +314,8 @@
     <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="bin\Debug\Resource\行动者.png" />
+    <Resource Include="bin\Debug\Resource\设置.png" />
     <Resource Include="bin\Debug\Resource\平移.png" />
     <Resource Include="bin\Debug\Resource\旋转.png" />
     <Resource Include="bin\Debug\Resource\粒子.png" />

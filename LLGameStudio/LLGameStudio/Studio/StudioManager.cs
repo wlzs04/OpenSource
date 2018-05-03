@@ -154,8 +154,14 @@ namespace LLGameStudio.Studio
             saveGameButton.ClickHandler += SaveGame;
             wrapPanelMenuArea.Children.Add(saveGameButton);
 
+            LLStudioButton setGameButton = new LLStudioButton();
+            setGameButton.SetImage("Resource/设置.png");
+            setGameButton.ToolTip = "设置游戏";
+            setGameButton.ClickHandler += SetGameConfig;
+            wrapPanelMenuArea.Children.Add(setGameButton);
+
             //游戏控制区
-            
+
             LLStudioButton startGameButton = new LLStudioButton();
             startGameButton.SetImage("Resource/开始.png");
             startGameButton.ToolTip = "开始游戏";
@@ -686,6 +692,16 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
+        /// 设置游戏配置
+        /// </summary>
+        public void SetGameConfig()
+        {
+            GameConfigWindow gameConfigWindow = new GameConfigWindow(gameManager);
+            gameConfigWindow.Owner = window;
+            gameConfigWindow.Show();
+        }
+
+        /// <summary>
         /// 停止游戏。
         /// </summary>
         /// <param name="sender"></param>
@@ -845,8 +861,15 @@ namespace LLGameStudio.Studio
                 ShowStatusInfo("打开游戏目录完成。");
                 LoadDirectoryToFileArea(GameManager.GameResourcePath);
                 studioConfig.LastGamePath = gameManager.GamePath;
-                window.SetGameName(gameManager.GameName);
             }
+        }
+
+        /// <summary>
+        /// 由其他管理类使用，更改显示的游戏名称。
+        /// </summary>
+        public void SetGameName(string gameName)
+        {
+            window.SetGameName(gameName);
         }
 
         /// <summary>
@@ -857,6 +880,11 @@ namespace LLGameStudio.Studio
         public void SaveGame(object sender, MouseButtonEventArgs e)
         {
             SaveGame();
+        }
+
+        public void SetGameConfig(object sender, MouseButtonEventArgs e)
+        {
+            SetGameConfig();
         }
 
         /// <summary>

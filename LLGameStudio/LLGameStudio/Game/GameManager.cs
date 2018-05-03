@@ -32,8 +32,9 @@ namespace LLGameStudio.Game
 
         static double gameWidth = 0;
         static double gameHeight = 0;
-
+        
         public string GamePath { get => gamePath; }
+        public string GameConfigPath { get => gameConfigFilePath; }
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
         public static string GameResourcePath { get => gameResourcePath; }
@@ -181,6 +182,7 @@ namespace LLGameStudio.Game
             LLConvert.LoadContentFromXML(gameConfigFilePath, gameConfig);
             gameWidth = gameConfig.Width;
             gameHeight = gameConfig.Height;
+            studioManager.SetGameName(gameConfig.GameName);
         }
 
         /// <summary>
