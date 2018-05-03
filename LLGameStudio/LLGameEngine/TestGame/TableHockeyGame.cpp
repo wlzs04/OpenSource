@@ -4,13 +4,13 @@ void TableHockeyGame::InitUserData()
 {
 	InitLayout();
 	InitObject();
-	//InitConnectNet();
+	InitConnectNet();
 	
 	physicsWorld->OnCollisionEvent = bind(&TableHockeyGame::CollisionEvent, this, placeholders::_1, placeholders::_2);
 	gameWindow->OnKeyDown = bind(&TableHockeyGame::KeyDownEvent, this, placeholders::_1, placeholders::_2);
 	
-	handBallConstraintPoint.x = gameConfig.width / 2;
-	handBallConstraintPoint.y = gameConfig.height-holeWidth/2;
+	handBallConstraintPoint.x = gameConfig.width.value / 2;
+	handBallConstraintPoint.y = gameConfig.height.value -holeWidth/2;
 
 	PhysicsConstraint* myHandBallConstraint = new PhysicsConstraint(myHandBallPhys);
 	myHandBallConstraint->SetPointConstrain(handBallConstraintPoint, handBallMaxLength);
@@ -58,7 +58,7 @@ void TableHockeyGame::InitLayout()
 
 	actor = new Actor();
 	actor->LoadActorFromFile(L"actor\\actor2.actor");
-	actor->SetPosition(gameConfig.width / 2, gameConfig.height);
+	actor->SetPosition(gameConfig.width.value / 2, gameConfig.height.value);
 	myHandbone = actor->GetBoneByName(actor->rootBone,L"上骨骼");
 	//actor->SetCurrentAction(L"测试");
 	//actor->Start();
@@ -70,53 +70,53 @@ void TableHockeyGame::InitObject()
 	physicsWorld = physicsManager->CreatePhysicsWorld();
 
 	//添加边缘碰撞体
-	PhysRectangle* leftRectangle = physicsManager->CreateRectangle(blockWidth, gameConfig.height);
+	PhysRectangle* leftRectangle = physicsManager->CreateRectangle(blockWidth, gameConfig.height.value);
 	leftRectangle->SetStatic();
-	leftRectangle->SetPosition(0, gameConfig.height / 2);
+	leftRectangle->SetPosition(0, gameConfig.height.value / 2);
 	physicsWorld->AddObject(leftRectangle);
 	vectorRectangle.push_back(leftRectangle);
-	PhysRectangle* topRectangle = physicsManager->CreateRectangle(gameConfig.width, blockWidth);
+	PhysRectangle* topRectangle = physicsManager->CreateRectangle(gameConfig.width.value, blockWidth);
 	topRectangle->SetStatic();
-	topRectangle->SetPosition(gameConfig.width / 2, 0);
+	topRectangle->SetPosition(gameConfig.width.value / 2, 0);
 	physicsWorld->AddObject(topRectangle);
 	vectorRectangle.push_back(topRectangle);
-	PhysRectangle* rightRectangle = physicsManager->CreateRectangle(blockWidth, gameConfig.height);
+	PhysRectangle* rightRectangle = physicsManager->CreateRectangle(blockWidth, gameConfig.height.value);
 	rightRectangle->SetStatic();
-	rightRectangle->SetPosition(gameConfig.width, gameConfig.height / 2);
+	rightRectangle->SetPosition(gameConfig.width.value, gameConfig.height.value / 2);
 	physicsWorld->AddObject(rightRectangle);
 	vectorRectangle.push_back(rightRectangle);
-	PhysRectangle* bottomRectangle = physicsManager->CreateRectangle(gameConfig.width, blockWidth);
+	PhysRectangle* bottomRectangle = physicsManager->CreateRectangle(gameConfig.width.value, blockWidth);
 	bottomRectangle->SetStatic();
-	bottomRectangle->SetPosition(gameConfig.width / 2, gameConfig.height);
+	bottomRectangle->SetPosition(gameConfig.width.value / 2, gameConfig.height.value);
 	physicsWorld->AddObject(bottomRectangle);
 	vectorRectangle.push_back(bottomRectangle);
 
 	//添加冰球
 	iceBallPhys = physicsManager->CreateCircle(ballRadius);
-	iceBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height / 2);
+	iceBallPhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value / 2);
 	physicsWorld->AddObject(iceBallPhys);
 
 	//添加我方内容
 	myHandBallPhys = physicsManager->CreateCircle(ballRadius);
-	myHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.75);
+	myHandBallPhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value*0.75);
 	myHandBallPhys->SetActive();
 	physicsWorld->AddObject(myHandBallPhys);
 	vectorCircle.push_back(myHandBallPhys);
 
-	myHolePhys = physicsManager->CreateRectangle(gameConfig.width*0.5, holeWidth);
-	myHolePhys->SetPosition(gameConfig.width / 2, gameConfig.height);
+	myHolePhys = physicsManager->CreateRectangle(gameConfig.width.value*0.5, holeWidth);
+	myHolePhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value);
 	myHolePhys->SetStatic();
 	physicsWorld->AddObject(myHolePhys);
 
 	//添加对方内容
 	opponentHandBallPhys = physicsManager->CreateCircle(ballRadius);
-	opponentHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.25);
+	opponentHandBallPhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value*0.25);
 	opponentHandBallPhys->SetActive();
 	physicsWorld->AddObject(opponentHandBallPhys);
 	vectorCircle.push_back(opponentHandBallPhys);
 
-	opponentHolePhys = physicsManager->CreateRectangle(gameConfig.width*0.5, holeWidth);
-	opponentHolePhys->SetPosition(gameConfig.width / 2, 0);
+	opponentHolePhys = physicsManager->CreateRectangle(gameConfig.width.value*0.5, holeWidth);
+	opponentHolePhys->SetPosition(gameConfig.width.value / 2, 0);
 	opponentHolePhys->SetStatic();
 	physicsWorld->AddObject(opponentHolePhys);
 
@@ -303,11 +303,11 @@ void TableHockeyGame::OnRestartGame(void * sender, int e)
 	gameScene->RemoveNode(youResultLayout);
 	gameStart = true;
 	physicsWorld->Start();
-	iceBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height / 2);
+	iceBallPhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value / 2);
 	iceBallPhys->SetVelocity(0, 0);
-	myHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.75);
+	myHandBallPhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value*0.75);
 	myHandBallPhys->SetVelocity(0, 0);
-	opponentHandBallPhys->SetPosition(gameConfig.width / 2, gameConfig.height*0.25);
+	opponentHandBallPhys->SetPosition(gameConfig.width.value / 2, gameConfig.height.value*0.25);
 	opponentHandBallPhys->SetVelocity(0, 0);
 	isCountDownState = true;
 	gameScene->AddNode(gameCountDownLayout);

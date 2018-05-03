@@ -36,18 +36,8 @@ void LLGame::LoadConfig()
 	LLXMLDocument xmlDocument;
 	if(xmlDocument.LoadXMLFromFile(currentPath + L"\\" + L"Game.xml"))
 	{
-		LLXMLNode* rootNode=xmlDocument.GetRootNode();
-		gameConfig.gameName = rootNode->GetProperty(L"gameName")->GetValue();
-		gameConfig.width = rootNode->GetProperty(L"width")->GetValueInt();
-		gameConfig.height = rootNode->GetProperty(L"height")->GetValueInt();
-		gameConfig.fullScreen = rootNode->GetProperty(L"fullScreen")->GetValueBool();
-		gameConfig.canMultiGame = rootNode->GetProperty(L"canMultiGame")->GetValueBool(); 
-		gameConfig.startScene = rootNode->GetProperty(L"startScene")->GetValue();
-		gameConfig.graphicsApi = rootNode->GetProperty(L"graphicsApi")->GetValue();
-		gameConfig.openNetClient = rootNode->GetProperty(L"openNetClient")->GetValueBool();
-		gameConfig.openPhysics = rootNode->GetProperty(L"openPhysics")->GetValueBool();
-		gameConfig.icon = rootNode->GetProperty(L"icon")->GetValue();
-		gameConfig.defaultCursor = rootNode->GetProperty(L"defaultCursor")->GetValue();
+		LLXMLNode* rootNode = xmlDocument.GetRootNode();
+		gameConfig.LoadFromXMLNode(rootNode);
 		SystemHelper::resourcePath = gameConfig.resourcePath;
 	}
 	else
@@ -59,19 +49,8 @@ void LLGame::LoadConfig()
 void LLGame::SaveConfig()
 {
 	LLXMLDocument xmlDocument;
-	LLXMLNode* node = new LLXMLNode(L"Game");
-	node->AddProperty(new LLXMLProperty(L"gameName", gameConfig.gameName));
-	node->AddProperty(new LLXMLProperty(L"width", to_wstring(gameConfig.width)));
-	node->AddProperty(new LLXMLProperty(L"height", to_wstring(gameConfig.height)));
-	node->AddProperty(new LLXMLProperty(L"fullScreen", to_wstring(gameConfig.fullScreen)));
-	node->AddProperty(new LLXMLProperty(L"canMultiGame", to_wstring(gameConfig.canMultiGame)));
-	node->AddProperty(new LLXMLProperty(L"startScene", gameConfig.startScene));
-	node->AddProperty(new LLXMLProperty(L"graphicsApi", gameConfig.graphicsApi));
-	node->AddProperty(new LLXMLProperty(L"openNetClient", to_wstring(gameConfig.openNetClient)));
-	node->AddProperty(new LLXMLProperty(L"openPhysics", to_wstring(gameConfig.openPhysics)));
-	node->AddProperty(new LLXMLProperty(L"icon", gameConfig.icon));
-	node->AddProperty(new LLXMLProperty(L"defaultCursor", gameConfig.defaultCursor));
-	xmlDocument.SetRootNode(node);
+	
+	xmlDocument.SetRootNode(gameConfig.ExportToXMLNode());
 	if (!xmlDocument.SaveXMLToFile(currentPath + L"\\" + L"Game.xml"))
 	{
 		MessageHelper::ShowMessage(L"配置文件保存失败！");
@@ -140,12 +119,12 @@ void LLGame::Render()
 
 void LLGame::InitWindow()
 {
-	if (!gameConfig.canMultiGame)
+	if (!gameConfig.canMultiGame.value)
 	{
-		HANDLE hMutex = CreateMutex(NULL, TRUE, gameConfig.gameName.c_str());
+		HANDLE hMutex = CreateMutex(NULL, TRUE, gameConfig.gameName.value.c_str());
 		if (GetLastError() == ERROR_ALREADY_EXISTS)
 		{
-			HWND hWnd = FindWindow(LLGameWindow::className.c_str(), gameConfig.gameName.c_str());
+			HWND hWnd = FindWindow(LLGameWindow::className.c_str(), gameConfig.gameName.value.c_str());
 			SetForegroundWindow(hWnd);
 			if (hMutex)
 			{
@@ -156,25 +135,25 @@ void LLGame::InitWindow()
 		}
 	}
 	gameWindow = new LLGameWindow();
-	if (gameConfig.icon != L"")
+	if (gameConfig.icon.value != L"")
 	{
-		gameWindow->SetIcon((HICON)LoadImage(GetModuleHandle(0), (SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.icon).c_str(), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE));
+		gameWindow->SetIcon((HICON)LoadImage(GetModuleHandle(0), (SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.icon.value).c_str(), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_CREATEDIBSECTION | LR_LOADFROMFILE));
 	}
 	gameWindow->InitWindow();
 	int screenWidth = SystemHelper::GetScreenWidth();
 	int screenHeight = SystemHelper::GetScreenHeight();
 
-	if (gameConfig.fullScreen)
+	if (gameConfig.fullScreen.value)
 	{
 		gameWindow->SetPosition(0, 0);
 		gameWindow->SetSize(screenWidth, screenHeight);
-		gameWindow->SetTitle(gameConfig.gameName);
+		gameWindow->SetTitle(gameConfig.gameName.value);
 	}
 	else
 	{
-		gameWindow->SetPosition((screenWidth - gameConfig.width) / 2, (screenHeight - gameConfig.height) / 2);
-		gameWindow->SetSize(gameConfig.width, gameConfig.height);
-		gameWindow->SetTitle(gameConfig.gameName);
+		gameWindow->SetPosition((screenWidth - gameConfig.width.value) / 2, (screenHeight - gameConfig.height.value) / 2);
+		gameWindow->SetSize(gameConfig.width.value, gameConfig.height.value);
+		gameWindow->SetTitle(gameConfig.gameName.value);
 	}
 
 	//注册事件
@@ -197,29 +176,29 @@ void LLGame::InitData()
 {
 	if (!gameExit)
 	{
-		GameHelper::width = gameConfig.width;
-		GameHelper::height = gameConfig.height;
+		GameHelper::width = gameConfig.width.value;
+		GameHelper::height = gameConfig.height.value;
 
 		//设置默认光标
 		{
 			HCURSOR defaultCursor;
-			if (gameConfig.defaultCursor == L"")
+			if (gameConfig.defaultCursor.value == L"")
 			{
 				defaultCursor = LoadCursor(GetModuleHandle(0), IDC_ARROW);
 			}
 			else
 			{
-				defaultCursor = LoadCursorFromFile((SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.defaultCursor).c_str());
+				defaultCursor = LoadCursorFromFile((SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.defaultCursor.value).c_str());
 			}
 			gameWindow->SetDefaultCursor(defaultCursor);
 		}
 
 		InitGraphics();
-		if (gameConfig.openNetClient){InitNetClient();}
-		if (gameConfig.openPhysics){InitPhysics();}
+		if (gameConfig.openNetClient.value){InitNetClient();}
+		if (gameConfig.openPhysics.value){InitPhysics();}
 		
 		gameScene = new LLGameScene();
-		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene);
+		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene.value);
 
 		InitUserData();
 	}
@@ -228,10 +207,10 @@ void LLGame::InitData()
 void LLGame::InitGraphics()
 {
 	GraphicsApi* graphicsApi;
-	if (gameConfig.graphicsApi == L"Direct2D")
+	if (gameConfig.graphicsApi.value == GraphicsApiType::Direct2D)
 	{
 		graphicsApi = new Direct2DApi(gameWindow->GetHWND());
-		graphicsApi->SetSize(gameConfig.width, gameConfig.height);
+		graphicsApi->SetSize(gameConfig.width.value, gameConfig.height.value);
 		graphicsApi->Init();
 		GraphicsApi::SetGraphicsApi(graphicsApi);
 	}

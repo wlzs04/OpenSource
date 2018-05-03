@@ -5,24 +5,24 @@ void TestLLGame::InitUserData()
 	physicsManager = new PhysicsManager();
 	physicsWorld = physicsManager->CreatePhysicsWorld();
 	
-	PhysRectangle* leftRectangle = physicsManager->CreateRectangle(10, gameConfig.height);
+	PhysRectangle* leftRectangle = physicsManager->CreateRectangle(10, gameConfig.height.value);
 	leftRectangle->SetStatic();
-	leftRectangle->SetPosition(0, gameConfig.height/2);
+	leftRectangle->SetPosition(0, gameConfig.height.value /2);
 	physicsWorld->AddObject(leftRectangle);
 	vectorRectangle.push_back(leftRectangle);
-	PhysRectangle* topRectangle = physicsManager->CreateRectangle(gameConfig.width, 10);
+	PhysRectangle* topRectangle = physicsManager->CreateRectangle(gameConfig.width.value, 10);
 	topRectangle->SetStatic();
-	topRectangle->SetPosition(gameConfig.width / 2, 0);
+	topRectangle->SetPosition(gameConfig.width.value / 2, 0);
 	physicsWorld->AddObject(topRectangle);
 	vectorRectangle.push_back(topRectangle);
-	PhysRectangle* rightRectangle = physicsManager->CreateRectangle(10, gameConfig.height);
+	PhysRectangle* rightRectangle = physicsManager->CreateRectangle(10, gameConfig.height.value);
 	rightRectangle->SetStatic();
-	rightRectangle->SetPosition(gameConfig.width, gameConfig.height / 2);
+	rightRectangle->SetPosition(gameConfig.width.value, gameConfig.height.value / 2);
 	physicsWorld->AddObject(rightRectangle);
 	vectorRectangle.push_back(rightRectangle);
-	PhysRectangle* bottomRectangle = physicsManager->CreateRectangle(gameConfig.width, 10);
+	PhysRectangle* bottomRectangle = physicsManager->CreateRectangle(gameConfig.width.value, 10);
 	bottomRectangle->SetStatic();
-	bottomRectangle->SetPosition(gameConfig.width / 2, gameConfig.height);
+	bottomRectangle->SetPosition(gameConfig.width.value / 2, gameConfig.height.value);
 	physicsWorld->AddObject(bottomRectangle);
 	vectorRectangle.push_back(bottomRectangle);
 

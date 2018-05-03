@@ -17,6 +17,8 @@ public:
 	wstring defaultValue;
 };
 
+//UI节点属性
+
 class PropertyName :public IUIProperty
 {
 public:
@@ -392,4 +394,116 @@ public:
 	wstring GetValue() { return to_wstring(value); };
 	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
 	float value;
+};
+
+//游戏配置属性
+
+class PropertyGameName :public IUIProperty
+{
+public:
+	PropertyGameName() :IUIProperty(L"gameName", L"游戏") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class PropertyGameWidth :public IUIProperty
+{
+public:
+	PropertyGameWidth() :IUIProperty(L"gameWidth", L"800") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyGameHeight :public IUIProperty
+{
+public:
+	PropertyGameHeight() :IUIProperty(L"gameHeight", L"600") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyFullScreen :public IUIProperty
+{
+public:
+	PropertyFullScreen() :IUIProperty(L"fullScreen", L"False") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
+};
+
+class PropertyCanMultiGame :public IUIProperty
+{
+public:
+	PropertyCanMultiGame() :IUIProperty(L"canMultiGame", L"False") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
+};
+
+class PropertyStartScene :public IUIProperty
+{
+public:
+	PropertyStartScene() :IUIProperty(L"startScene", L"layout/StartScene.scene") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class GraphicsApiType : public EnumBase
+{
+public:
+	GraphicsApiType(int i) :EnumBase(i) {}
+
+	static const int Direct2D = 0;//Direct2D
+	static const int LL2D = 1;//未实现
+private:
+	unordered_map<wstring, int>& GetEnumMap()override;
+};
+
+class PropertyGraphicsApi :public IUIProperty
+{
+public:
+	PropertyGraphicsApi() :IUIProperty(L"graphicsApi", L"Direct2D") { SetValue(defaultValue); }
+	wstring GetValue() { return value.ToWString(); };
+	void SetValue(wstring value) { this->value.GetValueFromWString(value); };
+	GraphicsApiType value = GraphicsApiType::Direct2D;
+};
+
+class PropertyOpenNetClient :public IUIProperty
+{
+public:
+	PropertyOpenNetClient() :IUIProperty(L"openNetClient", L"False") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
+};
+
+class PropertyOpenPhysics :public IUIProperty
+{
+public:
+	PropertyOpenPhysics() :IUIProperty(L"openPhysics", L"False") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
+};
+
+class PropertyIcon :public IUIProperty
+{
+public:
+	PropertyIcon() :IUIProperty(L"icon", L"") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class PropertyDefaultCursor :public IUIProperty
+{
+public:
+	PropertyDefaultCursor() :IUIProperty(L"defaultCursor", L"") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
 };

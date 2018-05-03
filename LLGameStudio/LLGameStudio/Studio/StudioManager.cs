@@ -156,7 +156,7 @@ namespace LLGameStudio.Studio
 
             LLStudioButton setGameButton = new LLStudioButton();
             setGameButton.SetImage("Resource/设置.png");
-            setGameButton.ToolTip = "设置游戏";
+            setGameButton.ToolTip = "设置游戏配置";
             setGameButton.ClickHandler += SetGameConfig;
             wrapPanelMenuArea.Children.Add(setGameButton);
 
@@ -877,12 +877,12 @@ namespace LLGameStudio.Studio
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void SaveGame(object sender, MouseButtonEventArgs e)
+        private void SaveGame(object sender, MouseButtonEventArgs e)
         {
             SaveGame();
         }
 
-        public void SetGameConfig(object sender, MouseButtonEventArgs e)
+        private void SetGameConfig(object sender, MouseButtonEventArgs e)
         {
             SetGameConfig();
         }

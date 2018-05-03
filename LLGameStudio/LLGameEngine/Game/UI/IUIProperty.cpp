@@ -53,3 +53,14 @@ unordered_map<wstring, int>& ParticleType::GetEnumMap()
 	}
 	return anchorEnumMap;
 }
+
+std::unordered_map<std::wstring, int>& GraphicsApiType::GetEnumMap()
+{
+	static unordered_map<wstring, int> anchorEnumMap;
+	if (anchorEnumMap.size() == 0)
+	{
+		anchorEnumMap[L"Direct2D"] = Direct2D;
+		anchorEnumMap[L"LL2D"] = LL2D;
+	}
+	return anchorEnumMap;
+}

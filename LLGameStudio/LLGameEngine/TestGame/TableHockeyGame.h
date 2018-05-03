@@ -77,6 +77,6 @@ public:
 	int myRecord = 0;
 	int opponentRecord = 0;
 
-	wstring ip = L"169.254.52.76";
+	wstring ip = L"10.237.20.13";
 	int port = 1234;
 };

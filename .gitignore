@@ -41,3 +41,6 @@
 /LLGameStudio/LLGameEngine/x64/Debug
 /LLGameStudio/x64/Debug/LLGameEngine.pdb
 /LLGameStudio/x64/Debug/LLGameEngine.ilk
+/LLGameStudio/LLGameServer/bin/Debug/LLGameServer.exe.config
+/LLGameStudio/LLGameServer/bin/Debug/LLGameServer.pdb
+/LLGameStudio/LLGameServer/obj/Debug

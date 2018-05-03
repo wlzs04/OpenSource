@@ -23,16 +23,10 @@ namespace LLGameStudio.Common.Config
     /// </summary>
     public class GameConfig : IXMLClass
     {
-        //int width=800;
-        //int height=600;
-        //string gameName="游戏";
-        //bool fullScreen=false;
-        //bool canMultiGame = false;
-        
         public Dictionary<string, IUIProperty> propertyDictionary = new Dictionary<string, IUIProperty>();
         Property.GameName gameName = new Property.GameName();
-        Property.Width width = new Property.Width();
-        Property.Height height = new Property.Height();
+        Property.GameWidth gameWidth = new Property.GameWidth();
+        Property.GameHeight gameHeight = new Property.GameHeight();
         Property.FullScreen fullScreen = new Property.FullScreen();
         Property.CanMultiGame canMultiGame = new Property.CanMultiGame();
         Property.StartScene startScene = new Property.StartScene();
@@ -42,8 +36,8 @@ namespace LLGameStudio.Common.Config
         Property.Icon icon = new Property.Icon();
         Property.DefaultCursor defaultCursor = new Property.DefaultCursor();
         
-        public int Width { get => width.Value; set => width.Value = value; }
-        public int Height { get => height.Value; set => height.Value = value; }
+        public int Width { get => gameWidth.Value; set => gameWidth.Value = value; }
+        public int Height { get => gameHeight.Value; set => gameHeight.Value = value; }
         public string GameName { get => gameName.Value; set => gameName.Value = value; }
         public bool FullScreen { get => fullScreen.Value; set => fullScreen.Value = value; }
         public bool CanMultiGame { get => canMultiGame.Value; set => canMultiGame.Value = value; }
@@ -51,8 +45,8 @@ namespace LLGameStudio.Common.Config
         public GameConfig()
         {
             AddProperty(gameName);
-            AddProperty(width);
-            AddProperty(height);
+            AddProperty(gameWidth);
+            AddProperty(gameHeight);
             AddProperty(fullScreen);
             AddProperty(canMultiGame);
             AddProperty(startScene);
@@ -123,14 +117,14 @@ namespace LLGameStudio.Common.Config
             public GameName() : base("gameName", typeof(string), UIPropertyEnum.Common, "游戏名称。", "游戏") { }
         }
 
-        public class Width : IUIProperty
+        public class GameWidth : IUIProperty
         {
-            public Width() : base("width", typeof(int), UIPropertyEnum.Transform, "游戏窗体宽度。", "800") { }
+            public GameWidth() : base("gameWidth", typeof(int), UIPropertyEnum.Transform, "游戏窗体宽度。", "800") { }
         }
 
-        public class Height : IUIProperty
+        public class GameHeight : IUIProperty
         {
-            public Height() : base("height", typeof(int), UIPropertyEnum.Transform, "游戏窗体高度。", "600") { }
+            public GameHeight() : base("gameHeight", typeof(int), UIPropertyEnum.Transform, "游戏窗体高度。", "600") { }
         }
 
         public class FullScreen : IUIProperty
