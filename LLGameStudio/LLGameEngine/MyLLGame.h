@@ -3,11 +3,13 @@
 #include "UserProtocol.h"
 #include <vector>
 
+using namespace MyLLGameProtocol;
+
 //一个棋子类游戏，仅用来测试功能，因缺少一台电脑用来传输网络协议而暂停。
 class MyLLGame :public LLGame
 {
 public:
-	void ProcessProtocol(LLGameProtocol protocol);
+	void ProcessProtocol(LLGameServerProtocol* protocol);
 	void InitUserData()override;
 	void MoveQizi(void* iuiNode, int i);
 	void OnPutQizi(void* iuiNode, int i);

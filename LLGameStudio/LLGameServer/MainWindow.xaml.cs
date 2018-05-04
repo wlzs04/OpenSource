@@ -1,4 +1,6 @@
-﻿using LLGameServer.Server;
+﻿using LLGameServer.Data;
+using LLGameServer.Server;
+using LLGameServer.TestGame.TableHockeyGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,30 +26,72 @@ namespace LLGameServer
     public partial class MainWindow : Window
     {
         ServerManager serverManager;
+        UserDataManager userDataManager;
         static int port = 1234;
+        int maxUserNumber = 2;
+
+        string firstUserKey;
+        string secondUserKey;
 
         public MainWindow()
         {
             InitializeComponent();
             serverManager = new ServerManager();
+            serverManager.AddLegalProtocol(new CStartGameProtocol());
             serverManager.AcceptNewSocketEvent += AcceptNewSocket;
+            serverManager.SocketDisconnectEvent += SocketDisconnect;
             serverManager.ProcessProtocolEvent += ProcessProtocol;
             if (serverManager.StartListen(port))
             {
-                textBoxShowContent.AppendText($"开始监听端口：{port}。");
+                AppendNewLine($"开始监听端口：{port}。");
             }
             else
             {
-                textBoxShowContent.AppendText($"端口：{port}无法监听，可能被占用！");
+                AppendNewLine($"端口：{port}无法监听，可能被占用！");
             }
+            userDataManager = UserDataManager.GetInstance();
+            userDataManager.SetMaxUserNumber(maxUserNumber);
         }
 
         void AcceptNewSocket(Socket socket)
         {
-            Dispatcher.Invoke(new Action(()=> { textBoxShowContent.AppendText((socket.RemoteEndPoint as IPEndPoint).ToString()); }));
+            string userString = (socket.RemoteEndPoint as IPEndPoint).ToString();
+            AppendNewLine(userString + "连接到服务器。");
+            
+            int userCount = userDataManager.GetUserCount();
+            if(userCount < maxUserNumber)
+            {
+                TableHockeyGameUserData userData = new TableHockeyGameUserData();
+                userData.SetContent("myKey", userString);
+                userData.mySocket = socket;
+                if (userCount==0)
+                {
+                    firstUserKey = userString;
+                }
+                else if(userCount==1)
+                {
+                    secondUserKey = userString;
+                    TableHockeyGameUserData opponentUserData = (TableHockeyGameUserData)userDataManager.GetUserData(firstUserKey);
+                    opponentUserData.SetContent("opponentKey", userString);
+                    userData.SetContent("opponentKey", opponentUserData.GetContent("myKey"));
+                    opponentUserData.opponentSocket = socket;
+                    userData.opponentSocket = opponentUserData.mySocket;
+                }
+                userDataManager.AddUserData(userString, userData);
+                AppendNewLine($"连接人数：{userCount+1}。");
+            }
+            else
+            {
+                AppendNewLine($"连接人数过多。");
+            }
         }
 
-        void ProcessProtocol(LLGameProtocol protocol)
+        void SocketDisconnect(Socket socket)
+        {
+            AppendNewLine((socket.RemoteEndPoint as IPEndPoint).ToString() + "断开连接。");
+        }
+
+        void ProcessProtocol(LLGameClientProtocol protocol)
         {
             protocol.Process();
         }
@@ -55,6 +99,11 @@ namespace LLGameServer
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             serverManager.StopListen();
+        }
+
+        private void AppendNewLine(string content)
+        {
+            Dispatcher.Invoke(new Action(() => { textBoxShowContent.AppendText(content + Environment.NewLine); }));
         }
     }
 }

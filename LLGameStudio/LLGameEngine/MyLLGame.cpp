@@ -1,26 +1,8 @@
 ﻿#include "MyLLGame.h"
 
-void MyLLGame::ProcessProtocol(LLGameProtocol protocol)
+void MyLLGame::ProcessProtocol(LLGameServerProtocol* protocol)
 {
-	wstring content = protocol.GetContent();
-	vector<wstring> vecWs;
-	WStringHelper::Split(content,L' ',vecWs);
-	if (vecWs[0] == L"SStartGameProtocol")
-	{
-		SStartGameProtocol gp;
-		gp.Process(this);
-	}
-	else if(vecWs[0] == L"SPutQiziProtocol")
-	{
-		SPutQiziProtocol protocol(WStringHelper::GetBool(vecWs[1]),
-			WStringHelper::GetInt(vecWs[2]),WStringHelper::GetInt(vecWs[3]));
-		protocol.Process(this);
-	}
-	else if(vecWs[0] == L"SGetQipanProtocol")
-	{
-		SGetQipanProtocol gp;
-		gp.Process(this);
-	}
+	protocol->Process(this);
 }
 
 void MyLLGame::InitUserData()
@@ -54,7 +36,7 @@ void MyLLGame::InitUserData()
 	gameNetClient->OnConnectSuccessHandle = [&]() {nodeTextNetState->SetText(L"连接成功！"); };
 	gameNetClient->OnConnectFailHandle = [&]() {nodeTextNetState->SetText(L"连接失败！"); };
 	gameNetClient->OnDisconnectHandle = [&]() {nodeTextNetState->SetText(L"连接断开！"); };
-	gameNetClient->OnProcessProtocolHandle = [this](LLGameProtocol protocol) {ProcessProtocol(protocol); };
+	gameNetClient->OnProcessProtocolHandle = [this](LLGameServerProtocol* protocol) {ProcessProtocol(protocol); };
 
 	gameNetClient->StartConnect(ip, port);
 }
@@ -74,8 +56,10 @@ void MyLLGame::OnPutQizi(void* iuiNode, int i)
 {
 	if (gameStart)
 	{
-		CPutQiziProtocol cpp(blackTurn, currentQiziPositionX, currentQiziPositionY);
-		cpp.SetContent(L"CPutQiziProtocol "+to_wstring(blackTurn) +L" "+ to_wstring(currentQiziPositionX) + L" "+ to_wstring(currentQiziPositionY));
+		CPutQiziProtocol cpp;
+		cpp.AddContent(L"blackTurn", to_wstring(blackTurn));
+		cpp.AddContent(L"currentQiziPositionX", to_wstring(currentQiziPositionX));
+		cpp.AddContent(L"currentQiziPositionY", to_wstring(currentQiziPositionY));
 		gameNetClient->SendProtocol(cpp);
 
 		nodeTextNetState->SetText(L"等待服务器协议！");
@@ -162,7 +146,6 @@ void MyLLGame::RenderQizi(void * iuiNode, int i)
 void MyLLGame::OnStartGame(void * iuiNode, int i)
 {
 	CStartGameProtocol csp;
-	csp.SetContent(L"CStartGameProtocol");
 	gameNetClient->SendProtocol(csp);
 	nodeTextNetState->SetText(L"等待服务器协议！");
 }

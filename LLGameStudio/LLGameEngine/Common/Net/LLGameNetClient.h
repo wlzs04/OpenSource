@@ -18,6 +18,8 @@ public:
 	bool SendProtocol(LLGameProtocol protocol);
 	//停止连接
 	void StopConnect();
+	//添加合法的协议
+	void AddLegalProtocol(LLGameServerProtocol* protocol);
 	//连接成功事件
 	function<void()> OnConnectSuccessHandle;
 	//连接失败事件
@@ -25,7 +27,7 @@ public:
 	//连接断开事件
 	function<void()> OnDisconnectHandle;
 	//处理协议事件
-	function<void(LLGameProtocol)> OnProcessProtocolHandle;
+	function<void(LLGameServerProtocol*)> OnProcessProtocolHandle;
 private:
 	//接收协议，使用前需实现OnProcessProtocolHandle处理协议方法，非阻塞。
 	void AcceptProtocol();
@@ -36,4 +38,5 @@ private:
 	int serverPort;
 	thread connectThread;
 	thread getProtocolThread;
+	unordered_map<wstring, LLGameServerProtocol*> legalProtocolMap;
 };

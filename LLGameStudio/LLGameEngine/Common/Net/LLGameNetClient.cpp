@@ -58,9 +58,13 @@ void LLGameNetClient::AcceptProtocol()
 
 			if (netState > 0)
 			{
-				LLGameProtocol protocol;
+				wstring content = WStringHelper::UTF8BufferToWString(string(szBuffer, 0, netState));
+				
+				wstring name = content.substr(0, content.find(L' '));
 
-				protocol.SetContent(WStringHelper::UTF8BufferToWString(string(szBuffer,0,netState)));
+				LLGameServerProtocol* protocol = legalProtocolMap[name]->GetInstance();
+
+				protocol->LoadContentFromWString(content);
 				if (OnProcessProtocolHandle)
 				{
 					OnProcessProtocolHandle(protocol);
@@ -84,7 +88,7 @@ bool LLGameNetClient::SendProtocol(LLGameProtocol protocol)
 	int returnCode = 0;
 	if (connecting)
 	{
-		string content = WStringHelper::WStringToUTF8Buffer(protocol.GetContent());
+		string content = WStringHelper::WStringToUTF8Buffer(protocol.ExportContentToWString());
 		returnCode = send(clientSocket, content.c_str(), content.length(), 0);
 	}
 	return connecting && returnCode != SOCKET_ERROR;
@@ -97,4 +101,9 @@ void LLGameNetClient::StopConnect()
 		closesocket(clientSocket);
 	}
 	connecting = false;
+}
+
+void LLGameNetClient::AddLegalProtocol(LLGameServerProtocol* protocol)
+{
+	legalProtocolMap[protocol->GetName()] = protocol;
 }

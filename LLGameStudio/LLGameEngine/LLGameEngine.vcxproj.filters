@@ -144,6 +144,9 @@
     <ClCompile Include="Game\Actor\Actor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Net\LLGameProtocol.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">

@@ -16,12 +16,13 @@ namespace LLGameServer.Server
         IPAddress ip = null;
         int maxLinkNumber = 2;//服务器最大监听数量。
         Dictionary<string, Socket> ipSocketMap = new Dictionary<string, Socket>();
-        Queue<LLGameProtocol> protocolQueue = new Queue<LLGameProtocol>();
-        List<string> legalProtocolNameList = new List<string>();
+        Queue<LLGameClientProtocol> protocolQueue = new Queue<LLGameClientProtocol>();
+        Dictionary<string, LLGameClientProtocol> legalProtocolMap = new Dictionary<string, LLGameClientProtocol>();
 
         public delegate void SocketEvent(Socket socket);
-        public delegate void ProtocolEvent(LLGameProtocol protocol);
+        public delegate void ProtocolEvent(LLGameClientProtocol protocol);
         public SocketEvent AcceptNewSocketEvent;
+        public SocketEvent SocketDisconnectEvent;
         public ProtocolEvent ProcessProtocolEvent;
 
         //收到协议唤醒线程，解决完让线程挂起。
@@ -45,7 +46,7 @@ namespace LLGameServer.Server
             }
             IPEndPoint point = new IPEndPoint(ip, port);
             serverSocket.Bind(point);
-            serverSocket.Listen(2);
+            serverSocket.Listen(maxLinkNumber);
 
             Thread threadwatch = new Thread(AcceptClient);
             threadwatch.IsBackground = true;
@@ -105,15 +106,22 @@ namespace LLGameServer.Server
         /// </summary>
         void AcceptClient()
         {
-            while (true)
+            try
             {
-                Socket clientSocket = serverSocket.Accept();
-                string ipPort = (clientSocket.RemoteEndPoint as IPEndPoint).ToString();
-                ipSocketMap[ipPort] = clientSocket;
-                AcceptNewSocketEvent?.Invoke(clientSocket);
-                Thread t = new Thread(AcceptSocketPeotocol);
-                t.IsBackground = true;
-                t.Start(clientSocket);
+                while (true)
+                {
+                    Socket clientSocket = serverSocket.Accept();
+                    string ipPort = (clientSocket.RemoteEndPoint as IPEndPoint).ToString();
+                    ipSocketMap[ipPort] = clientSocket;
+                    AcceptNewSocketEvent?.Invoke(clientSocket);
+                    Thread t = new Thread(AcceptSocketPeotocol);
+                    t.IsBackground = true;
+                    t.Start(clientSocket);
+                }
+            }
+            catch (SocketException)
+            {
+
             }
         }
 
@@ -131,32 +139,26 @@ namespace LLGameServer.Server
                 {
                     int byteNumber = socket.Receive(buf);
                     string s = Encoding.UTF8.GetString(buf, 0, byteNumber);
-                    string[] ss = s.Split();
-                    LLGameProtocol protocol;
-                    foreach (var item in legalProtocolNameList)
+                    string[] ss = s.Split(' ');
+                    
+                    if(legalProtocolMap.ContainsKey(ss[0]))
                     {
-                        if (ss[0] == item)
-                        {
-                            Type t = Type.GetType(item);
-                            if (t != null && typeof(LLGameProtocol).IsAssignableFrom(t))
-                            {
-                                object[] parameters = new object[1];
-                                parameters[0] = socket;
-                                protocol = t.Assembly.CreateInstance(s, true, System.Reflection.BindingFlags.Default, null, parameters, null, null) as LLGameProtocol;
-                                protocolQueue.Enqueue(protocol);
-                                processProtocolEvent.Set();
-                            }
-                        }
+                        LLGameClientProtocol protocol = legalProtocolMap[ss[0]].GetInstance();
+                        protocol.LoadContentFromWString(s);
+                        protocol.SetSocket(socket);
+                        protocolQueue.Enqueue(protocol);
+                        processProtocolEvent.Set();
                     }
                 }
             }
-            catch (SocketException e)
+            catch(SocketException)
             {
+
             }
             finally
             {
-                string ip = (socket.RemoteEndPoint as IPEndPoint).Address.ToString();
-                Console.WriteLine($"{ip}：断开连接！");
+                string ip = (socket.RemoteEndPoint as IPEndPoint).ToString();
+                SocketDisconnectEvent?.Invoke(socket);
                 ipSocketMap.Remove(ip);
                 socket.Close();
             }
@@ -197,13 +199,22 @@ namespace LLGameServer.Server
         /// 发送广播协议
         /// </summary>
         /// <param name="protocol"></param>
-        public void SendBroadcastProtocol(LLGameProtocol protocol)
+        public void SendBroadcastProtocol(LLGameClientProtocol protocol)
         {
-            byte[] msg = Encoding.UTF8.GetBytes(protocol.GetContent());
+            byte[] msg = Encoding.UTF8.GetBytes(protocol.ExportContentToWString());
             foreach (var item in ipSocketMap)
             {
                 item.Value.Send(msg);
             }
+        }
+
+        /// <summary>
+        /// 添加合法协议
+        /// </summary>
+        /// <param name="protocol"></param>
+        public void AddLegalProtocol(LLGameClientProtocol protocol)
+        {
+            legalProtocolMap.Add(protocol.GetName(), protocol);
         }
     }
 }

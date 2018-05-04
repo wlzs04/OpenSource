@@ -91,8 +91,29 @@ void PhysCircle::DoCollision(IPhysObject * iPhysObject)
 		
 		if (iPhysObject->IsDynamic())
 		{
-			fl1real = (fl1 * (m1 - m2) + fl2 * 2 * m2) / (m1 + m2);
-			fl2real = (fl2 * (m2 - m1) + fl1 * 2 * m1) / (m1 + m2);
+			if (fl1*fl2 < 0)
+			{
+				fl1real = (fl1 * (m1 - m2) + fl2 * 2 * m2) / (m1 + m2);
+				fl2real = (fl2 * (m2 - m1) + fl1 * 2 * m1) / (m1 + m2);
+			}
+			else
+			{
+				if (fl1 == 0)
+				{
+					fl1real = fl1;
+					fl2real = abs(fl2);
+				}
+				if (fl1 / abs(fl1)>0)
+				{
+					fl2real = fl1 > fl2 ? fl1 : fl2;
+					fl1real = fl1 < fl2 ? fl1 : fl2;
+				}
+				else if (fl1 / abs(fl1) < 0)
+				{
+					fl1real = fl1;
+					fl2real = fl2;
+				}
+			}
 		}
 		else
 		{

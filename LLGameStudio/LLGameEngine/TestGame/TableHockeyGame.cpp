@@ -130,19 +130,23 @@ void TableHockeyGame::InitObject()
 void TableHockeyGame::InitConnectNet()
 {
 	gameNetClient->OnConnectSuccessHandle = [&]() {
-		MessageHelper::ShowMessage(L"连接服务器成功！"); };
+		playOnLine = true; };
 	gameNetClient->OnConnectFailHandle = [&]() {
-		MessageHelper::ShowMessage(L"连接服务器失败！"); };
+		playOnLine = false; };
 	gameNetClient->OnDisconnectHandle = [&]() {
-		MessageHelper::ShowMessage(L"与服务器断开连接！"); };
-	gameNetClient->OnProcessProtocolHandle = [&](LLGameProtocol protocol) {ProcessProtocol(protocol); };
+		playOnLine = false; };
+	gameNetClient->OnProcessProtocolHandle = [&](LLGameServerProtocol* protocol) {
+		ProcessProtocol(protocol); };
+
+	gameNetClient->AddLegalProtocol(new SStartGameProtocol());
+	gameNetClient->AddLegalProtocol(new SRestartGameProtocol());
 
 	gameNetClient->StartConnect(ip, port);
 }
 
-void TableHockeyGame::ProcessProtocol(LLGameProtocol protocol)
+void TableHockeyGame::ProcessProtocol(LLGameServerProtocol* protocol)
 {
-	protocol.Process(this);
+	protocol->Process(this);
 }
 
 void TableHockeyGame::KeyDownEvent(void * sender, int key)
@@ -154,7 +158,7 @@ void TableHockeyGame::KeyDownEvent(void * sender, int key)
 	}
 	if (key == VK_SPACE)
 	{
-		OnRestartGame(NULL,0);
+		OnRestartGame(NULL, 0);
 	}
 	//(GetAsyncKeyState(key) & 0x8000);
 }
@@ -288,6 +292,19 @@ void TableHockeyGame::OnLost()
 
 void TableHockeyGame::OnStartGame(void * sender, int e)
 {
+	if (playOnLine)
+	{
+		CStartGameProtocol cp;
+		gameNetClient->SendProtocol(cp);
+	}
+	else
+	{
+		MessageHelper::ShowMessage(L"尚未连接到服务器！");
+	}
+}
+
+void TableHockeyGame::StartGameByServer()
+{
 	gameScene->RemoveNode(startLayout);
 	gameStart = true;
 	physicsWorld->Start();
@@ -299,6 +316,19 @@ void TableHockeyGame::OnStartGame(void * sender, int e)
 }
 
 void TableHockeyGame::OnRestartGame(void * sender, int e)
+{
+	if (playOnLine)
+	{
+		CRestartGameProtocol cp;
+		gameNetClient->SendProtocol(cp);
+	}
+	else
+	{
+		MessageHelper::ShowMessage(L"尚未连接到服务器！");
+	}
+}
+
+void TableHockeyGame::RestartGameByServer()
 {
 	gameScene->RemoveNode(youResultLayout);
 	gameStart = true;

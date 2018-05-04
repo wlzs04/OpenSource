@@ -10,7 +10,7 @@ public:
 	void InitLayout();
 	void InitObject();
 	void InitConnectNet();
-	void ProcessProtocol(LLGameProtocol protocol);
+	void ProcessProtocol(LLGameServerProtocol* protocol);
 	void KeyDownEvent(void* sender, int key);
 	void CollisionEvent(IPhysObject* object1, IPhysObject* object2);
 	void UpdateUserData()override;
@@ -20,10 +20,14 @@ public:
 	void OnWin();
 	//我输了。
 	void OnLost();
-	//开始游戏
+	//点击开始游戏
 	void OnStartGame(void* sender, int e);
+	//由服务器调用开始游戏
+	void StartGameByServer();
 	//重新开始游戏
 	void OnRestartGame(void* sender, int e);
+	//由服务器调用重新开始游戏
+	void RestartGameByServer();
 	//发球
 	void ServeBall();
 
@@ -79,4 +83,45 @@ public:
 
 	wstring ip = L"10.237.20.13";
 	int port = 1234;
+	bool playOnLine = false;
+};
+
+class CStartGameProtocol : public LLGameClientProtocol
+{
+public:
+	CStartGameProtocol() :LLGameClientProtocol(L"CStartGameProtocol") {}
+};
+
+class SStartGameProtocol : public LLGameServerProtocol
+{
+public:
+	SStartGameProtocol() :LLGameServerProtocol(L"SStartGameProtocol") {}
+	virtual LLGameServerProtocol* GetInstance() override
+	{
+		return new SStartGameProtocol();
+	}
+	virtual void Process(LLGame* ptr) override
+	{
+		((TableHockeyGame*)ptr)->StartGameByServer();
+	}
+};
+
+class CRestartGameProtocol : public LLGameClientProtocol
+{
+public:
+	CRestartGameProtocol() :LLGameClientProtocol(L"CRestartGameProtocol") {}
+};
+
+class SRestartGameProtocol : public LLGameServerProtocol
+{
+public:
+	SRestartGameProtocol() :LLGameServerProtocol(L"SRestartGameProtocol") {}
+	virtual LLGameServerProtocol* GetInstance() override
+	{
+		return new SRestartGameProtocol();
+	}
+	virtual void Process(LLGame* ptr) override
+	{
+		((TableHockeyGame*)ptr)->RestartGameByServer();
+	}
 };

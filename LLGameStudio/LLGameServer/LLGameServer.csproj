@@ -54,8 +54,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\UserData.cs" />
+    <Compile Include="Data\UserDataManager.cs" />
+    <Compile Include="Server\LLGameClientProtocol.cs" />
     <Compile Include="Server\LLGameProtocol.cs" />
+    <Compile Include="Server\LLGameServerProtocol.cs" />
     <Compile Include="Server\ServerManager.cs" />
+    <Compile Include="TestGame\TableHockeyGame\UserData.cs" />
+    <Compile Include="TestGame\TableHockeyGame\UserProtocol.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

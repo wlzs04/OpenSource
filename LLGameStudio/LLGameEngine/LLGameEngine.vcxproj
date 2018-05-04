@@ -131,6 +131,7 @@
     <ClCompile Include="Common\Helper\WStringHelper.cpp" />
     <ClCompile Include="Common\LLBase.cpp" />
     <ClCompile Include="Common\Net\LLGameNetClient.cpp" />
+    <ClCompile Include="Common\Net\LLGameProtocol.cpp" />
     <ClCompile Include="Common\XML\LLXML.cpp" />
     <ClCompile Include="Common\Window\LLGameWindow.cpp" />
     <ClCompile Include="Game\Actor\Action.cpp" />
