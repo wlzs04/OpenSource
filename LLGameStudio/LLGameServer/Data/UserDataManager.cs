@@ -21,7 +21,14 @@ namespace LLGameServer.Data
 
         public UserData GetUserData(string key)
         {
-            return userDataMap[key];
+            if(userDataMap.ContainsKey(key))
+            {
+                return userDataMap[key];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool AddUserData(string key, UserData value)

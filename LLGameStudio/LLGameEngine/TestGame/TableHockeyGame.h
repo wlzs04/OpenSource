@@ -28,6 +28,8 @@ public:
 	void OnRestartGame(void* sender, int e);
 	//由服务器调用重新开始游戏
 	void RestartGameByServer();
+	//由服务器设置对手球的位置
+	void SetOpponentBallPosition(float x, float y);
 	//发球
 	void ServeBall();
 
@@ -123,5 +125,29 @@ public:
 	virtual void Process(LLGame* ptr) override
 	{
 		((TableHockeyGame*)ptr)->RestartGameByServer();
+	}
+};
+
+class CSendMyHandBallInfoProtocol : public LLGameClientProtocol
+{
+public:
+	CSendMyHandBallInfoProtocol() :LLGameClientProtocol(L"CSendMyHandBallInfoProtocol") {}
+};
+
+class SGetOpponentBallInfoProtocol : public LLGameServerProtocol
+{
+public:
+	SGetOpponentBallInfoProtocol() :LLGameServerProtocol(L"SGetOpponentBallInfoProtocol") {}
+	virtual LLGameServerProtocol* GetInstance() override
+	{
+		return new SGetOpponentBallInfoProtocol();
+	}
+	virtual void Process(LLGame* ptr) override
+	{
+		wstring px = GetContent(L"px");
+		wstring py = GetContent(L"py");
+		((TableHockeyGame*)ptr)->SetOpponentBallPosition(
+			WStringHelper::GetFloat(px),
+			WStringHelper::GetFloat(py));
 	}
 };

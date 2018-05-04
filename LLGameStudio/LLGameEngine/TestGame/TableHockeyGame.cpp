@@ -223,6 +223,12 @@ void TableHockeyGame::UpdateUserData()
 	actor->Update();
 
 	physicsWorld->Update(tickTime);
+
+	CSendMyHandBallInfoProtocol cp;
+	Vector2 position = myHandBallPhys->GetPosition();
+	cp.AddContent(L"px", to_wstring(position.x));
+	cp.AddContent(L"py", to_wstring(position.y));
+	gameNetClient->SendProtocol(cp);
 }
 
 void TableHockeyGame::RenderCanvas(void * iuiNode, int i)
@@ -345,6 +351,12 @@ void TableHockeyGame::RestartGameByServer()
 	realCountDown = serveCountDown;
 	textCountDown->SetText(to_wstring(realCountDown));
 	particleSystem->SetEnable(false);
+}
+
+void TableHockeyGame::SetOpponentBallPosition(float x, float y)
+{
+	myHandBallPhys->SetPosition(gameConfig.width.value - x, gameConfig.height.value - y);
+	myHandBallPhys->SetVelocity(0, 0);
 }
 
 void TableHockeyGame::ServeBall()

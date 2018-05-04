@@ -38,6 +38,8 @@ namespace LLGameServer
             InitializeComponent();
             serverManager = new ServerManager();
             serverManager.AddLegalProtocol(new CStartGameProtocol());
+            serverManager.AddLegalProtocol(new CRestartGameProtocol());
+            serverManager.AddLegalProtocol(new CSendMyHandBallInfoProtocol());
             serverManager.AcceptNewSocketEvent += AcceptNewSocket;
             serverManager.SocketDisconnectEvent += SocketDisconnect;
             serverManager.ProcessProtocolEvent += ProcessProtocol;

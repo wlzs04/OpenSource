@@ -29,7 +29,8 @@ void LLGameProtocol::LoadContentFromWString(wstring content)
 
 const std::wstring LLGameProtocol::ExportContentToWString()
 {
-	wstringstream wss(name+L" ");
+	wstringstream wss(L"");
+	wss << name << L" ";
 	for (auto var : contentMap)
 	{
 		wss << var.first << L" " << var.second<<L" ";
