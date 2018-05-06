@@ -5,6 +5,9 @@ GameConfig::GameConfig()
 	propertyMap[gameName.name] = &gameName;
 	propertyMap[width.name] = &width;
 	propertyMap[height.name] = &height;
+	propertyMap[left.name] = &left;
+	propertyMap[top.name] = &top;
+	propertyMap[middleInScreen.name] = &middleInScreen;
 	propertyMap[fullScreen.name] = &fullScreen;
 	propertyMap[canMultiGame.name] = &canMultiGame;
 	propertyMap[startScene.name] = &startScene;
@@ -13,6 +16,7 @@ GameConfig::GameConfig()
 	propertyMap[openPhysics.name] = &openPhysics;
 	propertyMap[icon.name] = &icon;
 	propertyMap[defaultCursor.name] = &defaultCursor;
+	propertyMap[serverIPPort.name] = &serverIPPort;
 }
 
 GameConfig::~GameConfig()

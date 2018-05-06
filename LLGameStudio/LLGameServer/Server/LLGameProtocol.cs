@@ -10,6 +10,7 @@ namespace LLGameServer.Server
     abstract class LLGameProtocol
     {
         string name;
+        string content;
         protected Socket socket;
         protected Dictionary<string, string> contentMap = new Dictionary<string, string>();
 
@@ -30,6 +31,7 @@ namespace LLGameServer.Server
 
         public void LoadContentFromWString(string content)
         {
+            this.content = content;
             string[] contentVector = content.Split(new char[]{ ' '},StringSplitOptions.RemoveEmptyEntries);
             if (contentVector.Length % 2 != 1)
             {
@@ -49,7 +51,8 @@ namespace LLGameServer.Server
             {
                 stringBuilder.Append(item.Key + " " + item.Value + " ");
             }
-            return stringBuilder.ToString();
+            content = stringBuilder.ToString();
+            return content;
         }
     }
 }

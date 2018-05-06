@@ -27,6 +27,9 @@ namespace LLGameStudio.Common.Config
         Property.GameName gameName = new Property.GameName();
         Property.GameWidth gameWidth = new Property.GameWidth();
         Property.GameHeight gameHeight = new Property.GameHeight();
+        Property.GameLeft gameLeft = new Property.GameLeft();
+        Property.GameTop gameTop = new Property.GameTop();
+        Property.MiddleInScreen middleInScreen = new Property.MiddleInScreen();
         Property.FullScreen fullScreen = new Property.FullScreen();
         Property.CanMultiGame canMultiGame = new Property.CanMultiGame();
         Property.StartScene startScene = new Property.StartScene();
@@ -35,6 +38,7 @@ namespace LLGameStudio.Common.Config
         Property.OpenPhysics openPhysics = new Property.OpenPhysics();
         Property.Icon icon = new Property.Icon();
         Property.DefaultCursor defaultCursor = new Property.DefaultCursor();
+        Property.ServerIPPort serverIPPort = new Property.ServerIPPort();
         
         public int Width { get => gameWidth.Value; set => gameWidth.Value = value; }
         public int Height { get => gameHeight.Value; set => gameHeight.Value = value; }
@@ -47,6 +51,9 @@ namespace LLGameStudio.Common.Config
             AddProperty(gameName);
             AddProperty(gameWidth);
             AddProperty(gameHeight);
+            AddProperty(gameLeft);
+            AddProperty(gameTop);
+            AddProperty(middleInScreen);
             AddProperty(fullScreen);
             AddProperty(canMultiGame);
             AddProperty(startScene);
@@ -55,6 +62,7 @@ namespace LLGameStudio.Common.Config
             AddProperty(openPhysics);
             AddProperty(icon);
             AddProperty(defaultCursor);
+            AddProperty(serverIPPort);
         }
 
         /// <summary>
@@ -127,9 +135,24 @@ namespace LLGameStudio.Common.Config
             public GameHeight() : base("gameHeight", typeof(int), UIPropertyEnum.Transform, "游戏窗体高度。", "600") { }
         }
 
+        public class GameLeft : IUIProperty
+        {
+            public GameLeft() : base("gameLeft", typeof(int), UIPropertyEnum.Transform, "游戏窗体距离屏幕左边缘，窗体不居中时有效。", "0") { }
+        }
+
+        public class GameTop : IUIProperty
+        {
+            public GameTop() : base("gameTop", typeof(int), UIPropertyEnum.Transform, "游戏窗体距离屏幕上边缘，窗体不居中时有效。", "0") { }
+        }
+
+        public class MiddleInScreen : IUIProperty
+        {
+            public MiddleInScreen() : base("middleInScreen", typeof(bool), UIPropertyEnum.Transform, "游戏窗体是否居中。", "True") { }
+        }
+
         public class FullScreen : IUIProperty
         {
-            public FullScreen() : base("fullScreen", typeof(bool), UIPropertyEnum.Common, "游戏窗体是否全屏。", "False") { }
+            public FullScreen() : base("fullScreen", typeof(bool), UIPropertyEnum.Transform, "游戏窗体是否全屏。", "False") { }
         }
 
         public class CanMultiGame : IUIProperty
@@ -165,6 +188,11 @@ namespace LLGameStudio.Common.Config
         public class DefaultCursor : IUIProperty
         {
             public DefaultCursor() : base("defaultCursor", typeof(string), UIPropertyEnum.Common, "游戏默认的光标。", "") { }
+        }
+
+        public class ServerIPPort : IUIProperty
+        {
+            public ServerIPPort() : base("serverIPPort", typeof(string), UIPropertyEnum.Common, "游戏服务器的IP地址和端口号。", "") { }
         }
     }
 }

@@ -49,11 +49,19 @@ void WStringHelper::Split(wstring ws, wchar_t w,vector<wstring>& v)
 	int pos2 = ws.find(w);
 	while (pos2 >= 0)
 	{
-		v.push_back(ws.substr(pos1, pos2- pos1));
+		wstring tempws = ws.substr(pos1, pos2 - pos1);
+		if (tempws != L"")
+		{
+			v.push_back(tempws);
+		}
 		pos1 = pos2+1;
 		pos2= ws.find(w, pos1);
 	}
-	v.push_back(ws.substr(pos1));
+	wstring tempws = ws.substr(pos1);
+	if (tempws != L"")
+	{
+		v.push_back(tempws);
+	}
 }
 
 string WStringHelper::WStringToUTF8Buffer(wstring value)

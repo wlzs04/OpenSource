@@ -137,7 +137,10 @@ namespace LLGameServer.Server
             {
                 while (true)
                 {
-                    int byteNumber = socket.Receive(buf);
+                    socket.Receive(buf, 4,SocketFlags.None);
+                    int protocolLength = (buf[0]-'0') * 1000 + (buf[1] - '0') * 100 + (buf[2] - '0') * 10 + (buf[3] - '0') * 1;
+                    int byteNumber = socket.Receive(buf, protocolLength, SocketFlags.None);
+                    buf = DecodeProtocol(buf);
                     string s = Encoding.UTF8.GetString(buf, 0, byteNumber);
                     string[] ss = s.Split(' ');
                     
@@ -173,7 +176,11 @@ namespace LLGameServer.Server
             {
                 if (protocolQueue.Count > 0)
                 {
-                    ProcessProtocolEvent(protocolQueue.Dequeue());
+                    LLGameClientProtocol protocol = protocolQueue.Dequeue();
+                    if(protocol!=null)
+                    {
+                        ProcessProtocolEvent(protocol);
+                    }
                 }
                 else
                 {
@@ -215,6 +222,11 @@ namespace LLGameServer.Server
         public void AddLegalProtocol(LLGameClientProtocol protocol)
         {
             legalProtocolMap.Add(protocol.GetName(), protocol);
+        }
+
+        byte[] DecodeProtocol(byte[] content)
+        {
+            return content;
         }
     }
 }

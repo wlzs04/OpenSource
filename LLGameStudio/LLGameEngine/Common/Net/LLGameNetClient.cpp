@@ -47,6 +47,15 @@ void LLGameNetClient::StartConnect(wstring ip, int port)
 	});
 }
 
+void LLGameNetClient::StartConnect(wstring ipport)
+{
+	int mhi = ipport.find(L':');
+	wstring ip = ipport.substr(0, mhi);
+	wstring portstr = ipport.substr(mhi+1);
+	int port = WStringHelper::GetInt(portstr);
+	StartConnect(ip, port);
+}
+
 void LLGameNetClient::AcceptProtocol()
 {
 	getProtocolThread = thread([this]() {
@@ -54,14 +63,17 @@ void LLGameNetClient::AcceptProtocol()
 		{
 			char szBuffer[MAXBYTE] = { 0 };
 			int netState;
-			netState = recv(clientSocket, szBuffer, MAXBYTE, NULL);
+			int protocolLength = 0;
+			recv(clientSocket, szBuffer, 4, NULL);
+			protocolLength = atoi(szBuffer);
+			netState = recv(clientSocket, szBuffer, protocolLength, NULL);
 
 			if (netState > 0)
 			{
-				wstring content = WStringHelper::UTF8BufferToWString(string(szBuffer, 0, netState));
-				
-				wstring name = content.substr(0, content.find(L' '));
+				string strContent = DecodeProtocol(string(szBuffer, 0, netState));
+				wstring content = WStringHelper::UTF8BufferToWString(strContent);
 
+				wstring name = content.substr(0, content.find(L' '));
 				LLGameServerProtocol* protocol = legalProtocolMap[name]->GetInstance();
 
 				protocol->LoadContentFromWString(content);
@@ -83,12 +95,25 @@ void LLGameNetClient::AcceptProtocol()
 	});
 }
 
+std::string LLGameNetClient::EncryptProtocol(string sBuffer)
+{
+	char ss[10];
+	sprintf_s(ss, "%04d", sBuffer.size());
+	return ss + sBuffer;
+}
+
+std::string LLGameNetClient::DecodeProtocol(string sBuffer)
+{
+	return sBuffer;
+}
+
 bool LLGameNetClient::SendProtocol(LLGameProtocol protocol)
 {
 	int returnCode = 0;
 	if (connecting)
 	{
 		string content = WStringHelper::WStringToUTF8Buffer(protocol.ExportContentToWString());
+		content = EncryptProtocol(content);
 		returnCode = send(clientSocket, content.c_str(), content.length(), 0);
 	}
 	return connecting && returnCode != SOCKET_ERROR;

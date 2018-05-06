@@ -18,6 +18,9 @@ public:
 	PropertyGameName gameName;
 	PropertyGameWidth width;
 	PropertyGameHeight height;
+	PropertyGameLeft left;
+	PropertyGameTop top;
+	PropertyMiddleInScreen middleInScreen;
 	PropertyFullScreen fullScreen;
 	PropertyCanMultiGame canMultiGame;
 	PropertyStartScene startScene;
@@ -26,6 +29,7 @@ public:
 	PropertyOpenPhysics openPhysics;
 	PropertyIcon icon;
 	PropertyDefaultCursor defaultCursor;
+	PropertyServerIPPort serverIPPort;
 
 	wstring resourcePath = L"Resource";
 

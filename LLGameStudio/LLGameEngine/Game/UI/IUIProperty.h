@@ -425,6 +425,33 @@ public:
 	float value;
 };
 
+class PropertyGameLeft :public IUIProperty
+{
+public:
+	PropertyGameLeft() :IUIProperty(L"gameLeft", L"0") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyGameTop :public IUIProperty
+{
+public:
+	PropertyGameTop() :IUIProperty(L"gameTop", L"0") { SetValue(defaultValue); }
+	wstring GetValue() { return to_wstring(value); };
+	void SetValue(wstring value) { this->value = WStringHelper::GetFloat(value); };
+	float value;
+};
+
+class PropertyMiddleInScreen :public IUIProperty
+{
+public:
+	PropertyMiddleInScreen() :IUIProperty(L"middleInScreen", L"True") { SetValue(defaultValue); }
+	wstring GetValue() { return value ? L"True" : L"False"; };
+	void SetValue(wstring value) { this->value = WStringHelper::GetBool(value); };
+	bool value;
+};
+
 class PropertyFullScreen :public IUIProperty
 {
 public:
@@ -503,6 +530,15 @@ class PropertyDefaultCursor :public IUIProperty
 {
 public:
 	PropertyDefaultCursor() :IUIProperty(L"defaultCursor", L"") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class PropertyServerIPPort :public IUIProperty
+{
+public:
+	PropertyServerIPPort() :IUIProperty(L"serverIPPort", L"") { SetValue(defaultValue); }
 	wstring GetValue()override { return value; };
 	void SetValue(wstring value) { this->value = value; };
 	wstring value;

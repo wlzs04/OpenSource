@@ -151,7 +151,14 @@ void LLGame::InitWindow()
 	}
 	else
 	{
-		gameWindow->SetPosition((screenWidth - gameConfig.width.value) / 2, (screenHeight - gameConfig.height.value) / 2);
+		if (gameConfig.middleInScreen.value)
+		{
+			gameWindow->SetPosition((screenWidth - gameConfig.width.value) / 2, (screenHeight - gameConfig.height.value) / 2);
+		}
+		else
+		{
+			gameWindow->SetPosition(gameConfig.left.value, gameConfig.top.value);
+		}
 		gameWindow->SetSize(gameConfig.width.value, gameConfig.height.value);
 		gameWindow->SetTitle(gameConfig.gameName.value);
 	}

@@ -14,6 +14,7 @@ public:
 	~LLGameNetClient();
 	//连接指定IP端口，非阻塞,连接成功后会自动调用协议处理方法。
 	void StartConnect(wstring ip, int port);
+	void StartConnect(wstring ipport);
 	//发送协议
 	bool SendProtocol(LLGameProtocol protocol);
 	//停止连接
@@ -31,7 +32,10 @@ public:
 private:
 	//接收协议，使用前需实现OnProcessProtocolHandle处理协议方法，非阻塞。
 	void AcceptProtocol();
-
+	//对协议进行加密,并附加协议长度
+	string EncryptProtocol(string sBuffer);
+	//对协议进行解密
+	string DecodeProtocol(string sBuffer);
 	SOCKET clientSocket;
 	bool connecting = false;
 	wstring serverIP;
