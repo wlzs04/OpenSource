@@ -73,3 +73,13 @@ wstring WStringHelper::UTF8BufferToWString(string value)
 {
 	return conv.from_bytes(value);
 }
+
+std::string WStringHelper::WStringToString(wstring value)
+{
+	return conv.to_bytes(value);
+}
+
+std::wstring WStringHelper::StringToWString(string value)
+{
+	return conv.from_bytes(value);
+}

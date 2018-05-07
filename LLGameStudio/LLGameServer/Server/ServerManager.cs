@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LLGameServer.Encrypt;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ namespace LLGameServer.Server
 {
     class ServerManager
     {
+        static ServerManager instance=new ServerManager();
         Socket serverSocket = null;
         IPAddress ip = null;
         int maxLinkNumber = 2;//服务器最大监听数量。
@@ -28,10 +30,21 @@ namespace LLGameServer.Server
         //收到协议唤醒线程，解决完让线程挂起。
         AutoResetEvent processProtocolEvent = new AutoResetEvent(false);
 
-        public ServerManager()
+        IEncryptClass encryptClass = null;
+
+        private ServerManager()
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             ip = GetHostIPV4();
+        }
+
+        /// <summary>
+        /// 获得服务器管理单一实例
+        /// </summary>
+        /// <returns></returns>
+        public static ServerManager GetInstance()
+        {
+            return instance;
         }
 
         /// <summary>
@@ -132,13 +145,14 @@ namespace LLGameServer.Server
         void AcceptSocketPeotocol(object obj)
         {
             Socket socket = obj as Socket;
-            byte[] buf = new byte[1024];
+            byte[] buf4 = new byte[4];
             try
             {
                 while (true)
                 {
-                    socket.Receive(buf, 4,SocketFlags.None);
-                    int protocolLength = (buf[0]-'0') * 1000 + (buf[1] - '0') * 100 + (buf[2] - '0') * 10 + (buf[3] - '0') * 1;
+                    socket.Receive(buf4, 4,SocketFlags.None);
+                    int protocolLength = (buf4[0]-'0') * 1000 + (buf4[1] - '0') * 100 + (buf4[2] - '0') * 10 + (buf4[3] - '0') * 1;
+                    byte[] buf = new byte[protocolLength];
                     int byteNumber = socket.Receive(buf, protocolLength, SocketFlags.None);
                     buf = DecodeProtocol(buf);
                     string s = Encoding.UTF8.GetString(buf, 0, byteNumber);
@@ -203,10 +217,21 @@ namespace LLGameServer.Server
         }
 
         /// <summary>
+        /// 通过关联Socket发送协议
+        /// </summary>
+        /// <param name="protocol"></param>
+        public void SendProtocol(LLGameServerProtocol protocol)
+        {
+            byte[] msg = Encoding.UTF8.GetBytes(protocol.ExportContentToWString());
+            msg = EncryptProtocol(msg);
+            protocol.GetSocket().Send(msg);
+        }
+
+        /// <summary>
         /// 发送广播协议
         /// </summary>
         /// <param name="protocol"></param>
-        public void SendBroadcastProtocol(LLGameClientProtocol protocol)
+        public void SendBroadcastProtocol(LLGameServerProtocol protocol)
         {
             byte[] msg = Encoding.UTF8.GetBytes(protocol.ExportContentToWString());
             foreach (var item in ipSocketMap)
@@ -224,9 +249,44 @@ namespace LLGameServer.Server
             legalProtocolMap.Add(protocol.GetName(), protocol);
         }
 
+        /// <summary>
+        /// 对协议进行加密,并附加协议长度
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        byte[] EncryptProtocol(byte[] content)
+        {
+            if(encryptClass!=null)
+            {
+                content = encryptClass.Encrypt(content);
+            }
+
+            List<byte> byteSource = new List<byte>();
+            byteSource.AddRange(Encoding.UTF8.GetBytes(String.Format("{0:0000}", content.Length)));
+            byteSource.AddRange(content);
+            return byteSource.ToArray();
+        }
+
+        /// <summary>
+        /// 对协议进行解密
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
         byte[] DecodeProtocol(byte[] content)
         {
+            if (encryptClass != null)
+            {
+                content = encryptClass.Decode(content);
+            }
             return content;
+        }
+
+        /// <summary>
+        /// 设置进行加密解密的算法类
+        /// </summary>
+        public void SetEncryptClass(IEncryptClass encryptClass)
+        {
+            this.encryptClass = encryptClass;
         }
     }
 }

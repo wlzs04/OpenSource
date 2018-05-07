@@ -39,6 +39,7 @@ namespace LLGameStudio.Common.Config
         Property.Icon icon = new Property.Icon();
         Property.DefaultCursor defaultCursor = new Property.DefaultCursor();
         Property.ServerIPPort serverIPPort = new Property.ServerIPPort();
+        Property.EncryptKey encryptKey = new Property.EncryptKey();
         
         public int Width { get => gameWidth.Value; set => gameWidth.Value = value; }
         public int Height { get => gameHeight.Value; set => gameHeight.Value = value; }
@@ -63,6 +64,7 @@ namespace LLGameStudio.Common.Config
             AddProperty(icon);
             AddProperty(defaultCursor);
             AddProperty(serverIPPort);
+            AddProperty(encryptKey);
         }
 
         /// <summary>
@@ -193,6 +195,11 @@ namespace LLGameStudio.Common.Config
         public class ServerIPPort : IUIProperty
         {
             public ServerIPPort() : base("serverIPPort", typeof(string), UIPropertyEnum.Common, "游戏服务器的IP地址和端口号。", "") { }
+        }
+
+        public class EncryptKey : IUIProperty
+        {
+            public EncryptKey() : base("encryptKey", typeof(string), UIPropertyEnum.Common, "游戏网络协议加密的秘钥。", "401230") { }
         }
     }
 }

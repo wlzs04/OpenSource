@@ -30,6 +30,7 @@ public:
 	PropertyIcon icon;
 	PropertyDefaultCursor defaultCursor;
 	PropertyServerIPPort serverIPPort;
+	PropertyEncryptKey encryptKey;
 
 	wstring resourcePath = L"Resource";
 

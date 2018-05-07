@@ -183,7 +183,7 @@ namespace LLGameStudio.Game.Particle
                     imageBrush = new ImageBrush();
                     if (imagePath.Value != "")
                     {
-                        imageBrush.ImageSource = new BitmapImage(new Uri(imagePath.Value, UriKind.Absolute));
+                        imageBrush.ImageSource = new BitmapImage(new Uri(GameManager.GameResourcePath+@"\"+imagePath.Value, UriKind.Absolute));
                     }
                     else
                     {
@@ -200,7 +200,7 @@ namespace LLGameStudio.Game.Particle
                     break;
                 case ParticleType.Sequence:
                     imageSequenceList.Clear();
-                    BitmapSource bitmap = new BitmapImage(new Uri(imagePath.Value, UriKind.Absolute));
+                    BitmapSource bitmap = new BitmapImage(new Uri(GameManager.GameResourcePath + @"\"+imagePath.Value, UriKind.Absolute));
                     double imageWidth = bitmap.PixelWidth;
                     int everyWidth = (int)(imageWidth / column.Value);
                     double imageHeight = bitmap.PixelHeight;

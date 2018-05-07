@@ -61,16 +61,17 @@ void LLGameNetClient::AcceptProtocol()
 	getProtocolThread = thread([this]() {
 		while (connecting)
 		{
-			char szBuffer[MAXBYTE] = { 0 };
+			char szBuffer4[4] = { 0 };
 			int netState;
 			int protocolLength = 0;
-			recv(clientSocket, szBuffer, 4, NULL);
-			protocolLength = atoi(szBuffer);
-			netState = recv(clientSocket, szBuffer, protocolLength, NULL);
+			recv(clientSocket, szBuffer4, 4, NULL);
+			protocolLength = atoi(szBuffer4);
+			unsigned char* szBuffer = new unsigned char[protocolLength];
+			netState = recv(clientSocket, (char*)szBuffer, protocolLength, NULL);
 
 			if (netState > 0)
 			{
-				string strContent = DecodeProtocol(string(szBuffer, 0, netState));
+				string strContent = DecodeProtocol(string((char*)szBuffer, 0, netState));
 				wstring content = WStringHelper::UTF8BufferToWString(strContent);
 
 				wstring name = content.substr(0, content.find(L' '));
@@ -97,6 +98,10 @@ void LLGameNetClient::AcceptProtocol()
 
 std::string LLGameNetClient::EncryptProtocol(string sBuffer)
 {
+	if (encryptClass != nullptr)
+	{
+		sBuffer = encryptClass->Encrypt(sBuffer);
+	}
 	char ss[10];
 	sprintf_s(ss, "%04d", sBuffer.size());
 	return ss + sBuffer;
@@ -104,6 +109,10 @@ std::string LLGameNetClient::EncryptProtocol(string sBuffer)
 
 std::string LLGameNetClient::DecodeProtocol(string sBuffer)
 {
+	if (encryptClass != nullptr)
+	{
+		sBuffer = encryptClass->Decode(sBuffer);
+	}
 	return sBuffer;
 }
 
@@ -131,4 +140,9 @@ void LLGameNetClient::StopConnect()
 void LLGameNetClient::AddLegalProtocol(LLGameServerProtocol* protocol)
 {
 	legalProtocolMap[protocol->GetName()] = protocol;
+}
+
+void LLGameNetClient::SetEncryptClass(IEncryptClass* encryptClass)
+{
+	this->encryptClass = encryptClass;
 }

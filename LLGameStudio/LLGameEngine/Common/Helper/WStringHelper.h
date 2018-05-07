@@ -16,6 +16,8 @@ public:
 	static void Split(wstring ws, wchar_t w, vector<wstring>& v);
 	static string WStringToUTF8Buffer(wstring value);
 	static wstring UTF8BufferToWString(string value);
+	static string WStringToString(wstring value);
+	static wstring StringToWString(string value);
 private:
 	static wstring_convert<codecvt_utf8<wchar_t>> conv;
 };

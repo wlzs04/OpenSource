@@ -36,10 +36,10 @@ namespace LLGameServer.TestGame.TableHockeyGame
                     userData.SetContent("state", "游戏中");
                     SStartGameProtocol sp1 = new SStartGameProtocol();
                     sp1.SetSocket(socket);
-                    sp1.SendContentBySocket();
+                    ServerManager.GetInstance().SendProtocol(sp1);
                     SStartGameProtocol sp2 = new SStartGameProtocol();
                     sp2.SetSocket(opponentData.mySocket);
-                    sp2.SendContentBySocket();
+                    ServerManager.GetInstance().SendProtocol(sp2);
                 }
                 else
                 {
@@ -84,10 +84,10 @@ namespace LLGameServer.TestGame.TableHockeyGame
                     userData.SetContent("state", "游戏中");
                     SRestartGameProtocol sp1 = new SRestartGameProtocol();
                     sp1.SetSocket(socket);
-                    sp1.SendContentBySocket();
+                    ServerManager.GetInstance().SendProtocol(sp1);
                     SRestartGameProtocol sp2 = new SRestartGameProtocol();
                     sp2.SetSocket(opponentData.mySocket);
-                    sp2.SendContentBySocket();
+                    ServerManager.GetInstance().SendProtocol(sp2);
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace LLGameServer.TestGame.TableHockeyGame
                 sp.AddContent("px", GetContent("px"));
                 sp.AddContent("py", GetContent("py"));
                 sp.SetSocket(opponentData.mySocket);
-                sp.SendContentBySocket();
+                ServerManager.GetInstance().SendProtocol(sp);
             }
         }
     }

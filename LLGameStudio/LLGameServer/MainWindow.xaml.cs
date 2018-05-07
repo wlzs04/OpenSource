@@ -1,4 +1,5 @@
 ﻿using LLGameServer.Data;
+using LLGameServer.Encrypt;
 using LLGameServer.Server;
 using LLGameServer.TestGame.TableHockeyGame;
 using System;
@@ -25,6 +26,7 @@ namespace LLGameServer
     /// </summary>
     public partial class MainWindow : Window
     {
+        EncryptNumber encryptNumber = null;
         ServerManager serverManager;
         UserDataManager userDataManager;
         static int port = 1234;
@@ -33,10 +35,24 @@ namespace LLGameServer
         string firstUserKey;
         string secondUserKey;
 
+        string encryptKey = "4201357";
+
         public MainWindow()
         {
             InitializeComponent();
-            serverManager = new ServerManager();
+
+            InitServer();
+        }
+
+        void InitServer()
+        {
+            serverManager = ServerManager.GetInstance();
+
+            encryptNumber = new EncryptNumber();
+            encryptNumber.SetKey(encryptKey);
+
+            serverManager.SetEncryptClass(encryptNumber);
+
             serverManager.AddLegalProtocol(new CStartGameProtocol());
             serverManager.AddLegalProtocol(new CRestartGameProtocol());
             serverManager.AddLegalProtocol(new CSendMyHandBallInfoProtocol());
@@ -100,7 +116,10 @@ namespace LLGameServer
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            serverManager.StopListen();
+            if(serverManager!=null)
+            {
+                serverManager.StopListen();
+            }
         }
 
         private void AppendNewLine(string content)

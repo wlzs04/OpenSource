@@ -14,9 +14,10 @@ GameConfig::GameConfig()
 	propertyMap[graphicsApi.name] = &graphicsApi;
 	propertyMap[openNetClient.name] = &openNetClient;
 	propertyMap[openPhysics.name] = &openPhysics;
-	propertyMap[icon.name] = &icon;
+	propertyMap[icon.name] = &icon; 
 	propertyMap[defaultCursor.name] = &defaultCursor;
 	propertyMap[serverIPPort.name] = &serverIPPort;
+	propertyMap[encryptKey.name] = &encryptKey;
 }
 
 GameConfig::~GameConfig()

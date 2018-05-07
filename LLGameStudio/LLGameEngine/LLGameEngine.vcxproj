@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common\Config\GameConfig.cpp" />
+    <ClCompile Include="Common\Encrypt\EncryptNumber.cpp" />
     <ClCompile Include="Common\Graphics\Direct2D\Direct2DApi.cpp" />
     <ClCompile Include="Common\Graphics\GraphicsApi.cpp" />
     <ClCompile Include="Common\Helper\GameHelper.cpp" />
@@ -168,6 +169,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h" />
+    <ClInclude Include="Common\Encrypt\EncryptNumber.h" />
+    <ClInclude Include="Common\Encrypt\IEncryptClass.h" />
     <ClInclude Include="Common\Graphics\Direct2D\Direct2DApi.h" />
     <ClInclude Include="Common\Graphics\GraphicsApi.h" />
     <ClInclude Include="Common\Helper\GameHelper.h" />

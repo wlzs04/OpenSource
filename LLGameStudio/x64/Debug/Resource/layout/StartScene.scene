@@ -1,6 +1,7 @@
-﻿<LLGameScene name="startScene">
-  <LLGameBack name="back" image="texture\back.png"/>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LLGameScene name="startScene">
+  <LLGameBack name="back" image="texture\back.png" />
   <LLGameCanvas name="canvas" />
-  <LLGameLayout name="gameRecordLayout" anchorEnum="Top" width="1" height="0.2" margin="{0,0,0,0}" filePath="layout\gameRecordLayout.layout"/>
-  <LLGameLayout name="startButtonLayout" anchorEnum="Top" height="0.2" margin="{0,0.7,0,0}" filePath="layout\startButtonLayout.layout"/> 
+  <LLGameLayout name="gameRecordLayout" anchorEnum="Top" height="0.2" filePath="layout\gameRecordLayout.layout" />
+  <LLGameLayout name="startButtonLayout" anchorEnum="Top" height="0.2" margin="{0,0.4,0,0}" filePath="layout\startButtonLayout.layout" />
 </LLGameScene>

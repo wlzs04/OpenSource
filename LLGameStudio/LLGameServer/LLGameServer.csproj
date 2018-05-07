@@ -56,6 +56,8 @@
     </ApplicationDefinition>
     <Compile Include="Data\UserData.cs" />
     <Compile Include="Data\UserDataManager.cs" />
+    <Compile Include="Encrypt\EncryptNumber.cs" />
+    <Compile Include="Encrypt\IEncryptClass.cs" />
     <Compile Include="Server\LLGameClientProtocol.cs" />
     <Compile Include="Server\LLGameProtocol.cs" />
     <Compile Include="Server\LLGameServerProtocol.cs" />

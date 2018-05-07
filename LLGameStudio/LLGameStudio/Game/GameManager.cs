@@ -19,7 +19,7 @@ namespace LLGameStudio.Game
 {
     public class GameManager
     {
-        string gamePath = "";
+        static string gamePath = "";
         string gameConfigFilePath = "";
         static string gameResourcePath = "";
         GameConfig gameConfig;
@@ -33,10 +33,10 @@ namespace LLGameStudio.Game
         static double gameWidth = 0;
         static double gameHeight = 0;
         
-        public string GamePath { get => gamePath; }
         public string GameConfigPath { get => gameConfigFilePath; }
         public bool GameLoaded { get => gameLoaded;}
         public string GameName { get => gameConfig.GameName; }
+        public static string GamePath { get => gamePath; }
         public static string GameResourcePath { get => gameResourcePath; }
         public static double GameWidth { get => gameWidth; }
         public static double GameHeight { get => gameHeight; }
@@ -66,6 +66,7 @@ namespace LLGameStudio.Game
                 MessageBox.Show("当前未加载游戏！");
                 return;
             }
+            CopyGameExe(gamePath + @"\LLGameEngine.exe", gamePath + @"\" + gameConfig.GameName + ".exe");
             ShowStatusInfo("游戏：" + GameName + "正在启动。");
             gameProcess = Process.Start(gamePath + @"\" + gameConfig.GameName + ".exe");
             gameProcess.EnableRaisingEvents = true;
@@ -74,6 +75,11 @@ namespace LLGameStudio.Game
                 x.BeginInvoke(
                     new Action(() => { StopGame(); }), DispatcherPriority.Normal);
             };
+        }
+
+        void CopyGameExe(string fileSPath, string fileSDPath)
+        {
+            File.Copy(fileSPath, fileSDPath,true);
         }
 
         /// <summary>
@@ -127,7 +133,7 @@ namespace LLGameStudio.Game
         {
             if (IsLegalGamePath(gamePath))
             {
-                this.gamePath = gamePath;
+                GameManager.gamePath = gamePath;
                 gameConfigFilePath = gamePath + @"\" + "Game.xml";
                 LoadConfig();
                 gameLoaded = true;

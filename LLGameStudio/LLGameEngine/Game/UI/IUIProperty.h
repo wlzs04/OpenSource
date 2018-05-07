@@ -533,12 +533,21 @@ public:
 	wstring GetValue()override { return value; };
 	void SetValue(wstring value) { this->value = value; };
 	wstring value;
-};
+}; 
 
 class PropertyServerIPPort :public IUIProperty
 {
 public:
 	PropertyServerIPPort() :IUIProperty(L"serverIPPort", L"") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
+class PropertyEncryptKey :public IUIProperty
+{
+public:
+	PropertyEncryptKey() :IUIProperty(L"encryptKey", L"401230") { SetValue(defaultValue); }
 	wstring GetValue()override { return value; };
 	void SetValue(wstring value) { this->value = value; };
 	wstring value;

@@ -4,6 +4,7 @@
 #include <thread>
 #include "LLGameProtocol.h"
 #pragma comment(lib, "ws2_32.lib")
+#include "..\Encrypt\IEncryptClass.h"
 
 using namespace std;
 
@@ -21,6 +22,8 @@ public:
 	void StopConnect();
 	//添加合法的协议
 	void AddLegalProtocol(LLGameServerProtocol* protocol);
+	//设置进行加密解密的算法类
+	void SetEncryptClass(IEncryptClass* encryptClass);
 	//连接成功事件
 	function<void()> OnConnectSuccessHandle;
 	//连接失败事件
@@ -36,6 +39,7 @@ private:
 	string EncryptProtocol(string sBuffer);
 	//对协议进行解密
 	string DecodeProtocol(string sBuffer);
+	IEncryptClass* encryptClass = nullptr;
 	SOCKET clientSocket;
 	bool connecting = false;
 	wstring serverIP;

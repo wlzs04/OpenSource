@@ -1,4 +1,5 @@
 ﻿#include "LLGame.h"
+#include "..\Common\Encrypt\EncryptNumber.h"
 
 LLGame::LLGame()
 {
@@ -231,6 +232,9 @@ void LLGame::InitGraphics()
 void LLGame::InitNetClient()
 {
 	gameNetClient = new LLGameNetClient();
+	EncryptNumber* encryptNumber = new EncryptNumber();
+	encryptNumber->SetKey(WStringHelper::WStringToString(gameConfig.encryptKey.value));
+	gameNetClient->SetEncryptClass(encryptNumber);
 }
 
 void LLGame::InitPhysics()

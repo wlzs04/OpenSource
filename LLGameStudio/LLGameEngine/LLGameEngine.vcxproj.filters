@@ -147,6 +147,9 @@
     <ClCompile Include="Common\Net\LLGameProtocol.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Encrypt\EncryptNumber.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -279,6 +282,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Actor\Frame.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Encrypt\IEncryptClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Encrypt\EncryptNumber.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

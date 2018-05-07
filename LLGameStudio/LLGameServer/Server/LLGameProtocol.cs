@@ -29,6 +29,11 @@ namespace LLGameServer.Server
             this.socket = socket;
         }
 
+        public Socket GetSocket()
+        {
+            return socket;
+        }
+
         public void LoadContentFromWString(string content)
         {
             this.content = content;
