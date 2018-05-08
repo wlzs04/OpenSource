@@ -150,6 +150,21 @@
     <ClCompile Include="Common\Encrypt\EncryptNumber.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="TestGame\LogicGame\LogicGame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\Function.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\Class.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\LLScript.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\LLScriptManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -288,6 +303,33 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Common\Encrypt\EncryptNumber.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGame\LogicGame\LogicGame.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\LLScriptManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\Class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\Parameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\Function.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\LLScript.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\ScriptClass\Int.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\ScriptClass\Void.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\ScriptClass\Float.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

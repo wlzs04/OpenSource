@@ -141,6 +141,10 @@
     <ClCompile Include="Game\Actor\Frame.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
+    <ClCompile Include="Game\Logic\Class.cpp" />
+    <ClCompile Include="Game\Logic\Function.cpp" />
+    <ClCompile Include="Game\Logic\LLScript.cpp" />
+    <ClCompile Include="Game\Logic\LLScriptManager.cpp" />
     <ClCompile Include="Game\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Game\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Game\Physics\IPhysObject.cpp" />
@@ -163,6 +167,7 @@
     <ClCompile Include="Game\UI\LLGameText.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyLLGame.cpp" />
+    <ClCompile Include="TestGame\LogicGame\LogicGame.cpp" />
     <ClCompile Include="TestGame\TableHockeyGame.cpp" />
     <ClCompile Include="TestGame\TestLLGame.cpp" />
     <ClCompile Include="UserProtocol.cpp" />
@@ -189,6 +194,14 @@
     <ClInclude Include="Game\Actor\Frame.h" />
     <ClInclude Include="Game\GameTimer.h" />
     <ClInclude Include="Game\LLGame.h" />
+    <ClInclude Include="Game\Logic\Class.h" />
+    <ClInclude Include="Game\Logic\Function.h" />
+    <ClInclude Include="Game\Logic\LLScript.h" />
+    <ClInclude Include="Game\Logic\LLScriptManager.h" />
+    <ClInclude Include="Game\Logic\Parameter.h" />
+    <ClInclude Include="Game\Logic\ScriptClass\Float.h" />
+    <ClInclude Include="Game\Logic\ScriptClass\Int.h" />
+    <ClInclude Include="Game\Logic\ScriptClass\Void.h" />
     <ClInclude Include="Game\Particle\ParticleEmitter.h" />
     <ClInclude Include="Game\Particle\ParticleSystem.h" />
     <ClInclude Include="Game\Physics\IPhysObject.h" />
@@ -211,6 +224,7 @@
     <ClInclude Include="Game\UI\LLGameScene.h" />
     <ClInclude Include="Game\UI\LLGameText.h" />
     <ClInclude Include="MyLLGame.h" />
+    <ClInclude Include="TestGame\LogicGame\LogicGame.h" />
     <ClInclude Include="TestGame\TableHockeyGame.h" />
     <ClInclude Include="TestGame\TestLLGame.h" />
     <ClInclude Include="UserProtocol.h" />

@@ -143,6 +143,9 @@
     <Compile Include="Studio\Window\GameConfigWindow.xaml.cs">
       <DependentUpon>GameConfigWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Studio\Window\LogicWindow.xaml.cs">
+      <DependentUpon>LogicWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Studio\Window\ParticleWindow.xaml.cs">
       <DependentUpon>ParticleWindow.xaml</DependentUpon>
     </Compile>
@@ -227,6 +230,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Window\GameConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Window\LogicWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -325,6 +332,8 @@
     <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.dll" />
     <Content Include="bin\Debug\DLL\Microsoft.WindowsAPICodePack.Shell.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Game\Logic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

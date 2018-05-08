@@ -28,7 +28,7 @@ protected:
 	//初始化窗体
 	void InitWindow();
 	//初始化数据
-	virtual void InitData();
+	void InitData();
 	//初始化自定义数据
 	virtual void InitUserData() {};
 	

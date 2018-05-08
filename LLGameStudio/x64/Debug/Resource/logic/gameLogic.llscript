@@ -1,0 +1,12 @@
+int i = 0 ;
+
+void AddI ( )
+{
+	i = i + 12 ;
+	i = i + 3 ;
+}
+
+int GetI ( )
+{
+	return i ;
+}
