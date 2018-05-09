@@ -12,4 +12,7 @@ protected:
 	virtual void UpdateUserData() override;
 
 	LLScriptManager* scriptManager = nullptr;
+
+	LLGameLayout* startLayout = nullptr;
+	LLGameButton* startButton = nullptr;
 };

@@ -17,7 +17,7 @@ namespace LLGameStudio.Studio.Window
     /// <summary>
     /// LogicWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class LogicWindow : Window
+    public partial class LogicWindow : System.Windows.Window
     {
         public LogicWindow()
         {

@@ -76,7 +76,7 @@ Parameter Function::Run(vector<Parameter>* inputList)
 				wsstream >> tempWstring;
 				if (tempWstring==L"=")
 				{
-					Parameter pd = dhyc(wsstream);
+					Parameter pd = GetTempValue(wsstream);
 					pptr->CopyClass(pd);
 				}
 			}
@@ -129,69 +129,188 @@ Parameter* Function::GetParameter(wstring pName)
 	return tempP;
 }
 
-Parameter Function::dhyc(wistringstream& wsstream)
+Parameter Function::GetTempValue(wistringstream & wsstream)
 {
-	wstring tempWstring;
+	wchar_t tempWChar;
+	bool startCheck = false;
 	Parameter leftParameter;
+	wostringstream  valueStream;
+	wstring tempWString;
 
 	while (!wsstream.eof())
 	{
-		wsstream >> tempWstring;
-		
-		if (tempWstring[0]<=L'9'&&tempWstring[0]>=L'0')
+		wsstream.get(tempWChar);
+		if (!wsstream.fail())
 		{
-			StringEnum se = WStringHelper::GetStringEnum(tempWstring);
-			if (se == StringEnum::Int)
+			if (WCharCanIgnore(tempWChar))
 			{
-				leftParameter.SetClassName(L"int");
-				leftParameter.SetValue(tempWstring);
+				if (startCheck)
+				{
+					startCheck = false;
+				}
+				else
+				{
+					continue;
+				}
 			}
-			else if (se == StringEnum::Float)
+			else if (tempWChar == L';')
 			{
-				leftParameter.SetClassName(L"float");
-				leftParameter.SetValue(tempWstring);
+				return leftParameter;
 			}
-		}
-		else if (tempWstring == L";")
-		{
-			return leftParameter;
-		}
-		else if(tempWstring == L"+")
-		{
-			Parameter wsv = dhyc(wsstream);
-			leftParameter.GetClassPtr()->Add(wsv.GetClassPtr());
-			return leftParameter;
-		}
-		else if (tempWstring == L"-")
-		{
-			Parameter wsv = dhyc(wsstream);
-			leftParameter.GetClassPtr()->Subtract(wsv.GetClassPtr());
-			return leftParameter;
-		}
-		else if (tempWstring == L"*")
-		{
-			Parameter wsv = dhyc(wsstream);
-			leftParameter.GetClassPtr()->Multiple(wsv.GetClassPtr());
-			return leftParameter;
-		}
-		else if (tempWstring == L"/")
-		{
-			Parameter wsv = dhyc(wsstream);
-			leftParameter.GetClassPtr()->Divide(wsv.GetClassPtr());
-			return leftParameter;
-		}
-		else
-		{
-			Parameter* tempP = GetParameter(tempWstring);
-			if (tempP != nullptr)
+			else if(WCharIsOperator(tempWChar))
 			{
-				leftParameter = *tempP;
+				Parameter tempP = GetTempValue(wsstream);
+				leftParameter.DoFunctionByoperator(tempWChar, tempP);
+				return leftParameter;
+			}
+			else if ((L'0' <= tempWChar && tempWChar <= L'9'))
+			{
+				valueStream << tempWChar;
+				wsstream.get(tempWChar);
+				while (tempWChar != L' ')
+				{
+					wsstream.get(tempWChar);
+					valueStream << tempWChar;
+				}
+				tempWString = valueStream.str();
+
+				StringEnum es = WStringHelper::GetStringEnum(tempWString);
+				if (es == StringEnum::Int)
+				{
+					leftParameter.SetClassName(L"int");
+				}
+				else if(es == StringEnum::Float)
+				{
+					leftParameter.SetClassName(L"float");
+				}
+				leftParameter.SetValue(tempWString);
+			}
+			else if(tempWChar==L'"')
+			{
+				wsstream.get(tempWChar);
+
+				while (tempWChar != L'"')
+				{
+					valueStream << tempWChar;
+					wsstream.get(tempWChar);
+				}
+				leftParameter.SetClassName(L"string");
+				leftParameter.SetValue(valueStream.str()) ;
 			}
 			else
 			{
-
+				valueStream << tempWChar;
+				wsstream.get(tempWChar);
+				while (!WCharSpecial(tempWChar))
+				{
+					valueStream << tempWChar;
+					wsstream.get(tempWChar);
+				}
+				tempWString = valueStream.str();
+				Parameter* tempP = GetParameter(tempWString);
+				if (tempP != nullptr)
+				{
+					leftParameter = *tempP;
+				}
 			}
 		}
 	}
 	return leftParameter;
 }
+
+bool Function::WCharCanIgnore(wchar_t wc)
+{
+	return (wc == L' ')//半角空格 
+		|| (wc == L'　') //全角空格（输入法快捷键Shift+Space可以切换半角和全角）
+		|| wc == L'\n' //换行
+		|| wc == L'\r'//回车（“\r”和“\r\n”编码一样）
+		|| wc == L'\t'//水平制表符
+		;
+}
+
+bool Function::WCharSpecial(wchar_t wc)
+{
+	return (wc == L' ')//半角空格 
+		|| (wc == L'.') //点
+		|| wc == L';' //分号
+		;
+}
+
+bool Function::WCharIsOperator(wchar_t wc)
+{
+	return (wc == L'+')//加
+		|| (wc == L'-') //减
+		|| wc == L'*' //乘
+		|| wc == L'/' //除
+		|| wc == L'%' //取余
+		|| wc == L'&' //交
+		|| wc == L'|' //并
+		;
+}
+
+//Parameter Function::dhyc(wistringstream& wsstream)
+//{
+//	wstring tempWstring;
+//	Parameter leftParameter;
+//
+//	while (!wsstream.eof())
+//	{
+//		wsstream >> tempWstring;
+//		
+//		if (tempWstring[0]<=L'9'&&tempWstring[0]>=L'0')
+//		{
+//			StringEnum se = WStringHelper::GetStringEnum(tempWstring);
+//			if (se == StringEnum::Int)
+//			{
+//				leftParameter.SetClassName(L"int");
+//				leftParameter.SetValue(tempWstring);
+//			}
+//			else if (se == StringEnum::Float)
+//			{
+//				leftParameter.SetClassName(L"float");
+//				leftParameter.SetValue(tempWstring);
+//			}
+//		}
+//		else if (tempWstring == L";")
+//		{
+//			return leftParameter;
+//		}
+//		else if(tempWstring == L"+")
+//		{
+//			Parameter wsv = dhyc(wsstream);
+//			leftParameter.GetClassPtr()->Add(wsv.GetClassPtr());
+//			return leftParameter;
+//		}
+//		else if (tempWstring == L"-")
+//		{
+//			Parameter wsv = dhyc(wsstream);
+//			leftParameter.GetClassPtr()->Subtract(wsv.GetClassPtr());
+//			return leftParameter;
+//		}
+//		else if (tempWstring == L"*")
+//		{
+//			Parameter wsv = dhyc(wsstream);
+//			leftParameter.GetClassPtr()->Multiple(wsv.GetClassPtr());
+//			return leftParameter;
+//		}
+//		else if (tempWstring == L"/")
+//		{
+//			Parameter wsv = dhyc(wsstream);
+//			leftParameter.GetClassPtr()->Divide(wsv.GetClassPtr());
+//			return leftParameter;
+//		}
+//		else
+//		{
+//			Parameter* tempP = GetParameter(tempWstring);
+//			if (tempP != nullptr)
+//			{
+//				leftParameter = *tempP;
+//			}
+//			else
+//			{
+//
+//			}
+//		}
+//	}
+//	return leftParameter;
+//}

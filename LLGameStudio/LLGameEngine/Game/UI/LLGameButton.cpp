@@ -25,3 +25,8 @@ void LLGameButton::Render()
 		GraphicsApi::GetGraphicsApi()->DrawText(propertyText.value, actualRect.left, actualRect.top, actualWidth, actualHeight);
 	}
 }
+
+void LLGameButton::SetText(wstring text)
+{
+	this->propertyText.SetValue(text);
+}

@@ -26,6 +26,8 @@ public:
 	void SetClassName(wstring className);
 	//获得变量类名
 	wstring GetClassName() const;
+	//根据运算符作相应算法
+	void DoFunctionByoperator(wchar_t wc, Parameter& p);
 private:
 	Class* classPtr = nullptr;
 	wstring name = L"p1";

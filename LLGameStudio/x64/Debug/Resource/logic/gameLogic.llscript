@@ -1,6 +1,17 @@
 int i = 1 ;
 int j = 7 ;
 string name = "hello world!" ;
+int timer = 0 ;
+
+void AddTimer ( )
+{
+	timer = timer + 1 ;
+}
+
+int GetTimer ( )
+{
+	return timer ;
+}
 
 void AddI ( )
 {

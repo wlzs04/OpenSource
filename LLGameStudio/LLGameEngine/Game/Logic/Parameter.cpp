@@ -73,3 +73,23 @@ wstring Parameter::GetClassName() const
 {
 	return classPtr->GetName();
 }
+
+void Parameter::DoFunctionByoperator(wchar_t wc, Parameter& p)
+{
+	if (wc == L'+')
+	{
+		classPtr->Add(p.GetClassPtr());
+	}
+	else if (wc == L'-')
+	{
+		classPtr->Subtract(p.GetClassPtr());
+	}
+	else if (wc == L'*')
+	{
+		classPtr->Multiple(p.GetClassPtr());
+	}
+	else if (wc == L'/')
+	{
+		classPtr->Divide(p.GetClassPtr());
+	}
+}
