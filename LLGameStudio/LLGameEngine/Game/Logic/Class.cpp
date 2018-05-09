@@ -33,6 +33,7 @@ Parameter* Class::GetParameter(wstring pName)
 	{
 		return parameterMap[pName];
 	}
+	return nullptr;
 }
 
 Function* Class::GetFunction(wstring fName)

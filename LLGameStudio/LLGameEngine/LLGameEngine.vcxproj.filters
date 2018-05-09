@@ -165,6 +165,27 @@
     <ClCompile Include="Game\Logic\LLScriptManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Logic\ScriptClass\Int.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\ScriptClass\bool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\ScriptClass\String.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\Parameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\ScriptClass\Float.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\ScriptClass\Void.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Logic\ScriptClass\Ptr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -330,6 +351,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Logic\ScriptClass\Float.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\ScriptClass\bool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\ScriptClass\String.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\ScriptClass\Ptr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,12 +1,31 @@
-int i = 0 ;
+int i = 1 ;
+int j = 7 ;
+string name = "hello world!" ;
 
 void AddI ( )
 {
+	int i = 0 ;
 	i = i + 12 ;
-	i = i + 3 ;
+	i = j * i ;
+}
+
+void AddI2 ( )
+{
+	i = i + 12 ;
+	i = j * i ;
 }
 
 int GetI ( )
 {
 	return i ;
+}
+
+void AddS ( )
+{
+	name = name + "byllscript" ;
+}
+
+string GetS ( )
+{
+	return name ;
 }

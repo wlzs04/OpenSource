@@ -2,6 +2,26 @@
 
 wstring_convert<codecvt_utf8<wchar_t>> WStringHelper::conv;
 
+StringEnum WStringHelper::GetStringEnum(wstring input)
+{
+	StringEnum tempE = StringEnum::Int;
+	for (int i=0;i<input.size();i++)
+	{
+		if ((input[i]<L'0' || L'9'<input[i]))
+		{
+			if (input[i] == L'.')
+			{
+				if (tempE == StringEnum::Int)
+				{
+					return StringEnum::Float;
+				}
+			}
+			return StringEnum::UnKnown;
+		}
+	}
+	return tempE;
+}
+
 int WStringHelper::GetInt(wstring& value)
 {
 	return _wtoi(value.c_str());
@@ -82,4 +102,16 @@ std::string WStringHelper::WStringToString(wstring value)
 std::wstring WStringHelper::StringToWString(string value)
 {
 	return conv.from_bytes(value);
+}
+
+unordered_map<wstring, int>& StringEnum::GetEnumMap()
+{
+	static unordered_map<wstring, int> anchorEnumMap;
+	if (anchorEnumMap.size() == 0)
+	{
+		anchorEnumMap[L"Int"] = Int;
+		anchorEnumMap[L"Float"] = Float;
+		anchorEnumMap[L"UnKnown"] = UnKnown;
+	}
+	return anchorEnumMap;
 }

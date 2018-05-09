@@ -2,10 +2,12 @@
 #include "Class.h"
 #include "LLScript.h"
 #include "LLScriptManager.h"
+#include "Parameter.h"
 
-Function::Function(wstring name, LLScript* scriptPtr, Class* classptr)
+Function::Function(wstring name, wstring returnClassName, LLScript* scriptPtr, Class* classptr)
 {
 	this->name = name;
+	this->returnClassName = returnClassName;
 	this->scriptPtr = scriptPtr;
 	this->classPtr = classPtr;
 }
@@ -16,13 +18,15 @@ Parameter Function::Run(vector<Parameter>* inputList)
 	{
 		for (int i = 0; i < inputList->size(); i++)
 		{
-			inputParameterList[i].value = (*inputList)[i].value;
+			Parameter* p=new Parameter(inputParameterList[i].GetClassName(), inputParameterList[i].GetName());
+			p->CopyClass(inputParameterList[i]);
+			localParameterMap[p->GetName()] = p;
 		}
 	}
 
 	wsstream.clear();
 	wsstream.str(content);
-	Parameter returnP;
+	Parameter returnP(returnClassName);
 
 	wstring tempWstring;
 	while (!wsstream.eof())
@@ -30,7 +34,7 @@ Parameter Function::Run(vector<Parameter>* inputList)
 		wsstream >> tempWstring;
 		if (wsstream.fail())
 		{
-			return returnP;
+			break;
 		}
 		if (tempWstring == L"return")
 		{
@@ -40,14 +44,29 @@ Parameter Function::Run(vector<Parameter>* inputList)
 			if (tempWstring2 == L";")
 			{
 				Parameter* pptr = GetParameter(tempWstring);
-
-				returnP.type = pptr->type;
-				returnP.value = pptr->value;
+				returnP.CopyClass(*pptr);
+				break;
 			}
 		}
 		else if (LLScriptManager::GetSingleInstance()->IsLegalType(tempWstring))
 		{
-
+			wstring typeName = tempWstring;
+			wstring tempName;
+			wsstream >> tempName;
+			wstring tempX;
+			wsstream >> tempX;
+			if (tempX == L"=")
+			{
+				wsstream >> tempX;
+				Parameter* p = new Parameter(typeName, tempName);
+				p->SetValue(tempX);
+				localParameterMap[tempName] = p;
+			}
+			else if (tempX == L";")
+			{
+				Parameter* p = new Parameter(typeName, tempName);
+				localParameterMap[tempName] = p;
+			}
 		}
 		else
 		{
@@ -57,16 +76,21 @@ Parameter Function::Run(vector<Parameter>* inputList)
 				wsstream >> tempWstring;
 				if (tempWstring==L"=")
 				{
-					pptr->value = dhyc(wsstream).value;
+					Parameter pd = dhyc(wsstream);
+					pptr->CopyClass(pd);
 				}
 			}
 			else
 			{
-				return returnP;
+				break;
 			}
 		}
 	}
-	
+	for (auto var : localParameterMap)
+	{
+		delete var.second;
+	}
+	localParameterMap.clear();
 	return returnP;
 }
 
@@ -102,6 +126,7 @@ Parameter* Function::GetParameter(wstring pName)
 			return tempP;
 		}
 	}
+	return tempP;
 }
 
 Parameter Function::dhyc(wistringstream& wsstream)
@@ -115,9 +140,17 @@ Parameter Function::dhyc(wistringstream& wsstream)
 		
 		if (tempWstring[0]<=L'9'&&tempWstring[0]>=L'0')
 		{
-			float value = WStringHelper::GetFloat(tempWstring);
-			leftParameter.value = to_wstring(value);
-			leftParameter.type = L"float";
+			StringEnum se = WStringHelper::GetStringEnum(tempWstring);
+			if (se == StringEnum::Int)
+			{
+				leftParameter.SetClassName(L"int");
+				leftParameter.SetValue(tempWstring);
+			}
+			else if (se == StringEnum::Float)
+			{
+				leftParameter.SetClassName(L"float");
+				leftParameter.SetValue(tempWstring);
+			}
 		}
 		else if (tempWstring == L";")
 		{
@@ -125,14 +158,27 @@ Parameter Function::dhyc(wistringstream& wsstream)
 		}
 		else if(tempWstring == L"+")
 		{
-			if (leftParameter.type == L"int" ||leftParameter.type == L"float")
-			{
-				float value = WStringHelper::GetFloat(leftParameter.value);
-				wstring wsv = dhyc(wsstream).value;
-				value+= WStringHelper::GetFloat(wsv);
-				leftParameter.value = to_wstring(value);
-				return leftParameter;
-			}
+			Parameter wsv = dhyc(wsstream);
+			leftParameter.GetClassPtr()->Add(wsv.GetClassPtr());
+			return leftParameter;
+		}
+		else if (tempWstring == L"-")
+		{
+			Parameter wsv = dhyc(wsstream);
+			leftParameter.GetClassPtr()->Subtract(wsv.GetClassPtr());
+			return leftParameter;
+		}
+		else if (tempWstring == L"*")
+		{
+			Parameter wsv = dhyc(wsstream);
+			leftParameter.GetClassPtr()->Multiple(wsv.GetClassPtr());
+			return leftParameter;
+		}
+		else if (tempWstring == L"/")
+		{
+			Parameter wsv = dhyc(wsstream);
+			leftParameter.GetClassPtr()->Divide(wsv.GetClassPtr());
+			return leftParameter;
 		}
 		else
 		{
@@ -141,6 +187,11 @@ Parameter Function::dhyc(wistringstream& wsstream)
 			{
 				leftParameter = *tempP;
 			}
+			else
+			{
+
+			}
 		}
 	}
+	return leftParameter;
 }

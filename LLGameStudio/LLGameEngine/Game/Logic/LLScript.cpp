@@ -30,7 +30,7 @@ Parameter LLScript::RunFunction(wstring functionName)
 	{
 		return functionMap[functionName]->Run();
 	}
-	return Parameter();
+	return Parameter(L"int");
 }
 
 Parameter* LLScript::GetParameter(wstring pName)
@@ -106,23 +106,19 @@ bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 				file >> tempX;
 				if (tempX == L"=")
 				{
-					file >> tempX;
-					Parameter* p = new Parameter();
-					p->name = tempName;
-					p->type = typeName;
-					p->value = tempX;
+					tempX = LoadValue(file);
+					Parameter* p=new Parameter(typeName,tempName);
+					p->SetValue(tempX);
 					parameterMap[tempName] = p;
 				}
 				else if (tempX == L";")
 				{
-					Parameter* p = new Parameter();
-					p->name = tempName;
-					p->type = typeName;
+					Parameter* p = new Parameter(typeName, tempName);
 					parameterMap[tempName] = p;
 				}
 				else if (tempX == L"(")
 				{
-					Function* function = new Function(tempName,this,classptr);
+					Function* function = new Function(tempName, typeName,this,classptr);
 					functionMap[tempName] = function;
 					LoadFunction(file, function);
 				}
@@ -190,4 +186,47 @@ bool LLScript::LoadClass(wifstream& file, Class* classptr)
 		}
 	}
 	return false;
+}
+
+wstring LLScript::LoadValue(wifstream & file)
+{
+	wsstream.clear();
+	wsstream.str(L"");
+	wchar_t tempWChar;
+	file>>tempWChar;
+	
+	if (tempWChar==L'"')
+	{
+		while (!file.eof())
+		{
+			file.get(tempWChar);
+			if (file.fail())
+			{
+				break;
+			}
+			if (tempWChar == L'"')
+			{
+				return wsstream.str();
+			}
+			wsstream << tempWChar;
+		}
+	}
+	else if(L'0' <= tempWChar && tempWChar <= L'9')
+	{
+		wsstream << tempWChar;
+		while (!file.eof())
+		{
+			file.get(tempWChar);
+			if (file.fail())
+			{
+				break;
+			}
+			if(tempWChar == L';')
+			{
+				return wsstream.str();
+			}
+			wsstream << tempWChar;
+		}
+	}
+	return wsstream.str();
 }

@@ -1,18 +1,15 @@
 #pragma once
 #include "..\Class.h"
 
-class Int:public Class
+class String :public Class
 {
 public:
-	Int() :Class(L"int") {}
+	String() :Class(L"string") {}
 	Class* GetInstance() override;
 	void SetValue(wstring value) override;
 	wstring GetValueToWString() override;
-	int GetValue();
+	wstring GetValue();
 	void Add(Class* classptr)override;
-	void Subtract(Class* classptr)override;
-	void Multiple(Class* classptr) override;
-	void Divide(Class* classptr) override;
 private:
-	int value;
+	wstring value;
 };

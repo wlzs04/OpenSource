@@ -2,12 +2,18 @@
 #include "ScriptClass\Int.h"
 #include "ScriptClass\Void.h"
 #include "ScriptClass\Float.h"
+#include "ScriptClass\String.h"
+#include "ScriptClass\Bool.h"
+#include "ScriptClass\Ptr.h"
 
 LLScriptManager::LLScriptManager()
 {
 	AddLegalType(new Int());
 	AddLegalType(new Void());
 	AddLegalType(new Float());
+	AddLegalType(new String());
+	AddLegalType(new Bool());
+	AddLegalType(new Ptr());
 }
 
 LLScriptManager* LLScriptManager::GetSingleInstance()

@@ -4,9 +4,11 @@ void LogicGame::InitUserData()
 {
 	scriptManager = LLScriptManager::GetSingleInstance();
 	scriptManager->LoadScriptFromFile(L"logic\\gameLogic.llscript");
-	scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"AddI");
-	Parameter p = scriptManager->RunFunction(L"logic\\gameLogic.llscript",L"GetI");
-	wstring y = p.value;
+	Parameter p;
+	scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"AddS");
+	p = scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"GetS");
+	//p = scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"GetI");
+	int u = 0;
 }
 
 void LogicGame::UpdateUserData()
