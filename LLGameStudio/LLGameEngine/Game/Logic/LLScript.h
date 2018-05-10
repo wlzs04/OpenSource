@@ -16,7 +16,7 @@ protected:
 	bool LoadUnknown(wifstream& file, Class* classptr);
 	bool LoadFunction(wifstream& file, Function* functionptr);
 	bool LoadClass(wifstream& file, Class* classptr);
-	wstring LoadValue(wifstream& file);
+	Parameter LoadValue(wifstream& file);
 	wstring filePath = L"";
 	unordered_map<wstring, Class*> classMap;
 	unordered_map<wstring, Function*> functionMap;

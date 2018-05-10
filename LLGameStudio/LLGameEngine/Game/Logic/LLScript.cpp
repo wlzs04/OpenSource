@@ -1,6 +1,7 @@
 ﻿#include "LLScript.h"
 #include "LLScriptManager.h"
 #include "..\..\Common\Helper\SystemHelper.h"
+#include "LLScriptGrammar.h"
 
 LLScript::LLScript(wstring filePath)
 {
@@ -39,6 +40,7 @@ Parameter* LLScript::GetParameter(wstring pName)
 	{
 		return parameterMap[pName];
 	}
+	return nullptr;
 }
 
 Function* LLScript::GetFunction(wstring fName)
@@ -47,6 +49,7 @@ Function* LLScript::GetFunction(wstring fName)
 	{
 		return functionMap[fName];
 	}
+	return nullptr;
 }
 
 bool LLScript::LoadScriptFromFile()
@@ -66,66 +69,126 @@ bool LLScript::LoadScriptFromFile()
 
 bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 {
-	wstring tempWstring;
+	wchar_t tempWChar;
+	wstring tempWString;
 	while (!file.eof())
 	{
-		file >> tempWstring;
+		file >> tempWChar;
 		if (file.fail())
 		{
 			return true;
 		}
-
-		if (tempWstring == L"#include")
+		if (tempWChar == L'#')
 		{
-			file >> tempWstring;
-			LLScriptManager::GetSingleInstance()->LoadScriptFromFile(tempWstring);
+			file >> tempWString;
+			if (tempWString == L"include")
+			{
+				file >> tempWString;
+				LLScriptManager::GetSingleInstance()->LoadScriptFromFile(tempWString.substr(1, tempWString.size()-2));
+			}
 		}
-		else if (tempWstring == L"class")
+		else if (tempWChar == L'/')
 		{
-			file >> tempWstring;
-			Class* classptr = new Class(tempWstring);
-			LLScriptManager::GetSingleInstance()->AddLegalType(classptr);
-			classMap[tempWstring] = classptr;
-			LoadClass(file, classptr);
+			file.get(tempWChar);
+			if (tempWChar == L'*')
+			{
+				file.get(tempWChar);
+				while (true)
+				{
+					if (tempWChar == L'*')
+					{
+						file.get(tempWChar);
+						if (tempWChar == L'/')
+						{
+							break;
+						}
+					}
+					file.get(tempWChar);
+				}
+			}
+			else if (tempWChar == L'/')
+			{
+				file.get(tempWChar);
+				while (tempWChar != L'\n')
+				{
+					file.get(tempWChar);
+				}
+			}
 		}
-		else if (tempWstring == L"}")
+		else if (tempWChar == L'}')
 		{
 			return true;
 		}
-		else if (tempWstring == L";")
+		else if (tempWChar == L';')
 		{
 		}
 		else
 		{
-			if (LLScriptManager::GetSingleInstance()->IsLegalType(tempWstring))
+			wsstream.clear();
+			wsstream.str(L"");
+			wsstream << tempWChar;
+			file.get(tempWChar);
+
+			while (!LLScriptGrammar::WCharIsSpecial(tempWChar))
 			{
-				wstring typeName = tempWstring;
-				wstring tempName;
-				file >> tempName;
-				wstring tempX;
-				file >> tempX;
-				if (tempX == L"=")
-				{
-					tempX = LoadValue(file);
-					Parameter* p=new Parameter(typeName,tempName);
-					p->SetValue(tempX);
-					parameterMap[tempName] = p;
-				}
-				else if (tempX == L";")
-				{
-					Parameter* p = new Parameter(typeName, tempName);
-					parameterMap[tempName] = p;
-				}
-				else if (tempX == L"(")
-				{
-					Function* function = new Function(tempName, typeName,this,classptr);
-					functionMap[tempName] = function;
-					LoadFunction(file, function);
-				}
+				wsstream << tempWChar;
+				file.get(tempWChar);
+			}
+			tempWString = wsstream.str();
+
+			if (tempWString == L"class")
+			{
+				file >> tempWString;
+				Class* classptr = new Class(tempWString);
+				LLScriptManager::GetSingleInstance()->AddLegalType(classptr);
+				classMap[tempWString] = classptr;
+				LoadClass(file, classptr);
 			}
 			else
 			{
-				return false;
+				if (LLScriptManager::GetSingleInstance()->IsLegalType(tempWString))
+				{
+					wstring typeName = tempWString;
+					file.get(tempWChar);
+					wsstream.clear();
+					wsstream.str(L"");
+
+					while (!LLScriptGrammar::WCharIsSpecial(tempWChar))
+					{
+						wsstream << tempWChar;
+						file.get(tempWChar);
+					}
+
+					wstring tempName = wsstream.str();
+
+					while (LLScriptGrammar::WCharCanIgnore(tempWChar))
+					{
+						file.get(tempWChar);
+					}
+					
+					if (tempWChar == L'=')
+					{
+						Parameter tempP = LoadValue(file);
+						Parameter* p = new Parameter(typeName, tempName);
+						p->SetValue(tempP.GetValueToWString());
+						parameterMap[tempName] = p;
+					}
+					else if (tempWChar == L';')
+					{
+						Parameter* p = new Parameter(typeName, tempName);
+						parameterMap[tempName] = p;
+					}
+					else if (tempWChar == L'(')
+					{
+						Function* function = new Function(tempName, typeName, this, classptr);
+						functionMap[tempName] = function;
+						LoadFunction(file, function);
+					}
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 	}
@@ -188,13 +251,15 @@ bool LLScript::LoadClass(wifstream& file, Class* classptr)
 	return false;
 }
 
-wstring LLScript::LoadValue(wifstream & file)
+Parameter LLScript::LoadValue(wifstream & file)
 {
+	Parameter leftParameter;
 	wsstream.clear();
 	wsstream.str(L"");
 	wchar_t tempWChar;
+	wstring tempWStirng;
 	file>>tempWChar;
-	
+
 	if (tempWChar==L'"')
 	{
 		while (!file.eof())
@@ -206,7 +271,9 @@ wstring LLScript::LoadValue(wifstream & file)
 			}
 			if (tempWChar == L'"')
 			{
-				return wsstream.str();
+				leftParameter.SetClassName(L"string");
+				leftParameter.SetValue(wsstream.str());
+				return leftParameter;
 			}
 			wsstream << tempWChar;
 		}
@@ -221,12 +288,42 @@ wstring LLScript::LoadValue(wifstream & file)
 			{
 				break;
 			}
-			if(tempWChar == L';')
+			if(tempWChar == L';'|| tempWChar == L' ')
 			{
-				return wsstream.str();
+				tempWStirng = wsstream.str();
+				StringEnum se = WStringHelper::GetStringEnum(tempWStirng);
+				if (se == StringEnum::Int)
+				{
+					leftParameter.SetClassName(L"int");
+				}
+				else
+				{
+					leftParameter.SetClassName(L"float");
+				}
+				leftParameter.SetValue(tempWStirng);
+				return leftParameter;
 			}
 			wsstream << tempWChar;
 		}
 	}
-	return wsstream.str();
+	else
+	{
+		wsstream << tempWChar;
+		file.get(tempWChar);
+		while (!LLScriptGrammar::WCharIsSpecial(tempWChar))
+		{
+			wsstream << tempWChar;
+			file.get(tempWChar);
+		}
+		tempWStirng = wsstream.str();
+		if (LLScriptGrammar::WStringIsKeyWord(tempWStirng))
+		{
+			if (tempWStirng == L"true" || tempWStirng == L"false")
+			{
+				leftParameter.SetClassName(L"bool");
+				leftParameter.SetValue(tempWStirng);
+			}
+		}
+	}
+	return leftParameter;
 }

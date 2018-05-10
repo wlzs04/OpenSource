@@ -16,6 +16,12 @@ public:
 	virtual void Subtract(Class* classptr) {};
 	virtual void Multiple(Class* classptr) {};
 	virtual void Divide(Class* classptr) {};
+	//取余
+	virtual void Complementation(Class* classptr) {};
+	//交集
+	virtual void Intersection(Class* classptr) {};
+	//并集
+	virtual void Union (Class* classptr) {};
 protected:
 	wstring name;//类名
 	unordered_map<wstring, Parameter*> parameterMap;

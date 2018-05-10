@@ -13,6 +13,9 @@ public:
 	void Subtract(Class* classptr)override;
 	void Multiple(Class* classptr) override;
 	void Divide(Class* classptr) override;
+
+	virtual void Complementation(Class* classptr) override;
+
 private:
 	int value;
 };

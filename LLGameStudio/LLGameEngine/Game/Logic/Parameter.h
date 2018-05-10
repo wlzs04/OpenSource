@@ -28,6 +28,8 @@ public:
 	wstring GetClassName() const;
 	//根据运算符作相应算法
 	void DoFunctionByoperator(wchar_t wc, Parameter& p);
+	//是否为空变量
+	bool IsEmpty();
 private:
 	Class* classPtr = nullptr;
 	wstring name = L"p1";

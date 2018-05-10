@@ -18,7 +18,7 @@ LLScriptManager::LLScriptManager()
 
 LLScriptManager* LLScriptManager::GetSingleInstance()
 {
-	LLScriptManager* scriptManager = new LLScriptManager();
+	static LLScriptManager* scriptManager = new LLScriptManager();
 	return scriptManager;
 }
 

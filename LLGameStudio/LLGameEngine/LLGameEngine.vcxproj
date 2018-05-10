@@ -144,6 +144,7 @@
     <ClCompile Include="Game\Logic\Class.cpp" />
     <ClCompile Include="Game\Logic\Function.cpp" />
     <ClCompile Include="Game\Logic\LLScript.cpp" />
+    <ClCompile Include="Game\Logic\LLScriptGrammar.cpp" />
     <ClCompile Include="Game\Logic\LLScriptManager.cpp" />
     <ClCompile Include="Game\Logic\Parameter.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\bool.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Game\Logic\Class.h" />
     <ClInclude Include="Game\Logic\Function.h" />
     <ClInclude Include="Game\Logic\LLScript.h" />
+    <ClInclude Include="Game\Logic\LLScriptGrammar.h" />
     <ClInclude Include="Game\Logic\LLScriptManager.h" />
     <ClInclude Include="Game\Logic\Parameter.h" />
     <ClInclude Include="Game\Logic\ScriptClass\bool.h" />

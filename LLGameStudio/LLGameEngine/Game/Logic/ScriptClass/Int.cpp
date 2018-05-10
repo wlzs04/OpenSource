@@ -68,3 +68,11 @@ void Int::Divide(Class * classptr)
 		value = value / ((Float*)classptr)->GetValue();
 	}
 }
+
+void Int::Complementation(Class* classptr)
+{
+	if (classptr->GetName() == L"int")
+	{
+		value = value % ((Int*)classptr)->GetValue();
+	}
+}

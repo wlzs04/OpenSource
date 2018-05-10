@@ -42,4 +42,5 @@ Function* Class::GetFunction(wstring fName)
 	{
 		return functionMap[fName];
 	}
+	return nullptr;
 }

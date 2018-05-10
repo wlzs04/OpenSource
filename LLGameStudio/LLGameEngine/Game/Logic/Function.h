@@ -18,19 +18,20 @@ protected:
 	wstring name = L"";
 	wstring returnClassName = L"int";
 	wstring content = L"";
+	Parameter returnP; 
 private:
 	//寻找有效的变量，顺序为方法内变量，类变量，全局变量。
 	Parameter* GetParameter(wstring pName);
 	//获得右侧的值当作临时变量。
-	Parameter GetTempValue(wistringstream& wsstream);
+	Parameter GetTempValue(wstringstream& wsstream);
 	//获得等号右侧的值。
 	//Parameter dhyc(wistringstream& wsstream);
-	//脚本语言语法：是否是可忽略字符
-	bool WCharCanIgnore(wchar_t wc);
-	//脚本语言语法：是否为特殊符号，用来截断读取的标记
-	bool WCharSpecial(wchar_t wc);
-	//脚本语言语法：是否为运算符号
-	bool WCharIsOperator(wchar_t wc);
-	wistringstream  wsstream;
+	Function* GetFunction(wstring fName);
+	//在作用域中运行，大括号包围内的内容为一个作用域
+	void RunInSpace(wstringstream& wsstream);
+	//跳过作用域，大括号包围内的内容为一个作用域
+	void JumpOverSpace(wstringstream& wsstream);
+	wstringstream  wsstream;
+	wostringstream  valueStream;
 	
 };

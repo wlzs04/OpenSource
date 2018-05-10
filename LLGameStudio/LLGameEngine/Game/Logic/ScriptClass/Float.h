@@ -13,6 +13,7 @@ public:
 	void Subtract(Class* classptr)override;
 	void Multiple(Class* classptr)override;
 	void Divide(Class* classptr)override;
+
 private:
 	float value;
 };

@@ -15,14 +15,25 @@ Parameter::Parameter(wstring className, wstring name)
 
 Parameter::Parameter(const Parameter& p)
 {
-	classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(p.GetClassName());
-	classPtr->SetValue(p.GetValueToWString());
+	if (p.classPtr != nullptr)
+	{
+		classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(p.GetClassName());
+		classPtr->SetValue(p.GetValueToWString());
+	}
 }
 
 Parameter & Parameter::operator=(const Parameter & p)
 {
-	classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(p.GetClassName());
-	classPtr->SetValue(p.GetValueToWString());
+	if (classPtr != nullptr)
+	{
+		delete classPtr;
+		classPtr = nullptr;
+	}
+	if (p.classPtr != nullptr)
+	{
+		classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(p.GetClassName());
+		classPtr->SetValue(p.GetValueToWString());
+	}
 	return *this;
 }
 
@@ -42,8 +53,16 @@ Class* Parameter::GetClassPtr()
 
 void Parameter::CopyClass(Parameter & p)
 {
-	classPtr = p.classPtr->GetInstance();
-	classPtr->SetValue(p.classPtr->GetValueToWString());
+	if (classPtr != nullptr)
+	{
+		delete classPtr;
+		classPtr = nullptr;
+	}
+	if (p.classPtr != nullptr)
+	{
+		classPtr = p.classPtr->GetInstance();
+		classPtr->SetValue(p.classPtr->GetValueToWString());
+	}
 }
 
 wstring Parameter::GetName() const
@@ -92,4 +111,21 @@ void Parameter::DoFunctionByoperator(wchar_t wc, Parameter& p)
 	{
 		classPtr->Divide(p.GetClassPtr());
 	}
+	else if (wc == L'%')
+	{
+		classPtr->Complementation(p.GetClassPtr());
+	}
+	else if (wc == L'&')
+	{
+		classPtr->Intersection(p.GetClassPtr());
+	}
+	else if (wc == L'|')
+	{
+		classPtr->Union(p.GetClassPtr());
+	}
+}
+
+bool Parameter::IsEmpty()
+{
+	return classPtr==nullptr;
 }

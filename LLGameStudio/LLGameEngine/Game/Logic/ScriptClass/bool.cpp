@@ -7,7 +7,7 @@ Class * Bool::GetInstance()
 
 void Bool::SetValue(wstring value)
 {
-	this->value = WStringHelper::GetBool(value);
+	this->value = value!=L"0" && value != L"false";
 }
 
 wstring Bool::GetValueToWString()
@@ -18,4 +18,20 @@ wstring Bool::GetValueToWString()
 bool Bool::GetValue()
 {
 	return value;
+}
+
+void Bool::Intersection(Class* classptr)
+{
+	if (classptr->GetName() == L"bool")
+	{
+		value = value && ((Bool*)classptr)->GetValue();
+	}
+}
+
+void Bool::Union(Class* classptr)
+{
+	if (classptr->GetName() == L"bool")
+	{
+		value = value || ((Bool*)classptr)->GetValue();
+	}
 }

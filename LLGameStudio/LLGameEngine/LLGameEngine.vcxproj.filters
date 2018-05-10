@@ -186,6 +186,9 @@
     <ClCompile Include="Game\Logic\ScriptClass\Ptr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Logic\LLScriptGrammar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -360,6 +363,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Logic\ScriptClass\Ptr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Logic\LLScriptGrammar.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

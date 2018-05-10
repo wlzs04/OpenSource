@@ -1,8 +1,10 @@
-#include "Function.h"
+Ôªø#include "Function.h"
 #include "Class.h"
 #include "LLScript.h"
 #include "LLScriptManager.h"
 #include "Parameter.h"
+#include "LLScriptGrammar.h"
+#include "ScriptClass\bool.h"
 
 Function::Function(wstring name, wstring returnClassName, LLScript* scriptPtr, Class* classptr)
 {
@@ -24,73 +26,18 @@ Parameter Function::Run(vector<Parameter>* inputList)
 		}
 	}
 
-	wsstream.clear();
 	wsstream.str(content);
-	Parameter returnP(returnClassName);
+	returnP = Parameter(returnClassName);
 
-	wstring tempWstring;
-	while (!wsstream.eof())
-	{
-		wsstream >> tempWstring;
-		if (wsstream.fail())
-		{
-			break;
-		}
-		if (tempWstring == L"return")
-		{
-			wsstream >> tempWstring;
-			wstring tempWstring2;
-			wsstream >> tempWstring2;
-			if (tempWstring2 == L";")
-			{
-				Parameter* pptr = GetParameter(tempWstring);
-				returnP.CopyClass(*pptr);
-				break;
-			}
-		}
-		else if (LLScriptManager::GetSingleInstance()->IsLegalType(tempWstring))
-		{
-			wstring typeName = tempWstring;
-			wstring tempName;
-			wsstream >> tempName;
-			wstring tempX;
-			wsstream >> tempX;
-			if (tempX == L"=")
-			{
-				wsstream >> tempX;
-				Parameter* p = new Parameter(typeName, tempName);
-				p->SetValue(tempX);
-				localParameterMap[tempName] = p;
-			}
-			else if (tempX == L";")
-			{
-				Parameter* p = new Parameter(typeName, tempName);
-				localParameterMap[tempName] = p;
-			}
-		}
-		else
-		{
-			Parameter* pptr = GetParameter(tempWstring);
-			if (pptr != nullptr)
-			{
-				wsstream >> tempWstring;
-				if (tempWstring==L"=")
-				{
-					Parameter pd = GetTempValue(wsstream);
-					pptr->CopyClass(pd);
-				}
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
+	RunInSpace(wsstream);
+	
 	for (auto var : localParameterMap)
 	{
 		delete var.second;
 	}
 	localParameterMap.clear();
+	wsstream.str(L"");
+	wsstream.clear();
 	return returnP;
 }
 
@@ -105,20 +52,16 @@ Parameter* Function::GetParameter(wstring pName)
 	if (localParameterMap.count(pName) != 0)
 	{
 		tempP = localParameterMap[pName];
-		if(tempP!=nullptr)
-		{
-			return tempP;
-		}
 	}
-	if (classPtr != nullptr)
+	else if (classPtr != nullptr)
 	{
-		tempP = classPtr->GetParameter(pName); 
+		tempP = classPtr->GetParameter(pName);
 		if (tempP != nullptr)
 		{
 			return tempP;
 		}
 	}
-	if (scriptPtr != nullptr)
+	else if (scriptPtr != nullptr)
 	{
 		tempP = scriptPtr->GetParameter(pName);
 		if (tempP != nullptr)
@@ -129,20 +72,20 @@ Parameter* Function::GetParameter(wstring pName)
 	return tempP;
 }
 
-Parameter Function::GetTempValue(wistringstream & wsstream)
+Parameter Function::GetTempValue(wstringstream & wsstream)
 {
-	wchar_t tempWChar;
+	wchar_t tempWChar=L' ';
 	bool startCheck = false;
 	Parameter leftParameter;
-	wostringstream  valueStream;
+	valueStream.clear();
+	valueStream.str(L"");
 	wstring tempWString;
 
 	while (!wsstream.eof())
 	{
-		wsstream.get(tempWChar);
 		if (!wsstream.fail())
 		{
-			if (WCharCanIgnore(tempWChar))
+			if (LLScriptGrammar::WCharCanIgnore(tempWChar))
 			{
 				if (startCheck)
 				{
@@ -150,14 +93,23 @@ Parameter Function::GetTempValue(wistringstream & wsstream)
 				}
 				else
 				{
+					wsstream.get(tempWChar);
 					continue;
 				}
+			}
+			else if (tempWChar == L')')
+			{
+				return leftParameter;
+			}
+			else if (tempWChar == L',')
+			{
+				return leftParameter;
 			}
 			else if (tempWChar == L';')
 			{
 				return leftParameter;
 			}
-			else if(WCharIsOperator(tempWChar))
+			else if (LLScriptGrammar::WCharIsOperator(tempWChar))
 			{
 				Parameter tempP = GetTempValue(wsstream);
 				leftParameter.DoFunctionByoperator(tempWChar, tempP);
@@ -167,10 +119,10 @@ Parameter Function::GetTempValue(wistringstream & wsstream)
 			{
 				valueStream << tempWChar;
 				wsstream.get(tempWChar);
-				while (tempWChar != L' ')
+				while (tempWChar != L' '&& tempWChar != L';' && LLScriptGrammar::WCharIsOperator(tempWChar))
 				{
-					wsstream.get(tempWChar);
 					valueStream << tempWChar;
+					wsstream.get(tempWChar);
 				}
 				tempWString = valueStream.str();
 
@@ -179,13 +131,13 @@ Parameter Function::GetTempValue(wistringstream & wsstream)
 				{
 					leftParameter.SetClassName(L"int");
 				}
-				else if(es == StringEnum::Float)
+				else if (es == StringEnum::Float)
 				{
 					leftParameter.SetClassName(L"float");
 				}
 				leftParameter.SetValue(tempWString);
 			}
-			else if(tempWChar==L'"')
+			else if (tempWChar == L'"')
 			{
 				wsstream.get(tempWChar);
 
@@ -195,22 +147,46 @@ Parameter Function::GetTempValue(wistringstream & wsstream)
 					wsstream.get(tempWChar);
 				}
 				leftParameter.SetClassName(L"string");
-				leftParameter.SetValue(valueStream.str()) ;
+				leftParameter.SetValue(valueStream.str());
+				return leftParameter;
 			}
 			else
 			{
 				valueStream << tempWChar;
 				wsstream.get(tempWChar);
-				while (!WCharSpecial(tempWChar))
+				while (!LLScriptGrammar::WCharIsSpecial(tempWChar))
 				{
 					valueStream << tempWChar;
 					wsstream.get(tempWChar);
 				}
 				tempWString = valueStream.str();
-				Parameter* tempP = GetParameter(tempWString);
-				if (tempP != nullptr)
+
+				Function* tempF = GetFunction(tempWString);
+				if (tempF != nullptr)
 				{
-					leftParameter = *tempP;
+					if (LLScriptGrammar::WCharCanIgnore(tempWChar))
+					{
+						wsstream >> tempWChar;
+					}
+					if (tempWChar == L'(')
+					{
+						//ËØªÂèñÊñπÊ≥ïÂÜÖÂèÇÊï∞„ÄÇ
+						vector<Parameter> inputNewList;
+						Parameter tempInputP = GetTempValue(wsstream);
+						while (!tempInputP.IsEmpty())
+						{
+							inputNewList.push_back(tempInputP);
+						}
+						leftParameter = tempF->Run(&inputNewList);
+					}
+				}
+				else
+				{
+					Parameter* tempP = GetParameter(tempWString);
+					if (tempP != nullptr)
+					{
+						leftParameter = *tempP;
+					}
 				}
 			}
 		}
@@ -218,99 +194,307 @@ Parameter Function::GetTempValue(wistringstream & wsstream)
 	return leftParameter;
 }
 
-bool Function::WCharCanIgnore(wchar_t wc)
+Function * Function::GetFunction(wstring fName)
 {
-	return (wc == L' ')//∞ÎΩ«ø’∏Ò 
-		|| (wc == L'°°') //»´Ω«ø’∏Ò£® ‰»Î∑®øÏΩ›º¸Shift+Spaceø…“‘«–ªª∞ÎΩ«∫Õ»´Ω«£©
-		|| wc == L'\n' //ªª––
-		|| wc == L'\r'//ªÿ≥µ£®°∞\r°±∫Õ°∞\r\n°±±‡¬Î“ª—˘£©
-		|| wc == L'\t'//ÀÆ∆Ω÷∆±Ì∑˚
-		;
+	Function* tempF = nullptr;
+	if (classPtr != nullptr)
+	{
+		tempF = classPtr->GetFunction(fName);
+		if (tempF != nullptr)
+		{
+			return tempF;
+		}
+	}
+	else if (scriptPtr != nullptr)
+	{
+		tempF = scriptPtr->GetFunction(fName);
+		if (tempF != nullptr)
+		{
+			return tempF;
+		}
+	}
+	return tempF;
 }
 
-bool Function::WCharSpecial(wchar_t wc)
+void Function::RunInSpace(wstringstream & wsstream)
 {
-	return (wc == L' ')//∞ÎΩ«ø’∏Ò 
-		|| (wc == L'.') //µ„
-		|| wc == L';' //∑÷∫≈
-		;
+	valueStream.clear();
+	valueStream.str(L"");
+	wchar_t tempWchar;
+	while (!wsstream.eof())
+	{
+		wsstream >> tempWchar;
+		if (wsstream.fail())
+		{
+			break;
+		}
+		if (tempWchar == L';')
+		{
+
+		}
+		else if (tempWchar == L'}')
+		{
+			break;
+		}
+		else if (tempWchar == L'/')
+		{
+			wsstream.get(tempWchar);
+			if (tempWchar == L'/')
+			{
+				wsstream.get(tempWchar);
+				while (tempWchar != L'\n')
+				{
+					wsstream.get(tempWchar);
+				}
+			}
+		}
+		else
+		{
+			wstring tempWString;
+			valueStream.str(L"");
+			valueStream << tempWchar;
+			wsstream.get(tempWchar);
+			while (!LLScriptGrammar::WCharIsSpecial(tempWchar))
+			{
+				valueStream << tempWchar;
+				wsstream.get(tempWchar);
+			}
+			tempWString = valueStream.str();
+			valueStream.str(L"");
+			if (LLScriptGrammar::WStringIsKeyWord(tempWString))
+			{
+				if (tempWString == L"return")
+				{
+					Parameter tempP = GetTempValue(wsstream);
+					returnP.CopyClass(tempP);
+					break;
+				}
+				else if(tempWString == L"else")
+				{
+					valueStream.str(L"");
+					wsstream >> tempWchar;
+					while (!LLScriptGrammar::WCharIsSpecial(tempWchar))
+					{
+						valueStream << tempWchar;
+						wsstream.get(tempWchar);
+					}
+					tempWString = valueStream.str();
+					if (tempWString == L"if")
+					{
+						while (tempWchar!=L'{')
+						{
+							wsstream.get(tempWchar);
+						}
+						{
+							JumpOverSpace(wsstream);
+						}
+					}
+					else if (tempWString == L"{")
+					{
+						JumpOverSpace(wsstream);
+					}
+				}
+				else if (tempWString == L"if")
+				{
+					while (true)
+					{
+						while (LLScriptGrammar::WCharCanIgnore(tempWchar))
+						{
+							wsstream.get(tempWchar);
+						}
+						if (tempWchar == L'(')
+						{
+							Parameter tempP = GetTempValue(wsstream);
+							if (((Bool*)tempP.GetClassPtr())->GetValue())
+							{
+								wsstream >> tempWchar;
+								if (tempWchar == L'{')
+								{
+									RunInSpace(wsstream);
+									break;
+								}
+							}
+							else
+							{
+								wsstream >> tempWchar;
+								if (tempWchar == L'{')
+								{
+									JumpOverSpace(wsstream);
+								}
+							}
+						}
+						valueStream.clear();
+						valueStream.str(L"");
+						wsstream >> tempWchar;
+						while (!LLScriptGrammar::WCharIsSpecial(tempWchar))
+						{
+							valueStream << tempWchar;
+							wsstream.get(tempWchar);
+						}
+						tempWString = valueStream.str();
+						valueStream.str(L"");
+						if (tempWString == L"else")
+						{
+							valueStream.str(L"");
+							wsstream >> tempWchar;
+							while (!LLScriptGrammar::WCharIsSpecial(tempWchar)|| tempWchar==L'{')
+							{
+								valueStream << tempWchar;
+								wsstream.get(tempWchar);
+							}
+							tempWString = valueStream.str();
+							if (tempWString == L"if")
+							{
+								continue;
+							}
+							else if (tempWString == L"{")
+							{
+								RunInSpace(wsstream);
+								break;
+							}
+						}
+					}
+				}
+				else if(tempWString == L"while")
+				{
+					while (LLScriptGrammar::WCharCanIgnore(tempWchar))
+					{
+						wsstream.get(tempWchar);
+					}
+					if (tempWchar == L'(')
+					{
+						streampos temppos = wsstream.tellg();
+						while (true)
+						{
+							wsstream.seekg(temppos);
+							Parameter tempP = GetTempValue(wsstream);
+							wsstream >> tempWchar;
+							if (tempWchar == L'{')
+							{
+								if (((Bool*)tempP.GetClassPtr())->GetValue())
+								{
+									RunInSpace(wsstream);
+								}
+								else
+								{
+									JumpOverSpace(wsstream);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (LLScriptManager::GetSingleInstance()->IsLegalType(tempWString))
+			{
+				wstring typeName = tempWString;
+				wsstream.get(tempWchar);
+				valueStream.clear();
+				valueStream.str(L"");
+
+				while (!LLScriptGrammar::WCharIsSpecial(tempWchar))
+				{
+					valueStream << tempWchar;
+					wsstream.get(tempWchar);
+				}
+
+				wstring tempName = valueStream.str();
+
+				while (LLScriptGrammar::WCharCanIgnore(tempWchar))
+				{
+					wsstream.get(tempWchar);
+				}
+
+				if (tempWchar == L'=')
+				{
+					Parameter pd = GetTempValue(wsstream);
+					Parameter* p = new Parameter(typeName, tempName);
+					p->CopyClass(pd);
+					localParameterMap[tempName] = p;
+				}
+				else if (tempWchar == L';')
+				{
+					Parameter* p = new Parameter(typeName, tempName);
+					localParameterMap[tempName] = p;
+				}
+			}
+			else
+			{
+				Function* tempF = GetFunction(tempWString);
+				if (tempF != nullptr)
+				{
+					if (LLScriptGrammar::WCharCanIgnore(tempWchar))
+					{
+						wsstream >> tempWchar;
+					}
+					if (tempWchar == L'(')
+					{
+						//ËØªÂèñÊñπÊ≥ïÂÜÖÂèÇÊï∞„ÄÇ
+						vector<Parameter> inputNewList;
+						Parameter tempInputP = GetTempValue(wsstream);
+						while (!tempInputP.IsEmpty())
+						{
+							inputNewList.push_back(tempInputP);
+						}
+						tempF->Run(&inputNewList);
+					}
+				}
+				else
+				{
+					Parameter* pptr = GetParameter(tempWString);
+					if (pptr != nullptr)
+					{
+						while (LLScriptGrammar::WCharCanIgnore(tempWchar))
+						{
+							wsstream.get(tempWchar);
+						}
+
+						if (tempWchar == L'=')
+						{
+							Parameter pd = GetTempValue(wsstream);
+							pptr->CopyClass(pd);
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
-bool Function::WCharIsOperator(wchar_t wc)
+void Function::JumpOverSpace(wstringstream & wsstream)
 {
-	return (wc == L'+')//º”
-		|| (wc == L'-') //ºı
-		|| wc == L'*' //≥À
-		|| wc == L'/' //≥˝
-		|| wc == L'%' //»°”‡
-		|| wc == L'&' //Ωª
-		|| wc == L'|' //≤¢
-		;
-}
+	wchar_t tempWchar;
+	bool inString = false;
 
-//Parameter Function::dhyc(wistringstream& wsstream)
-//{
-//	wstring tempWstring;
-//	Parameter leftParameter;
-//
-//	while (!wsstream.eof())
-//	{
-//		wsstream >> tempWstring;
-//		
-//		if (tempWstring[0]<=L'9'&&tempWstring[0]>=L'0')
-//		{
-//			StringEnum se = WStringHelper::GetStringEnum(tempWstring);
-//			if (se == StringEnum::Int)
-//			{
-//				leftParameter.SetClassName(L"int");
-//				leftParameter.SetValue(tempWstring);
-//			}
-//			else if (se == StringEnum::Float)
-//			{
-//				leftParameter.SetClassName(L"float");
-//				leftParameter.SetValue(tempWstring);
-//			}
-//		}
-//		else if (tempWstring == L";")
-//		{
-//			return leftParameter;
-//		}
-//		else if(tempWstring == L"+")
-//		{
-//			Parameter wsv = dhyc(wsstream);
-//			leftParameter.GetClassPtr()->Add(wsv.GetClassPtr());
-//			return leftParameter;
-//		}
-//		else if (tempWstring == L"-")
-//		{
-//			Parameter wsv = dhyc(wsstream);
-//			leftParameter.GetClassPtr()->Subtract(wsv.GetClassPtr());
-//			return leftParameter;
-//		}
-//		else if (tempWstring == L"*")
-//		{
-//			Parameter wsv = dhyc(wsstream);
-//			leftParameter.GetClassPtr()->Multiple(wsv.GetClassPtr());
-//			return leftParameter;
-//		}
-//		else if (tempWstring == L"/")
-//		{
-//			Parameter wsv = dhyc(wsstream);
-//			leftParameter.GetClassPtr()->Divide(wsv.GetClassPtr());
-//			return leftParameter;
-//		}
-//		else
-//		{
-//			Parameter* tempP = GetParameter(tempWstring);
-//			if (tempP != nullptr)
-//			{
-//				leftParameter = *tempP;
-//			}
-//			else
-//			{
-//
-//			}
-//		}
-//	}
-//	return leftParameter;
-//}
+	while (!wsstream.eof())
+	{
+		wsstream >> tempWchar;
+		if (wsstream.fail())
+		{
+			break;
+		}
+		if (tempWchar == L'"')
+		{
+			if (inString)
+			{
+				inString = false;
+			}
+			else
+			{
+				inString = true;
+			}
+		}
+		else if(tempWchar == L'{')
+		{
+			JumpOverSpace(wsstream);
+		}
+		else if(tempWchar == L'}')
+		{
+			break;
+		}
+	}
+}
