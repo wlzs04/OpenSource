@@ -3,7 +3,14 @@
 
 Class * Float::GetInstance()
 {
-	return new Float();
+	Float* f = new Float();
+	f->SetValue(value);
+	return f;
+}
+
+void Float::SetValue(float value)
+{
+	this->value = value;
 }
 
 void Float::SetValue(wstring value)
@@ -21,50 +28,114 @@ float Float::GetValue()
 	return value;
 }
 
-void Float::Add(Class * classptr)
+Parameter Float::Add(Class * classptr)
 {
+	Parameter p(L"float");
 	if (classptr->GetName() == L"int")
 	{
-		value = value + ((Int*)classptr)->GetValue();
+		p.SetValue(to_wstring(value + ((Int*)classptr)->GetValue()));
 	}
 	else if (classptr->GetName() == L"float")
 	{
-		value = value + ((Float*)classptr)->GetValue();
+		p.SetValue(to_wstring(value + ((Float*)classptr)->GetValue()));
 	}
+	return p;
 }
 
-void Float::Subtract(Class * classptr)
+Parameter Float::Subtract(Class * classptr)
 {
+	Parameter p(L"float");
 	if (classptr->GetName() == L"int")
 	{
-		value = value - ((Int*)classptr)->GetValue();
+		p.SetValue(to_wstring(value - ((Int*)classptr)->GetValue()));
 	}
 	else if (classptr->GetName() == L"float")
 	{
-		value = value - ((Float*)classptr)->GetValue();
+		p.SetValue(to_wstring(value - ((Float*)classptr)->GetValue()));
 	}
+	return p;
 }
 
-void Float::Multiple(Class * classptr)
+Parameter Float::Multiple(Class * classptr)
 {
+	Parameter p(L"float");
 	if (classptr->GetName() == L"int")
 	{
-		value = value * ((Int*)classptr)->GetValue();
+		p.SetValue(to_wstring(value * ((Int*)classptr)->GetValue()));
 	}
 	else if (classptr->GetName() == L"float")
 	{
-		value = value * ((Float*)classptr)->GetValue();
+		p.SetValue(to_wstring(value * ((Float*)classptr)->GetValue()));
 	}
+	return p;
 }
 
-void Float::Divide(Class * classptr)
+Parameter Float::Divide(Class * classptr)
 {
+	Parameter p(L"float");
 	if (classptr->GetName() == L"int")
 	{
-		value = value / ((Int*)classptr)->GetValue();
+		p.SetValue(to_wstring(value / ((Int*)classptr)->GetValue()));
 	}
 	else if (classptr->GetName() == L"float")
 	{
-		value = value / ((Float*)classptr)->GetValue();
+		p.SetValue(to_wstring(value / ((Float*)classptr)->GetValue()));
 	}
+	return p;
+}
+
+Parameter Float::Greater(Class* classptr)
+{
+	Parameter p(L"bool");
+	if (classptr->GetName() == L"int")
+	{
+		p.SetValue(to_wstring(value > ((Int*)classptr)->GetValue()));
+	}
+	else if (classptr->GetName() == L"float")
+	{
+		p.SetValue(to_wstring(value > ((Float*)classptr)->GetValue()));
+	}
+	return p;
+}
+
+Parameter Float::Less(Class* classptr)
+{
+	Parameter p(L"bool");
+	if (classptr->GetName() == L"int")
+	{
+		p.SetValue(to_wstring(value < ((Int*)classptr)->GetValue()));
+	}
+	else if (classptr->GetName() == L"float")
+	{
+		p.SetValue(to_wstring(value < ((Float*)classptr)->GetValue()));
+	}
+	return p;
+}
+
+Parameter Float::Equal(Class* classptr)
+{
+	Parameter p(L"bool");
+	if (classptr->GetName() == L"int")
+	{
+		p.SetValue(to_wstring(value == ((Int*)classptr)->GetValue()));
+	}
+	else if (classptr->GetName() == L"float")
+	{
+		p.SetValue(to_wstring(value == ((Float*)classptr)->GetValue()));
+	}
+	return p;
+}
+
+Parameter Float::UnEqual(Class * classptr)
+{
+	Parameter p(L"bool");
+	if (classptr->GetName() == L"int")
+	{
+		p.SetValue(to_wstring(value != ((Int*)classptr)->GetValue()));
+	}
+	else if (classptr->GetName() == L"float")
+	{
+		p.SetValue(to_wstring(value != ((Float*)classptr)->GetValue()));
+	}
+	return p;
 }

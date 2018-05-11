@@ -8,6 +8,9 @@ bool b1 = false ;
 bool b2 = true ;
 
 /*
+
+@ logic\gameLogic2.llscript
+
 用来演示的脚本样例：
 当期可支持的类型有以上和void；
 方法书写规范如下；
@@ -34,10 +37,10 @@ void AddTimer ( )
 //while
 void MakeTimerTo600()
 {
-	while(b2)
+	while(timer>600)
 	{
-		timer = 600;
-		b2 = b1;
+		timer=timer-1;
+		//b2 = b1;
 	}
 }
 
@@ -63,7 +66,7 @@ void AddI2 ( )
 	i = j * i ;
 }
 
-//
+//int
 int GetI ( )
 {
 	return i ;
@@ -99,4 +102,67 @@ bool GetB3 ( )
 	bool b3 = b1 & b2 ;
 	//b3 = b1 | b2 ;
 	return b1 | b2 ;
+}
+
+class Position
+{
+	int x = 0;
+	int y = 0;
+}
+
+class UserData
+{
+	Position currentPosition;
+	
+	void SetPosition()
+	{
+		currentPosition.x=90;
+		currentPosition.y=20;
+	}
+}
+
+//自定义类
+Position GetUserPosition()
+{
+	Position p1;
+	Position p2;
+	//p1.x=10;
+	//p2.x=20-8;
+	//p2.y = p1.x;
+	
+	UserData ud;
+	//ud.currentPosition.x=4;
+	ud.SetPosition();
+	
+	return ud;
+}
+
+//类拷贝
+Position GetUserP()
+{
+	UserData ud;
+	ud.SetPosition();
+	Position p = ud.currentPosition;
+	return p;
+}
+
+//return后使用.字符
+int GetUserPX()
+{
+	UserData ud;
+	ud.SetPosition();
+	Position p = ud.currentPosition;
+	return p.x;
+}
+
+void SetInputValue(int y,float f)
+{
+	timer=y*f;
+}
+
+//传入参数
+int GetInputValue()
+{
+	SetInputValue(12,34);
+	return timer;
 }

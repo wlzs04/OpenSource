@@ -2,7 +2,9 @@
 
 Class * String::GetInstance()
 {
-	return new String();
+	String* s = new String();
+	s->SetValue(value);
+	return s;
 }
 
 void String::SetValue(wstring value)
@@ -20,12 +22,14 @@ wstring String::GetValue()
 	return value;
 }
 
-void String::Add(Class * classptr)
+Parameter String::Add(Class * classptr)
 {
+	Parameter p(L"string");
 	if (classptr->GetName() == L"int"
 		|| classptr->GetName() == L"float"
 		|| classptr->GetName() == L"string")
 	{
-		value += classptr->GetValueToWString();
+		p.SetValue(value + classptr->GetValueToWString());
 	}
+	return p;
 }

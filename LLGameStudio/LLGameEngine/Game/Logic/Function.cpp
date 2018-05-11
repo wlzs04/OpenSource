@@ -11,17 +11,26 @@ Function::Function(wstring name, wstring returnClassName, LLScript* scriptPtr, C
 	this->name = name;
 	this->returnClassName = returnClassName;
 	this->scriptPtr = scriptPtr;
-	this->classPtr = classPtr;
+	this->classPtr = classptr;
 }
 
-Parameter Function::Run(vector<Parameter>* inputList)
+Function::~Function()
 {
+	for (auto var : inputParameterList)
+	{
+		delete var;
+	}
+}
+
+Parameter Function::Run(Class* useClassInstance, vector<Parameter>* inputList)
+{
+	this->classPtr = useClassInstance;
 	if (inputList != nullptr)
 	{
 		for (int i = 0; i < inputList->size(); i++)
 		{
-			Parameter* p=new Parameter(inputParameterList[i].GetClassName(), inputParameterList[i].GetName());
-			p->CopyClass(inputParameterList[i]);
+			Parameter* p=new Parameter(inputParameterList[i]->GetClassName(), inputParameterList[i]->GetName());
+			p->CopyClass((*inputList)[i]);
 			localParameterMap[p->GetName()] = p;
 		}
 	}
@@ -44,6 +53,16 @@ Parameter Function::Run(vector<Parameter>* inputList)
 void Function::SetContent(wstring content)
 {
 	this->content = content;
+}
+
+wstring Function::GetName()
+{
+	return name;
+}
+
+void Function::AddFunctionDefineInputValue(Parameter* p)
+{
+	inputParameterList.push_back(p);
 }
 
 Parameter* Function::GetParameter(wstring pName)
@@ -77,6 +96,7 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 	wchar_t tempWChar=L' ';
 	bool startCheck = false;
 	Parameter leftParameter;
+	Parameter* leftParameterPtr = nullptr;
 	valueStream.clear();
 	valueStream.str(L"");
 	wstring tempWString;
@@ -97,29 +117,36 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 					continue;
 				}
 			}
-			else if (tempWChar == L')')
+			else if (tempWChar == L')'||tempWChar == L','||tempWChar == L';')
 			{
 				return leftParameter;
 			}
-			else if (tempWChar == L',')
+			else if (tempWChar == L'.')
 			{
-				return leftParameter;
-			}
-			else if (tempWChar == L';')
-			{
-				return leftParameter;
+				bool isFunction = false;
+				Parameter p;
+				p = GetPointValue(&leftParameterPtr, isFunction, wsstream);
+				if (isFunction)
+				{
+					leftParameter = p;
+				}
+				else
+				{
+					leftParameter.CopyClass(*leftParameterPtr);
+				}
+				wsstream.get(tempWChar);
 			}
 			else if (LLScriptGrammar::WCharIsOperator(tempWChar))
 			{
 				Parameter tempP = GetTempValue(wsstream);
-				leftParameter.DoFunctionByoperator(tempWChar, tempP);
+				leftParameter = leftParameter.DoFunctionByoperator(tempWChar, tempP);
 				return leftParameter;
 			}
 			else if ((L'0' <= tempWChar && tempWChar <= L'9'))
 			{
 				valueStream << tempWChar;
 				wsstream.get(tempWChar);
-				while (tempWChar != L' '&& tempWChar != L';' && LLScriptGrammar::WCharIsOperator(tempWChar))
+				while ((!LLScriptGrammar::WCharIsSpecial(tempWChar)) || tempWChar == L'.')
 				{
 					valueStream << tempWChar;
 					wsstream.get(tempWChar);
@@ -177,7 +204,15 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 						{
 							inputNewList.push_back(tempInputP);
 						}
-						leftParameter = tempF->Run(&inputNewList);
+						if (leftParameterPtr == nullptr)
+						{
+							leftParameter = tempF->Run(nullptr, &inputNewList);
+						}
+						else
+						{
+							leftParameter = tempF->Run(leftParameterPtr->GetClassPtr(), &inputNewList);
+						}
+						
 					}
 				}
 				else
@@ -185,7 +220,14 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 					Parameter* tempP = GetParameter(tempWString);
 					if (tempP != nullptr)
 					{
-						leftParameter = *tempP;
+						if (tempWChar == L'.')
+						{
+							leftParameterPtr = tempP;
+						}
+						else
+						{
+							leftParameter = *tempP;
+						}
 					}
 				}
 			}
@@ -194,7 +236,57 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 	return leftParameter;
 }
 
-Function * Function::GetFunction(wstring fName)
+Parameter Function::GetPointValue(Parameter** parameterPoint, bool& isFunction, wstringstream& wsstream)
+{
+	wchar_t tempWChar;
+	wstring tempWString;
+	Parameter leftParameter;
+	valueStream.clear();
+	valueStream.str(L"");
+
+	wsstream.get(tempWChar);
+	while (!LLScriptGrammar::WCharIsSpecial(tempWChar))
+	{
+		valueStream << tempWChar;
+		wsstream.get(tempWChar);
+	}
+
+	tempWString = valueStream.str();
+
+	Function* tempF = (*parameterPoint)->GetClassPtr()->GetFunction(tempWString);
+	if (tempF != nullptr)
+	{
+		isFunction = true;
+		if (LLScriptGrammar::WCharCanIgnore(tempWChar))
+		{
+			wsstream >> tempWChar;
+		}
+		if (tempWChar == L'(')
+		{
+			//读取方法内参数。
+			vector<Parameter> inputNewList;
+			Parameter tempInputP = GetTempValue(wsstream);
+			while (!tempInputP.IsEmpty())
+			{
+				inputNewList.push_back(tempInputP);
+			}
+			leftParameter = tempF->Run((*parameterPoint)->GetClassPtr(),&inputNewList);
+		}
+	}
+	else
+	{
+		Parameter* tempP = (*parameterPoint)->GetClassPtr()->GetParameter(tempWString);
+		if (tempP != nullptr)
+		{
+			*parameterPoint = tempP;
+			isFunction = false;
+		}
+		wsstream.seekg(-1, ios::cur);
+	}
+	return leftParameter;
+}
+
+Function* Function::GetFunction(wstring fName)
 {
 	Function* tempF = nullptr;
 	if (classPtr != nullptr)
@@ -220,6 +312,7 @@ void Function::RunInSpace(wstringstream & wsstream)
 {
 	valueStream.clear();
 	valueStream.str(L"");
+	Parameter* leftParameter = nullptr;
 	wchar_t tempWchar;
 	while (!wsstream.eof())
 	{
@@ -247,6 +340,17 @@ void Function::RunInSpace(wstringstream & wsstream)
 					wsstream.get(tempWchar);
 				}
 			}
+		}
+		else if (tempWchar == L'=')
+		{
+			Parameter pd = GetTempValue(wsstream);
+			leftParameter->SetValue(pd.GetValueToWString());
+			//leftParameter->CopyClass(pd);
+		}
+		else if (tempWchar == L'.')
+		{
+			bool isFunction = false;
+			GetPointValue(&leftParameter, isFunction,wsstream);
 		}
 		else
 		{
@@ -435,8 +539,16 @@ void Function::RunInSpace(wstringstream & wsstream)
 						while (!tempInputP.IsEmpty())
 						{
 							inputNewList.push_back(tempInputP);
+							tempInputP = GetTempValue(wsstream);
 						}
-						tempF->Run(&inputNewList);
+						if (leftParameter == nullptr)
+						{
+							tempF->Run(nullptr, &inputNewList);
+						}
+						else
+						{
+							tempF->Run(leftParameter->GetClassPtr(), &inputNewList);
+						}
 					}
 				}
 				else
@@ -444,16 +556,8 @@ void Function::RunInSpace(wstringstream & wsstream)
 					Parameter* pptr = GetParameter(tempWString);
 					if (pptr != nullptr)
 					{
-						while (LLScriptGrammar::WCharCanIgnore(tempWchar))
-						{
-							wsstream.get(tempWchar);
-						}
-
-						if (tempWchar == L'=')
-						{
-							Parameter pd = GetTempValue(wsstream);
-							pptr->CopyClass(pd);
-						}
+						leftParameter = pptr;
+						wsstream.seekg(-1,ios::cur);
 					}
 					else
 					{

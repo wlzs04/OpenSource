@@ -5,8 +5,8 @@ void LogicGame::InitUserData()
 	scriptManager = LLScriptManager::GetSingleInstance();
 	scriptManager->LoadScriptFromFile(L"logic\\gameLogic.llscript");
 	Parameter p;
-	scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"MakeTimerTo600");
-	//p = scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"GetB3");
+	//scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"MakeTimerTo600");
+	p = scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"GetInputValue");
 	//p = scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"GetB2");
 	//p = scriptManager->RunFunction(L"logic\\gameLogic.llscript", L"GetI");
 	startLayout = (LLGameLayout*)gameScene->GetNode(L"startButtonLayout");

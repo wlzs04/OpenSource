@@ -2,7 +2,14 @@
 
 Class * Bool::GetInstance()
 {
-	return new Bool();
+	Bool* b = new Bool();
+	b->SetValue(value);
+	return b;
+}
+
+void Bool::SetValue(bool value)
+{
+	this->value = value;
 }
 
 void Bool::SetValue(wstring value)
@@ -20,18 +27,22 @@ bool Bool::GetValue()
 	return value;
 }
 
-void Bool::Intersection(Class* classptr)
+Parameter Bool::Intersection(Class* classptr)
 {
+	Parameter p(L"bool");
 	if (classptr->GetName() == L"bool")
 	{
-		value = value && ((Bool*)classptr)->GetValue();
+		p.SetValue(to_wstring(value && ((Bool*)classptr)->GetValue()));
 	}
+	return p;
 }
 
-void Bool::Union(Class* classptr)
+Parameter Bool::Union(Class* classptr)
 {
+	Parameter p(L"bool");
 	if (classptr->GetName() == L"bool")
 	{
-		value = value || ((Bool*)classptr)->GetValue();
+		p.SetValue(to_wstring(value || ((Bool*)classptr)->GetValue()));
 	}
+	return p;
 }

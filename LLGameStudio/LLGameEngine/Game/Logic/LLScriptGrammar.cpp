@@ -14,6 +14,7 @@ bool LLScriptGrammar::WCharIsSpecial(wchar_t wc)
 {
 	return LLScriptGrammar::WCharCanIgnore(wc)
 		|| wc == L'.' //点
+		|| wc == L',' //逗点
 		|| wc == L';' //分号
 		|| wc == L'=' //等号
 		|| wc == L'/' //注释半个开始标记
@@ -33,6 +34,8 @@ bool LLScriptGrammar::WCharIsOperator(wchar_t wc)
 		|| wc == L'/' //除
 		|| wc == L'>' //大于
 		|| wc == L'<' //小于
+		|| wc == L'#' //等于
+		|| wc == L'!' //不等于
 		|| wc == L'%' //取余
 		|| wc == L'&' //交
 		|| wc == L'|' //并

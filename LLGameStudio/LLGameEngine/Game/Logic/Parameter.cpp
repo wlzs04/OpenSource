@@ -2,7 +2,11 @@
 #include "Class.h"
 #include "LLScriptManager.h"
 
-Parameter::Parameter(wstring className = L"int")
+Parameter::Parameter()
+{
+}
+
+Parameter::Parameter(wstring className)
 {
 	classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(className);
 }
@@ -17,8 +21,7 @@ Parameter::Parameter(const Parameter& p)
 {
 	if (p.classPtr != nullptr)
 	{
-		classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(p.GetClassName());
-		classPtr->SetValue(p.GetValueToWString());
+		classPtr = p.GetClassPtr()->GetInstance();
 	}
 }
 
@@ -31,8 +34,7 @@ Parameter & Parameter::operator=(const Parameter & p)
 	}
 	if (p.classPtr != nullptr)
 	{
-		classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(p.GetClassName());
-		classPtr->SetValue(p.GetValueToWString());
+		classPtr = p.GetClassPtr()->GetInstance();
 	}
 	return *this;
 }
@@ -46,7 +48,7 @@ Parameter::~Parameter()
 	}
 }
 
-Class* Parameter::GetClassPtr()
+Class* Parameter::GetClassPtr() const
 {
 	return classPtr;
 }
@@ -60,14 +62,18 @@ void Parameter::CopyClass(Parameter & p)
 	}
 	if (p.classPtr != nullptr)
 	{
-		classPtr = p.classPtr->GetInstance();
-		classPtr->SetValue(p.classPtr->GetValueToWString());
+		classPtr = p.GetClassPtr()->GetInstance();
 	}
 }
 
 wstring Parameter::GetName() const
 {
 	return name;
+}
+
+void Parameter::SetName(wstring name)
+{
+	this->name = name;
 }
 
 wstring Parameter::GetValueToWString() const
@@ -93,36 +99,53 @@ wstring Parameter::GetClassName() const
 	return classPtr->GetName();
 }
 
-void Parameter::DoFunctionByoperator(wchar_t wc, Parameter& p)
+Parameter Parameter::DoFunctionByoperator(wchar_t wc, Parameter& p)
 {
 	if (wc == L'+')
 	{
-		classPtr->Add(p.GetClassPtr());
+		return classPtr->Add(p.GetClassPtr());
 	}
 	else if (wc == L'-')
 	{
-		classPtr->Subtract(p.GetClassPtr());
+		return classPtr->Subtract(p.GetClassPtr());
 	}
 	else if (wc == L'*')
 	{
-		classPtr->Multiple(p.GetClassPtr());
+		return classPtr->Multiple(p.GetClassPtr());
 	}
 	else if (wc == L'/')
 	{
-		classPtr->Divide(p.GetClassPtr());
+		return classPtr->Divide(p.GetClassPtr());
 	}
 	else if (wc == L'%')
 	{
-		classPtr->Complementation(p.GetClassPtr());
+		return classPtr->Complementation(p.GetClassPtr());
 	}
 	else if (wc == L'&')
 	{
-		classPtr->Intersection(p.GetClassPtr());
+		return classPtr->Intersection(p.GetClassPtr());
 	}
 	else if (wc == L'|')
 	{
-		classPtr->Union(p.GetClassPtr());
+		return classPtr->Union(p.GetClassPtr());
 	}
+	else if (wc == L'>')
+	{
+		return classPtr->Greater(p.GetClassPtr());
+	}
+	else if (wc == L'<')
+	{
+		return classPtr->Less(p.GetClassPtr());
+	}
+	else if (wc == L'#')
+	{
+		return classPtr->Equal(p.GetClassPtr());
+	}
+	else if (wc == L'!')
+	{
+		return classPtr->UnEqual(p.GetClassPtr());
+	}
+	return Parameter();
 }
 
 bool Parameter::IsEmpty()

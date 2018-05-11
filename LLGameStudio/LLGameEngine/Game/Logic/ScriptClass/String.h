@@ -9,7 +9,7 @@ public:
 	void SetValue(wstring value) override;
 	wstring GetValueToWString() override;
 	wstring GetValue();
-	void Add(Class* classptr)override;
+	Parameter Add(Class* classptr)override;
 private:
 	wstring value;
 };

@@ -6,22 +6,38 @@ class Class
 public:
 	Class(wstring name);
 	~Class();
+	//只有在类被取消定义，如类所在的脚本文件被移除，才能使用。
+	void RemoveClassDefine();
 	virtual Class* GetInstance();
 	virtual void SetValue(wstring value) {};
 	virtual wstring GetValueToWString() { return wstring(); };
 	wstring GetName();
 	Parameter* GetParameter(wstring pName);
+
+	//在类定义时添加类的变量
+	void AddParamterDefine(Parameter* p);
+	//在类定义时添加类的变量
+	void AddFunctionDefine(Function* f);
+
 	Function* GetFunction(wstring fName);
-	virtual void Add(Class* classptr) {};
-	virtual void Subtract(Class* classptr) {};
-	virtual void Multiple(Class* classptr) {};
-	virtual void Divide(Class* classptr) {};
+	virtual Parameter Add(Class* classptr);
+	virtual Parameter Subtract(Class* classptr);
+	virtual Parameter Multiple(Class* classptr);
+	virtual Parameter Divide(Class* classptr);
 	//取余
-	virtual void Complementation(Class* classptr) {};
+	virtual Parameter Complementation(Class* classptr);
 	//交集
-	virtual void Intersection(Class* classptr) {};
+	virtual Parameter Intersection(Class* classptr);
 	//并集
-	virtual void Union (Class* classptr) {};
+	virtual Parameter Union (Class* classptr);
+	//大于
+	virtual Parameter Greater(Class* classptr);
+	//小于
+	virtual Parameter Less(Class* classptr);
+	//等于
+	virtual Parameter Equal(Class* classptr);
+	//不等于
+	virtual Parameter UnEqual(Class* classptr);
 protected:
 	wstring name;//类名
 	unordered_map<wstring, Parameter*> parameterMap;

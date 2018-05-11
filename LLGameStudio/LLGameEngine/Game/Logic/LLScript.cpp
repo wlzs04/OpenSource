@@ -29,7 +29,7 @@ Parameter LLScript::RunFunction(wstring functionName)
 {
 	if (functionMap.count(functionName) != 0)
 	{
-		return functionMap[functionName]->Run();
+		return functionMap[functionName]->Run(nullptr);
 	}
 	return Parameter(L"int");
 }
@@ -78,14 +78,10 @@ bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 		{
 			return true;
 		}
-		if (tempWChar == L'#')
+		if (tempWChar == L'@')
 		{
 			file >> tempWString;
-			if (tempWString == L"include")
-			{
-				file >> tempWString;
-				LLScriptManager::GetSingleInstance()->LoadScriptFromFile(tempWString.substr(1, tempWString.size()-2));
-			}
+			LLScriptManager::GetSingleInstance()->LoadScriptFromFile(tempWString.substr(1, tempWString.size() - 2));
 		}
 		else if (tempWChar == L'/')
 		{
@@ -171,17 +167,45 @@ bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 						Parameter tempP = LoadValue(file);
 						Parameter* p = new Parameter(typeName, tempName);
 						p->SetValue(tempP.GetValueToWString());
-						parameterMap[tempName] = p;
+						if (classptr == nullptr)
+						{
+							parameterMap[tempName] = p;
+						}
+						else
+						{
+							classptr->AddParamterDefine(p);
+						}
 					}
 					else if (tempWChar == L';')
 					{
 						Parameter* p = new Parameter(typeName, tempName);
-						parameterMap[tempName] = p;
+						if (classptr == nullptr)
+						{
+							parameterMap[tempName] = p;
+						}
+						else
+						{
+							classptr->AddParamterDefine(p);
+						}
 					}
 					else if (tempWChar == L'(')
 					{
 						Function* function = new Function(tempName, typeName, this, classptr);
-						functionMap[tempName] = function;
+						
+						if (tempName == L"SetInputValue")
+						{
+							int y = 0;
+						}
+
+						if (classptr == nullptr)
+						{
+							functionMap[tempName] = function;
+						}
+						else
+						{
+							classptr->AddFunctionDefine(function);
+						}
+
 						LoadFunction(file, function);
 					}
 				}
@@ -201,16 +225,50 @@ bool LLScript::LoadFunction(wifstream& file, Function* functionptr)
 	int level = 0;
 	wsstream.str(L"");//需要进行两步操作，只用clear的话wsstream内的保存的字符串是不变的。
 	wsstream.clear();//需要清空缓存
-
+	wstring tempWString;
 	//读取参数信息
 	file>> endFlag;
-	if (endFlag = L')')
+	while (endFlag!= L')')
 	{
-		file >> endFlag;
-		if (endFlag != L'{')
+		while (endFlag == L',' || endFlag == L' ')
 		{
-			return false;
+			file.get(endFlag);
 		}
+		if (endFlag == L')')
+		{
+			break;
+		}
+		wsstream.str(L"");
+		wsstream << endFlag;
+		file.get(endFlag);
+
+		while (!LLScriptGrammar::WCharIsSpecial(endFlag))
+		{
+			wsstream << endFlag;
+			file.get(endFlag);
+		}
+		tempWString = wsstream.str();
+		if (LLScriptManager::GetSingleInstance()->IsLegalType(tempWString))
+		{
+			wstring typeName = tempWString;
+			file.get(endFlag);
+			wsstream.clear();
+			wsstream.str(L"");
+			while (!LLScriptGrammar::WCharIsSpecial(endFlag))
+			{
+				wsstream << endFlag;
+				file.get(endFlag);
+			}
+			tempWString= wsstream.str();
+			Parameter* p=new Parameter(typeName, tempWString);
+			functionptr->AddFunctionDefineInputValue(p);
+		}
+	}
+	wsstream.str(L"");
+	file >> endFlag;
+	if (endFlag != L'{')
+	{
+		return false;
 	}
 	while (!file.eof())
 	{

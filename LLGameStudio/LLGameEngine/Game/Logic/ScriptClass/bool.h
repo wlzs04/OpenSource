@@ -6,12 +6,13 @@ class Bool :public Class
 public:
 	Bool() :Class(L"bool") {}
 	Class* GetInstance() override;
+	void SetValue(bool value);
 	void SetValue(wstring value) override;
 	wstring GetValueToWString() override;
 	bool GetValue();
 
-	virtual void Intersection(Class* classptr) override;
-	virtual void Union(Class* classptr) override;
+	Parameter Intersection(Class* classptr) override;
+	Parameter Union(Class* classptr) override;
 
 private:
 	bool value;
