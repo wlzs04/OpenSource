@@ -5,7 +5,8 @@
 class LogicGame : public LLGame
 {
 public:
-
+	Parameter RunGame(vector<Parameter>* inputList=nullptr);
+	void OnStartGame(void* sender, int e);
 protected:
 	virtual void InitUserData() override;
 

@@ -1,5 +1,10 @@
 ﻿#pragma once
 #include "Parameter.h"
+#include <functional>
+
+using namespace std;
+
+typedef function<Parameter(vector<Parameter>*)> CppFunction;
 
 class LLScript;
 
@@ -9,6 +14,7 @@ public:
 	Function(wstring name,wstring returnClassName,LLScript* scriptPtr,Class* classptr);
 	~Function();
 	Parameter Run(Class* useClassInstance,vector<Parameter>* inputList = nullptr);
+	void SetCppFunction(CppFunction cppFunction);
 	void SetContent(wstring content);
 	wstring GetName();
 	//在方法定义时设置传入参数的类型和名称
@@ -41,5 +47,6 @@ private:
 	void JumpOverSpace(wstringstream& wsstream);
 	wstringstream  wsstream;
 	wostringstream  valueStream;
-	
+	bool isCppFunction = false;
+	CppFunction cppFunction = nullptr;
 };

@@ -11,25 +11,26 @@ LLScript::LLScript(wstring filePath)
 
 LLScript::~LLScript()
 {
+	LLScriptManager* scriptManager = LLScriptManager::GetSingleInstance();
 	for (auto var : parameterMap)
 	{
-		delete var.second;
+		scriptManager->RemoveGlobalParameter(var.second);
 	}
 	for (auto var : functionMap)
 	{
-		delete var.second;
+		scriptManager->RemoveGlobalFunction(var.second);
 	}
 	for (auto var : classMap)
 	{
-		delete var.second;
+		scriptManager->RemoveLegalType(var.second);
 	}
 }
 
-Parameter LLScript::RunFunction(wstring functionName)
+Parameter LLScript::RunFunction(wstring functionName, vector<Parameter>* inputList)
 {
 	if (functionMap.count(functionName) != 0)
 	{
-		return functionMap[functionName]->Run(nullptr);
+		return functionMap[functionName]->Run(nullptr,inputList);
 	}
 	return Parameter(L"int");
 }
@@ -170,6 +171,7 @@ bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 						if (classptr == nullptr)
 						{
 							parameterMap[tempName] = p;
+							LLScriptManager::GetSingleInstance()->AddGlobalParameter(p);
 						}
 						else
 						{
@@ -182,6 +184,7 @@ bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 						if (classptr == nullptr)
 						{
 							parameterMap[tempName] = p;
+							LLScriptManager::GetSingleInstance()->AddGlobalParameter(p);
 						}
 						else
 						{
@@ -200,6 +203,7 @@ bool LLScript::LoadUnknown(wifstream& file, Class* classptr)
 						if (classptr == nullptr)
 						{
 							functionMap[tempName] = function;
+							LLScriptManager::GetSingleInstance()->AddGlobalFunction(function);
 						}
 						else
 						{

@@ -7,6 +7,8 @@ int timer = 1000;
 bool b1 = false ;
 bool b2 = true ;
 
+@ "logic\gameLogic2.llscript"
+
 /*
 
 @ logic\gameLogic2.llscript
@@ -165,4 +167,41 @@ int GetInputValue()
 {
 	SetInputValue(12,34);
 	return timer;
+}
+
+//c++传入参数
+int GetInputValueFromCpp(int y,float f)
+{
+	UserData ud;
+	ud.SetPosition();
+	float tempF=ud.currentPosition.x-y*f;
+	return tempF;
+}
+
+//使用c++的system方法
+void UserCPPFunction()
+{
+	//float tempF=7.2;
+	//system.ShowMessage(tempF+"ludcluidckutdckutd");
+	int timeLong = system.GetNowTime();
+	system.ShowMessage("当前时间为："+timeLong);
+	
+}
+
+//使用c++的game方法
+void UserCPPFunction()
+{
+	game.RunGame();
+}
+
+//调用其它脚本文件
+string UserAnotherFunction()
+{
+	return AnotherScriptFunction();
+}
+
+void ReLoadScript()
+{
+	system.UnloadScriptFile("logic\gameLogic2.llscript");
+	system.LoadScriptFile("logic\gameLogic2.llscript");
 }

@@ -7,7 +7,7 @@ class LLScript
 public:
 	LLScript(wstring filePath);
 	~LLScript();
-	Parameter RunFunction(wstring functionName);
+	Parameter RunFunction(wstring functionName, vector<Parameter>* inputList = nullptr);
 	Parameter* GetParameter(wstring pName);
 	Function* GetFunction(wstring fName);
 	

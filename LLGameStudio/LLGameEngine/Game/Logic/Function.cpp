@@ -25,20 +25,25 @@ Function::~Function()
 Parameter Function::Run(Class* useClassInstance, vector<Parameter>* inputList)
 {
 	this->classPtr = useClassInstance;
-	if (inputList != nullptr)
+	if (isCppFunction)
 	{
-		for (int i = 0; i < inputList->size(); i++)
-		{
-			Parameter* p=new Parameter(inputParameterList[i]->GetClassName(), inputParameterList[i]->GetName());
-			p->CopyClass((*inputList)[i]);
-			localParameterMap[p->GetName()] = p;
-		}
+		returnP = cppFunction(inputList);
 	}
-
-	wsstream.str(content);
-	returnP = Parameter(returnClassName);
-
-	RunInSpace(wsstream);
+	else
+	{
+		if (inputList != nullptr)
+		{
+			for (int i = 0; i < inputList->size(); i++)
+			{
+				Parameter* p = new Parameter(inputParameterList[i]->GetClassName(), inputParameterList[i]->GetName());
+				p->CopyClass((*inputList)[i]);
+				localParameterMap[p->GetName()] = p;
+			}
+		}
+		returnP = Parameter(returnClassName);
+		wsstream.str(content);
+		RunInSpace(wsstream);
+	}
 	
 	for (auto var : localParameterMap)
 	{
@@ -48,6 +53,12 @@ Parameter Function::Run(Class* useClassInstance, vector<Parameter>* inputList)
 	wsstream.str(L"");
 	wsstream.clear();
 	return returnP;
+}
+
+void Function::SetCppFunction(CppFunction cppFunction)
+{
+	isCppFunction = true;
+	this->cppFunction = cppFunction;
 }
 
 void Function::SetContent(wstring content)
@@ -71,6 +82,7 @@ Parameter* Function::GetParameter(wstring pName)
 	if (localParameterMap.count(pName) != 0)
 	{
 		tempP = localParameterMap[pName];
+		return tempP;
 	}
 	else if (classPtr != nullptr)
 	{
@@ -88,7 +100,7 @@ Parameter* Function::GetParameter(wstring pName)
 			return tempP;
 		}
 	}
-	return tempP;
+	return LLScriptManager::GetSingleInstance()->GetGlobalParameter(pName);
 }
 
 Parameter Function::GetTempValue(wstringstream & wsstream)
@@ -175,7 +187,7 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 				}
 				leftParameter.SetClassName(L"string");
 				leftParameter.SetValue(valueStream.str());
-				return leftParameter;
+				wsstream.get(tempWChar);
 			}
 			else
 			{
@@ -269,6 +281,7 @@ Parameter Function::GetPointValue(Parameter** parameterPoint, bool& isFunction, 
 			while (!tempInputP.IsEmpty())
 			{
 				inputNewList.push_back(tempInputP);
+				tempInputP = GetTempValue(wsstream);
 			}
 			leftParameter = tempF->Run((*parameterPoint)->GetClassPtr(),&inputNewList);
 		}
@@ -305,7 +318,7 @@ Function* Function::GetFunction(wstring fName)
 			return tempF;
 		}
 	}
-	return tempF;
+	return LLScriptManager::GetSingleInstance()->GetGlobalFunction(fName);
 }
 
 void Function::RunInSpace(wstringstream & wsstream)

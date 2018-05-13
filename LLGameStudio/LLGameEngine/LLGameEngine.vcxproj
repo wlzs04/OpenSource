@@ -149,9 +149,11 @@
     <ClCompile Include="Game\Logic\Parameter.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\bool.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\Float.cpp" />
+    <ClCompile Include="Game\Logic\ScriptClass\Game.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\Int.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\Ptr.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\String.cpp" />
+    <ClCompile Include="Game\Logic\ScriptClass\System.cpp" />
     <ClCompile Include="Game\Logic\ScriptClass\Void.cpp" />
     <ClCompile Include="Game\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="Game\Particle\ParticleSystem.cpp" />
@@ -210,9 +212,11 @@
     <ClInclude Include="Game\Logic\Parameter.h" />
     <ClInclude Include="Game\Logic\ScriptClass\bool.h" />
     <ClInclude Include="Game\Logic\ScriptClass\Float.h" />
+    <ClInclude Include="Game\Logic\ScriptClass\Game.h" />
     <ClInclude Include="Game\Logic\ScriptClass\Int.h" />
     <ClInclude Include="Game\Logic\ScriptClass\Ptr.h" />
     <ClInclude Include="Game\Logic\ScriptClass\String.h" />
+    <ClInclude Include="Game\Logic\ScriptClass\System.h" />
     <ClInclude Include="Game\Logic\ScriptClass\Void.h" />
     <ClInclude Include="Game\Particle\ParticleEmitter.h" />
     <ClInclude Include="Game\Particle\ParticleSystem.h" />

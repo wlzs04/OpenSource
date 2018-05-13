@@ -17,6 +17,13 @@ Parameter::Parameter(wstring className, wstring name)
 	this->name = name;
 }
 
+Parameter::Parameter(wstring className, wstring name, wstring value)
+{
+	classPtr = LLScriptManager::GetSingleInstance()->GetTypeInstanceByName(className);
+	this->name = name;
+	classPtr->SetValue(value);
+}
+
 Parameter::Parameter(const Parameter& p)
 {
 	if (p.classPtr != nullptr)

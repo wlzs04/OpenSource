@@ -1,5 +1,6 @@
 #include "Int.h"
 #include "Float.h"
+#include "String.h"
 
 Class * Int::GetInstance()
 {
@@ -40,6 +41,11 @@ Parameter Int::Add(Class * classptr)
 	{
 		p.SetClassName(L"float");
 		p.SetValue(to_wstring(value + ((Float*)classptr)->GetValue()));
+	}
+	else if (classptr->GetName() == L"string")
+	{
+		p.SetClassName(L"string");
+		p.SetValue(to_wstring(value) + ((String*)classptr)->GetValue());
 	}
 	return p;
 }

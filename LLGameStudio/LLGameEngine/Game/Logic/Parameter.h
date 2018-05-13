@@ -8,7 +8,8 @@ class Parameter
 public:
 	Parameter();
 	Parameter(wstring className);
-	Parameter(wstring className,wstring name);
+	Parameter(wstring className, wstring name);
+	Parameter(wstring className, wstring name, wstring value);
 	Parameter(const Parameter& p);
 	Parameter& operator=(const Parameter& p);
 	~Parameter();
