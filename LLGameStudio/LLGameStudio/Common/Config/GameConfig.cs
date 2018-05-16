@@ -40,7 +40,9 @@ namespace LLGameStudio.Common.Config
         Property.DefaultCursor defaultCursor = new Property.DefaultCursor();
         Property.ServerIPPort serverIPPort = new Property.ServerIPPort();
         Property.EncryptKey encryptKey = new Property.EncryptKey();
+        Property.DefaultScript defaultScript = new Property.DefaultScript();
         
+
         public int Width { get => gameWidth.Value; set => gameWidth.Value = value; }
         public int Height { get => gameHeight.Value; set => gameHeight.Value = value; }
         public string GameName { get => gameName.Value; set => gameName.Value = value; }
@@ -196,10 +198,15 @@ namespace LLGameStudio.Common.Config
         {
             public ServerIPPort() : base("serverIPPort", typeof(string), UIPropertyEnum.Common, "游戏服务器的IP地址和端口号。", "") { }
         }
-
+        
         public class EncryptKey : IUIProperty
         {
             public EncryptKey() : base("encryptKey", typeof(string), UIPropertyEnum.Common, "游戏网络协议加密的秘钥。", "401230") { }
+        }
+
+        public class DefaultScript : IUIProperty
+        {
+            public DefaultScript() : base("defaultScript", typeof(string), UIPropertyEnum.Common, "游戏默认使用的脚本文件。", "logic/StartLogic.llscript") { }
         }
     }
 }

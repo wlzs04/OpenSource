@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Actor>
+  <Bone name="下骨骼" length="100" angle="3.14">
+    <Bone name="中骨骼" length="100" angle="0">
+      <Bone name="上骨骼" length="10"/>
+    </Bone>
+  </Bone>
+  <IKs>
+    <IK endBone="上骨骼" startBone="下骨骼" />
+  </IKs>
+  <Actions />
+</Actor>

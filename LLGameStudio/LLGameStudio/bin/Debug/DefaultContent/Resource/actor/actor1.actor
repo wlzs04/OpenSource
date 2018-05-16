@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Actor>
+  <Bone name="根骨骼" length="214.99999999999997" angle="-3.1415926535897931">
+    <Bone name="bone1" length="92.954200839271564" angle="1.7014603329153242">
+      <Bone name="bone2" angle="1.3524226045327483" />
+    </Bone>
+    <Bone name="bone3" length="95.856094768228473" angle="4.5820836833971867">
+      <Bone name="bone4" angle="-1.3923069706673061" />
+    </Bone>
+    <Bone name="头骨骼" length="48.00186149801408" angle="-0.012891964751136964">
+      <Bone name="左头骨" angle="-1" />
+      <Bone name="右头骨" angle="1" />
+    </Bone>
+    <Bone name="bone7" length="142.77084339823472" angle="3.6063735609391112">
+      <Bone name="bone8" angle="0.37370061269439364" />
+    </Bone>
+    <Bone name="bone9" length="143.69939420383957" angle="2.7015921968470225">
+      <Bone name="bone10" angle="-0.38854819955447395" />
+    </Bone>
+  </Bone>
+  <Actions>
+    <Action name="测试" totalTime="1">
+      <Frame>
+        <Bone name="根骨骼" angle="-3.1415926535897931" />
+        <Bone name="bone1" angle="1.7014603329153242" />
+        <Bone name="bone2" angle="1.3524226045327483" />
+        <Bone name="bone3" angle="4.5820836833971867" />
+        <Bone name="bone4" angle="-1.3923069706673061" />
+        <Bone name="头骨骼" angle="-0.012891964751136964" />
+        <Bone name="左头骨" angle="-1" />
+        <Bone name="右头骨" angle="1" />
+        <Bone name="bone7" angle="3.6063735609391112" />
+        <Bone name="bone8" angle="0.37370061269439364" />
+        <Bone name="bone9" angle="2.7015921968470225" />
+        <Bone name="bone10" angle="-0.38854819955447395" />
+      </Frame>
+      <Frame frameNumber="3">
+        <Bone name="根骨骼" angle="-3.1415926535897931" />
+        <Bone name="bone1" angle="1.7014603329153242" />
+        <Bone name="bone2" angle="1.3524226045327483" />
+        <Bone name="bone3" angle="4.5820836833971867" />
+        <Bone name="bone4" angle="-1.3923069706673061" />
+        <Bone name="头骨骼" angle="-0.012891964751136964" />
+        <Bone name="左头骨" angle="-1.4858958523556236" />
+        <Bone name="右头骨" angle="1.4849183070494978" />
+        <Bone name="bone7" angle="3.6063735609391112" />
+        <Bone name="bone8" angle="0.37370061269439364" />
+        <Bone name="bone9" angle="2.7015921968470225" />
+        <Bone name="bone10" angle="-0.38854819955447395" />
+      </Frame>
+      <Frame frameNumber="12">
+        <Bone name="根骨骼" angle="-3.1415926535897931" />
+        <Bone name="bone1" angle="1.7014603329153242" />
+        <Bone name="bone2" angle="1.3524226045327483" />
+        <Bone name="bone3" angle="4.5820836833971867" />
+        <Bone name="bone4" angle="-1.3923069706673061" />
+        <Bone name="头骨骼" angle="-0.012891964751136964" />
+        <Bone name="左头骨" angle="-0.25990246852557719" />
+        <Bone name="右头骨" angle="0.26743806719193497" />
+        <Bone name="bone7" angle="3.6063735609391112" />
+        <Bone name="bone8" angle="0.37370061269439364" />
+        <Bone name="bone9" angle="2.7015921968470225" />
+        <Bone name="bone10" angle="-0.38854819955447395" />
+      </Frame>
+      <Frame frameNumber="24">
+        <Bone name="根骨骼" angle="-3.1415926535897931" />
+        <Bone name="bone1" angle="1.7014603329153242" />
+        <Bone name="bone2" angle="1.3524226045327483" />
+        <Bone name="bone3" angle="4.5820836833971867" />
+        <Bone name="bone4" angle="-1.3923069706673061" />
+        <Bone name="头骨骼" angle="-0.012891964751136964" />
+        <Bone name="左头骨" angle="-1" />
+        <Bone name="右头骨" angle="1" />
+        <Bone name="bone7" angle="3.6063735609391112" />
+        <Bone name="bone8" angle="0.37370061269439364" />
+        <Bone name="bone9" angle="2.7015921968470225" />
+        <Bone name="bone10" angle="-0.38854819955447395" />
+      </Frame>
+    </Action>
+  </Actions>
+</Actor>

@@ -1,0 +1,12 @@
+
+//游戏初始化时调用
+void InitUserData()
+{
+	
+}
+
+//游戏运行时每帧调用
+void UpdateUserData()
+{
+	
+}

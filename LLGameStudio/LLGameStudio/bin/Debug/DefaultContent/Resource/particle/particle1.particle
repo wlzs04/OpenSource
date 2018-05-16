@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ParticleSystem>
+  <ParticleEmitter maxNumber="50" createNumberBySecond="8" color="#FF8FFF00" angleRange="180" />
+  <ParticleEmitter particleType="Star" radius="10" color="#FF8F00AA" />
+  <ParticleEmitter particleType="Image" maxNumber="30" createNumberBySecond="5" radius="30" imagePath="texture\test1.png" />
+  <ParticleEmitter loopTime="1" particleType="Sequence" maxNumber="1" startNumber="1" createNumberBySecond="0" radius="30" radiusError="0" velocityError="0" angleRange="0" imagePath="texture\test2.png" row="4" column="4" />
+</ParticleSystem>

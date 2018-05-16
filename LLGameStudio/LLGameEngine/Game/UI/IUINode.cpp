@@ -168,6 +168,20 @@ void IUINode::RemoveNode(IUINode* node)
 	node->parentNode = nullptr;
 }
 
+void IUINode::RemoveNode(wstring nodeName)
+{
+	for (auto var : listNode)
+	{
+		if (var->GetName() == nodeName)
+		{
+			listNode.remove(var);
+			var->parentNode = nullptr;
+			delete var;
+			break;
+		}
+	}
+}
+
 void IUINode::LoadFromXMLNode(LLXMLNode * xmlNode)
 {
 	for (auto var : xmlNode->GetPropertyMap())

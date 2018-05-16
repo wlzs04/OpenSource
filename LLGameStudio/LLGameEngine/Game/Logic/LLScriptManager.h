@@ -11,6 +11,7 @@ public:
 	static LLScriptManager* GetSingleInstance();
 	bool LoadScriptFromFile(wstring filePath);
 	void UnLoadScriptFromFile(wstring filePath);
+	Parameter RunFunction(wstring functionName, vector<Parameter>* inputList = nullptr);
 	Parameter RunFunction(wstring scriptName, wstring functionName, vector<Parameter>* inputList = nullptr);
 	bool IsLegalType(wstring typeName);
 	void AddLegalType(Class* classPtr);

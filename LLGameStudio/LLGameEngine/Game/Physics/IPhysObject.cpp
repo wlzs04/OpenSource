@@ -5,6 +5,16 @@ IPhysObject::IPhysObject()
 	ResetEnergy();
 }
 
+void IPhysObject::SetName(wstring name)
+{
+	this->name = name;
+}
+
+std::wstring IPhysObject::GetName()
+{
+	return name;
+}
+
 void IPhysObject::SetPosition(Vector2 position)
 {
 	SetPosition(position.x, position.y);

@@ -1,0 +1,3 @@
+﻿<LLGameGrid name="grid1">
+  <LLGameButton name="buttonStart" anchorEnum="Center" image="texture\start.jpg" />
+</LLGameGrid>

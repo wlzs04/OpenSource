@@ -75,6 +75,15 @@ Parameter LLScriptManager::RunFunction(wstring scriptName, wstring functionName,
 	return Parameter();
 }
 
+Parameter LLScriptManager::RunFunction(wstring functionName, vector<Parameter>* inputList)
+{
+	if (globalFunctionMap.count(functionName) != 0)
+	{
+		return globalFunctionMap[functionName]->Run(nullptr, inputList);
+	}
+	return Parameter();
+}
+
 bool LLScriptManager::IsLegalType(wstring typeName)
 {
 	return legalTypeMap.count(typeName) != 0;

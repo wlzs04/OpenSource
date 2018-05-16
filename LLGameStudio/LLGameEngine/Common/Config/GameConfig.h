@@ -31,20 +31,9 @@ public:
 	PropertyDefaultCursor defaultCursor;
 	PropertyServerIPPort serverIPPort;
 	PropertyEncryptKey encryptKey;
+	PropertyDefaultScript defaultScript;
 
 	wstring resourcePath = L"Resource";
-
-	/*int width = 800;
-	int height = 600;
-	wstring gameName = L"Game";
-	bool fullScreen = false;
-	bool canMultiGame = false;
-	wstring startScene = L"";
-	wstring graphicsApi = L"Direct2D";
-	bool openNetClient = false;
-	bool openPhysics = false;
-	wstring icon = L"";
-	wstring defaultCursor = L"";*/
 
 private:
 	unordered_map<wstring, IUIProperty*> propertyMap;

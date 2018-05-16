@@ -34,6 +34,12 @@ namespace LLGameStudio.Game
         static FontConfig fontConfig;
         static string fontConfigPath="";
 
+        public static void CreateFontConfig(string fontConfigPath)
+        {
+            FontConfig tempFontConfig = new FontConfig();
+            LLConvert.ExportContentToXML(fontConfigPath, tempFontConfig);
+        }
+
         /// <summary>
         /// 加载字体配置文件。
         /// </summary>

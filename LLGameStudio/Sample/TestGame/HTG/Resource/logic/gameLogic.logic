@@ -1,0 +1,20 @@
+<LLScript>
+	<GameLine>
+		<FunctionPtr name="GameInit" rateOfProgress="0" />
+		<FunctionPtr name="GameStart" rateOfProgress="0.1" />
+		<FunctionPtr name="GameRun" rateOfProgress="0.5" />
+		<FunctionPtr name="GameStop" rateOfProgress="0.9" />
+		<FunctionPtr name="GameExit" rateOfProgress="1" />
+	</GameLine>
+	<DefineArea>
+		<Define name="gameCount" type="int"/>
+		<Define name="currentMousePoint" type="int"/>
+	</DefineArea>
+	<FunctionArea>
+		<Function name="GameInit" returnType="void" content=""/>
+		<Function name="GameStart" returnType="void" content=""/>
+		<Function name="GameRun" returnType="void" content=""/>
+		<Function name="GameStop" returnType="void" content=""/>
+		<Function name="GameExit" returnType="void" content=""/>
+	</FunctionArea>
+</LLScript>

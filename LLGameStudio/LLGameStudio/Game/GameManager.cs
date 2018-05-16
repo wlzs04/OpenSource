@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using LLGameStudio.Common;
 using LLGameStudio.Common.Config;
+using LLGameStudio.Common.Helper;
 using LLGameStudio.Common.XML;
 using LLGameStudio.Game.UI;
 using LLGameStudio.Studio;
@@ -116,11 +117,13 @@ namespace LLGameStudio.Game
         public void CreateGame(string gamePath, string gameName)
         {
             Directory.CreateDirectory(gamePath);
-            gameConfigFilePath = gamePath + @"\" + "Game.xml";
-            gameConfig.GameName = gameName;
-            SaveConfig();
+            GameConfig tempGameConfig = new GameConfig();
+            tempGameConfig.GameName = gameName;
+            LLConvert.ExportContentToXML(gamePath + @"\" + "Game.xml", tempGameConfig);
             gameResourcePath = gamePath + @"\" + "Resource";
-            Directory.CreateDirectory(gameResourcePath);
+            FileHelper.CopyDirectory(@"DefaultContent\Resource", gamePath);
+            FontManager.CreateFontConfig(gamePath + @"\" + "Font.xml");
+            File.Copy("../../../x64/Debug/LLGameEngine.exe", gamePath + @"\LLGameEngine.exe", true);
             gameLoaded = true;
         }
 
@@ -265,7 +268,7 @@ public enum GameUIFileEnum
     Layout,//布局
     Particle,//粒子
     Actor,//角色
-    Action,//角色动画
+    Script,//脚本
     Unknown,//未知
 }
 

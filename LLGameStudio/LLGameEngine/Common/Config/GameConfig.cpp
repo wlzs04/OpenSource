@@ -16,8 +16,9 @@ GameConfig::GameConfig()
 	propertyMap[openPhysics.name] = &openPhysics;
 	propertyMap[icon.name] = &icon; 
 	propertyMap[defaultCursor.name] = &defaultCursor;
-	propertyMap[serverIPPort.name] = &serverIPPort;
+	propertyMap[serverIPPort.name] = &serverIPPort; 
 	propertyMap[encryptKey.name] = &encryptKey;
+	propertyMap[defaultScript.name] = &defaultScript;
 }
 
 GameConfig::~GameConfig()

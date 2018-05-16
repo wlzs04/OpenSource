@@ -1,0 +1,3 @@
+<LLGameGrid name="grid1">
+  <LLGameText name="textCountDown" anchorEnum="Center"/>
+</LLGameGrid>

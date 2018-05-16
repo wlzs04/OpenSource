@@ -23,6 +23,8 @@ class IPhysObject
 public:
 	IPhysObject();
 	~IPhysObject() {};
+	void SetName(wstring name);
+	wstring GetName();
 	//设置位置
 	void SetPosition(Vector2 position);
 	void SetPosition(float x, float y);
@@ -59,4 +61,5 @@ protected:
 	float energy = 0;//动能
 	float mass = 1;//质量
 	Vector2 velocity;//速度
+	wstring name;
 };

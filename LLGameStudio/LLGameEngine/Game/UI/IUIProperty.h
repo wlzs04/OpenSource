@@ -552,3 +552,12 @@ public:
 	void SetValue(wstring value) { this->value = value; };
 	wstring value;
 };
+
+class PropertyDefaultScript :public IUIProperty
+{
+public:
+	PropertyDefaultScript() :IUIProperty(L"defaultScript", L"logic/StartLogic.llscript") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};

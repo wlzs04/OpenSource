@@ -34,7 +34,10 @@ public:
 	void SetHeight(float height);
 	void AddNode(IUINode* node);
 	IUINode* GetNode(wstring nodeName);
+	//仅移除节点
 	void RemoveNode(IUINode* node);
+	//移除节点并释放占用
+	void RemoveNode(wstring nodeName);
 	virtual void LoadFromXMLNode(LLXMLNode* xmlNode);
 	virtual bool CheckState();
 	virtual void Update();

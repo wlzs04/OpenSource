@@ -68,6 +68,7 @@
     <Compile Include="Common\Config\FontConfig.cs" />
     <Compile Include="Common\Config\ThemeConfig.cs" />
     <Compile Include="Common\DataType.cs" />
+    <Compile Include="Common\Helper\FileHelper.cs" />
     <Compile Include="Common\Helper\LLConvert.cs" />
     <Compile Include="Common\Helper\LLMath.cs" />
     <Compile Include="Common\Standard.cs" />
@@ -143,8 +144,8 @@
     <Compile Include="Studio\Window\GameConfigWindow.xaml.cs">
       <DependentUpon>GameConfigWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Studio\Window\LogicWindow.xaml.cs">
-      <DependentUpon>LogicWindow.xaml</DependentUpon>
+    <Compile Include="Studio\Window\NewGameWindow.xaml.cs">
+      <DependentUpon>NewGameWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Studio\Window\ParticleWindow.xaml.cs">
       <DependentUpon>ParticleWindow.xaml</DependentUpon>
@@ -233,7 +234,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Studio\Window\LogicWindow.xaml">
+    <Page Include="Studio\Window\NewGameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -321,6 +322,8 @@
     <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="bin\Debug\Resource\script.png" />
+    <Resource Include="bin\Debug\Resource\c++.png" />
     <Resource Include="bin\Debug\Resource\行动者.png" />
     <Resource Include="bin\Debug\Resource\设置.png" />
     <Resource Include="bin\Debug\Resource\平移.png" />

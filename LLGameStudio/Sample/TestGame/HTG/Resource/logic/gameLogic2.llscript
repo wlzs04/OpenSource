@@ -1,0 +1,6 @@
+
+string AnotherScriptFunction()
+{
+	string returnString="修改后";
+	return returnString;
+}

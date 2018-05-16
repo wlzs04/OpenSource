@@ -254,6 +254,11 @@ namespace LLGameStudio.Studio
             mi4.Click += CreateNewActorToCurrrentDirectory;
             contextMenu.Items.Add(mi4);
 
+            MenuItem mi5 = new MenuItem();
+            mi5.Header = "新建llscript";
+            mi5.Click += CreateNewScriptToCurrrentDirectory;
+            contextMenu.Items.Add(mi5);
+
             wrapPanelFileArea.ContextMenu = contextMenu;
 
             //属性编辑区
@@ -417,6 +422,11 @@ namespace LLGameStudio.Studio
         private void CreateNewActorToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
             CreateNewFileToCurrrentDirectory(GameUIFileEnum.Actor);
+        }
+
+        private void CreateNewScriptToCurrrentDirectory(object sender, RoutedEventArgs e)
+        {
+            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Script);
         }
 
         /// <summary>
@@ -696,9 +706,16 @@ namespace LLGameStudio.Studio
         /// </summary>
         public void SetGameConfig()
         {
-            GameConfigWindow gameConfigWindow = new GameConfigWindow(gameManager);
-            gameConfigWindow.Owner = window;
-            gameConfigWindow.Show();
+            if(gameManager.GameLoaded)
+            {
+                GameConfigWindow gameConfigWindow = new GameConfigWindow(gameManager);
+                gameConfigWindow.Owner = window;
+                gameConfigWindow.Show();
+            }
+            else
+            {
+                ShowStatusInfo("当前未加载游戏！");
+            }
         }
 
         /// <summary>
@@ -752,23 +769,27 @@ namespace LLGameStudio.Studio
         private void OpenFile(object sender, MouseButtonEventArgs e)
         {
             LLStudioFileItem item = sender as LLStudioFileItem;
-            currentFilePath = fileAreaDirectory+@"\"+item.textBox.Text;
+            string openFilePath = fileAreaDirectory + @"\" + item.textBox.Text;
             switch (item.GetFileEnum())
             {
                 case GameUIFileEnum.Scene:
                 case GameUIFileEnum.Layout:
+                    currentFilePath = openFilePath;
                     OpenFile();
                     window.RestoreCanvas();
                     break;
                 case GameUIFileEnum.Particle:
-                    ParticleWindow particleWindow = new ParticleWindow(currentFilePath);
+                    ParticleWindow particleWindow = new ParticleWindow(openFilePath);
                     particleWindow.Owner = window;
-                    particleWindow.Show();
+                    particleWindow.ShowDialog();
                     break;
                 case GameUIFileEnum.Actor:
-                    ActorWindow actorWindow = new ActorWindow(currentFilePath);
+                    ActorWindow actorWindow = new ActorWindow(openFilePath);
                     actorWindow.Owner = window;
-                    actorWindow.Show();
+                    actorWindow.ShowDialog();
+                    break;
+                case GameUIFileEnum.Script:
+                    System.Diagnostics.Process.Start(openFilePath);
                     break;
                 case GameUIFileEnum.Unknown:
                     ShowStatusInfo("未知文件无法打开！");
@@ -795,6 +816,7 @@ namespace LLGameStudio.Studio
             {
                 LLStudioFileItem fileItem = new LLStudioFileItem(wrapPanelFileArea, fi.FullName);
                 fileItem.MouseDoubleClick += OpenFile;
+                //fileItem添加拖动事件
                 wrapPanelFileArea.Children.Add(fileItem);
             }
         }
@@ -805,28 +827,17 @@ namespace LLGameStudio.Studio
         /// <returns>返回在当前路径是否创建成功。</returns>
         public void ChooseNewGamePathAndOpen(object sender, MouseButtonEventArgs e)
         {
-            CommonOpenFileDialog folderDialog = new CommonOpenFileDialog();
-            
-            folderDialog.IsFolderPicker = true;
-            folderDialog.Title = "请选择游戏目录。";
-            if (folderDialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                string gameName = "helloworld";
-                string gamePath = folderDialog.FileName + @"\" + gameName;
+            NewGameWindow newGameWindow = new NewGameWindow(this);
+            newGameWindow.Owner = window;
+            newGameWindow.ShowDialog();
+        }
 
-                if (Directory.Exists(gamePath))
-                {
-                    MessageBox.Show("当前文件路径已存在！");
-                    ShowStatusInfo("当前文件路径已存在！");
-                }
-                else
-                {
-                    ShowStatusInfo("正新建游戏目录。");
-                    gameManager.CreateGame(gamePath,gameName);
-                    ShowStatusInfo("游戏目录新建完成。");
-                    OpenGameByPath(gamePath);
-                }
-            }
+        public void CreateGame(string path,string name)
+        {
+            ShowStatusInfo("正新建游戏目录。");
+            gameManager.CreateGame(path, name);
+            ShowStatusInfo("游戏目录新建完成。");
+            OpenGameByPath(path);
         }
 
         /// <summary>
