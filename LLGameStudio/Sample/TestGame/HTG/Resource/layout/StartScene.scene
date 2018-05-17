@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LLGameScene name="startScene">
-  <LLGameBack name="back" />
+  <LLGameBack name="back" image="texture\back.png" />
   <LLGameCanvas name="canvas" />
 </LLGameScene>

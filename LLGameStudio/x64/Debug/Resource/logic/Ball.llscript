@@ -1,0 +1,40 @@
+
+//球
+class Ball
+{
+	string name;
+	float x=0;
+	float y=0;
+	int radius=50;
+	int state=0;
+	
+	void SetValue(string name1,float x1,float y1,float radius1,int state1)
+	{
+		name=name1;
+		x=x1;
+		y=y1;
+		radius=radius1;
+		state=state1;
+		
+		game.CreatePhysCircle(name,radius,state);
+		game.SetPhysPosition(name,x,y);
+	}
+	
+	void GetValueFromPhy()
+	{
+		x=game.GetPhysPositionX(name);
+		y=game.GetPhysPositionY(name);
+	}
+	
+	void SetXY(float x1,float y1)
+	{
+		x=x1;
+		y=y1;
+		game.SetPhysPosition(name,x,y);
+	}
+	
+	void SetVelocity(float x1,float y1)
+	{
+		game.SetPhysVelocity(name,x1,y1);
+	}
+}

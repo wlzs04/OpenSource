@@ -2,6 +2,18 @@
 #include "..\..\Game\Logic\ScriptClass\Game.h"
 #include "..\..\Game\Logic\ScriptClass\Float.h"
 
+LogicGame::~LogicGame()
+{
+	for (auto var : particleMap)
+	{
+		delete var.second;
+	}
+	for (auto var : actorMap)
+	{
+		delete var.second;
+	}
+}
+
 void LogicGame::InitUserData()
 {
 	//当physicsManager为NULL时不会报错，因为CreatePhysicsWorld方法没有用到physicsManager本身的内容。
@@ -21,7 +33,10 @@ void LogicGame::UpdateUserData()
 void LogicGame::InitGameFunction()
 {
 	Parameter* gameParameter = scriptManager->GetGlobalParameter(L"game");
-	gamePtr = (Game*)gameParameter->GetClassPtr();
+	gamePtr = (Game*)gameParameter->GetClassPtr(); 
+
+	AddGameCppFunction(L"StopGame", L"void", &LogicGame::StopGame, this);
+	AddGameCppFunction(L"GetThisTickTime", L"float", &LogicGame::GetThisTickTime, this);
 
 	AddGameCppFunction(L"AddLayout", L"void", &LogicGame::AddLayout, this);
 	AddGameCppFunction(L"RemoveLayout", L"void", &LogicGame::RemoveLayout, this);
@@ -40,6 +55,12 @@ void LogicGame::InitGameFunction()
 	AddGameCppFunction(L"CreatePhysRectangle", L"void", &LogicGame::CreatePhysRectangle, this);
 	AddGameCppFunction(L"CreatePhysCircle", L"void", &LogicGame::CreatePhysCircle, this);
 	AddGameCppFunction(L"SetPhysPosition", L"void", &LogicGame::SetPhysPosition, this);
+	AddGameCppFunction(L"SetPhysVelocity", L"void", &LogicGame::SetPhysVelocity, this);
+	AddGameCppFunction(L"GetPhysPositionX", L"float", &LogicGame::GetPhysPositionX, this);
+	AddGameCppFunction(L"GetPhysPositionY", L"float", &LogicGame::GetPhysPositionY, this);
+	AddGameCppFunction(L"PhysSimulate", L"void", &LogicGame::PhysSimulate, this);
+	AddGameCppFunction(L"PhysStart", L"void", &LogicGame::PhysStart, this);
+	AddGameCppFunction(L"PhysStop", L"void", &LogicGame::PhysStop, this);
 	AddGameCppFunction(L"BindCollisionEvent", L"void", &LogicGame::BindCollisionEvent, this);
 	
 	AddGameCppFunction(L"BindConnectServerSuccessEvent", L"void", &LogicGame::BindConnectServerSuccessEvent, this);
@@ -58,6 +79,19 @@ void LogicGame::InitGameFunction()
 	AddGameCppFunction(L"DrawEllipse", L"void", &LogicGame::DrawEllipse, this);
 }
 
+Parameter LogicGame::StopGame(vector<Parameter>* inputList)
+{
+	gameExit = true;
+	SendMessage(gameWindow->GetHWND(), WM_DESTROY, 0, 0);
+	return Parameter();
+}
+
+Parameter LogicGame::GetThisTickTime(vector<Parameter>* inputList)
+{
+	float t = gameTimer.GetThisTickTime();
+	return Parameter(L"float",L"p1",to_wstring(t));
+}
+
 Parameter LogicGame::AddLayout(vector<Parameter>* inputList)
 {
 	wstring layoutName = (*inputList)[0].GetValueToWString();
@@ -65,6 +99,9 @@ Parameter LogicGame::AddLayout(vector<Parameter>* inputList)
 
 	LLGameLayout* gameLayout = new LLGameLayout();
 	gameLayout->LoadLayoutFromFile(layoutFilePath);
+	gameLayout->SetProperty(L"name", layoutName);
+	gameScene->AddNode(gameLayout);
+	gameLayout->ResetTransform();
 	return Parameter();
 }
 
@@ -80,7 +117,9 @@ Parameter LogicGame::SetUINodeProperty(vector<Parameter>* inputList)
 	wstring layoutName = (*inputList)[0].GetValueToWString();
 	wstring propertyName = (*inputList)[1].GetValueToWString();
 	wstring propertyValue = (*inputList)[2].GetValueToWString();
-	gameScene->GetNode(layoutName)->SetProperty(propertyName, propertyValue);
+	IUINode* uiNode = gameScene->GetNode(layoutName);
+	uiNode->SetProperty(propertyName, propertyValue);
+	uiNode->ResetTransform();
 	return Parameter();
 }
 
@@ -89,7 +128,7 @@ Parameter LogicGame::BindButtonClickEvent(vector<Parameter>* inputList)
 	wstring buttonName = (*inputList)[0].GetValueToWString();
 	wstring functionName = (*inputList)[1].GetValueToWString();
 	LLGameButton* gameButton = (LLGameButton*)gameScene->GetNode(buttonName);
-	gameButton->OnMouseClick = [&](void * sender, int e) {
+	gameButton->OnMouseClick = [=](void * sender, int e) {
 		scriptManager->RunFunction(functionName);
 	};
 	return Parameter();
@@ -100,7 +139,7 @@ Parameter LogicGame::BindCanvasRenderEvent(vector<Parameter>* inputList)
 	wstring canvasName = (*inputList)[0].GetValueToWString();
 	wstring functionName = (*inputList)[1].GetValueToWString();
 	LLGameCanvas* gameCanvas = (LLGameCanvas*)gameScene->GetNode(canvasName);
-	gameCanvas->OnRender = [&](void * sender, int e) {
+	gameCanvas->OnRender = [=](void * sender, int e) {
 		scriptManager->RunFunction(functionName);
 	};
 	return Parameter();
@@ -227,22 +266,65 @@ Parameter LogicGame::SetPhysPosition(vector<Parameter>* inputList)
 	return Parameter();
 }
 
+Parameter LogicGame::SetPhysVelocity(vector<Parameter>* inputList)
+{
+	wstring physName = (*inputList)[0].GetValueToWString();
+	wstring xWString = (*inputList)[1].GetValueToWString();
+	float x = WStringHelper::GetFloat(xWString);
+	wstring yWString = (*inputList)[2].GetValueToWString();
+	float y = WStringHelper::GetFloat(yWString);
+	physicsMap[physName]->SetVelocity(x, y);
+	return Parameter();
+}
+
+Parameter LogicGame::GetPhysPositionX(vector<Parameter>* inputList)
+{
+	wstring physName = (*inputList)[0].GetValueToWString();
+	return Parameter(L"float", L"p1", to_wstring(physicsMap[physName]->GetPosition().x));
+}
+
+Parameter LogicGame::GetPhysPositionY(vector<Parameter>* inputList)
+{
+	wstring physName = (*inputList)[0].GetValueToWString();
+	return Parameter(L"float", L"p1", to_wstring(physicsMap[physName]->GetPosition().y));
+}
+
 Parameter LogicGame::BindCollisionEvent(vector<Parameter>* inputList)
 {
 	wstring functionName = (*inputList)[0].GetValueToWString();
-	physicsWorld->OnCollisionEvent = [&](IPhysObject* object1, IPhysObject* object2) {
+	physicsWorld->OnCollisionEvent = [=](IPhysObject* object1, IPhysObject* object2) {
 		vector<Parameter> tempV;
 		tempV.push_back(Parameter(L"string",L"p1", object1->GetName()));
 		tempV.push_back(Parameter(L"string", L"p2", object2->GetName()));
 		scriptManager->RunFunction(functionName,&tempV);
-	};
+	}; 
+	return Parameter();
+}
+
+Parameter LogicGame::PhysSimulate(vector<Parameter>* inputList)
+{
+	wstring simulationTimeWString = (*inputList)[0].GetValueToWString();
+	float simulationTime = WStringHelper::GetFloat(simulationTimeWString);
+	physicsWorld->Update(simulationTime);
+	return Parameter();
+}
+
+Parameter LogicGame::PhysStart(vector<Parameter>* inputList)
+{
+	physicsWorld->Start();
+	return Parameter();
+}
+
+Parameter LogicGame::PhysStop(vector<Parameter>* inputList)
+{
+	physicsWorld->Stop();
 	return Parameter();
 }
 
 Parameter LogicGame::BindConnectServerSuccessEvent(vector<Parameter>* inputList)
 {
 	wstring functionName = (*inputList)[0].GetValueToWString();
-	gameNetClient->OnConnectSuccessHandle = [&]() {
+	gameNetClient->OnConnectSuccessHandle = [=]() {
 		scriptManager->RunFunction(functionName);
 	};
 	return Parameter();
@@ -251,10 +333,10 @@ Parameter LogicGame::BindConnectServerSuccessEvent(vector<Parameter>* inputList)
 Parameter LogicGame::BindConnectServerFailEvent(vector<Parameter>* inputList)
 {
 	wstring functionName = (*inputList)[0].GetValueToWString();
-	gameNetClient->OnConnectFailHandle = [&]() {
+	gameNetClient->OnConnectFailHandle = [=]() {
 		scriptManager->RunFunction(functionName);
 	};
-	gameNetClient->OnDisconnectHandle = [&]() {
+	gameNetClient->OnDisconnectHandle = [=]() {
 		scriptManager->RunFunction(functionName);
 	};
 	return Parameter();
@@ -269,7 +351,7 @@ Parameter LogicGame::StartConnectServer(vector<Parameter>* inputList)
 Parameter LogicGame::BindKeyDownEvent(vector<Parameter>* inputList)
 {
 	wstring functionName = (*inputList)[0].GetValueToWString();
-	gameWindow->OnKeyDown = [&](void* sender, int key) {
+	gameWindow->OnKeyDown = [=](void* sender, int key) {
 		vector<Parameter> tempV;
 		tempV.push_back(Parameter(L"int", L"p1", to_wstring(key)));
 		scriptManager->RunFunction(functionName, &tempV);
@@ -331,7 +413,7 @@ Parameter LogicGame::DrawRectangle(vector<Parameter>* inputList)
 	float width = WStringHelper::GetFloat(widthWString);
 	wstring heightWString = (*inputList)[4].GetValueToWString();
 	float height = WStringHelper::GetFloat(heightWString);
-	GraphicsApi::GetGraphicsApi()->DrawRect(isFull, x, y, width, height);
+	GraphicsApi::GetGraphicsApi()->DrawRect(isFull, x- width/2, y- height/2, width, height);
 	return Parameter();
 }
 

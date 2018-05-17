@@ -264,6 +264,9 @@ namespace LLGameStudio.Game.UI
             node.parentNode = null;
             listNode.Remove(node);
             grid.Children.Remove(node);
+            StudioManager.GetSingleInstance().TreeResetItem();
+            CanvasManager.GetSingleInstance().SelectUINode(this);
+            GameManager.GetSingleInstance().SelectUINode(this);
         }
 
         /// <summary>
@@ -385,6 +388,21 @@ namespace LLGameStudio.Game.UI
             {
                 Move(0, d);
                 SetHeight(actualHeight + 2 * d);
+            }
+        }
+
+        /// <summary>
+        /// 从父节点中移除当前节点
+        /// </summary>
+        public override void RemoveThisNode()
+        {
+            if(parentNode!=null)
+            {
+                parentNode.RemoveNode(this);
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("根节点无法移除");
             }
         }
     }

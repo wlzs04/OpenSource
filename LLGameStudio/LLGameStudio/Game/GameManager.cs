@@ -42,10 +42,25 @@ namespace LLGameStudio.Game
         public static double GameWidth { get => gameWidth; }
         public static double GameHeight { get => gameHeight; }
 
-        public GameManager(StudioManager studioManager)
+        private static GameManager gameManager = null;
+
+        private GameManager(StudioManager studioManager)
         {
             this.studioManager = studioManager;
             gameConfig = new GameConfig();
+        }
+
+        public static void InitGameManager(StudioManager studioManager)
+        {
+            if (gameManager == null)
+            {
+                gameManager = new GameManager(studioManager);
+            }
+        }
+
+        public static GameManager GetSingleInstance()
+        {
+            return gameManager;
         }
 
         /// <summary>
@@ -257,6 +272,48 @@ namespace LLGameStudio.Game
         {
             currentSelectUINode = currentUINode;
             studioManager.SelectUINodeToTree(currentUINode);
+        }
+
+        public void AddButtonToLayout()
+        {
+            if(currentSelectUINode!=null)
+            {
+                LLGameButton button = new LLGameButton();
+                currentSelectUINode.AddNode(button);
+                StudioManager.GetSingleInstance().TreeResetItem();
+                button.ResetUIProperty();
+                CanvasManager.GetSingleInstance().SelectUINode(button);
+                SelectUINode(button);
+                CanvasManager.GetSingleInstance().SetEventForUINode(button);
+            }
+        }
+
+        public void AddTextToLayout()
+        {
+            if (currentSelectUINode != null)
+            {
+                LLGameText text = new LLGameText();
+                currentSelectUINode.AddNode(text);
+                StudioManager.GetSingleInstance().TreeResetItem();
+                text.ResetUIProperty();
+                CanvasManager.GetSingleInstance().SelectUINode(text);
+                SelectUINode(text);
+                CanvasManager.GetSingleInstance().SetEventForUINode(text);
+            }
+        }
+
+        public void AddImageToLayout()
+        {
+            if (currentSelectUINode != null)
+            {
+                LLGameImage image = new LLGameImage();
+                currentSelectUINode.AddNode(image);
+                StudioManager.GetSingleInstance().TreeResetItem();
+                image.ResetUIProperty();
+                CanvasManager.GetSingleInstance().SelectUINode(image);
+                SelectUINode(image);
+                CanvasManager.GetSingleInstance().SetEventForUINode(image);
+            }
         }
     }
 }

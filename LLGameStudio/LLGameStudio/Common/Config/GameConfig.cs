@@ -65,8 +65,9 @@ namespace LLGameStudio.Common.Config
             AddProperty(openPhysics);
             AddProperty(icon);
             AddProperty(defaultCursor);
-            AddProperty(serverIPPort);
+            AddProperty(serverIPPort); 
             AddProperty(encryptKey);
+            AddProperty(defaultScript);
         }
 
         /// <summary>

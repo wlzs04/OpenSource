@@ -1,4 +1,5 @@
-<LLGameGrid name="grid1">
-  <LLGameText name="textMyRecord" anchorEnum="Left_Top" width="0.4" margin="{0,0,0,0}"/>
-  <LLGameText name="textOpponentRecord" anchorEnum="Right_Top" width="0.4" margin="{0,0,0,0}"/>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LLGameGrid name="grid1" anchorEnum="Top" height="200">
+  <LLGameText name="textMyRecord" width="0.4" text="我方得分：" />
+  <LLGameText name="textOpponentRecord" anchorEnum="Right_Top" width="0.4" text="对方得分：" />
 </LLGameGrid>

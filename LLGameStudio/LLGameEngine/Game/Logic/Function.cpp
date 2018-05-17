@@ -146,6 +146,7 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 				{
 					leftParameter.CopyClass(*leftParameterPtr);
 				}
+				wsstream.seekg(-1, ios::cur);
 				wsstream.get(tempWChar);
 			}
 			else if (LLScriptGrammar::WCharIsOperator(tempWChar))
@@ -200,45 +201,62 @@ Parameter Function::GetTempValue(wstringstream & wsstream)
 				}
 				tempWString = valueStream.str();
 
-				Function* tempF = GetFunction(tempWString);
-				if (tempF != nullptr)
+				if (LLScriptGrammar::WStringIsKeyWord(tempWString))
 				{
-					if (LLScriptGrammar::WCharCanIgnore(tempWChar))
+					if (tempWString == L"true")
 					{
-						wsstream >> tempWChar;
+						leftParameter.SetClassName(L"bool");
+						leftParameter.SetValue(L"true");
 					}
-					if (tempWChar == L'(')
+					else if(tempWString == L"false")
 					{
-						//读取方法内参数。
-						vector<Parameter> inputNewList;
-						Parameter tempInputP = GetTempValue(wsstream);
-						while (!tempInputP.IsEmpty())
-						{
-							inputNewList.push_back(tempInputP);
-						}
-						if (leftParameterPtr == nullptr)
-						{
-							leftParameter = tempF->Run(nullptr, &inputNewList);
-						}
-						else
-						{
-							leftParameter = tempF->Run(leftParameterPtr->GetClassPtr(), &inputNewList);
-						}
-						
+						leftParameter.SetClassName(L"bool");
+						leftParameter.SetValue(L"false");
 					}
+					continue;
 				}
 				else
 				{
-					Parameter* tempP = GetParameter(tempWString);
-					if (tempP != nullptr)
+					Function* tempF = GetFunction(tempWString);
+					if (tempF != nullptr)
 					{
-						if (tempWChar == L'.')
+						if (LLScriptGrammar::WCharCanIgnore(tempWChar))
 						{
-							leftParameterPtr = tempP;
+							wsstream >> tempWChar;
 						}
-						else
+						if (tempWChar == L'(')
 						{
-							leftParameter = *tempP;
+							//读取方法内参数。
+							vector<Parameter> inputNewList;
+							Parameter tempInputP = GetTempValue(wsstream);
+							while (!tempInputP.IsEmpty())
+							{
+								inputNewList.push_back(tempInputP);
+							}
+							if (leftParameterPtr == nullptr)
+							{
+								leftParameter = tempF->Run(nullptr, &inputNewList);
+							}
+							else
+							{
+								leftParameter = tempF->Run(leftParameterPtr->GetClassPtr(), &inputNewList);
+							}
+
+						}
+					}
+					else
+					{
+						Parameter* tempP = GetParameter(tempWString);
+						if (tempP != nullptr)
+						{
+							if (tempWChar == L'.')
+							{
+								leftParameterPtr = tempP;
+							}
+							else
+							{
+								leftParameter = *tempP;
+							}
 						}
 					}
 				}

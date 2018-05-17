@@ -32,7 +32,9 @@ namespace LLGameStudio.Studio
 
         public double CanvasShowRate { get => canvasShowRate; }
 
-        public CanvasManager(Canvas canvas, GameManager gameManager)
+        private static CanvasManager canvasManager = null;
+
+        private CanvasManager(Canvas canvas, GameManager gameManager)
         {
             this.canvas = canvas;
             this.gameManager = gameManager;
@@ -41,6 +43,19 @@ namespace LLGameStudio.Studio
             uiNodelist = new List<IUINode>();
 
             llStudioSelectBorder = new LLStudioSelectBorder(this);
+        }
+
+        public static void InitCanvasManager(Canvas canvas, GameManager gameManager)
+        {
+            if (canvasManager == null)
+            {
+                canvasManager = new CanvasManager(canvas, gameManager);
+            }
+        }
+
+        public static CanvasManager GetSingleInstance()
+        {
+            return canvasManager;
         }
 
         /// <summary>
@@ -340,6 +355,13 @@ namespace LLGameStudio.Studio
             }
         }
 
+        public void SetEventForUINode(IUINode uiNode)
+        {
+            uiNode.MouseLeftButtonDown += UINodeMouseLeftButtonDown;
+            uiNode.MouseMove += UINodeMouseMove;
+            uiNode.MouseLeftButtonUp += UINodeMouseLeftButtonUp;
+        }
+
         /// <summary>
         /// UI节点的鼠标左键弹起事件，控制UI节点的移动。
         /// </summary>
@@ -410,22 +432,6 @@ namespace LLGameStudio.Studio
                 DrawStandardGrid();
             }
         }
-
-        ///// <summary>
-        ///// 通过UI节点的Name属性选择UI节点，此方法即将修改。
-        ///// </summary>
-        ///// <param name="uiNodeName"></param>
-        //public void SelectUINodeByName(string uiNodeName)
-        //{
-        //    foreach (var item in uiNodelist)
-        //    {
-        //        if(item.name.Value== uiNodeName)
-        //        {
-        //            gameManager.currentSelectUINode = item;
-        //            SelectUINode(item);
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// 控制UI节点的选中。

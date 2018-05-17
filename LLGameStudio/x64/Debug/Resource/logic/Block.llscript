@@ -1,0 +1,22 @@
+
+//边缘阻挡
+class Block
+{
+	string name;
+	int x=0;
+	int y=0;
+	int width=100;
+	int height=100;
+	
+	void SetValue(string name1,int x1,int y1,int width1,int height1)
+	{
+		name=name1;
+		x=x1;
+		y=y1;
+		width=width1;
+		height=height1;
+		
+		game.CreatePhysRectangle(name,width,height,0);
+		game.SetPhysPosition(name,x,y);
+	}
+}

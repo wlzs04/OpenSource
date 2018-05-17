@@ -11,4 +11,5 @@ private:
 	Parameter GetNowTime(vector<Parameter>* inputList = nullptr);
 	Parameter LoadScriptFile(vector<Parameter>* inputList = nullptr);
 	Parameter UnloadScriptFile(vector<Parameter>* inputList = nullptr);
+	Parameter GetRandomFloat(vector<Parameter>* inputList = nullptr);
 };

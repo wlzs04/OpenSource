@@ -39,6 +39,10 @@ namespace LLGameStudio.Game.UI
             {
                 gridContent.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + image.Value, UriKind.Relative)));
             }
+            else
+            {
+                gridContent.Background = null;
+            }
         }
     }
 }

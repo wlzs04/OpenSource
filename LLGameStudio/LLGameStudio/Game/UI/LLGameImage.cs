@@ -40,7 +40,14 @@ namespace LLGameStudio.Game.UI
         public override void ResetUIProperty()
         {
             base.ResetUIProperty();
-            gridContent.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + image.Value, UriKind.Relative)));
+            if(image.IsDefault)
+            {
+                gridContent.Background = null;
+            }
+            else
+            {
+                gridContent.Background = new ImageBrush(new BitmapImage(new Uri(GameManager.GameResourcePath + @"\" + image.Value, UriKind.Relative)));
+            }
         }
     }
 }

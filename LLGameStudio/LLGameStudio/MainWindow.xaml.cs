@@ -67,7 +67,8 @@ namespace LLGameStudio
         /// </summary>
         private void InitManager()
         {
-            studioManager = new StudioManager(this);
+            StudioManager.InitStudioManager(this);
+            studioManager = StudioManager.GetSingleInstance();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -199,12 +200,27 @@ namespace LLGameStudio
         {
             labelGameName.Content = gameName;
         }
-        
+
+        /// <summary>
+        /// 返回上目录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void imageReturnLastDirectory_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.ReturnLastDirectory();
         }
-        
+
+        /// <summary>
+        /// 在资源管理器中打开文件夹
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageShowDirectoryInSystem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            studioManager.ShowDirectoryInSystem();
+        }
+
         private void canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             double rate=studioManager.ScaleCanvas(e.GetPosition(canvas), (1 + e.Delta / 3000.0));
@@ -277,6 +293,11 @@ namespace LLGameStudio
                 studioManager.MoveStudio();
                 imageMaximizeWindow.ToolTip = "最大化";
             }
+        }
+
+        public void SetCurrentDirectory(string fileAreaDirectory)
+        {
+            labelCurrentPath.Content = fileAreaDirectory;
         }
     }
 }

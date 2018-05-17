@@ -20,7 +20,7 @@
         <Style TargetType="{x:Type TextBox}" >
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
-        <Style TargetType="{x:Type TreeViewItem}">
+        <Style TargetType="Control:LLStudioTreeViewItem">
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
         <Style TargetType="{x:Type TabItem}" x:Key="TabItemStyleLeft">
@@ -130,7 +130,9 @@
                             </Grid>
                             <GridSplitter x:Name="gridSplitterColumn0" Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderBrush="#FF686868"/>
                             <Grid Margin="0" Grid.Row="1" Background="#FF6355EA">
-                                <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" Source="bin/Debug/Resource/左箭头.png" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录" MouseLeftButtonDown="imageReturnLastDirectory_MouseLeftButtonDown"/>
+                                <Image x:Name="imageReturnLastDirectory" Height="20" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="返回上目录" MouseLeftButtonDown="imageReturnLastDirectory_MouseLeftButtonDown" Source="bin/Debug/Resource/左箭头.png"/>
+                                <Label x:Name="labelCurrentPath" VerticalAlignment="Top" HorizontalAlignment="Center"></Label>
+                                <Image x:Name="imageShowDirectoryInSystem" Height="20" Width="20" Source="bin/Debug/Resource/文件夹.png" HorizontalAlignment="Right" VerticalAlignment="Top" ToolTip="在资源管理器中打开文件夹" MouseLeftButtonDown="imageShowDirectoryInSystem_MouseLeftButtonDown"/>
                                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,20,0,0" Focusable="False" Padding="0">
                                     <WrapPanel x:Name="wrapPanelFileArea" Background="#FF323232" Margin="0"/>
                                 </ScrollViewer>

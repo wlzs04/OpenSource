@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LLGameStudio.Game;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,6 +43,8 @@ namespace LLGameStudio.Studio.Control
                 switch (fileInfo.Extension)
                 {
                     case ".png":
+                    case ".jpg":
+                    case ".ico":
                         uri = new Uri(path);
                         break;
                     case ".scene":
@@ -89,6 +92,20 @@ namespace LLGameStudio.Studio.Control
             ContextMenu.Items.Add(mi1);
 
             border.Background = ThemeManager.GetBrushByName("backgroundAlphaColor");
+            ToolTip = GetFileResourcePath();
+
+            AllowDrop = true;
+            MouseMove += DrawDrop;
+            
+        }
+
+        private void DrawDrop(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && textBox.IsReadOnly)
+            {
+                DataObject dataObject = new DataObject(((LLStudioFileItem)sender).GetFileResourcePath());
+                DragDrop.DoDragDrop((LLStudioFileItem)sender, dataObject, DragDropEffects.Copy);
+            }
         }
 
         /// <summary>
@@ -137,8 +154,15 @@ namespace LLGameStudio.Studio.Control
         {
             if(MessageBox.Show("确定要删除文件"+fileInfo.Name+"吗?", "删除文件", MessageBoxButton.OKCancel)==MessageBoxResult.OK)
             {
-                parentPanel.Children.Remove(this);
-                fileInfo.Delete();
+                try
+                {
+                    fileInfo.Delete();
+                    parentPanel.Children.Remove(this);
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("文件删除失败！");
+                }
             }
         }
 
@@ -148,6 +172,7 @@ namespace LLGameStudio.Studio.Control
             {
                 textBox.IsReadOnly = false;
                 textBox.BorderBrush = new SolidColorBrush(Colors.DeepSkyBlue);
+                AllowDrop = false;
             }
         }
 
@@ -195,6 +220,7 @@ namespace LLGameStudio.Studio.Control
                 }
                 fileInfo.MoveTo(newPath);
             }
+            AllowDrop = true;
             textBox.IsReadOnly = true;
             return true;
         }
@@ -233,6 +259,15 @@ namespace LLGameStudio.Studio.Control
         public GameUIFileEnum GetFileEnum()
         {
             return gameUIFileEnum;
+        }
+
+        /// <summary>
+        /// 获得此文件在资源文件夹中的路径
+        /// </summary>
+        /// <returns></returns>
+        public string GetFileResourcePath()
+        {
+            return fileInfo.FullName.Remove(0, GameManager.GameResourcePath.Length + 1);
         }
     }
 }

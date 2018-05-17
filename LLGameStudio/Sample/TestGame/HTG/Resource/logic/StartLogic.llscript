@@ -1,8 +1,13 @@
 
+//开始游戏界面名称
+string startGameLayoutName ="startLayout";
+
+
+
 //游戏初始化时调用
 void InitUserData()
 {
-	system.ShowMessage("游戏启动！");
+	game.AddLayout(startGameLayoutName,"layout/startButtonLayout.layout");
 }
 
 //游戏运行时每帧调用

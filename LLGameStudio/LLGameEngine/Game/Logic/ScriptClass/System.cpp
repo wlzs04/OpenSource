@@ -2,6 +2,7 @@
 #include "..\..\..\Common\Helper\MessageHelper.h"
 #include <functional>
 #include "..\LLScriptManager.h"
+#include "..\..\..\Common\Helper\MathHelper.h"
 
 System::System() :Class(L"System")
 {
@@ -20,6 +21,10 @@ System::System() :Class(L"System")
 	Function* unloadScriptFileFunction = new Function(L"UnloadScriptFile", L"void", nullptr, this);
 	unloadScriptFileFunction->SetCppFunction(std::bind(&System::UnloadScriptFile, this, placeholders::_1));
 	AddFunctionDefine(unloadScriptFileFunction);
+
+	Function* getRandomFloatFunction = new Function(L"GetRandomFloat", L"void", nullptr, this);
+	getRandomFloatFunction->SetCppFunction(std::bind(&System::GetRandomFloat, this, placeholders::_1));
+	AddFunctionDefine(getRandomFloatFunction);
 }
 
 Class * System::GetInstance()
@@ -65,4 +70,9 @@ Parameter System::UnloadScriptFile(vector<Parameter>* inputList)
 	}
 	LLScriptManager::GetSingleInstance()->UnLoadScriptFromFile(content);
 	return Parameter();
+}
+
+Parameter System::GetRandomFloat(vector<Parameter>* inputList)
+{
+	return Parameter(L"float",L"p1",to_wstring(MathHelper::RandFloat()));
 }

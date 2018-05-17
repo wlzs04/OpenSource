@@ -16,6 +16,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using LLGameStudio.Game.UI;
 using LLGameStudio.Studio.Window;
+using LLGameStudio.Game.Particle;
+using LLGameStudio.Game.Actor;
 
 namespace LLGameStudio.Studio
 {
@@ -25,9 +27,9 @@ namespace LLGameStudio.Studio
         string fileAreaDirectory="";
         string currentFilePath="";
         StudioConfig studioConfig;
-        MainWindow window;
-        GameManager gameManager;
-        CanvasManager canvasManager;
+        MainWindow window =null;
+        GameManager gameManager = null;
+        CanvasManager canvasManager = null;
 
         TreeView treeViewUILayer;
 
@@ -53,7 +55,9 @@ namespace LLGameStudio.Studio
         public string FileAreaDirectory { get => fileAreaDirectory; }
         public string CurrentFilePath { get => currentFilePath;}
 
-        public StudioManager(MainWindow window)
+        private static StudioManager studioManager = null;
+
+        private StudioManager(MainWindow window)
         {
             System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
             Common.Standard.CurrentDpiX = g.DpiX;
@@ -73,15 +77,30 @@ namespace LLGameStudio.Studio
             gridPropertyEditorArea = window.GetGridPropertyEditorArea();
 
             LoadConfig();
-            gameManager = new GameManager(this);
+            GameManager.InitGameManager(this);
+            gameManager = GameManager.GetSingleInstance();
             ThemeManager.LoadTheme(studioConfig.Theme);
-            
-            canvasManager = new CanvasManager(window.GetCanvas(), gameManager);
+
+            CanvasManager.InitCanvasManager(window.GetCanvas(), gameManager);
+            canvasManager = CanvasManager.GetSingleInstance();
             
             if(!string.IsNullOrEmpty(studioConfig.LastGamePath))
             {
                 OpenGameByPath(studioConfig.LastGamePath);
             }
+        }
+
+        public static void InitStudioManager(MainWindow window)
+        {
+            if(studioManager==null)
+            {
+                studioManager = new StudioManager(window);
+            }
+        }
+
+        public static StudioManager GetSingleInstance()
+        {
+            return studioManager;
         }
 
         /// <summary>
@@ -200,28 +219,28 @@ namespace LLGameStudio.Studio
             //UI控件区
 
             LLStudioButton gameControlButton = new LLStudioButton();
-            gameControlButton.Width = 50;
-            gameControlButton.SetImage("Resource/立方体.png");
+            gameControlButton.Width = 100;
+            gameControlButton.Height = 100;
+            gameControlButton.SetText("按钮");
+            gameControlButton.MouseDoubleClick += AddButtonToLayout;
             gameControlButton.ToolTip = "按钮";
             wrapPanelUIControlArea.Children.Add(gameControlButton);
 
-            LLStudioButton gameControlLabel = new LLStudioButton();
-            gameControlLabel.SetImage("Resource/球.png");
-            gameControlLabel.Width = 50;
-            gameControlLabel.ToolTip = "文字";
-            wrapPanelUIControlArea.Children.Add(gameControlLabel);
+            LLStudioButton gameControlText = new LLStudioButton();
+            gameControlText.Width = 100;
+            gameControlText.Height = 100;
+            gameControlText.SetText("文字");
+            gameControlText.MouseDoubleClick += AddTextToLayout;
+            gameControlText.ToolTip = "文字";
+            wrapPanelUIControlArea.Children.Add(gameControlText);
 
             LLStudioButton gameControlImage = new LLStudioButton();
-            gameControlImage.SetImage("Resource/圆柱.png");
-            gameControlImage.Width = 50;
+            gameControlImage.Width = 100;
+            gameControlImage.Height = 100;
+            gameControlImage.SetText("图片");
+            gameControlImage.MouseDoubleClick += AddImageToLayout;
             gameControlImage.ToolTip = "图片";
             wrapPanelUIControlArea.Children.Add(gameControlImage);
-
-            LLStudioButton gameControlGrid = new LLStudioButton();
-            gameControlGrid.SetImage("Resource/圆锥.png");
-            gameControlGrid.Width = 50;
-            gameControlGrid.ToolTip = "容器";
-            wrapPanelUIControlArea.Children.Add(gameControlGrid);
 
             //文件区：右键菜单
 
@@ -267,6 +286,29 @@ namespace LLGameStudio.Studio
             gridPropertyEditorArea.Children.Add(listBoxPropertyEditor);
         }
 
+        private void AddButtonToLayout(object sender, MouseButtonEventArgs e)
+        {
+            gameManager.AddButtonToLayout();
+        }
+
+        private void AddTextToLayout(object sender, MouseButtonEventArgs e)
+        {
+            gameManager.AddTextToLayout();
+        }
+
+        private void AddImageToLayout(object sender, MouseButtonEventArgs e)
+        {
+            gameManager.AddImageToLayout();
+        }
+
+        /// <summary>
+        /// 在资源管理器中打开文件夹
+        /// </summary>
+        public void ShowDirectoryInSystem()
+        {
+            System.Diagnostics.Process.Start(fileAreaDirectory);
+        }
+
         /// <summary>
         /// 将选中的UI节点同步到UI层级树中。
         /// </summary>
@@ -287,6 +329,7 @@ namespace LLGameStudio.Studio
             {
                 if (item.GetUINode() == currentUINode)
                 {
+                    ShowPropertyToEditorArea(currentUINode);
                     item.IsSelected = true;
                     LLStudioTreeViewItem parentTreeViewItem = item.Parent as LLStudioTreeViewItem;
                     while (parentTreeViewItem != null)
@@ -298,7 +341,6 @@ namespace LLGameStudio.Studio
                 }
                 SelectUINodeToTree(currentUINode, item);
             }
-            ShowPropertyToEditorArea(currentUINode);
         }
 
         /// <summary>
@@ -373,7 +415,36 @@ namespace LLGameStudio.Studio
                     newFilePath = fileAreaDirectory + @"/" + fileType + fileNum + "."+ fileType;
 
                 } while (File.Exists(newFilePath));
-                File.Create(newFilePath);
+                File.Create(newFilePath).Close();
+                IXMLClass iXMLClass=null;
+                string fileName = fileType + fileNum + "." + fileType;
+                switch (uiType)
+                {
+                    case GameUIFileEnum.Folder:
+                        break;
+                    case GameUIFileEnum.Scene:
+                        iXMLClass = new LLGameScene();
+                        break;
+                    case GameUIFileEnum.Layout:
+                        iXMLClass = new LLGameLayout();
+                        break;
+                    case GameUIFileEnum.Particle:
+                        iXMLClass = new ParticleSystem(fileName, null);
+                        break;
+                    case GameUIFileEnum.Actor:
+                        iXMLClass = new Actor(fileName);
+                        break;
+                    case GameUIFileEnum.Script:
+                        break;
+                    case GameUIFileEnum.Unknown:
+                        break;
+                    default:
+                        break;
+                }
+                if(iXMLClass!=null)
+                {
+                    LLConvert.ExportContentToXML(newFilePath, iXMLClass);
+                }
                 LoadDirectoryToFileArea(fileAreaDirectory);
             }
             else
@@ -424,6 +495,11 @@ namespace LLGameStudio.Studio
             CreateNewFileToCurrrentDirectory(GameUIFileEnum.Actor);
         }
 
+        /// <summary>
+        /// 新建角色文件到当前文件夹下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CreateNewScriptToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
             CreateNewFileToCurrrentDirectory(GameUIFileEnum.Script);
@@ -710,7 +786,7 @@ namespace LLGameStudio.Studio
             {
                 GameConfigWindow gameConfigWindow = new GameConfigWindow(gameManager);
                 gameConfigWindow.Owner = window;
-                gameConfigWindow.Show();
+                gameConfigWindow.ShowDialog();
             }
             else
             {
@@ -758,6 +834,7 @@ namespace LLGameStudio.Studio
             currentFilePath = "";
             LLStudioFileItem item = sender as LLStudioFileItem;
             fileAreaDirectory += @"\" + item.textBox.Text;
+            window.SetCurrentDirectory(fileAreaDirectory);
             LoadDirectoryToFileArea(FileAreaDirectory);
         }
 
@@ -869,6 +946,7 @@ namespace LLGameStudio.Studio
             else
             {
                 fileAreaDirectory = GameManager.GameResourcePath;
+                window.SetCurrentDirectory(fileAreaDirectory);
                 ShowStatusInfo("打开游戏目录完成。");
                 LoadDirectoryToFileArea(GameManager.GameResourcePath);
                 studioConfig.LastGamePath = GameManager.GamePath;
@@ -910,6 +988,7 @@ namespace LLGameStudio.Studio
             else
             {
                 fileAreaDirectory = fileAreaDirectory.Substring(0, fileAreaDirectory.LastIndexOf('\\'));
+                window.SetCurrentDirectory(fileAreaDirectory);
                 LoadDirectoryToFileArea(fileAreaDirectory);
             }
         }

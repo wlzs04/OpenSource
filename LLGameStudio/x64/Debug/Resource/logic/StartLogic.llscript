@@ -1,12 +1,151 @@
+@ "logic/Block.llscript"
+@ "logic/Ball.llscript"
+
+//开始游戏界面名称
+string startGameLayoutName ="startLayout";
+string startGameLayoutPath ="layout/startButtonLayout.layout";
+
+int gameWidth;
+int gameHeight;
+
+//球的半径
+int ballRadius = 40;
+//阻挡体厚度
+int blockThickness = 40;
+//洞口厚度
+int holeThickness = 80;
+
+Block leftBlock;
+Block topBlock;
+Block rightBlock;
+Block bottomBlock;
+
+Block myHole;
+Block oppenentHole;
+
+Ball myHandBall;
+Ball oppenentHandBall;
+
+Ball iceBall;
+
+bool gameStart = false;
+
+//画刷名称
+string iceBallBrush ="iceBallBrush";
+string handBallBrush ="handBallBrush";
+string blockBrush ="blockBrush";
+string holeBrush ="holeBrush";
 
 //游戏初始化时调用
 void InitUserData()
 {
+	gameWidth=game.GetGameWidth();
+	gameHeight=game.GetGameHeight();
 	
+	game.AddLayout(startGameLayoutName,startGameLayoutPath);
+	game.SetUINodeProperty(startGameLayoutName,"modal", "True");
+	game.BindButtonClickEvent(startGameLayoutName+"/grid1/buttonStart","GameStartButtonClick");
+	game.BindCanvasRenderEvent("canvas","CanvasRender");
+	
+	game.BindKeyDownEvent("KeyDown");
+	
+	game.CreatePhysicsWorld();
+	
+	leftBlock.SetValue("leftBlock",0,gameHeight/2,blockThickness,gameHeight);
+	topBlock.SetValue("topBlock",gameWidth/2,0,gameWidth,blockThickness);
+	rightBlock.SetValue("rightBlock",gameWidth,gameHeight/2,blockThickness,gameHeight);
+	bottomBlock.SetValue("bottomBlock",gameWidth/2,gameHeight,gameWidth,blockThickness);
+	
+	myHole.SetValue("myHole",gameWidth/2,gameHeight,gameWidth/2,holeThickness);
+	oppenentHole.SetValue("oppenentHole",gameWidth/2,0,gameWidth/2,holeThickness);
+	
+	myHandBall.SetValue("myHandBall",gameWidth/2,gameHeight*0.75,ballRadius,2);
+	oppenentHandBall.SetValue("oppenentHandBall",gameWidth/2,gameHeight*0.25,ballRadius,2);
+	iceBall.SetValue("iceBall",gameWidth/2,gameHeight/2,ballRadius,1);
+	
+	game.AddBrush(iceBallBrush,0.9, 0.8, 0.8, 1);
+	game.AddBrush(handBallBrush,0.7, 0.4, 0.2, 1);
+	game.AddBrush(blockBrush,0.8, 0.6, 0.6, 1);
+	game.AddBrush(holeBrush,0.9, 0.1, 0.1, 1);
 }
 
 //游戏运行时每帧调用
 void UpdateUserData()
 {
+	float thisTickTime = game.GetThisTickTime();
+	game.PhysSimulate(thisTickTime);
+	myHandBall.GetValueFromPhy();
+	oppenentHandBall.GetValueFromPhy();
+	iceBall.GetValueFromPhy();
+}
+
+void GameStartButtonClick()
+{
+	game.RemoveLayout(startGameLayoutName);
+	gameStart=true;
+	game.PhysStart();
+}
+
+void CanvasRender()
+{
+	//绘制阻挡体
+	game.SetCurrentBrush(blockBrush);
+	RenderRectangle(leftBlock);
+	RenderRectangle(topBlock);
+	RenderRectangle(rightBlock);
+	RenderRectangle(bottomBlock);
 	
+	//绘制洞口
+	game.SetCurrentBrush(holeBrush);
+	RenderRectangle(myHole);
+	RenderRectangle(oppenentHole);
+	
+	//绘制手球
+	game.SetCurrentBrush(handBallBrush);
+	RenderBall(myHandBall);
+	RenderBall(oppenentHandBall);
+	
+	//绘制冰球
+	game.SetCurrentBrush(iceBallBrush);
+	RenderBall(iceBall);
+}
+
+void RenderRectangle(Block block)
+{
+	game.DrawRectangle(true,block.x,block.y,block.width,block.height);
+}
+
+void RenderBall(Ball ball)
+{
+	game.DrawEllipse(true,ball.x,ball.y,ball.radius,ball.radius);
+}
+
+void KeyDown(int key)
+{
+	if(key#13)
+	{
+		if(gameStart)
+		{
+			ServeBall();
+		}
+		else
+		{
+		}
+		
+	}
+	else if(key#27)
+	{
+		game.StopGame();
+	}
+	else
+	{
+	}
+}
+
+void ServeBall()
+{
+	iceBall.SetXY(gameWidth/2,gameHeight/2);
+	float vx=50-100*system.GetRandomFloat();
+	float vy=50-100*system.GetRandomFloat();
+	iceBall.SetVelocity(vx,vy);
 }

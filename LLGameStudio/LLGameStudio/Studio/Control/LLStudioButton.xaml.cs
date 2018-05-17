@@ -37,10 +37,23 @@ namespace LLGameStudio.Studio.Control
             border.Background = ThemeManager.GetBrushByName("backgroundHoverColor");
         }
 
+        /// <summary>
+        /// 设置图片路径
+        /// </summary>
+        /// <param name="filePath"></param>
         public void SetImage(string filePath)
         {
             Uri uri = new Uri(Environment.CurrentDirectory + @"\"+ filePath);
             image.Source = new BitmapImage(uri);
+        }
+
+        /// <summary>
+        /// 设置文字
+        /// </summary>
+        /// <param name="content"></param>
+        public void SetText(string content)
+        {
+            label.Content = content;
         }
 
         private void border_MouseLeave(object sender, MouseEventArgs e)

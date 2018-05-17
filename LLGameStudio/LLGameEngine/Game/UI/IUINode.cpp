@@ -136,6 +136,11 @@ IUINode* IUINode::GetNode(wstring nodeName)
 	wstring rootNodeName;
 	wstring realNodeName;
 	int pos = nodeName.find(L"\\");
+	if (pos == -1)
+	{
+		pos = nodeName.find(L"/");
+
+	}
 	if (pos != -1)
 	{
 		rootNodeName = nodeName.substr(0, pos);

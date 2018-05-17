@@ -1,4 +1,4 @@
-﻿<LLGameGrid name="grid1">
-  <LLGameText name="textNetState" anchorEnum="Left_Top" width="0.3" height="0.1"/>
-  <LLGameText name="textTurnNumber" anchorEnum="Top" text="0" width="0.3" height="0.1"/>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LLGameGrid name="grid1" anchorEnum="Top" height="100">
+  <LLGameText name="textTurnNumber" anchorEnum="Top" width="0.5" text="回合数：" />
 </LLGameGrid>

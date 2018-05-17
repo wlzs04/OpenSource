@@ -6,6 +6,8 @@ class Game;
 
 class LogicGame : public LLGame
 {
+public :
+	~LogicGame();
 protected:
 	virtual void InitUserData() override;
 	virtual void UpdateUserData() override;
@@ -26,6 +28,16 @@ protected:
 	unordered_map<wstring, void*>brushMap;
 
 private:
+	//游戏结束
+	//参数：
+	//返回：
+	Parameter StopGame(vector<Parameter>* inputList = nullptr);
+
+	//游戏在这一帧运行的时间
+	//参数：
+	//返回：float
+	Parameter GetThisTickTime(vector<Parameter>* inputList = nullptr);
+
 	//向游戏界面中添加布局
 	//参数：布局的名称，布局的文件路径
 	//返回：
@@ -96,10 +108,40 @@ private:
 	//返回：
 	Parameter SetPhysPosition(vector<Parameter>* inputList = nullptr);
 
+	//设置物理物体位置
+	//参数：物体的名称，速度x，速度y
+	//返回：
+	Parameter SetPhysVelocity(vector<Parameter>* inputList = nullptr);
+	
+	//获得物理物体横坐标
+	//参数：物体的名称
+	//返回：float
+	Parameter GetPhysPositionX(vector<Parameter>* inputList = nullptr);
+
+	//获得物理物体纵坐标
+	//参数：物体的名称
+	//返回：float
+	Parameter GetPhysPositionY(vector<Parameter>* inputList = nullptr);
+
 	//绑定物理物体相互碰撞的事件
 	//参数：脚本中方法的名称
 	//返回：
 	Parameter BindCollisionEvent(vector<Parameter>* inputList = nullptr);
+
+	//让受物理管理的物体模拟一段时间
+	//参数：模拟时长
+	//返回：
+	Parameter PhysSimulate(vector<Parameter>* inputList = nullptr);
+
+	//开始物理模拟
+	//参数：
+	//返回：
+	Parameter PhysStart(vector<Parameter>* inputList = nullptr);
+
+	//停止物理模拟
+	//参数：
+	//返回：
+	Parameter PhysStop(vector<Parameter>* inputList = nullptr);
 
 	//绑定网络连接成功的事件
 	//参数：脚本中方法的名称

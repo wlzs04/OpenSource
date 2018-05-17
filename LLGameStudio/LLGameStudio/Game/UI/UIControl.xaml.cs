@@ -28,6 +28,24 @@ namespace LLGameStudio.Game.UI
             InitializeComponent();
             border.BorderBrush = ThemeManager.GetBrushByName("borderUIColor");
             grid.Background = ThemeManager.GetBrushByName("backgroundUIAlphaColor");
+            ContextMenu = new ContextMenu();
+            MenuItem mi0 = new MenuItem();
+            mi0.Header = "删除";
+            mi0.Click += menuItem0_Click;
+            ContextMenu.Items.Add(mi0);
+        }
+
+        private void menuItem0_Click(object sender, RoutedEventArgs e)
+        {
+            RemoveThisNode();
+        }
+
+        /// <summary>
+        /// 移除当期节点
+        /// </summary>
+        public virtual void RemoveThisNode()
+        {
+
         }
 
         private void grid_MouseEnter(object sender, MouseEventArgs e)

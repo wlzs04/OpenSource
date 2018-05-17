@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LLGameGrid name="grid1">
-  <LLGameText name="textCountDown" anchorEnum="Center"/>
+  <LLGameText name="textCountDown" anchorEnum="Center" width="300" height="100" text="倒计时：" />
 </LLGameGrid>
