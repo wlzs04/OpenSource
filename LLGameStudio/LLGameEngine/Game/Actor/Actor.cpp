@@ -144,13 +144,11 @@ Bone* Actor::GetBoneByName(Bone* bone, wstring actionName)
 
 void Actor::SetBoneTrandformByIK(Bone* moveBone, Vector2 newPosition)
 {
-	//POINT currentMousePosition = GameHelper::mousePosition;
 	for (int i = 0; i < ikCyclicNumber; i++)
 	{
 		Bone* tempBone = moveBone;
 		while (tempBone)
 		{
-			double tempAngle = tempBone->GetRealAngle();
 			Vector2 tempPoint = tempBone->GetPosition();
 			Vector2 sPoint = moveBone->GetBoneEndPosition();
 			Vector2 dv(newPosition.x - tempPoint.x, newPosition.y - tempPoint.y);

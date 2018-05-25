@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Actor>
+  <Bone name="根骨骼" length="239.01204990543889" angle="-3.1315511501001536">
+    <Bone name="胸骨" length="90.868176948125807" angle="-0.030705729665776893">
+      <Bone name="头骨" angle="6.3166580059815072" />
+      <Bone name="右肩骨" length="61.986372341269266" angle="1.5809851059197977">
+        <Bone name="右上臂" length="87.098105605116359" angle="1.498511930192441">
+          <Bone name="右小臂" angle="0.082759843653691822" />
+        </Bone>
+      </Bone>
+      <Bone name="左肩骨" length="62.736208153793228" angle="4.711406578459659">
+        <Bone name="左上臂" length="77.3490788568293" angle="-1.4870534693317405">
+          <Bone name="左小臂" angle="-0.062096229361987554" />
+        </Bone>
+      </Bone>
+    </Bone>
+    <Bone name="右股骨" length="74.5131094318451" angle="2.8102921107306629">
+      <Bone name="右大腿骨" angle="0.32125903936949085">
+        <Bone name="右小腿骨" />
+      </Bone>
+    </Bone>
+    <Bone name="左股骨" length="74.507011785826592" angle="3.4717433028540885">
+      <Bone name="左大腿骨" angle="-0.34019215275393466">
+        <Bone name="左小腿骨" />
+      </Bone>
+    </Bone>
+  </Bone>
+  <IKs />
+  <Actions>
+    <Action name="跑步" totalTime="1">
+      <Frame>
+        <Bone name="根骨骼" angle="-3.1315511501001536" />
+        <Bone name="胸骨" angle="-0.030705729665776893" />
+        <Bone name="头骨" angle="6.3166580059815072" />
+        <Bone name="右肩骨" angle="1.5809851059197977" />
+        <Bone name="右上臂" angle="0.987335585720309" />
+        <Bone name="右小臂" angle="-1.4097506565940234" />
+        <Bone name="左肩骨" angle="4.711406578459659" />
+        <Bone name="左上臂" angle="-0.93462779206690938" />
+        <Bone name="左小臂" angle="-1.5457141408470281" />
+        <Bone name="右股骨" angle="2.8102921107306629" />
+        <Bone name="右大腿骨" angle="-0.36932813409759679" />
+        <Bone name="右小腿骨" angle="0.91953468461079835" />
+        <Bone name="左股骨" angle="3.4717433028540885" />
+        <Bone name="左大腿骨" angle="0.17408431867457497" />
+        <Bone name="左小腿骨" angle="0.31669702913591891" />
+      </Frame>
+      <Frame frameNumber="12">
+        <Bone name="根骨骼" angle="-3.1315511501001536" />
+        <Bone name="胸骨" angle="-0.030705729665776893" />
+        <Bone name="头骨" angle="6.3166580059815072" />
+        <Bone name="右肩骨" angle="1.5809851059197977" />
+        <Bone name="右上臂" angle="2.0572230214315375" />
+        <Bone name="右小臂" angle="-1.8601222189808095" />
+        <Bone name="左肩骨" angle="4.711406578459659" />
+        <Bone name="左上臂" angle="-1.9320905018527914" />
+        <Bone name="左小臂" angle="-1.5" />
+        <Bone name="右股骨" angle="2.8102921107306629" />
+        <Bone name="右大腿骨" angle="0.90972395175081577" />
+        <Bone name="右小腿骨" angle="1.0931300322774444" />
+        <Bone name="左股骨" angle="3.4717433028540885" />
+        <Bone name="左大腿骨" angle="-1.0926683470103091" />
+        <Bone name="左小腿骨" angle="1.1599897900433127" />
+      </Frame>
+      <Frame frameNumber="24">
+        <Bone name="根骨骼" angle="-3.1315511501001536" />
+        <Bone name="胸骨" angle="-0.030705729665776893" />
+        <Bone name="头骨" angle="6.3166580059815072" />
+        <Bone name="右肩骨" angle="1.5809851059197977" />
+        <Bone name="右上臂" angle="0.987335585720309" />
+        <Bone name="右小臂" angle="-1.4097506565940234" />
+        <Bone name="左肩骨" angle="4.711406578459659" />
+        <Bone name="左上臂" angle="-0.93462779206690938" />
+        <Bone name="左小臂" angle="-1.5457141408470281" />
+        <Bone name="右股骨" angle="2.8102921107306629" />
+        <Bone name="右大腿骨" angle="-0.36932813409759679" />
+        <Bone name="右小腿骨" angle="0.91953468461079835" />
+        <Bone name="左股骨" angle="3.4717433028540885" />
+        <Bone name="左大腿骨" angle="0.17408431867457497" />
+        <Bone name="左小腿骨" angle="0.3137768533586841" />
+      </Frame>
+    </Action>
+    <Action name="摔倒" totalTime="1">
+      <Frame>
+        <Bone name="根骨骼" angle="-3.1315511501001536" />
+        <Bone name="胸骨" angle="-0.030705729665776893" />
+        <Bone name="头骨" angle="6.3166580059815072" />
+        <Bone name="右肩骨" angle="1.5809851059197977" />
+        <Bone name="右上臂" angle="0.987335585720309" />
+        <Bone name="右小臂" angle="-1.4097506565940234" />
+        <Bone name="左肩骨" angle="4.711406578459659" />
+        <Bone name="左上臂" angle="-0.93462779206690938" />
+        <Bone name="左小臂" angle="-1.5457141408470281" />
+        <Bone name="右股骨" angle="2.8102921107306629" />
+        <Bone name="右大腿骨" angle="-0.36932813409759679" />
+        <Bone name="右小腿骨" angle="0.91953468461079835" />
+        <Bone name="左股骨" angle="3.4717433028540885" />
+        <Bone name="左大腿骨" angle="0.17408431867457497" />
+        <Bone name="左小腿骨" angle="0.31669702913591891" />
+      </Frame>
+      <Frame frameNumber="24">
+        <Bone name="根骨骼" angle="-3.1315511501001536" />
+        <Bone name="胸骨" angle="1.2623123662934641" />
+        <Bone name="头骨" angle="6.3166580059815072" />
+        <Bone name="右肩骨" angle="0.94248151908538147" />
+        <Bone name="右上臂" angle="-0.46198660290341254" />
+        <Bone name="右小臂" angle="-0.87619194766807762" />
+        <Bone name="左肩骨" angle="3.7928326539760553" />
+        <Bone name="左上臂" angle="-2.6709810090578729" />
+        <Bone name="左小臂" angle="-0.598179096178342" />
+        <Bone name="右股骨" angle="4.5273992548961717" />
+        <Bone name="右大腿骨" angle="0.090505077531850109" />
+        <Bone name="右小腿骨" angle="0.21912877697907396" />
+        <Bone name="左股骨" angle="4.539714534860062" />
+        <Bone name="左大腿骨" angle="0.17408431867457497" />
+        <Bone name="左小腿骨" angle="0.31669702913591891" />
+      </Frame>
+    </Action>
+  </Actions>
+</Actor>

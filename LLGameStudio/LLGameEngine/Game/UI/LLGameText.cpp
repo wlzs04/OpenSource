@@ -2,7 +2,8 @@
 
 LLGameText::LLGameText()
 {
-	propertyMap[propertyText.name] = &propertyText;
+	propertyMap[propertyText.name] = &propertyText; 
+	propertyMap[propertyTextFamily.name] = &propertyTextFamily;
 }
 
 void LLGameText::SetText(wstring text)

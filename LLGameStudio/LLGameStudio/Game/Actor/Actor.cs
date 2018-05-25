@@ -18,6 +18,7 @@ namespace LLGameStudio.Game.Actor
         public Actor(string name)
         {
             this.name = name;
+            SetRootBone(new Bone());
         }
 
         public void LoadContentFromXML(XElement element)
@@ -72,7 +73,10 @@ namespace LLGameStudio.Game.Actor
         {
             XElement element = new XElement("Actor");
             ExportAttrbuteToXML(element);
-            element.Add(rootBone.ExportContentToXML());
+            if(rootBone!=null)
+            {
+                element.Add(rootBone.ExportContentToXML());
+            }
             XElement iksElement = new XElement("IKs");
             foreach (var item in ikMap)
             {

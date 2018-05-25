@@ -1,0 +1,31 @@
+
+//开始游戏界面名称
+string startGameLayoutName ="startLayout";
+string startGameLayoutPath ="layout/startButtonLayout.layout";
+bool gameStart =false;
+
+//游戏初始化时调用
+void InitUserData()
+{
+	game.AddLayout(startGameLayoutName,startGameLayoutPath);
+	game.SetUINodeProperty(startGameLayoutName,"modal", "True");
+	game.BindButtonClickEvent(startGameLayoutName+"/grid1/buttonStart","GameStartButtonClick");
+	game.BindCanvasRenderEvent("canvas","CanvasRender");
+}
+
+//游戏运行时每帧调用
+void UpdateUserData()
+{
+	
+}
+
+void GameStartButtonClick()
+{
+	game.RemoveLayout(startGameLayoutName);
+	gameStart=true;
+}
+
+void CanvasRender()
+{
+	
+}

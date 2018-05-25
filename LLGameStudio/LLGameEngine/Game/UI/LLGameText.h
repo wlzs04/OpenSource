@@ -10,4 +10,5 @@ public:
 	void Render()override;
 private:
 	PropertyText propertyText;
+	PropertyTextFamily propertyTextFamily;
 };

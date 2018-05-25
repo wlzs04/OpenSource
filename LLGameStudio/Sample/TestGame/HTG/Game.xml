@@ -1,2 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Game gameName="桌上冰球" gameWidth="600" gameHeight="800" openPhysics="true" />
+<Game gameName="桌上冰球" gameWidth="600" gameHeight="800" openNetClient="true" openPhysics="true" />

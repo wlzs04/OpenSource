@@ -160,6 +160,15 @@ public:
 	wstring value;
 };
 
+class PropertyTextFamily :public IUIProperty
+{
+public:
+	PropertyTextFamily() :IUIProperty(L"textFamily", L"") { SetValue(defaultValue); }
+	wstring GetValue()override { return value; };
+	void SetValue(wstring value) { this->value = value; };
+	wstring value;
+};
+
 class PropertyModal :public IUIProperty
 {
 public:

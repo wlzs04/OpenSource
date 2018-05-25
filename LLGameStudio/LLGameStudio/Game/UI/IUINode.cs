@@ -458,6 +458,11 @@ namespace LLGameStudio.Game.UI
         {
             public Text() : base("text", typeof(string), UIPropertyEnum.Common, "显示文字。", "") { }
         }
+
+        public class TextFamily : IUIProperty
+        {
+            public TextFamily() : base("textFamily", typeof(string), UIPropertyEnum.Common, "显示文字的样式。", "") { }
+        }
     }
     
     /// <summary>

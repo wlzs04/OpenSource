@@ -23,7 +23,7 @@
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
             <Setter Property="FontSize" Value="16"/>
         </Style>
-        <Style TargetType="TreeViewItem">
+        <Style TargetType="Control:LLStudioTreeViewItem">
             <Setter Property="Foreground" Value="#FFF0F0F0"/>
         </Style>
     </Window.Resources>

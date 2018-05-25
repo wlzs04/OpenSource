@@ -1,2 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Fonts />
+<Fonts>
+  <Font name="testFont" familyName="Microsoft YaHei" color="#FFFFFF55" size="20" />
+</Fonts>

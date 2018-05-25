@@ -54,7 +54,14 @@ namespace LLGameStudio.Common.Config
         /// <returns></returns>
         public LLFont GetFontByName(string name)
         {
-            return dictionaryFont[name];
+            if(dictionaryFont.ContainsKey(name))
+            {
+                return dictionaryFont[name];
+            }
+            else
+            {
+                return new LLFont("font", "Microsoft YaHei","#FF000000",15);
+            }
         }
 
     }
