@@ -1,2 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Game gameName="桌上冰球" gameWidth="600" gameHeight="800" gameLeft="700" gameTop="0" middleInScreen="false" canMultiGame="true" openNetClient="true" openPhysics="true" icon="texture\iceBall.ico" defaultCursor="texture\忙.cur" serverIPPort="10.237.20.13:1234" encryptKey="4201357"/>
+<Game gameName="桌上冰球" gameWidth="600" gameHeight="800" gameLeft="100" gameTop="0" middleInScreen="false" canMultiGame="true" openNetClient="true" openPhysics="true" icon="texture\iceBall.ico" defaultCursor="texture\忙.cur" serverIPPort="118.202.10.219:1234" encryptKey="4201357"/>

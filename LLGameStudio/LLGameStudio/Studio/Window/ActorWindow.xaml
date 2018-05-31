@@ -49,7 +49,7 @@
                     <Grid Margin="0,2,0,0">
                         <Grid Margin="0,0,0,0" Height="30" VerticalAlignment="Top">
                             <Label Height="30" Content="名称：" VerticalAlignment="Center" FontSize="14.667" Padding="5,0,0,0" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
-                            <TextBox x:Name="textBoxParticleName" IsReadOnly="True" Height="30" Margin="50,0,2,0" VerticalAlignment="Top" Text="asdasd" TextDecorations="{x:Null}"/>
+                            <TextBox x:Name="textBoxActorName" IsReadOnly="True" Height="30" Margin="50,0,2,0" VerticalAlignment="Top" Text="asdasd" TextDecorations="{x:Null}"/>
                         </Grid>
                         <Grid Margin="0,30,0,0">
                             <Grid.RowDefinitions>

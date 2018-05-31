@@ -48,8 +48,8 @@ namespace LLGameStudio.Studio.Window
         {
             InitializeComponent();
             this.filePath = filePath;
-            textBoxParticleName.Text = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            actor = new Actor(textBoxParticleName.Text);
+            textBoxActorName.Text = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            actor = new Actor(textBoxActorName.Text);
             transformAxis = new LLStudioTransformAxis(canvas);
             transformAxis.DragAxisEvent += DragAxisEvent;
             transformAxis.SetTransformType(TransformType.Tranlation);

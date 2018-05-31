@@ -274,47 +274,60 @@ namespace LLGameStudio.Game
             studioManager.SelectUINodeToTree(currentUINode);
         }
 
-        public void AddButtonToLayout()
-        {
-            if(currentSelectUINode!=null)
-            {
-                LLGameButton button = new LLGameButton();
-                currentSelectUINode.AddNode(button);
-                StudioManager.GetSingleInstance().TreeResetItem();
-                button.ResetUIProperty();
-                CanvasManager.GetSingleInstance().SelectUINode(button);
-                SelectUINode(button);
-                CanvasManager.GetSingleInstance().SetEventForUINode(button);
-            }
-        }
-
-        public void AddTextToLayout()
+        public void AddControlToLayout(IUINode uiNode)
         {
             if (currentSelectUINode != null)
             {
-                LLGameText text = new LLGameText();
-                currentSelectUINode.AddNode(text);
+                currentSelectUINode.AddNode(uiNode);
                 StudioManager.GetSingleInstance().TreeResetItem();
-                text.ResetUIProperty();
-                CanvasManager.GetSingleInstance().SelectUINode(text);
-                SelectUINode(text);
-                CanvasManager.GetSingleInstance().SetEventForUINode(text);
+                uiNode.ResetUIProperty();
+                CanvasManager.GetSingleInstance().SelectUINode(uiNode);
+                SelectUINode(uiNode);
+                CanvasManager.GetSingleInstance().SetEventForUINode(uiNode);
             }
         }
 
-        public void AddImageToLayout()
-        {
-            if (currentSelectUINode != null)
-            {
-                LLGameImage image = new LLGameImage();
-                currentSelectUINode.AddNode(image);
-                StudioManager.GetSingleInstance().TreeResetItem();
-                image.ResetUIProperty();
-                CanvasManager.GetSingleInstance().SelectUINode(image);
-                SelectUINode(image);
-                CanvasManager.GetSingleInstance().SetEventForUINode(image);
-            }
-        }
+        //public void AddButtonToLayout()
+        //{
+        //    if(currentSelectUINode!=null)
+        //    {
+        //        LLGameButton button = new LLGameButton();
+        //        currentSelectUINode.AddNode(button);
+        //        StudioManager.GetSingleInstance().TreeResetItem();
+        //        button.ResetUIProperty();
+        //        CanvasManager.GetSingleInstance().SelectUINode(button);
+        //        SelectUINode(button);
+        //        CanvasManager.GetSingleInstance().SetEventForUINode(button);
+        //    }
+        //}
+
+        //public void AddTextToLayout()
+        //{
+        //    if (currentSelectUINode != null)
+        //    {
+        //        LLGameText text = new LLGameText();
+        //        currentSelectUINode.AddNode(text);
+        //        StudioManager.GetSingleInstance().TreeResetItem();
+        //        text.ResetUIProperty();
+        //        CanvasManager.GetSingleInstance().SelectUINode(text);
+        //        SelectUINode(text);
+        //        CanvasManager.GetSingleInstance().SetEventForUINode(text);
+        //    }
+        //}
+
+        //public void AddImageToLayout()
+        //{
+        //    if (currentSelectUINode != null)
+        //    {
+        //        LLGameImage image = new LLGameImage();
+        //        currentSelectUINode.AddNode(image);
+        //        StudioManager.GetSingleInstance().TreeResetItem();
+        //        image.ResetUIProperty();
+        //        CanvasManager.GetSingleInstance().SelectUINode(image);
+        //        SelectUINode(image);
+        //        CanvasManager.GetSingleInstance().SetEventForUINode(image);
+        //    }
+        //}
     }
 }
 

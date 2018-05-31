@@ -10,6 +10,7 @@
         <Grid x:Name="grid" MouseEnter="grid_MouseEnter" MouseLeave="grid_MouseLeave">
             <Grid x:Name="gridContent"/>
         </Grid>
-        <Border x:Name="border" BorderThickness="1"/>
+        <Border x:Name="border" BorderThickness="1">
+        </Border>
     </Grid>
 </UserControl>

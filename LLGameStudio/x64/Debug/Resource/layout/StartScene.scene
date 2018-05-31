@@ -2,4 +2,6 @@
 <LLGameScene name="startScene">
   <LLGameBack name="back" image="texture\back.png" />
   <LLGameCanvas name="canvas" />
+  <LLGameLayout name="gameRecordLayout" filePath="layout/gameRecordLayout.layout"/>
+  <LLGameLayout name="startButtonLayout" filePath="layout/startButtonLayout.layout"/>
 </LLGameScene>

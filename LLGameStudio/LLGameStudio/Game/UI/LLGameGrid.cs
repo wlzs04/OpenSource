@@ -30,22 +30,31 @@ namespace LLGameStudio.Game.UI
 
             foreach (var item in element.Elements())
             {
+                IUINode uINode = null;
                 switch (item.Name.ToString())
                 {
                     case "LLGameImage":
-                        AddNode(new LLGameImage());
-                        listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        uINode = new LLGameImage();
                         break;
                     case "LLGameButton":
-                        AddNode(new LLGameButton());
-                        listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        uINode = new LLGameButton();
                         break;
                     case "LLGameText":
-                        AddNode(new LLGameText());
-                        listNode[listNode.Count - 1].LoadContentFromXML(item);
+                        uINode = new LLGameText();
+                        break;
+                    case "LLGameComboBox":
+                        uINode = new LLGameComboBox();
+                        break;
+                    case "LLGameSlide":
+                        uINode = new LLGameSlide();
                         break;
                     default:
                         break;
+                }
+                if(uINode!=null)
+                {
+                    AddNode(uINode);
+                    uINode.LoadContentFromXML(item);
                 }
             }
         }

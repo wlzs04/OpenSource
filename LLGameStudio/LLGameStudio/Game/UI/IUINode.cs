@@ -463,6 +463,37 @@ namespace LLGameStudio.Game.UI
         {
             public TextFamily() : base("textFamily", typeof(string), UIPropertyEnum.Common, "显示文字的样式。", "") { }
         }
+
+        public class BackImage : IUIProperty
+        {
+            public BackImage() : base("backImage", typeof(string), UIPropertyEnum.Common, "背景图片。", "") { }
+        }
+
+        public class ButtonImage : IUIProperty
+        {
+            public ButtonImage() : base("buttonImage", typeof(string), UIPropertyEnum.Common, "按钮图片。", "") { }
+        }
+        
+
+        public class ButtonSize : IUIProperty
+        {
+            public ButtonSize() : base("buttonSize", typeof(double), UIPropertyEnum.Common, "按钮大小。", "0.1") { }
+        }
+        
+        public class BlockImage : IUIProperty
+        {
+            public BlockImage() : base("blockImage", typeof(string), UIPropertyEnum.Common, "滑块图片。", "") { }
+        }
+        
+        public class Progress : IUIProperty
+        {
+            public Progress() : base("progress", typeof(double), UIPropertyEnum.Common, "进度。", "0") { }
+        }
+
+        public class Pad : IUIProperty
+        {
+            public Pad() : base("pad", typeof(double), UIPropertyEnum.Common, "内容距离控件边缘长度。", "0") { }
+        }
     }
     
     /// <summary>

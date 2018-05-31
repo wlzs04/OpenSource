@@ -83,11 +83,14 @@
     <Compile Include="Game\UI\IUIProperty.cs" />
     <Compile Include="Game\UI\LLGameButton.cs" />
     <Compile Include="Game\UI\LLGameCanvas.cs" />
+    <Compile Include="Game\UI\LLGameComboBox.cs" />
     <Compile Include="Game\UI\LLGameImage.cs" />
     <Compile Include="Game\UI\LLGameLayout.cs" />
     <Compile Include="Game\UI\LLGameBack.cs" />
     <Compile Include="Game\UI\LLGameScene.cs" />
+    <Compile Include="Game\UI\LLGameSlide.cs" />
     <Compile Include="Game\UI\LLGameText.cs" />
+    <Compile Include="Game\UI\LLGameTextBox.cs" />
     <Compile Include="Game\UI\UIControl.xaml.cs">
       <DependentUpon>UIControl.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,9 @@
     </Compile>
     <Compile Include="Studio\Window\ParticleWindow.xaml.cs">
       <DependentUpon>ParticleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Studio\Window\PhysicsWindow.xaml.cs">
+      <DependentUpon>PhysicsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Game\UI\UIControl.xaml">
       <SubType>Designer</SubType>
@@ -239,6 +245,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Studio\Window\ParticleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Studio\Window\PhysicsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

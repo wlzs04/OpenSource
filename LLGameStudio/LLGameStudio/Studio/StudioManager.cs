@@ -218,29 +218,7 @@ namespace LLGameStudio.Studio
 
             //UI控件区
 
-            LLStudioButton gameControlButton = new LLStudioButton();
-            gameControlButton.Width = 100;
-            gameControlButton.Height = 100;
-            gameControlButton.SetText("按钮");
-            gameControlButton.MouseDoubleClick += AddButtonToLayout;
-            gameControlButton.ToolTip = "按钮";
-            wrapPanelUIControlArea.Children.Add(gameControlButton);
-
-            LLStudioButton gameControlText = new LLStudioButton();
-            gameControlText.Width = 100;
-            gameControlText.Height = 100;
-            gameControlText.SetText("文字");
-            gameControlText.MouseDoubleClick += AddTextToLayout;
-            gameControlText.ToolTip = "文字";
-            wrapPanelUIControlArea.Children.Add(gameControlText);
-
-            LLStudioButton gameControlImage = new LLStudioButton();
-            gameControlImage.Width = 100;
-            gameControlImage.Height = 100;
-            gameControlImage.SetText("图片");
-            gameControlImage.MouseDoubleClick += AddImageToLayout;
-            gameControlImage.ToolTip = "图片";
-            wrapPanelUIControlArea.Children.Add(gameControlImage);
+            AddLegalControl();
 
             //文件区：右键菜单
 
@@ -286,19 +264,61 @@ namespace LLGameStudio.Studio
             gridPropertyEditorArea.Children.Add(listBoxPropertyEditor);
         }
 
-        private void AddButtonToLayout(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// 添加现阶段支持的控件
+        /// </summary>
+        private void AddLegalControl()
         {
-            gameManager.AddButtonToLayout();
-        }
+            wrapPanelUIControlArea.Children.Clear();
+            if (!gameManager.GameLoaded)
+            {
+                return;
+            }
 
-        private void AddTextToLayout(object sender, MouseButtonEventArgs e)
-        {
-            gameManager.AddTextToLayout();
-        }
+            LLStudioButton gameControlButton = new LLStudioButton();
+            gameControlButton.Width = 100;
+            gameControlButton.Height = 100;
+            gameControlButton.SetText("按钮");
+            gameControlButton.MouseDoubleClick +=
+                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameButton()); };
+            gameControlButton.ToolTip = "按钮";
+            wrapPanelUIControlArea.Children.Add(gameControlButton);
 
-        private void AddImageToLayout(object sender, MouseButtonEventArgs e)
-        {
-            gameManager.AddImageToLayout();
+            LLStudioButton gameControlText = new LLStudioButton();
+            gameControlText.Width = 100;
+            gameControlText.Height = 100;
+            gameControlText.SetText("文字");
+            gameControlText.MouseDoubleClick += 
+                (object sender, MouseButtonEventArgs e) =>{ gameManager.AddControlToLayout(new LLGameText()); };
+            gameControlText.ToolTip = "文字";
+            wrapPanelUIControlArea.Children.Add(gameControlText);
+
+            LLStudioButton gameControlImage = new LLStudioButton();
+            gameControlImage.Width = 100;
+            gameControlImage.Height = 100;
+            gameControlImage.SetText("图片");
+            gameControlImage.MouseDoubleClick += 
+                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameImage()); };
+            gameControlImage.ToolTip = "图片";
+            wrapPanelUIControlArea.Children.Add(gameControlImage);
+
+            LLStudioButton gameControlComboBox = new LLStudioButton();
+            gameControlComboBox.Width = 100;
+            gameControlComboBox.Height = 100;
+            gameControlComboBox.SetText("下拉框");
+            gameControlComboBox.MouseDoubleClick +=
+                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameComboBox()); };
+            gameControlComboBox.ToolTip = "下拉框";
+            wrapPanelUIControlArea.Children.Add(gameControlComboBox);
+
+            LLStudioButton gameControlSlide = new LLStudioButton();
+            gameControlSlide.Width = 100;
+            gameControlSlide.Height = 100;
+            gameControlSlide.SetText("滑动条");
+            gameControlSlide.MouseDoubleClick += 
+                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameSlide()); };
+            gameControlSlide.ToolTip = "滑动条";
+            wrapPanelUIControlArea.Children.Add(gameControlSlide);
         }
 
         /// <summary>
@@ -950,6 +970,7 @@ namespace LLGameStudio.Studio
                 ShowStatusInfo("打开游戏目录完成。");
                 LoadDirectoryToFileArea(GameManager.GameResourcePath);
                 studioConfig.LastGamePath = GameManager.GamePath;
+                AddLegalControl();
             }
         }
 
