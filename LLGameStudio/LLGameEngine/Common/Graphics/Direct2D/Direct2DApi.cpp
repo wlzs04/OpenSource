@@ -102,9 +102,7 @@ void Direct2DApi::DrawText(wstring text, float x, float y, float width, float he
 void Direct2DApi::SetTransform(float angle, float x, float y)
 {
 	d2dRenderTarget->SetTransform(
-		D2D1::Matrix3x2F::Rotation(
-			angle,
-			D2D1::Point2F(x, y)));
+		D2D1::Matrix3x2F::Rotation(angle,D2D1::Point2F(x, y)));
 }
 
 void Direct2DApi::ResetTransform()

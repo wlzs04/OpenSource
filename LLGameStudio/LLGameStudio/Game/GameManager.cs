@@ -339,6 +339,7 @@ public enum GameUIFileEnum
     Particle,//粒子
     Actor,//角色
     Script,//脚本
+    Physics,//物理
     Unknown,//未知
 }
 

@@ -45,14 +45,28 @@
                             <TextBox x:Name="textBoxPhysicsName" IsReadOnly="True" Height="30" Margin="50,0,2,0" VerticalAlignment="Top" Text="asdasd" TextDecorations="{x:Null}"/>
                         </Grid>
                         <Grid Margin="0,30,0,0">
-                            <Grid x:Name="gridPhys" Grid.Row="0" Background="#FF191919"/>
+                            <Grid x:Name="gridPhys" Grid.Row="0" Background="#FF191919">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,0">
+                                    <StackPanel Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <Expander Header="变换" IsExpanded="True">
+                                            <Grid x:Name="gridTransform"/>
+                                        </Expander>
+                                        <Expander Header="通用" IsExpanded="True">
+                                            <Grid x:Name="gridCommon"/>
+                                        </Expander>
+                                        <Expander Header="其他" IsExpanded="True">
+                                            <Grid x:Name="gridOther"/>
+                                        </Expander>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
             </Border>
             <GridSplitter Width="3" Grid.Column="0" Background="Black"/>
             <Border Grid.Column="1" BorderThickness="3" CornerRadius="5" BorderBrush="#FF646464" Margin="0">
-                <Canvas x:Name="canvas" ClipToBounds="True" Margin="0" Background="#FF3E3E40"></Canvas>
+                <Canvas x:Name="canvas" ClipToBounds="True" Margin="0" Background="#FF3E3E40" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
             </Border>
         </Grid>
     </Grid>

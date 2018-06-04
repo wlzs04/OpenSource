@@ -7,6 +7,7 @@ class TableHockeyGame : public LLGame
 {
 public:
 	void InitUserData()override;
+	void InitAudio();
 	void InitLayout();
 	void InitObject();
 	void InitConnectNet();

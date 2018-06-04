@@ -28,7 +28,7 @@ bool LLScriptGrammar::WCharIsSpecial(wchar_t wc)
 
 bool LLScriptGrammar::WCharIsOperator(wchar_t wc)
 {
-	return wc == L'+'//加
+	return wc == L'+' //加
 		|| wc == L'-' //减
 		|| wc == L'*' //乘
 		|| wc == L'/' //除

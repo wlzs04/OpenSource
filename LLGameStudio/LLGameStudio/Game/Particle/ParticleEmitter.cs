@@ -579,7 +579,7 @@ namespace LLGameStudio.Game.Particle
 
         public class Row : IUIProperty
         {
-            public Row() : base("row", typeof(int), UIPropertyEnum.Common, "//粒子类别为序列图时拥有的行数.", "1") { }
+            public Row() : base("row", typeof(int), UIPropertyEnum.Common, "粒子类别为序列图时拥有的行数.", "1") { }
         }
 
         public class Column : IUIProperty

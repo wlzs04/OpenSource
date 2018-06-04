@@ -48,6 +48,9 @@ namespace LLGameStudio.Game.UI
                     case "LLGameSlide":
                         uINode = new LLGameSlide();
                         break;
+                    case "LLGameTextBox":
+                        uINode = new LLGameTextBox();
+                        break;
                     default:
                         break;
                 }

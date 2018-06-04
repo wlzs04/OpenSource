@@ -195,6 +195,12 @@
     <ClCompile Include="Game\Logic\ScriptClass\Game.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Audio\Audio.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Audio\AudioManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Config\GameConfig.h">
@@ -378,6 +384,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Game\Logic\ScriptClass\Game.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Audio\Audio.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Audio\AudioManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

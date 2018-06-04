@@ -40,4 +40,10 @@
   <timeBlockSelectColor>#FF4A81B8</timeBlockSelectColor>
   <!--帧标记颜色：常规-->
   <keyFlagColor>#FF00FF00</keyFlagColor>
+  <!--物理画布颜色：常规-->
+  <physicsCanvasColor>#440000FF</physicsCanvasColor>
+  <!--物理多边形连线颜色：常规-->
+  <physicsPolygonLineColor>#FF00FF00</physicsPolygonLineColor>
+  <!--物理多边形节点颜色：常规-->
+  <physicsPolygonPointColor>#FFFF0000</physicsPolygonPointColor>
 </Theme>

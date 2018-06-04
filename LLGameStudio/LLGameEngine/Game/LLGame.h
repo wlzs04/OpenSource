@@ -14,6 +14,7 @@
 #include "Physics/PhysicsManager.h"
 #include "Particle\ParticleSystem.h"
 #include "Actor\Actor.h"
+#include "Audio\AudioManager.h"
 
 class LLGame
 {
@@ -59,6 +60,7 @@ protected:
 	GameTimer gameTimer;
 	LLGameNetClient* gameNetClient = nullptr;
 	PhysicsManager* physicsManager = nullptr;
+	AudioManager* audioManager = nullptr;
 private:
 	//初始化绘图功能
 	void InitGraphics();

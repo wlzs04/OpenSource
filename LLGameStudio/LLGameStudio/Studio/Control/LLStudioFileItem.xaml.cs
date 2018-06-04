@@ -67,6 +67,10 @@ namespace LLGameStudio.Studio.Control
                         gameUIFileEnum = GameUIFileEnum.Script;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\脚本文件.png");
                         break;
+                    case ".physics":
+                        gameUIFileEnum = GameUIFileEnum.Physics;
+                        uri = new Uri(Environment.CurrentDirectory + @"\Resource\碰撞.png");
+                        break;
                     default:
                         gameUIFileEnum = GameUIFileEnum.Unknown;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");

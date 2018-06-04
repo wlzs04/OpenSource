@@ -1,0 +1,8 @@
+<PhysCollision designWidth="200" designHeight="200">
+  <PhysPolygon>
+	<Point x="50" y="50" />
+	<Point x="150" y="50" />
+	<Point x="150" y="150" />
+	<Point x="50" y="150" />
+  </PhysPolygon>
+</PhysCollision>

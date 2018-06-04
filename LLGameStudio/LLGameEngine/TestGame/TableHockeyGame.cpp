@@ -5,6 +5,7 @@ void TableHockeyGame::InitUserData()
 	InitLayout();
 	InitObject();
 	InitConnectNet();
+	InitAudio();
 	
 	physicsWorld->OnCollisionEvent = bind(&TableHockeyGame::CollisionEvent, this, placeholders::_1, placeholders::_2);
 	gameWindow->OnKeyDown = bind(&TableHockeyGame::KeyDownEvent, this, placeholders::_1, placeholders::_2);
@@ -15,6 +16,16 @@ void TableHockeyGame::InitUserData()
 	PhysicsConstraint* myHandBallConstraint = new PhysicsConstraint(myHandBallPhys);
 	myHandBallConstraint->SetPointConstrain(handBallConstraintPoint, handBallMaxLength);
 	physicsWorld->AddConstraint(myHandBallConstraint);
+}
+
+void TableHockeyGame::InitAudio()
+{
+	Audio* audio = audioManager->LoadSoundFromFile(L"Audio/战斗胜利.wav");
+	Audio* audioBgm = audioManager->LoadSoundFromFile(L"Audio/背景音乐.wav");
+	audioManager->SetBackgroundMusic(L"Audio/背景音乐.wav");
+	audioManager->StartBackgroundMusic();
+	audioManager->StartSoundEffect(L"Audio/战斗胜利.wav");
+	audio->SetIsLoop(false);
 }
 
 void TableHockeyGame::InitLayout()

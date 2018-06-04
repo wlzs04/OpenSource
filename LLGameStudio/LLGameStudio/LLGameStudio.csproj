@@ -79,6 +79,8 @@
     <Compile Include="Game\FontManager.cs" />
     <Compile Include="Game\Particle\ParticleEmitter.cs" />
     <Compile Include="Game\Particle\ParticleSystem.cs" />
+    <Compile Include="Game\Physics\PhysCollision.cs" />
+    <Compile Include="Game\Physics\PhysPolygon.cs" />
     <Compile Include="Game\UI\IUINode.cs" />
     <Compile Include="Game\UI\IUIProperty.cs" />
     <Compile Include="Game\UI\LLGameButton.cs" />
@@ -332,6 +334,8 @@
     <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="bin\Debug\Resource\碰撞.png" />
+    <Resource Include="bin\Debug\Resource\脚本文件.png" />
     <Resource Include="bin\Debug\Resource\script.png" />
     <Resource Include="bin\Debug\Resource\c++.png" />
     <Resource Include="bin\Debug\Resource\行动者.png" />

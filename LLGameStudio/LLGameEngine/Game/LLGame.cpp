@@ -7,6 +7,22 @@ LLGame::LLGame()
 
 LLGame::~LLGame()
 {
+	if (gameConfig.openNetClient.value)
+	{
+		gameNetClient->StopConnect();
+		delete gameNetClient;
+	}
+
+	if (gameConfig.openPhysics.value)
+	{
+		delete physicsManager;
+	}
+	
+	audioManager->Release();
+	delete audioManager;
+
+	delete gameScene;
+	
 	GraphicsApi::ReleaseGraphicsApi();
 	if (gameWindow)
 	{
@@ -204,6 +220,8 @@ void LLGame::InitData()
 		InitGraphics();
 		if (gameConfig.openNetClient.value){InitNetClient();}
 		if (gameConfig.openPhysics.value){InitPhysics();}
+
+		audioManager = AudioManager::GetInstance();
 		
 		gameScene = new LLGameScene();
 		gameScene->LoadSceneFromFile(SystemHelper::GetResourceRootPath() + L"\\" + gameConfig.startScene.value);

@@ -12,7 +12,13 @@ LLGameNetClient::LLGameNetClient()
 
 LLGameNetClient::~LLGameNetClient()
 {
+	if (encryptClass != nullptr)
+	{
+		delete encryptClass;
+	}
+
 	WSACleanup();
+	connectThread.join();
 }
 
 void LLGameNetClient::StartConnect(wstring ip, int port)

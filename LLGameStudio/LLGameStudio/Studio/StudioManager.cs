@@ -319,6 +319,15 @@ namespace LLGameStudio.Studio
                 (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameSlide()); };
             gameControlSlide.ToolTip = "滑动条";
             wrapPanelUIControlArea.Children.Add(gameControlSlide);
+
+            LLStudioButton gameControlTextBox = new LLStudioButton();
+            gameControlTextBox.Width = 100;
+            gameControlTextBox.Height = 100;
+            gameControlTextBox.SetText("文本框");
+            gameControlTextBox.MouseDoubleClick +=
+                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameTextBox()); };
+            gameControlTextBox.ToolTip = "文本框";
+            wrapPanelUIControlArea.Children.Add(gameControlTextBox);
         }
 
         /// <summary>
@@ -887,6 +896,11 @@ namespace LLGameStudio.Studio
                     break;
                 case GameUIFileEnum.Script:
                     System.Diagnostics.Process.Start(openFilePath);
+                    break;
+                case GameUIFileEnum.Physics:
+                    PhysicsWindow physicsWindow = new PhysicsWindow(openFilePath);
+                    physicsWindow.Owner = window;
+                    physicsWindow.ShowDialog();
                     break;
                 case GameUIFileEnum.Unknown:
                     ShowStatusInfo("未知文件无法打开！");

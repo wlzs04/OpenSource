@@ -139,6 +139,8 @@
     <ClCompile Include="Game\Actor\Actor.cpp" />
     <ClCompile Include="Game\Actor\Bone.cpp" />
     <ClCompile Include="Game\Actor\Frame.cpp" />
+    <ClCompile Include="Game\Audio\Audio.cpp" />
+    <ClCompile Include="Game\Audio\AudioManager.cpp" />
     <ClCompile Include="Game\GameTimer.cpp" />
     <ClCompile Include="Game\LLGame.cpp" />
     <ClCompile Include="Game\Logic\Class.cpp" />
@@ -202,6 +204,8 @@
     <ClInclude Include="Game\Actor\Actor.h" />
     <ClInclude Include="Game\Actor\Bone.h" />
     <ClInclude Include="Game\Actor\Frame.h" />
+    <ClInclude Include="Game\Audio\Audio.h" />
+    <ClInclude Include="Game\Audio\AudioManager.h" />
     <ClInclude Include="Game\GameTimer.h" />
     <ClInclude Include="Game\LLGame.h" />
     <ClInclude Include="Game\Logic\Class.h" />
