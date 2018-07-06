@@ -1,5 +1,4 @@
 ﻿using LLGameStudio.Common;
-using LLGameStudio.Common.Config;
 using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;

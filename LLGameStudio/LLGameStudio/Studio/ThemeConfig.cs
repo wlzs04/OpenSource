@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace LLGameStudio.Common.Config
+namespace LLGameStudio.Studio
 {
     /// <summary>
     /// 主题配置

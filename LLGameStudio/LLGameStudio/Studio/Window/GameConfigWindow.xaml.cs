@@ -1,5 +1,4 @@
 ﻿using LLGameStudio.Common;
-using LLGameStudio.Common.Config;
 using LLGameStudio.Common.DataType;
 using LLGameStudio.Game;
 using LLGameStudio.Game.UI;

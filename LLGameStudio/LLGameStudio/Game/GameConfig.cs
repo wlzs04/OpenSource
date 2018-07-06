@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace LLGameStudio.Common.Config
+namespace LLGameStudio.Game
 {
     /// <summary>
     /// 游戏使用的图形API
@@ -41,14 +41,14 @@ namespace LLGameStudio.Common.Config
         Property.ServerIPPort serverIPPort = new Property.ServerIPPort();
         Property.EncryptKey encryptKey = new Property.EncryptKey();
         Property.DefaultScript defaultScript = new Property.DefaultScript();
-        
+
 
         public int Width { get => gameWidth.Value; set => gameWidth.Value = value; }
         public int Height { get => gameHeight.Value; set => gameHeight.Value = value; }
         public string GameName { get => gameName.Value; set => gameName.Value = value; }
         public bool FullScreen { get => fullScreen.Value; set => fullScreen.Value = value; }
         public bool CanMultiGame { get => canMultiGame.Value; set => canMultiGame.Value = value; }
-        
+
         public GameConfig()
         {
             AddProperty(gameName);
@@ -65,7 +65,7 @@ namespace LLGameStudio.Common.Config
             AddProperty(openPhysics);
             AddProperty(icon);
             AddProperty(defaultCursor);
-            AddProperty(serverIPPort); 
+            AddProperty(serverIPPort);
             AddProperty(encryptKey);
             AddProperty(defaultScript);
         }
@@ -84,7 +84,7 @@ namespace LLGameStudio.Common.Config
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public void SetProperty(string name,string value)
+        public void SetProperty(string name, string value)
         {
             propertyDictionary[name].Value = value;
         }
@@ -199,7 +199,7 @@ namespace LLGameStudio.Common.Config
         {
             public ServerIPPort() : base("serverIPPort", typeof(string), UIPropertyEnum.Common, "游戏服务器的IP地址和端口号。", "") { }
         }
-        
+
         public class EncryptKey : IUIProperty
         {
             public EncryptKey() : base("encryptKey", typeof(string), UIPropertyEnum.Common, "游戏网络协议加密的秘钥。", "401230") { }

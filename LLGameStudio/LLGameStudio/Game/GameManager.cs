@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using LLGameStudio.Common;
-using LLGameStudio.Common.Config;
 using LLGameStudio.Common.Helper;
 using LLGameStudio.Common.XML;
 using LLGameStudio.Game.UI;
@@ -30,13 +29,15 @@ namespace LLGameStudio.Game
         public IUINode rootNode;
         public IUINode currentSelectUINode;
         string currentUINodeFilePath;
+        GameResourceEnum currentOpenResourceEnum= GameResourceEnum.Unknown;
 
         static double gameWidth = 0;
         static double gameHeight = 0;
-        
+
         public string GameConfigPath { get => gameConfigFilePath; }
-        public bool GameLoaded { get => gameLoaded;}
+        public bool GameLoaded { get => gameLoaded; }
         public string GameName { get => gameConfig.GameName; }
+        public GameResourceEnum CurrentOpenResourceEnum { get => currentOpenResourceEnum; }
         public static string GamePath { get => gamePath; }
         public static string GameResourcePath { get => gameResourcePath; }
         public static double GameWidth { get => gameWidth; }
@@ -50,6 +51,10 @@ namespace LLGameStudio.Game
             gameConfig = new GameConfig();
         }
 
+        /// <summary>
+        /// 初始化游戏管理器
+        /// </summary>
+        /// <param name="studioManager"></param>
         public static void InitGameManager(StudioManager studioManager)
         {
             if (gameManager == null)
@@ -58,6 +63,10 @@ namespace LLGameStudio.Game
             }
         }
 
+        /// <summary>
+        /// 获得游戏管理器单例
+        /// </summary>
+        /// <returns></returns>
         public static GameManager GetSingleInstance()
         {
             return gameManager;
@@ -93,6 +102,11 @@ namespace LLGameStudio.Game
             };
         }
 
+        /// <summary>
+        /// 拷贝游戏运行程序
+        /// </summary>
+        /// <param name="fileSPath"></param>
+        /// <param name="fileSDPath"></param>
         void CopyGameExe(string fileSPath, string fileSDPath)
         {
             File.Copy(fileSPath, fileSDPath,true);
@@ -230,11 +244,13 @@ namespace LLGameStudio.Game
             {
                 case ".layout":
                     uiNode = new LLGameLayout();
-                    canOpen=((LLGameLayout)uiNode).LoadContentFromFile(path);
+                    currentOpenResourceEnum = GameResourceEnum.Layout;
+                    canOpen =((LLGameLayout)uiNode).LoadContentFromFile(path);
                     break;
                 case ".scene":
                     uiNode = new LLGameScene();
-                    canOpen=((LLGameScene)uiNode).LoadContentFromFile(path);
+                    currentOpenResourceEnum = GameResourceEnum.Scene;
+                    canOpen =((LLGameScene)uiNode).LoadContentFromFile(path);
                     break;
                 default:
                     break;
@@ -246,6 +262,7 @@ namespace LLGameStudio.Game
                 currentSelectUINode = rootNode;
                 return true;
             }
+            currentOpenResourceEnum = GameResourceEnum.Unknown;
             return false;
         }
         
@@ -259,6 +276,9 @@ namespace LLGameStudio.Game
             studioManager.TreeResetItem();
         }
 
+        /// <summary>
+        /// 重新设置UI根节点信息
+        /// </summary>
         public void ResetUIProperty()
         {
             rootNode.ResetUIProperty();
@@ -274,6 +294,10 @@ namespace LLGameStudio.Game
             studioManager.SelectUINodeToTree(currentUINode);
         }
 
+        /// <summary>
+        /// 添加控件到布局上
+        /// </summary>
+        /// <param name="uiNode"></param>
         public void AddControlToLayout(IUINode uiNode)
         {
             if (currentSelectUINode != null)
@@ -286,52 +310,14 @@ namespace LLGameStudio.Game
                 CanvasManager.GetSingleInstance().SetEventForUINode(uiNode);
             }
         }
-
-        //public void AddButtonToLayout()
-        //{
-        //    if(currentSelectUINode!=null)
-        //    {
-        //        LLGameButton button = new LLGameButton();
-        //        currentSelectUINode.AddNode(button);
-        //        StudioManager.GetSingleInstance().TreeResetItem();
-        //        button.ResetUIProperty();
-        //        CanvasManager.GetSingleInstance().SelectUINode(button);
-        //        SelectUINode(button);
-        //        CanvasManager.GetSingleInstance().SetEventForUINode(button);
-        //    }
-        //}
-
-        //public void AddTextToLayout()
-        //{
-        //    if (currentSelectUINode != null)
-        //    {
-        //        LLGameText text = new LLGameText();
-        //        currentSelectUINode.AddNode(text);
-        //        StudioManager.GetSingleInstance().TreeResetItem();
-        //        text.ResetUIProperty();
-        //        CanvasManager.GetSingleInstance().SelectUINode(text);
-        //        SelectUINode(text);
-        //        CanvasManager.GetSingleInstance().SetEventForUINode(text);
-        //    }
-        //}
-
-        //public void AddImageToLayout()
-        //{
-        //    if (currentSelectUINode != null)
-        //    {
-        //        LLGameImage image = new LLGameImage();
-        //        currentSelectUINode.AddNode(image);
-        //        StudioManager.GetSingleInstance().TreeResetItem();
-        //        image.ResetUIProperty();
-        //        CanvasManager.GetSingleInstance().SelectUINode(image);
-        //        SelectUINode(image);
-        //        CanvasManager.GetSingleInstance().SetEventForUINode(image);
-        //    }
-        //}
+        
     }
 }
 
-public enum GameUIFileEnum
+/// <summary>
+/// 游戏资源文件类型
+/// </summary>
+public enum GameResourceEnum
 {
     Folder,//文件夹
     Scene,//场景
@@ -343,9 +329,3 @@ public enum GameUIFileEnum
     Unknown,//未知
 }
 
-enum GameUIControlEnum
-{
-    Window,//窗体
-    Button,//按钮
-    Image,//图片
-}

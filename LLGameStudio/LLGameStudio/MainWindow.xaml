@@ -95,8 +95,8 @@
                         <Image x:Name="imageExitWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/退出.png" Grid.Column="1" ToolTip="退出" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
                     </Grid>
                 </Border>
-                <Grid Margin="0,30" Background="#FF191919">
-                    <Grid x:Name="gridToolArea" Background="#FF2D2D30" VerticalAlignment="Top" Height="50">
+                <Grid Margin="0,30" Background="#FF252526">
+                    <Grid x:Name="gridToolArea" Background="#FF323232" VerticalAlignment="Top" Height="50">
                         <WrapPanel x:Name="wrapPanelMenuArea" HorizontalAlignment="Left"/>
                         <Grid x:Name="gridGameControlArea" HorizontalAlignment="Center"/>
                         <Grid HorizontalAlignment="Right">

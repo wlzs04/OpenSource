@@ -24,7 +24,7 @@ namespace LLGameStudio.Studio.Control
     {
         bool isSelect = false;
         FileInfo fileInfo;
-        GameUIFileEnum gameUIFileEnum;
+        GameResourceEnum gameUIFileEnum;
         WrapPanel parentPanel;
 
         public LLStudioFileItem(WrapPanel wp, string path)
@@ -36,7 +36,7 @@ namespace LLGameStudio.Studio.Control
             if(fileInfo.Attributes==FileAttributes.Directory)
             {
                 uri = new Uri(Environment.CurrentDirectory + @"\Resource\文件夹.png");
-                gameUIFileEnum = GameUIFileEnum.Folder;
+                gameUIFileEnum = GameResourceEnum.Folder;
             }
             else
             {
@@ -48,31 +48,31 @@ namespace LLGameStudio.Studio.Control
                         uri = new Uri(path);
                         break;
                     case ".scene":
-                        gameUIFileEnum = GameUIFileEnum.Scene;
+                        gameUIFileEnum = GameResourceEnum.Scene;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
                         break;
                     case ".layout":
-                        gameUIFileEnum = GameUIFileEnum.Layout;
+                        gameUIFileEnum = GameResourceEnum.Layout;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
                         break;
                     case ".particle":
-                        gameUIFileEnum = GameUIFileEnum.Particle;
+                        gameUIFileEnum = GameResourceEnum.Particle;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\粒子.png");
                         break; 
                     case ".actor":
-                        gameUIFileEnum = GameUIFileEnum.Actor;
+                        gameUIFileEnum = GameResourceEnum.Actor;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\行动者.png");
                         break;
                     case ".llscript":
-                        gameUIFileEnum = GameUIFileEnum.Script;
+                        gameUIFileEnum = GameResourceEnum.Script;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\脚本文件.png");
                         break;
                     case ".physics":
-                        gameUIFileEnum = GameUIFileEnum.Physics;
+                        gameUIFileEnum = GameResourceEnum.Physics;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\碰撞.png");
                         break;
                     default:
-                        gameUIFileEnum = GameUIFileEnum.Unknown;
+                        gameUIFileEnum = GameResourceEnum.Unknown;
                         uri = new Uri(Environment.CurrentDirectory + @"\Resource\未知文件.png");
                         break;
                 }
@@ -260,7 +260,7 @@ namespace LLGameStudio.Studio.Control
             }
         }
 
-        public GameUIFileEnum GetFileEnum()
+        public GameResourceEnum GetFileEnum()
         {
             return gameUIFileEnum;
         }
