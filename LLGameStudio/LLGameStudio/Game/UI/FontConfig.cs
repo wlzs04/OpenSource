@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace LLGameStudio.Common.Config
+namespace LLGameStudio.Game.UI
 {
     /// <summary>
     /// 字体配置
@@ -54,13 +54,13 @@ namespace LLGameStudio.Common.Config
         /// <returns></returns>
         public LLFont GetFontByName(string name)
         {
-            if(dictionaryFont.ContainsKey(name))
+            if (dictionaryFont.ContainsKey(name))
             {
                 return dictionaryFont[name];
             }
             else
             {
-                return new LLFont("font", "Microsoft YaHei","#FF000000",15);
+                return new LLFont("font", "Microsoft YaHei", "#FF000000", 15);
             }
         }
 

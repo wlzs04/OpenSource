@@ -1,5 +1,4 @@
-﻿using LLGameStudio.Common.Config;
-using LLGameStudio.Common.XML;
+﻿using LLGameStudio.Common.XML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -261,8 +260,10 @@ namespace LLGameStudio
         {
             RestoreCanvas();
         }
-
-        //恢复画布缩放比例和移动。
+        
+        /// <summary>
+        /// 恢复画布缩放比例和移动。
+        /// </summary>
         public void RestoreCanvas()
         {
             studioManager.RestoreCanvas();

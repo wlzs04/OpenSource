@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using LLGameStudio.Common.XML;
 
-namespace LLGameStudio.Common.Config
+namespace LLGameStudio.Studio
 {
+    /// <summary>
+    /// 编辑器配置
+    /// </summary>
     /// <summary>
     /// 编辑器配置
     /// </summary>
     class StudioConfig : IXMLClass
     {
-        int top=0;
-        int left=0;
-        int width=800;
-        int height=600;
-        string studioName="LLGameStudio";
-        bool fullScreen=true;
+        int top = 0;
+        int left = 0;
+        int width = 800;
+        int height = 600;
+        string studioName = "LLGameStudio";
+        bool fullScreen = true;
         int borderWidth = 3;
         string version = "1.0.0";
         string theme = "Default";
@@ -84,4 +87,3 @@ enum Window32HandleEnum
     HTBOTTOMLEFT = 16,
     HTBOTTOMRIGHT = 17,
 }
-

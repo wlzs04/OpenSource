@@ -65,8 +65,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Common\Config\FontConfig.cs" />
-    <Compile Include="Common\Config\ThemeConfig.cs" />
     <Compile Include="Common\DataType.cs" />
     <Compile Include="Common\Helper\FileHelper.cs" />
     <Compile Include="Common\Helper\LLConvert.cs" />
@@ -76,11 +74,13 @@
     <Compile Include="Game\Actor\Actor.cs" />
     <Compile Include="Game\Actor\Bone.cs" />
     <Compile Include="Game\Actor\Frame.cs" />
-    <Compile Include="Game\FontManager.cs" />
+    <Compile Include="Game\GameConfig.cs" />
     <Compile Include="Game\Particle\ParticleEmitter.cs" />
     <Compile Include="Game\Particle\ParticleSystem.cs" />
     <Compile Include="Game\Physics\PhysCollision.cs" />
     <Compile Include="Game\Physics\PhysPolygon.cs" />
+    <Compile Include="Game\UI\FontConfig.cs" />
+    <Compile Include="Game\UI\FontManager.cs" />
     <Compile Include="Game\UI\IUINode.cs" />
     <Compile Include="Game\UI\IUIProperty.cs" />
     <Compile Include="Game\UI\LLGameButton.cs" />
@@ -138,6 +138,8 @@
       <DependentUpon>LLStudioTransformAxis.xaml</DependentUpon>
     </Compile>
     <Compile Include="Studio\Control\LLStudioTreeViewItem.cs" />
+    <Compile Include="Studio\StudioConfig.cs" />
+    <Compile Include="Studio\ThemeConfig.cs" />
     <Compile Include="Studio\ThemeManager.cs" />
     <Compile Include="Studio\StudioManager.cs" />
     <Compile Include="Studio\Window\ActorWindow.xaml.cs">
@@ -182,8 +184,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\Config\GameConfig.cs" />
-    <Compile Include="Common\Config\StudioConfig.cs" />
     <Compile Include="Common\XML\IXMLClass.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="MainWindow.xaml.cs">

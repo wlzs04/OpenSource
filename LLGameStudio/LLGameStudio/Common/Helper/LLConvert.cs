@@ -15,7 +15,8 @@ namespace LLGameStudio.Common
     /// <summary>
     /// 自定义类型转换器，可以转换基础类型、枚举类型和
     /// 实现了IConvertStringClass接口的类，还可以
-    /// 用于与XML文件交互,可以将XML内容和实现了IXMLClass接口的类进行加载或导出。
+    /// 用于与XML文件交互,可以将XML内容
+    /// 和实现了IXMLClass接口的类进行加载或导出。
     /// </summary>
     class LLConvert
     {
@@ -41,7 +42,7 @@ namespace LLGameStudio.Common
         }
         
         /// <summary>
-        /// 将string转换为Vector，要求string格式为“{x,y}”，例“{1,1}”
+        /// 将string转换为Vector2类型，要求string格式为“{x,y}”，例“{1,1}”
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>

@@ -1,5 +1,4 @@
-﻿using LLGameStudio.Common.Config;
-using LLGameStudio.Common.XML;
+﻿using LLGameStudio.Common.XML;
 using LLGameStudio.Common;
 using LLGameStudio.Game;
 using LLGameStudio.Studio.Control;
@@ -90,6 +89,10 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 初始化编辑管理器
+        /// </summary>
+        /// <param name="window"></param>
         public static void InitStudioManager(MainWindow window)
         {
             if(studioManager==null)
@@ -98,6 +101,10 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 获得编辑管理器的单例
+        /// </summary>
+        /// <returns></returns>
         public static StudioManager GetSingleInstance()
         {
             return studioManager;
@@ -170,13 +177,15 @@ namespace LLGameStudio.Studio
             LLStudioButton saveGameButton = new LLStudioButton();
             saveGameButton.SetImage("Resource/保存.png");
             saveGameButton.ToolTip = "保存游戏";
-            saveGameButton.ClickHandler += SaveGame;
+            saveGameButton.ClickHandler += (object sender, 
+                MouseButtonEventArgs e) => { SaveGame(); };
             wrapPanelMenuArea.Children.Add(saveGameButton);
 
             LLStudioButton setGameButton = new LLStudioButton();
-            setGameButton.SetImage("Resource/设置.png");
+            setGameButton.SetImage("Resource/设置.png"); 
             setGameButton.ToolTip = "设置游戏配置";
-            setGameButton.ClickHandler += SetGameConfig;
+            setGameButton.ClickHandler += (object sender,
+                MouseButtonEventArgs e) => { SetGameConfig(); };
             wrapPanelMenuArea.Children.Add(setGameButton);
 
             //游戏控制区
@@ -200,10 +209,18 @@ namespace LLGameStudio.Studio
 
             //UI层级区
 
+            Label label = new Label();
+            label.Height = 25;
+            label.VerticalAlignment = VerticalAlignment.Top;
+            label.HorizontalAlignment = HorizontalAlignment.Left;
+            label.Margin = new Thickness(0, 5, 0, 2.5);
+            label.Content = "查找节点：";
+            gridUILayer.Children.Add(label);
+
             TextBox textBox = new TextBox();
             textBox.Height = 25;
             textBox.VerticalAlignment = VerticalAlignment.Top;
-            textBox.Margin = new Thickness(10,2.5,10,2.5);
+            textBox.Margin = new Thickness(80,2.5,10,2.5);
             textBox.Background = ThemeManager.GetBrushByName("backgroundTextBoxColor");
             textBox.ToolTip = "输入文字过滤节点";
             textBox.TextChanged += UILayerFilterTextChanged;
@@ -275,59 +292,91 @@ namespace LLGameStudio.Studio
                 return;
             }
 
-            LLStudioButton gameControlButton = new LLStudioButton();
-            gameControlButton.Width = 100;
-            gameControlButton.Height = 100;
-            gameControlButton.SetText("按钮");
-            gameControlButton.MouseDoubleClick +=
-                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameButton()); };
-            gameControlButton.ToolTip = "按钮";
-            wrapPanelUIControlArea.Children.Add(gameControlButton);
+            if(gameManager.CurrentOpenResourceEnum== GameResourceEnum.Layout)
+            {
+                LLStudioButton gameControlButton = new LLStudioButton();
+                gameControlButton.Width = 100;
+                gameControlButton.Height = 100;
+                gameControlButton.SetImage("Resource/Button.png");
+                gameControlButton.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameButton()); };
+                gameControlButton.ToolTip = "按钮";
+                wrapPanelUIControlArea.Children.Add(gameControlButton);
 
-            LLStudioButton gameControlText = new LLStudioButton();
-            gameControlText.Width = 100;
-            gameControlText.Height = 100;
-            gameControlText.SetText("文字");
-            gameControlText.MouseDoubleClick += 
-                (object sender, MouseButtonEventArgs e) =>{ gameManager.AddControlToLayout(new LLGameText()); };
-            gameControlText.ToolTip = "文字";
-            wrapPanelUIControlArea.Children.Add(gameControlText);
+                LLStudioButton gameControlText = new LLStudioButton();
+                gameControlText.Width = 100;
+                gameControlText.Height = 100;
+                gameControlText.SetImage("Resource/Text.png");
+                gameControlText.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameText()); };
+                gameControlText.ToolTip = "文字";
+                wrapPanelUIControlArea.Children.Add(gameControlText);
 
-            LLStudioButton gameControlImage = new LLStudioButton();
-            gameControlImage.Width = 100;
-            gameControlImage.Height = 100;
-            gameControlImage.SetText("图片");
-            gameControlImage.MouseDoubleClick += 
-                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameImage()); };
-            gameControlImage.ToolTip = "图片";
-            wrapPanelUIControlArea.Children.Add(gameControlImage);
+                LLStudioButton gameControlImage = new LLStudioButton();
+                gameControlImage.Width = 100;
+                gameControlImage.Height = 100;
+                gameControlImage.SetImage("Resource/Image.png");
+                gameControlImage.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameImage()); };
+                gameControlImage.ToolTip = "图片";
+                wrapPanelUIControlArea.Children.Add(gameControlImage);
 
-            LLStudioButton gameControlComboBox = new LLStudioButton();
-            gameControlComboBox.Width = 100;
-            gameControlComboBox.Height = 100;
-            gameControlComboBox.SetText("下拉框");
-            gameControlComboBox.MouseDoubleClick +=
-                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameComboBox()); };
-            gameControlComboBox.ToolTip = "下拉框";
-            wrapPanelUIControlArea.Children.Add(gameControlComboBox);
+                LLStudioButton gameControlComboBox = new LLStudioButton();
+                gameControlComboBox.Width = 100;
+                gameControlComboBox.Height = 100;
+                gameControlComboBox.SetImage("Resource/ComboBox.png");
+                gameControlComboBox.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameComboBox()); };
+                gameControlComboBox.ToolTip = "下拉框";
+                wrapPanelUIControlArea.Children.Add(gameControlComboBox);
 
-            LLStudioButton gameControlSlide = new LLStudioButton();
-            gameControlSlide.Width = 100;
-            gameControlSlide.Height = 100;
-            gameControlSlide.SetText("滑动条");
-            gameControlSlide.MouseDoubleClick += 
-                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameSlide()); };
-            gameControlSlide.ToolTip = "滑动条";
-            wrapPanelUIControlArea.Children.Add(gameControlSlide);
+                LLStudioButton gameControlSlide = new LLStudioButton();
+                gameControlSlide.Width = 100;
+                gameControlSlide.Height = 100;
+                gameControlSlide.SetImage("Resource/Slide.png");
+                gameControlSlide.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameSlide()); };
+                gameControlSlide.ToolTip = "滑动条";
+                wrapPanelUIControlArea.Children.Add(gameControlSlide);
 
-            LLStudioButton gameControlTextBox = new LLStudioButton();
-            gameControlTextBox.Width = 100;
-            gameControlTextBox.Height = 100;
-            gameControlTextBox.SetText("文本框");
-            gameControlTextBox.MouseDoubleClick +=
-                (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameTextBox()); };
-            gameControlTextBox.ToolTip = "文本框";
-            wrapPanelUIControlArea.Children.Add(gameControlTextBox);
+                LLStudioButton gameControlTextBox = new LLStudioButton();
+                gameControlTextBox.Width = 100;
+                gameControlTextBox.Height = 100;
+                gameControlTextBox.SetImage("Resource/TextBox.png");
+                gameControlTextBox.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameTextBox()); };
+                gameControlTextBox.ToolTip = "文本框";
+                wrapPanelUIControlArea.Children.Add(gameControlTextBox);
+            }
+            else if(gameManager.CurrentOpenResourceEnum == GameResourceEnum.Scene)
+            {
+                LLStudioButton gameControlBack = new LLStudioButton();
+                gameControlBack.Width = 100;
+                gameControlBack.Height = 100;
+                gameControlBack.SetImage("Resource/Back.png");
+                gameControlBack.MouseDoubleClick += 
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameBack()); };
+                gameControlBack.ToolTip = "背景";
+                wrapPanelUIControlArea.Children.Add(gameControlBack);
+
+                LLStudioButton gameControlCanvas = new LLStudioButton();
+                gameControlCanvas.Width = 100;
+                gameControlCanvas.Height = 100;
+                gameControlCanvas.SetImage("Resource/Canvas.png");
+                gameControlCanvas.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameCanvas()); };
+                gameControlCanvas.ToolTip = "画布";
+                wrapPanelUIControlArea.Children.Add(gameControlCanvas);
+
+                LLStudioButton gameControlLayout = new LLStudioButton();
+                gameControlLayout.Width = 100;
+                gameControlLayout.Height = 100;
+                gameControlLayout.SetImage("Resource/Layout.png");
+                gameControlLayout.MouseDoubleClick +=
+                    (object sender, MouseButtonEventArgs e) => { gameManager.AddControlToLayout(new LLGameLayout()); };
+                gameControlLayout.ToolTip = "布局";
+                wrapPanelUIControlArea.Children.Add(gameControlLayout);
+            }
         }
 
         /// <summary>
@@ -426,7 +475,7 @@ namespace LLGameStudio.Studio
         /// </summary>
         /// <param name="uiType"></param>
         /// <returns></returns>
-        private bool CreateNewFileToCurrrentDirectory(GameUIFileEnum uiType)
+        private bool CreateNewFileToCurrrentDirectory(GameResourceEnum uiType)
         {
             if (gameManager.GameLoaded)
             {
@@ -449,23 +498,23 @@ namespace LLGameStudio.Studio
                 string fileName = fileType + fileNum + "." + fileType;
                 switch (uiType)
                 {
-                    case GameUIFileEnum.Folder:
+                    case GameResourceEnum.Folder:
                         break;
-                    case GameUIFileEnum.Scene:
+                    case GameResourceEnum.Scene:
                         iXMLClass = new LLGameScene();
                         break;
-                    case GameUIFileEnum.Layout:
+                    case GameResourceEnum.Layout:
                         iXMLClass = new LLGameLayout();
                         break;
-                    case GameUIFileEnum.Particle:
+                    case GameResourceEnum.Particle:
                         iXMLClass = new ParticleSystem(fileName, null);
                         break;
-                    case GameUIFileEnum.Actor:
+                    case GameResourceEnum.Actor:
                         iXMLClass = new Actor(fileName);
                         break;
-                    case GameUIFileEnum.Script:
+                    case GameResourceEnum.Script:
                         break;
-                    case GameUIFileEnum.Unknown:
+                    case GameResourceEnum.Unknown:
                         break;
                     default:
                         break;
@@ -491,7 +540,7 @@ namespace LLGameStudio.Studio
         /// <param name="e"></param>
         private void CreateNewSceneToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
-            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Scene);
+            CreateNewFileToCurrrentDirectory(GameResourceEnum.Scene);
         }
 
         /// <summary>
@@ -501,7 +550,7 @@ namespace LLGameStudio.Studio
         /// <param name="e"></param>
         private void CreateNewLayoutToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
-            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Layout);
+            CreateNewFileToCurrrentDirectory(GameResourceEnum.Layout);
         }
 
         /// <summary>
@@ -511,7 +560,7 @@ namespace LLGameStudio.Studio
         /// <param name="e"></param>
         private void CreateNewParticleToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
-            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Particle);
+            CreateNewFileToCurrrentDirectory(GameResourceEnum.Particle);
         }
 
         /// <summary>
@@ -521,7 +570,7 @@ namespace LLGameStudio.Studio
         /// <param name="e"></param>
         private void CreateNewActorToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
-            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Actor);
+            CreateNewFileToCurrrentDirectory(GameResourceEnum.Actor);
         }
 
         /// <summary>
@@ -531,7 +580,7 @@ namespace LLGameStudio.Studio
         /// <param name="e"></param>
         private void CreateNewScriptToCurrrentDirectory(object sender, RoutedEventArgs e)
         {
-            CreateNewFileToCurrrentDirectory(GameUIFileEnum.Script);
+            CreateNewFileToCurrrentDirectory(GameResourceEnum.Script);
         }
 
         /// <summary>
@@ -542,18 +591,35 @@ namespace LLGameStudio.Studio
             if(gameManager.rootNode != null)
             {
                 treeViewUILayer.Items.Clear();
-                foreach (var item in gameManager.rootNode.listNode)
+
+                if(gameManager.CurrentOpenResourceEnum== GameResourceEnum.Scene)
                 {
                     LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
-                    treeViewItem.SetUINodeItem(item);
-                    treeViewItem.Header = item.name.Value;
+                    treeViewItem.SetUINodeItem(gameManager.rootNode);
+                    treeViewItem.Header = gameManager.rootNode.name.Value;
                     treeViewItem.IsExpanded = true;
                     treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
-                    if (!(item is LLGameLayout))
+                    if (!(gameManager.rootNode is LLGameLayout))
                     {
-                        AddNodeToTree(item, treeViewItem);
+                        AddNodeToTree(gameManager.rootNode, treeViewItem);
                     }
                     treeViewUILayer.Items.Add(treeViewItem);
+                }
+                else
+                {
+                    foreach (var item in gameManager.rootNode.listNode)
+                    {
+                        LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
+                        treeViewItem.SetUINodeItem(item);
+                        treeViewItem.Header = item.name.Value;
+                        treeViewItem.IsExpanded = true;
+                        treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
+                        if (!(item is LLGameLayout))
+                        {
+                            AddNodeToTree(item, treeViewItem);
+                        }
+                        treeViewUILayer.Items.Add(treeViewItem);
+                    }
                 }
             }
         }
@@ -569,6 +635,13 @@ namespace LLGameStudio.Studio
             {
                 LLStudioTreeViewItem treeViewItem = new LLStudioTreeViewItem();
                 treeViewItem.SetUINodeItem(item);
+                treeViewItem.ContextMenu =new ContextMenu();
+
+                MenuItem mi0 = new MenuItem();
+                mi0.Header = "删除节点";
+                mi0.Click += DeleteNodeFromTree;
+                treeViewItem.ContextMenu.Items.Add(mi0);
+
                 treeViewItem.Header = item.name.Value;
                 treeViewItem.IsExpanded = true;
                 treeViewItem.MouseDoubleClick += SelectUINodeByTreeView;
@@ -651,6 +724,23 @@ namespace LLGameStudio.Studio
                 {
                     i++;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 通过树删除节点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteNodeFromTree(object sender, RoutedEventArgs e)
+        {
+            ContextMenu contextMenu = (sender as MenuItem).Parent as ContextMenu;
+            LLStudioTreeViewItem treeViewItem = contextMenu.PlacementTarget as LLStudioTreeViewItem;
+            
+            if (treeViewItem == treeViewUILayer.SelectedItem)
+            {
+                IUINode node = treeViewItem.GetUINode() as IUINode;
+                node.RemoveThisNode();
             }
         }
 
@@ -878,31 +968,31 @@ namespace LLGameStudio.Studio
             string openFilePath = fileAreaDirectory + @"\" + item.textBox.Text;
             switch (item.GetFileEnum())
             {
-                case GameUIFileEnum.Scene:
-                case GameUIFileEnum.Layout:
+                case GameResourceEnum.Scene:
+                case GameResourceEnum.Layout:
                     currentFilePath = openFilePath;
                     OpenFile();
                     window.RestoreCanvas();
                     break;
-                case GameUIFileEnum.Particle:
+                case GameResourceEnum.Particle:
                     ParticleWindow particleWindow = new ParticleWindow(openFilePath);
                     particleWindow.Owner = window;
                     particleWindow.ShowDialog();
                     break;
-                case GameUIFileEnum.Actor:
+                case GameResourceEnum.Actor:
                     ActorWindow actorWindow = new ActorWindow(openFilePath);
                     actorWindow.Owner = window;
                     actorWindow.ShowDialog();
                     break;
-                case GameUIFileEnum.Script:
+                case GameResourceEnum.Script:
                     System.Diagnostics.Process.Start(openFilePath);
                     break;
-                case GameUIFileEnum.Physics:
+                case GameResourceEnum.Physics:
                     PhysicsWindow physicsWindow = new PhysicsWindow(openFilePath);
                     physicsWindow.Owner = window;
                     physicsWindow.ShowDialog();
                     break;
-                case GameUIFileEnum.Unknown:
+                case GameResourceEnum.Unknown:
                     ShowStatusInfo("未知文件无法打开！");
                     break;
             }
@@ -943,6 +1033,11 @@ namespace LLGameStudio.Studio
             newGameWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// 新建游戏
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
         public void CreateGame(string path,string name)
         {
             ShowStatusInfo("正新建游戏目录。");
@@ -997,21 +1092,6 @@ namespace LLGameStudio.Studio
         }
 
         /// <summary>
-        /// 保存游戏目录。
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SaveGame(object sender, MouseButtonEventArgs e)
-        {
-            SaveGame();
-        }
-
-        private void SetGameConfig(object sender, MouseButtonEventArgs e)
-        {
-            SetGameConfig();
-        }
-
-        /// <summary>
         /// 返回到上一目录。
         /// </summary>
         public void ReturnLastDirectory()
@@ -1057,6 +1137,7 @@ namespace LLGameStudio.Studio
                 canvasManager.ClearAll();
                 gameManager.RenderToCanvas(canvasManager);
                 gameManager.ResetUIProperty();
+                AddLegalControl();
             }
             else
             {

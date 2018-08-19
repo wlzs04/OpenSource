@@ -45,6 +45,11 @@ namespace LLGameStudio.Studio
             llStudioSelectBorder = new LLStudioSelectBorder(this);
         }
 
+        /// <summary>
+        /// 初始化画布管理器
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="gameManager"></param>
         public static void InitCanvasManager(Canvas canvas, GameManager gameManager)
         {
             if (canvasManager == null)
@@ -53,6 +58,10 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 获得画布管理器单例
+        /// </summary>
+        /// <returns></returns>
         public static CanvasManager GetSingleInstance()
         {
             return canvasManager;
@@ -355,6 +364,10 @@ namespace LLGameStudio.Studio
             }
         }
 
+        /// <summary>
+        /// 为UI节点添加事件
+        /// </summary>
+        /// <param name="uiNode"></param>
         public void SetEventForUINode(IUINode uiNode)
         {
             uiNode.MouseLeftButtonDown += UINodeMouseLeftButtonDown;

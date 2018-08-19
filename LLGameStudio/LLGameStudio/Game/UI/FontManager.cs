@@ -1,12 +1,12 @@
 ﻿using LLGameStudio.Common;
-using LLGameStudio.Common.Config;
+using LLGameStudio.Game.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LLGameStudio.Game
+namespace LLGameStudio.Game.UI
 {
     public struct LLFont
     {
@@ -32,7 +32,7 @@ namespace LLGameStudio.Game
     class FontManager
     {
         static FontConfig fontConfig;
-        static string fontConfigPath="";
+        static string fontConfigPath = "";
 
         public static void CreateFontConfig(string fontConfigPath)
         {
@@ -91,7 +91,7 @@ namespace LLGameStudio.Game
 
         public static void SaveFonts()
         {
-            if(!string.IsNullOrEmpty(fontConfigPath))
+            if (!string.IsNullOrEmpty(fontConfigPath))
             {
                 LLConvert.ExportContentToXML(fontConfigPath, fontConfig);
             }
