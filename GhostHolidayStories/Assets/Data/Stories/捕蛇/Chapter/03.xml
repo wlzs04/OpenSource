@@ -1,0 +1,18 @@
+<Chapter name="第三章">
+	<Section index="0" sceneName="青州" >
+		<Action Actor="Game" changeState="Controlled"/>
+		<Action Actor="test" isAsync="false" isAnimation="false" isTalk="false" setPosition="100,100"/>
+		<Action Actor="Camera" isAsync="false" setFollowActor="test" />
+		<Action Actor="test" isAsync="true" isMove="true" needTime="2" moveToPosition="500,500" />
+		<Action Actor="test" isAsync="false" isAnimation="true" needTime="2" isTalk="false" animationName="Walk" />
+		<Action Actor="Game" changeState="Free"/>
+	</Section>
+	<Section index="1" sceneName="青州" >
+		<Action Actor="Game" changeState="Controlled"/>
+		<Action Actor="test" isAsync="false" isAnimation="false" isTalk="false" setPosition="100,100"/>
+		<Action Actor="Camera" isAsync="false" setFollowActor="test" />
+		<Action Actor="test" isAsync="true" isMove="true" needTime="2" moveToPosition="500,500" />
+		<Action Actor="test" isAsync="false" isAnimation="true" needTime="2" isTalk="false" animationName="Walk" />
+		<Action Actor="Game" changeState="Free"/>
+	</Section>
+</Chapter>

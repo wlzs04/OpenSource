@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LLGameGrid>
+  <LLGameButton name="userBack" width="80.750687918119979" height="62.304880535193718" image="texture\炫酷策略打斗游戏原创UI-游戏头 bg(game_head__爱给网_aigei_com.png" />
+  <LLGameButton name="friend" width="70" height="70" margin="{628.546922785755,326.026777835214,-628.546922785755,-326.026777835214}" image="texture\炫酷策略打斗游戏原创UI-游戏的朋友 btn_3(game__爱给网_aigei_com.png" />
+  <LLGameButton name="set" width="70" height="70" margin="{715.419261707363,326.026777835214,-715.419261707363,-326.026777835214}" image="texture\炫酷策略打斗游戏原创UI-游戏设置 btn_3(game_s_爱给网_aigei_com.png" />
+  <LLGameButton name="control" width="145.90238929612491" height="135.29487316827544" margin="{28.6167704682946,240.176466430329,-28.6167704682946,-240.176466430329}" image="texture\炫酷策略打斗游戏原创UI-游戏方向 bg(game_dire_爱给网_aigei_com.png" />
+  <LLGameButton name="shop" width="121.37372889473049" height="110.76621276688026" margin="{669.428023454746,7.15419261707363,-669.428023454746,-7.15419261707363}" image="texture\炫酷策略打斗游戏原创UI-游戏商店 btn_2(game_s_爱给网_aigei_com.png" />
+  <LLGameText name="userName" width="130.57197654525257" height="48.4225342466671" margin="{6.13216510034877,68.4758436205619,-6.13216510034877,-68.4758436205619}" text="用户名：LL" textFamily="testFont" />
+  <LLGameButton name="blood" width="133.638059095427" height="36.158204045969192" margin="{85.8503114048835,21.4625778512209,-85.8503114048835,-21.4625778512209}" />
+  <LLGameButton name="talk" width="390.16696579335331" height="122.00851545085287" margin="{210.53766844531,252.440796631027,-210.53766844531,-252.440796631027}" image="texture\炫酷策略打斗游戏原创UI-游戏谈 bg(game_talk__爱给网_aigei_com.png" />
+</LLGameGrid>
