@@ -334,6 +334,17 @@
     <Resource Include="bin\Debug\Resource\保存.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="bin\Debug\Resource\back.png" />
+    <Resource Include="bin\Debug\Resource\Button.png" />
+    <Resource Include="bin\Debug\Resource\Canvas.png" />
+    <Resource Include="bin\Debug\Resource\ComboBox.png" />
+    <Resource Include="bin\Debug\Resource\Image.png" />
+    <Resource Include="bin\Debug\Resource\Layout.png" />
+    <Resource Include="bin\Debug\Resource\Slide.png" />
+    <Resource Include="bin\Debug\Resource\Text.png" />
+    <Resource Include="bin\Debug\Resource\TextBox.png" />
+    <Resource Include="bin\Debug\Resource\最大化.png" />
+    <Resource Include="bin\Debug\Resource\还原.png" />
     <Resource Include="bin\Debug\Resource\碰撞.png" />
     <Resource Include="bin\Debug\Resource\脚本文件.png" />
     <Resource Include="bin\Debug\Resource\script.png" />

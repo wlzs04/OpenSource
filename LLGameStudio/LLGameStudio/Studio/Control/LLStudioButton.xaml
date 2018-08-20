@@ -17,7 +17,7 @@
         <Border x:Name="border" BorderThickness="1" MouseEnter="border_MouseEnter" MouseLeave="border_MouseLeave" MouseLeftButtonDown="border_MouseLeftButtonDown" MouseLeftButtonUp="border_MouseLeftButtonUp">
             <Grid >
                 <Image x:Name="image" VerticalAlignment="Center"/>
-                <Label x:Name="label" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+                <Label x:Name="label" HorizontalAlignment="Center" VerticalAlignment="Center" Content="" Padding="0"></Label>
             </Grid>
         </Border>
     </Grid>

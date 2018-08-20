@@ -56,9 +56,42 @@ namespace LLGameStudio
             comboBoxScaleCanvas.SelectedIndex = 1;
 
             comboBoxScaleCanvas.SelectionChanged += comboBoxScaleCanvas_SelectionChanged;
-
+            
+            buttonRestoreCanvas.ClickHandler += (object sender, 
+                MouseButtonEventArgs e) => { RestoreCanvas(); };
+            
             imageMaximizeWindow.ToolTip = studioManager.FullScreen ? "还原" : "最大化";
             labelTitle.Content = Title;
+
+            //imageMinimizeWindow.SetImage(@"\Resource\最小化.png");
+            imageMinimizeWindow.ClickHandler += (object sender, MouseButtonEventArgs e) =>
+            {
+                studioManager.MinimizeStudio();
+                e.Handled = true;
+            };
+            //imageMaximizeWindow.SetImage(@"\Resource\最大化.png");
+            imageMaximizeWindow.ClickHandler += (object sender, MouseButtonEventArgs e) =>
+            {
+                if (studioManager.FullScreen)
+                {
+                    studioManager.RestoreStudio();
+                    imageMaximizeWindow.ToolTip = "最大化";
+                    imageMaximizeWindow.SetImage(@"\Resource\最大化.png");
+                }
+                else
+                {
+                    studioManager.MaximizeStudio();
+                    imageMaximizeWindow.ToolTip = "还原";
+                    imageMaximizeWindow.SetImage(@"\Resource\还原.png");
+                }
+                e.Handled = true;
+            };
+            //imageExitWindow.SetImage(@"\Resource\退出.png");
+            imageExitWindow.ClickHandler += (object sender, MouseButtonEventArgs e) =>
+            {
+                studioManager.ExitStudio();
+                e.Handled = true;
+            };
         }
 
         /// <summary>
@@ -155,34 +188,7 @@ namespace LLGameStudio
         {
             return gridPropertyEditorArea;
         }
-
-        private void imageMinimizeWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            studioManager.MinimizeStudio();
-            e.Handled = true;
-        }
-
-        private void imageMaximizeWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (studioManager.FullScreen)
-            {
-                studioManager.RestoreStudio();
-                imageMaximizeWindow.ToolTip = "最大化";
-            }
-            else
-            {
-                studioManager.MaximizeStudio();
-                imageMaximizeWindow.ToolTip = "还原";
-            }
-            e.Handled = true;
-        }
-
-        private void imageExitWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            studioManager.ExitStudio();
-            e.Handled = true;
-        }
-
+        
         private void imageHelp_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             studioManager.ShowStudioHelpInfo();
@@ -256,11 +262,6 @@ namespace LLGameStudio
             }
         }
 
-        private void buttonRestoreCanvas_Click(object sender, RoutedEventArgs e)
-        {
-            RestoreCanvas();
-        }
-        
         /// <summary>
         /// 恢复画布缩放比例和移动。
         /// </summary>

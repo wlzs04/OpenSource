@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
 
-namespace Assets.StoryNamespace
+namespace Assets.Script.StoryNamespace
 {
     class Save
     {
@@ -55,6 +55,7 @@ namespace Assets.StoryNamespace
                         position = new Vector2(x, y);
                         break;
                     default:
+                        Debug.LogError("未知属性："+ attribute.Name.ToString());
                         break;
                 }
             }

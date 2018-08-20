@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Assets.StoryNamespace
+namespace Assets.Script.StoryNamespace
 {
     class Story
     {
@@ -108,7 +108,18 @@ namespace Assets.StoryNamespace
         /// </summary>
         private void LoadContent()
         {
+            DirectoryInfo directoryInfo = new DirectoryInfo(storyPath + "/Chapter/");
 
+            foreach (var item in directoryInfo.GetFiles())
+            {
+                if (item.Extension == ".xml")
+                {
+                    Chapter chapter = new Chapter();
+                    Save save = new Save(item.FullName, Convert.ToInt32(item.Name.Substring(0, item.Name.IndexOf('.'))));
+                    save.LoadContent();
+                    saveList.Add(save);
+                }
+            }
         }
 
         public void Start()

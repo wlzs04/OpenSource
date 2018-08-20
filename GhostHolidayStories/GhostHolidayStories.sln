@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostHolidayStories", "Assembly-CSharp.csproj", "{23E3A571-D9C7-2497-B467-95B2F0340EE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GhostHolidayStories", "GhostHolidayStories.csproj", "{1136D1D2-2C4C-7DB2-1220-7FDBFCD426B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{23E3A571-D9C7-2497-B467-95B2F0340EE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23E3A571-D9C7-2497-B467-95B2F0340EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23E3A571-D9C7-2497-B467-95B2F0340EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23E3A571-D9C7-2497-B467-95B2F0340EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1136D1D2-2C4C-7DB2-1220-7FDBFCD426B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1136D1D2-2C4C-7DB2-1220-7FDBFCD426B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1136D1D2-2C4C-7DB2-1220-7FDBFCD426B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1136D1D2-2C4C-7DB2-1220-7FDBFCD426B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

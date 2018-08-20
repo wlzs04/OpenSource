@@ -26,6 +26,24 @@ namespace LLGameStudio.Studio.Control
 
         public MouseButtonEventHandler ClickHandler { get => clickHandler; set => clickHandler = value; }
 
+        public static readonly DependencyProperty TextProperty =
+    DependencyProperty.Register("Text", typeof(string), typeof(LLStudioButton), new PropertyMetadata("Label", new PropertyChangedCallback(OnTextChanged)));
+
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        static void OnTextChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        {
+            ((LLStudioButton)sender).OnTextValueChanged(args);
+        }
+        protected void OnTextValueChanged(DependencyPropertyChangedEventArgs e)
+        {
+            label.Content = e.NewValue.ToString();
+        }
+
         public LLStudioButton()
         {
             InitializeComponent();

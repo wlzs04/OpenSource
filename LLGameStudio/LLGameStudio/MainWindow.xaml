@@ -84,15 +84,11 @@
             <Grid>
                 <Border x:Name="borderTitleArea" CornerRadius="10,10,0,0" Height="30" VerticalAlignment="Top" Background="#FF2D2D30" BorderThickness="0" MouseMove="borderTitleArea_MouseMove">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="853*"/>
-                            <ColumnDefinition Width="741*"/>
-                        </Grid.ColumnDefinitions>
                         <Image HorizontalAlignment="Left" Source="bin/Debug/Resource/保存.ico"/>
                         <Label x:Name="labelTitle" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" FontStretch="Expanded" Grid.ColumnSpan="2" Content="LLGameStudio" />
-                        <Image x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/最小化.png" Margin="0,0,100,0" Grid.Column="1" ToolTip="最小化" MouseLeftButtonDown="imageMinimizeWindow_MouseLeftButtonDown"/>
-                        <Image x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/最小化.png" Margin="0,0,50,0" Grid.Column="1" ToolTip="最大化" MouseLeftButtonDown="imageMaximizeWindow_MouseLeftButtonDown"/>
-                        <Image x:Name="imageExitWindow" HorizontalAlignment="Right" Source="bin/Debug/Resource/退出.png" Grid.Column="1" ToolTip="退出" MouseLeftButtonDown="imageExitWindow_MouseLeftButtonDown"/>
+                        <Control:LLStudioButton x:Name="imageMinimizeWindow" HorizontalAlignment="Right" Margin="0,0,60,0" ToolTip="最小化"></Control:LLStudioButton>
+                        <Control:LLStudioButton x:Name="imageMaximizeWindow" HorizontalAlignment="Right" Margin="0,0,30,0" ToolTip="最大化"></Control:LLStudioButton>
+                        <Control:LLStudioButton x:Name="imageExitWindow" HorizontalAlignment="Right" ToolTip="退出"></Control:LLStudioButton>
                     </Grid>
                 </Border>
                 <Grid Margin="0,30" Background="#FF252526">
@@ -128,7 +124,7 @@
                             <Grid Margin="0" Background="#FF512CC9">
                                 <WrapPanel x:Name="wrapPanelCanvasControlArea" Height="25" VerticalAlignment="Top"/>
                                 <ComboBox x:Name="comboBoxScaleCanvas" VerticalAlignment="Top" Height="25" Width="50" HorizontalAlignment="Left" IsEditable="True" Background="#FF333337" BorderBrush="#FF434346" Foreground="#FFD5D5D5" Focusable="False"/>
-                                <Button x:Name="buttonRestoreCanvas" HorizontalAlignment="Left" Width="50" Height="25" VerticalAlignment="Top" Margin="50,0,0,0" Content="还原画布" Click="buttonRestoreCanvas_Click" />
+                                <Control:LLStudioButton x:Name="buttonRestoreCanvas" Text="asd" HorizontalAlignment="Left" Width="75" Height="25" VerticalAlignment="Top" Margin="50,0,0,0"></Control:LLStudioButton>
                                 <Canvas x:Name="canvas" Background="#FF252526" ClipToBounds="True" MouseWheel="canvas_MouseWheel" MouseDown="canvas_MouseDown" MouseUp="canvas_MouseUp" MouseMove="canvas_MouseMove" Margin="0,25,0,0"/>
                             </Grid>
                             <GridSplitter x:Name="gridSplitterColumn0" Grid.Row="0" Height="3" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#FF2D2D30" BorderBrush="#FF686868"/>
