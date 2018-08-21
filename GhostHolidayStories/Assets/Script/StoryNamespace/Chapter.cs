@@ -11,6 +11,7 @@ namespace Assets.Script.StoryNamespace
         string chapterPath;
         int index;
         string name;
+        string description = "";
 
         List<Section> sectionList = new List<Section>();
 
@@ -31,6 +32,9 @@ namespace Assets.Script.StoryNamespace
                 {
                     case "name":
                         name = attribute.Value;
+                        break;
+                    case "description":
+                        description = attribute.Value;
                         break;
                     default:
                         break;

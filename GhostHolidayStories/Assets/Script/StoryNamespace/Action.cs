@@ -13,9 +13,17 @@ namespace Assets.Script.StoryNamespace
         Free,//角色由玩家控制。
     }
 
+    enum MoveState
+    {
+        AI,
+        Line,
+        Jump
+    }
+
     class Action
     {
         string actorName;
+        string targetActorName;
         GameState gameState;
         bool isAsync = false;
         bool isAnimation = false;
@@ -34,29 +42,25 @@ namespace Assets.Script.StoryNamespace
                     case "actor":
                         actorName = item.Value;
                         break;
-                    case "changeState":
+                    case "gameState":
                         gameState = (GameState)Enum.Parse(typeof(GameState), item.Value);
                         break;
                     case "isAsync":
                         isAsync = Convert.ToBoolean(item.Value);
                         break;
                     case "setPosition":
-                        functionName= item.Name.ToString();
+                    case "moveToPosition":
+                        functionName = item.Name.ToString();
                         int tempIndex = item.Value.IndexOf(',');
                         float x = (float)Convert.ToDouble(item.Value.Substring(0, tempIndex));
                         float y = (float)Convert.ToDouble(item.Value.Substring(tempIndex + 1));
                         position = new Vector2(x, y);
                         break;
-                    case "actor":
-                        actorName = item.Value;
+                    case "setFollowActor":
+                        functionName = item.Name.ToString();
+                        targetActorName = item.Value;
                         break;
-                    case "actor":
-                        actorName = item.Value;
-                        break;
-                    case "actor":
-                        actorName = item.Value;
-                        break;
-                    case "actor":
+                    case "animationName":
                         actorName = item.Value;
                         break;
                     default:

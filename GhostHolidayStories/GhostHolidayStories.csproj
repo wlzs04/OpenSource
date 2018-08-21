@@ -13,12 +13,14 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.2.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -223,19 +225,34 @@
     <Compile Include="Assets\Script\AudioPlayer.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Action.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\Actor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\CameraActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Chapter.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\GameActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Save.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\Scene.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Section.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Story.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Data\Common\Common.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Chapter\01.xml" />
+    <None Include="Assets\Data\ReadMe.txt" />
+    <None Include="Assets\Data\Stories\捕蛇\Audio\temp.txt" />
+    <None Include="Assets\Data\Stories\捕蛇\Chapter\01.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assets\Data\Stories\捕蛇\Chapter\02.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Chapter\03.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Chapter\04.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Save\01.xml" />
+    <None Include="Assets\Data\Stories\捕蛇\Save\01.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assets\Data\Stories\捕蛇\Story.xml" />
+    <None Include="Assets\Data\Stories\捕蛇\Texture\temp.txt" />
+    <None Include="Assets\Data\Stories\捕蛇\Video\temp.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

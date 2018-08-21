@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using UnityEngine;
 
 namespace Assets.Script.StoryNamespace
 {
@@ -12,18 +11,22 @@ namespace Assets.Script.StoryNamespace
         List<Action> actionList = new List<Action>();
         int index = 0;
         string sceneName;
+        string description = "";
 
         public void LoadContent(XElement node)
         {
-            foreach (var item in node.Attributes())
+            foreach (var attribute in node.Attributes())
             {
-                switch (item.Name.ToString())
+                switch (attribute.Name.ToString())
                 {
                     case "index":
-                        index = Convert.ToInt32(item.Value);
+                        index = Convert.ToInt32(attribute.Value);
                         break;
                     case "sceneName":
-                        sceneName = item.Value;
+                        sceneName = attribute.Value;
+                        break;
+                    case "description":
+                        description = attribute.Value;
                         break;
                     default:
                         break;
@@ -38,7 +41,7 @@ namespace Assets.Script.StoryNamespace
                         index = Convert.ToInt32(item.Value);
                         break;
                     default:
-                        Debug.LogError("未知指令："+ item.Name.ToString());
+                        GameManager.ShowErrorMessage("未知指令："+ item.Name.ToString());
                         break;
                 }
             }
