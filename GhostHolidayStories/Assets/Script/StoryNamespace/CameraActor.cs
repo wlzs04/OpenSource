@@ -13,7 +13,6 @@ namespace Assets.Script.StoryNamespace
         static CameraActor cameraActor = null;
         private CameraActor():base("Camera")
         {
-
         }
     }
 }

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ObjectInfoList>
+  <ObjectInfo itemId="10001" name="铜钱" description="可以用的钱才是真钱。"/>
+  <ObjectInfo itemId="10002" name="钱袋" description="很小，很朴素的钱袋。"/>
+</ObjectInfoList>

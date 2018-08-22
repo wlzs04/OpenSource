@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Assets.Script.StoryNamespace.ActionNamespace;
 
 namespace Assets.Script.StoryNamespace
 {
     class Section
     {
-        List<Action> actionList = new List<Action>();
+        List<ActionBase> actionList = new List<ActionBase>();
         int index = 0;
         string sceneName;
         string description = "";
@@ -35,14 +36,13 @@ namespace Assets.Script.StoryNamespace
 
             foreach (var item in node.Elements())
             {
-                switch (item.Name.ToString())
+                if(item.Name.ToString().Contains("Action"))
                 {
-                    case "Action":
-                        index = Convert.ToInt32(item.Value);
-                        break;
-                    default:
-                        GameManager.ShowErrorMessage("未知指令："+ item.Name.ToString());
-                        break;
+                    ActionBase action = ActionBase.LoadAction(item);
+                }
+                else
+                {
+                    GameManager.ShowErrorMessage("未知指令：" + item.Name.ToString());
                 }
             }
         }

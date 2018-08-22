@@ -224,13 +224,24 @@
   <ItemGroup>
     <Compile Include="Assets\Script\AudioPlayer.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\Action.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\Actor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\ActionBase.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\AnimationAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\CameraAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\GameAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\MovePositionAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\SetPositionAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\TalkAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\CameraActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Chapter.cs" />
     <Compile Include="Assets\Script\StoryNamespace\GameActor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ObjectItem.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Save.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\Scene.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\ActorBase.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\AnimationActor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\InteractiveActor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\PickableActor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\Scene.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\StaticActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Section.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Story.cs" />
   </ItemGroup>
@@ -244,9 +255,8 @@
     <None Include="Assets\Data\Stories\捕蛇\Chapter\02.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Chapter\03.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Chapter\04.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Save\01.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Assets\Data\Stories\捕蛇\Config\ObjectInfo.xml" />
+    <None Include="Assets\Data\Stories\捕蛇\Save\01.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml">
       <SubType>Designer</SubType>
     </None>

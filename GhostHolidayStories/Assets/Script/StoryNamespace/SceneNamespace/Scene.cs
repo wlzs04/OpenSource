@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
 
-namespace Assets.Script.StoryNamespace
+namespace Assets.Script.StoryNamespace.SceneNamespace
 {
     class Scene
     {
@@ -13,7 +13,7 @@ namespace Assets.Script.StoryNamespace
         string name;
         Vector2 position;
 
-
+        List<ActorBase> actorList = new List<ActorBase>();
 
         private Scene(string scenePath, string name)
         {
@@ -59,12 +59,14 @@ namespace Assets.Script.StoryNamespace
 
             foreach (var item in root.Elements())
             {
-                switch (item.Name.ToString())
+                ActorBase actor = ActorBase.LoadActor(item);
+                if (actor!=null)
                 {
-                    case "Static":
-                        break;
-                    default:
-                        break;
+                    actorList.Add(actor);
+                }
+                else
+                {
+                    GameManager.ShowErrorMessage("从场景中读取Actor:" + item.Name.ToString() + "失败！");
                 }
             }
         }
