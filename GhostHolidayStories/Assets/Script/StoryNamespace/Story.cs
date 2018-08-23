@@ -1,4 +1,5 @@
 ﻿using Assets.Script;
+using Assets.Script.StoryNamespace.SceneNamespace;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,12 +18,14 @@ namespace Assets.Script.StoryNamespace
         //Save:与存档相关配置
         int maxSaveNumber = 10;
         int lastSaveIndex = 0;
+
         //Preview:与预览相关配置
         string description = "";
         string image = "";
 
         List<Save> saveList = new List<Save>();
         List<Chapter> chapterList = new List<Chapter>();
+        Dictionary<string, Scene> sceneMap = new Dictionary<string, Scene>();
 
         Save currentSave = null;
 
@@ -150,6 +153,10 @@ namespace Assets.Script.StoryNamespace
                     chapterList.Add(chapter);
                 }
             }
+
+            LoadChapter(currentSave.GetChapterIndex());
+            LoadObject();
+            LoadScene(currentSave.GetSceneName());
         }
 
         /// <summary>
@@ -163,7 +170,7 @@ namespace Assets.Script.StoryNamespace
                 GameManager.ShowDebugMessage("存档创建失败！");
                 return;
             }
-            LoadChapter(currentSave.GetChapterIndex());
+            LoadContent();
         }
 
         /// <summary>
@@ -173,6 +180,7 @@ namespace Assets.Script.StoryNamespace
         public void Continue(int index)
         {
             currentSave = saveList[index];
+            LoadContent();
         }
 
         /// <summary>
@@ -188,6 +196,27 @@ namespace Assets.Script.StoryNamespace
             else
             {
                 GameManager.ShowErrorMessage("故事"+name+"缺少章节："+index);
+            }
+        }
+
+        /// <summary>
+        /// 加载物品
+        /// </summary>
+        private void LoadObject()
+        {
+            ObjectItem.LoadConfig();
+        }
+
+        private void LoadScene(string sceneName)
+        {
+            Scene scene = Scene.LoadScene(storyPath+"/Scene/"+ sceneName + ".xml", sceneName);
+            if(scene!=null)
+            {
+                sceneMap.Add(sceneName, scene);
+            }
+            else
+            {
+                GameManager.ShowErrorMessage("加载场景："+ sceneName+"失败！");
             }
         }
     }

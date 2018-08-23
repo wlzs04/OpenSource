@@ -1,18 +1,20 @@
 ﻿<Chapter name="第一章" description="半掩家门初入林，林深天开似无垠">
 	<Section index="0" sceneName="青州" description="户部尚书的两个儿子第一次到青州。">
-		<Action actor="Game" gameState="Controlled"/>
-		<Action actor="test" isAsync="false" isAnimation="false" isTalk="false" setPosition="100,100"/>
-		<Action actor="Camera" isAsync="false" isAnimation="false" setFollowActor="test" />
-		<Action actor="test" isAsync="true" needTime="2" moveToPosition="500,500" moveState="Path"/>
-		<Action actor="test" isAsync="false" isAnimation="true" needTime="2" isTalk="false" animationName="Walk" />
-		<Action actor="Game" gameState="Free"/>
+    <Game gameState="Controlled"/>
+    <Move actor="test" position="100,100" moveState="Set"/>
+    <Camera followActor="test" isAsync="false" needTime="0" moveState="Set"/>
+    <Animation actor="test" isAsync="true" loopTime="-1" onceTime="2" row="1" column="4" animationName="Walk" />
+    <Move actor="test" needTime="2" position="500,500" moveState="AI"/>
+    <Stop actor="test" />
+    <Game gameState="Free"/>
 	</Section>
 	<Section index="1" sceneName="青州" description="青州知府派人接待。">
-		<Action actor="Game" gameState="Controlled"/>
-		<Action actor="test" isAsync="false" isAnimation="false" isTalk="false" setPosition="100,100"/>
-		<Action actor="Camera" isAsync="false" setFollowActor="test" />
-		<Action actor="test" isAsync="true" isMove="true" needTime="2" moveToPosition="500,500" />
-		<Action actor="test" isAsync="false" isAnimation="true" needTime="2" isTalk="false" animationName="Walk" />
-		<Action actor="Game" gameState="Free"/>
+    <Game gameState="Controlled"/>
+    <Move actor="test" position="100,100" moveState="Set"/>
+    <Camera followActor="test" isAsync="false" needTime="0" moveState="Set"/>
+    <Animation actor="test" isAsync="true" isLoop="true" needTime="2" isTalk="false" animationName="Walk" />
+    <Move actor="test" needTime="2" position="500,500" moveState="AI"/>
+    <Stop actor="test" />
+    <Game gameState="Free"/>
 	</Section>
 </Chapter>

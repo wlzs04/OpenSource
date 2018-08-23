@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
-    class GameAction
+    class GameAction:ActionBase
     {
     }
 }

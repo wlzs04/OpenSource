@@ -148,5 +148,10 @@ namespace Assets.Script.StoryNamespace
         {
             return sectionIndex;
         }
+
+        public string GetSceneName()
+        {
+            return sceneName;
+        }
     }
 }

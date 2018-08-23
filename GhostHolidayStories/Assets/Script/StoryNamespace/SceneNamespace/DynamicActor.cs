@@ -7,22 +7,22 @@ using System.Xml.Linq;
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
     /// <summary>
-    /// 动画演员：展示动态物品，如被风吹动的草等
+    /// 动态演员：展示动态物品，如被风吹动的草等
     /// </summary>
-    class AnimationActor : ActorBase
+    class DynamicActor : ActorBase
     {
         int row = 1;//行数
         int column = 1;//列数
-        float playTime = 1;//播放时间
+        float onceTime = 1;//播放时间
 
-        public AnimationActor() : base("Animation")
+        public DynamicActor() : base("Dynamic")
         {
 
         }
 
         protected override ActorBase CreateActor(XElement node)
         {
-            AnimationActor animationActor = new AnimationActor();
+            DynamicActor animationActor = new DynamicActor();
 
             return animationActor;
         }
@@ -40,8 +40,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     case "column":
                         column = Convert.ToInt32(attribute.Value);
                         break;
-                    case "playTime":
-                        playTime = (float)Convert.ToDouble(attribute.Value);
+                    case "onceTime":
+                        onceTime = (float)Convert.ToDouble(attribute.Value);
                         break;
                     default:
                         break;

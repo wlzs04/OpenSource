@@ -2,10 +2,58 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
-    class AnimationAction
+    /// <summary>
+    /// 动画指令
+    /// </summary>
+    class AnimationAction : ActionBase
     {
+        bool isAsync = false;//是否此指令执行的同时执行下一条指令
+        int loopTime = 1;//动画循环次数，-1代表永远执行
+        float onceTime = 1;//动画播放一次所用的时间
+        int row = 1;//行数
+        int column = 1;//列数
+        string animationName = "";//动画名称
+
+        public AnimationAction():base("Animation")
+        {
+
+        }
+
+        protected override ActionBase CreateAction(XElement node)
+        {
+            AnimationAction action = new AnimationAction();
+            action.LoadContent(node);
+            return action;
+        }
+
+        protected override void LoadContent(XElement node)
+        {
+
+            base.LoadContent(node);
+            foreach (var attribute in node.Attributes())
+            {
+                switch (attribute.Name.ToString())
+                {
+                    case "content":
+                        content = attribute.Value;
+                        break;
+                    case "onlyTalkByTime":
+                        onlyTalkByTime = Convert.ToInt32(attribute.Value);
+                        break;
+                    case "audio":
+                        audio = attribute.Value;
+                        break;
+                    case "showContent":
+                        showContent = Convert.ToBoolean(attribute.Value);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }

@@ -6,26 +6,23 @@ using System.Xml.Linq;
 
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
-    /// <summary>
-    /// 谈话指令
-    /// </summary>
-    class TalkAction:ActionBase
+    class QuestionAction:ActionBase
     {
-        string content = "";//谈话内容
-        int onlyTalkByTime = 0;//只有在规定次数的谈话才会显示
-        string audio = "";//谈话的音频路径
+        string content = "";
         bool showContent = true;
+        bool isLoop = false;
 
-        public TalkAction():base("Talk")
+        List<OptionAction> optionList = new List<OptionAction>();
+
+        public QuestionAction() : base("Question")
         {
-
         }
 
         protected override ActionBase CreateAction(XElement node)
         {
-            TalkAction talkAction = new TalkAction();
-            talkAction.LoadContent(node);
-            return talkAction;
+            QuestionAction action = new QuestionAction();
+            action.LoadContent(node);
+            return action;
         }
 
         protected override void LoadContent(XElement node)
@@ -38,17 +35,27 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     case "content":
                         content = attribute.Value;
                         break;
-                    case "onlyTalkByTime":
-                        onlyTalkByTime = Convert.ToInt32(attribute.Value);
-                        break;
-                    case "audio":
-                        audio = attribute.Value;
-                        break;
                     case "showContent":
                         showContent = Convert.ToBoolean(attribute.Value);
                         break;
+                    case "isLoop":
+                        isLoop = Convert.ToBoolean(attribute.Value);
+                        break;
                     default:
                         break;
+                }
+            }
+
+            foreach (var item in node.Elements())
+            {
+                OptionAction action = (OptionAction)LoadAction(item);
+                if (action != null)
+                {
+                    optionList.Add(action);
+                }
+                else
+                {
+                    GameManager.ShowErrorMessage("在添加选项指令时指令加载失败！");
                 }
             }
         }

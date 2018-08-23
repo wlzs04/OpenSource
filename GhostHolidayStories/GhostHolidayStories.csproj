@@ -228,8 +228,10 @@
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\AnimationAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\CameraAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\GameAction.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\MovePositionAction.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\SetPositionAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\MoveAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\OptionAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\QuestionAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\RandomAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\TalkAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\CameraActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Chapter.cs" />
@@ -237,7 +239,7 @@
     <Compile Include="Assets\Script\StoryNamespace\ObjectItem.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Save.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\ActorBase.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\AnimationActor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\DynamicActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\InteractiveActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\PickableActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\Scene.cs" />
