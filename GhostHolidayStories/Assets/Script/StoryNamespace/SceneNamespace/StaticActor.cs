@@ -18,9 +18,14 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         protected override ActorBase CreateActor(XElement node)
         {
-            StaticActor staticActor = new StaticActor();
-            staticActor.LoadContent(node);
-            return staticActor;
+            StaticActor actor = new StaticActor();
+            actor.LoadContent(node);
+            return actor;
+        }
+
+        protected override void LoadContent(XElement node)
+        {
+            base.LoadContent(node);
         }
     }
 }

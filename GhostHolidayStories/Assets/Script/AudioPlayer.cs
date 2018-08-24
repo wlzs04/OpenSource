@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class AudioPlayer : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-        GameManager.GetInstance().ChooseStory("捕蛇");
+    GameManager gameManager = null;
 
+	// Use this for initialization
+	void Start ()
+    {
+        gameManager = GameManager.GetInstance();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Update ()
+    {
+        gameManager.Update();
+
+    }
 }

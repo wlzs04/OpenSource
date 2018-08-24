@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
@@ -62,6 +63,24 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         protected static void AddLegalAction(ActionBase actionBase)
         {
             legalActionMap.Add(actionBase.simpleActionClassName, actionBase);
+        }
+
+        /// <summary>
+        /// 加载所有合法指令
+        /// </summary>
+        public static void LoadAllLegalAction()
+        {
+            Assembly assembly = Assembly.GetAssembly(typeof(ActionBase));
+            foreach (var item in assembly.GetTypes())
+            {
+                if (item.Namespace == typeof(ActionBase).Namespace)
+                {
+                    if (item.IsClass&& item.Name != "ActionBase")
+                    {
+                        AddLegalAction((ActionBase)assembly.CreateInstance(item.FullName));
+                    }
+                }
+            }
         }
 
         /// <summary>

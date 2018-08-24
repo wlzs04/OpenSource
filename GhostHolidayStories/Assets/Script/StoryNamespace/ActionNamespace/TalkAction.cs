@@ -23,9 +23,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override ActionBase CreateAction(XElement node)
         {
-            TalkAction talkAction = new TalkAction();
-            talkAction.LoadContent(node);
-            return talkAction;
+            TalkAction action = new TalkAction();
+            action.LoadContent(node);
+            return action;
         }
 
         protected override void LoadContent(XElement node)

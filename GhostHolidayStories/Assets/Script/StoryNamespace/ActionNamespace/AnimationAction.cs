@@ -38,17 +38,23 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 switch (attribute.Name.ToString())
                 {
-                    case "content":
-                        content = attribute.Value;
+                    case "isAsync":
+                        isAsync = Convert.ToBoolean(attribute.Value);
                         break;
-                    case "onlyTalkByTime":
-                        onlyTalkByTime = Convert.ToInt32(attribute.Value);
+                    case "loopTime":
+                        loopTime = Convert.ToInt32(attribute.Value);
                         break;
-                    case "audio":
-                        audio = attribute.Value;
+                    case "onceTime":
+                        onceTime = (float)Convert.ToDouble(attribute.Value);
                         break;
-                    case "showContent":
-                        showContent = Convert.ToBoolean(attribute.Value);
+                    case "row":
+                        row = Convert.ToInt32(attribute.Value);
+                        break;
+                    case "column":
+                        column = Convert.ToInt32(attribute.Value);
+                        break;
+                    case "animationName":
+                        animationName = attribute.Value;
                         break;
                     default:
                         break;

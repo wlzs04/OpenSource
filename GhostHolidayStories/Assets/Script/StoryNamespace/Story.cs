@@ -130,6 +130,34 @@ namespace Assets.Script.StoryNamespace
         }
 
         /// <summary>
+        /// 获得描述
+        /// </summary>
+        /// <returns></returns>
+        public string GetDescription()
+        {
+            return description;
+        }
+
+        /// <summary>
+        /// 获得存档列表
+        /// </summary>
+        /// <returns></returns>
+        public List<Save> GetSaveList()
+        {
+            return saveList;
+        }
+
+        /// <summary>
+        /// 获得指定章节
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Chapter GetChapterByIndex(int index)
+        {
+            return chapterList[index];
+        }
+
+        /// <summary>
         /// 获得故事路径
         /// </summary>
         /// <returns></returns>
@@ -154,8 +182,8 @@ namespace Assets.Script.StoryNamespace
                 }
             }
 
-            LoadChapter(currentSave.GetChapterIndex());
             LoadObject();
+            LoadChapter(currentSave.GetChapterIndex());
             LoadScene(currentSave.GetSceneName());
         }
 
@@ -207,6 +235,10 @@ namespace Assets.Script.StoryNamespace
             ObjectItem.LoadConfig();
         }
 
+        /// <summary>
+        /// 加载场景
+        /// </summary>
+        /// <param name="sceneName"></param>
         private void LoadScene(string sceneName)
         {
             Scene scene = Scene.LoadScene(storyPath+"/Scene/"+ sceneName + ".xml", sceneName);

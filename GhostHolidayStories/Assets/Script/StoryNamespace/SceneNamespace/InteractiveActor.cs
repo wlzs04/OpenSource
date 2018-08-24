@@ -26,9 +26,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         protected override ActorBase CreateActor(XElement node)
         {
-            InteractiveActor interactiveActor = new InteractiveActor();
-            interactiveActor.LoadContent(node);
-            return interactiveActor;
+            InteractiveActor actor = new InteractiveActor();
+            actor.LoadContent(node);
+            return actor;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,11 +17,13 @@ namespace Assets.Script.StoryNamespace
         string savePath;
         DateTime createTime;
         DateTime lastSaveTime;
-        TimeSpan gamePlayTime;
+        TimeSpan playTime;
         int chapterIndex = 0;
         int sectionIndex = 0;
         string sceneName;
         Vector2 position;
+
+        Sprite image = null;
 
         private Save(string savePath, int index)
         {
@@ -115,7 +118,9 @@ namespace Assets.Script.StoryNamespace
                 }
             }
 
-            gamePlayTime = lastSaveTime - createTime;
+            playTime = lastSaveTime - createTime;
+
+            image = ImageHelper.LoadImage(savePath.Substring(0, savePath.LastIndexOf(".")) + ".jpg");
         }
 
         /// <summary>
@@ -124,7 +129,7 @@ namespace Assets.Script.StoryNamespace
         public void SaveGameData()
         {
             lastSaveTime = DateTime.Now;
-            gamePlayTime = lastSaveTime - createTime;
+            playTime = lastSaveTime - createTime;
 
             XDocument doc = new XDocument(
                 new XElement("Save",
@@ -152,6 +157,16 @@ namespace Assets.Script.StoryNamespace
         public string GetSceneName()
         {
             return sceneName;
+        }
+
+        public Sprite GetImage()
+        {
+            return image;
+        }
+
+        public TimeSpan GetPlayTime()
+        {
+            return playTime;
         }
     }
 }

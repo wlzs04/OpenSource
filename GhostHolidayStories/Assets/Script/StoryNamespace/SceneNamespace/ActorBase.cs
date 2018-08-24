@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
@@ -34,6 +35,24 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected static void AddLegalActor(ActorBase actorBase)
         {
             legalActorMap.Add(actorBase.simpleActorClassName, actorBase);
+        }
+
+        /// <summary>
+        /// 加载所有合法演员
+        /// </summary>
+        public static void LoadAllLegalActor()
+        {
+            Assembly assembly = Assembly.GetAssembly(typeof(ActorBase));
+            foreach (var item in assembly.GetTypes())
+            {
+                if(item.Namespace== typeof(ActorBase).Namespace)
+                {
+                    if (item.Name != "Scene" && item.Name != "ActorBase" && item.Name != "GameActor" & item.Name != "CameraActor")
+                    {
+                        AddLegalActor((ActorBase)assembly.CreateInstance(item.FullName));
+                    }
+                }
+            }
         }
 
         /// <summary>

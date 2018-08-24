@@ -51,5 +51,15 @@ namespace Assets.Script.StoryNamespace
                 }
             }
         }
+
+        public string GetName()
+        {
+            return name;
+        }
+
+        public string GetDescription()
+        {
+            return description;
+        }
     }
 }

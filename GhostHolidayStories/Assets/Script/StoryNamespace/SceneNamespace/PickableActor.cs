@@ -23,9 +23,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         protected override ActorBase CreateActor(XElement node)
         {
-            PickableActor pickableActor = new PickableActor();
-            pickableActor.LoadContent(node);
-            return pickableActor;
+            PickableActor actor = new PickableActor();
+            actor.LoadContent(node);
+            return actor;
         }
 
         protected override void LoadContent(XElement node)
