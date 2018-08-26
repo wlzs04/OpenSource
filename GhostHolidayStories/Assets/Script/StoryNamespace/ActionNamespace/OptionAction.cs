@@ -15,7 +15,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         bool changeStateAfterSelect = false;
         bool endLoop = false;
 
-        ActionBase nextAction = null;//当选择此项后进行的下一项指令
+        List<ActionBase> actionList = new List<ActionBase>();//当选择此项后进行的下一项指令
 
         public OptionAction():base("Option")
         {
@@ -50,16 +50,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
             foreach (var item in node.Elements())
             {
-                if(nextAction==null)
-                {
-                    nextAction = LoadAction(item);
-                }
-                else
-                {
-                    ActionBase newNextAction = LoadAction(item);
-                    GameManager.ShowErrorMessage("选项指令的子指令："+nextAction.GetSimpleActionClassName()+"已存在，将会被新指令："+ newNextAction.GetSimpleActionClassName()+ "覆盖。");
-                    nextAction = newNextAction;
-                }
+                actionList.Add(LoadAction(item));
             }
         }
     }

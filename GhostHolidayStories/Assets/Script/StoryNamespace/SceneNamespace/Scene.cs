@@ -15,10 +15,21 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         List<ActorBase> actorList = new List<ActorBase>();
 
+        GameObject world = null;
+        GameObject gameObject = null;
+
         private Scene(string scenePath, string name)
         {
             this.scenePath = scenePath;
             this.name = name;
+
+            gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
+            gameObject.name = name;
+        }
+
+        public GameObject GetGameObject()
+        {
+            return gameObject;
         }
 
         /// <summary>
@@ -63,11 +74,49 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 if (actor!=null)
                 {
                     actorList.Add(actor);
+                    actor.SetScene(this);
                 }
                 else
                 {
                     GameManager.ShowErrorMessage("从场景中读取Actor:" + item.Name.ToString() + "失败！");
                 }
+            }
+
+            actorList.Sort(SortRule);
+        }
+
+        public void Update()
+        {
+            
+        }
+
+        public void SetWorld(GameObject world)
+        {
+            this.world = world;
+            gameObject.transform.parent = world.transform;
+            gameObject.transform.localPosition = position;
+        }
+
+        /// <summary>
+        /// 场景内的演员的排序规则
+        /// </summary>
+        private int SortRule(ActorBase actor0, ActorBase actor1)
+        {
+            if(actor0.GetLayer()> actor1.GetLayer())
+            {
+                return 1;
+            }
+            else if (actor0.GetLayer() < actor1.GetLayer())
+            {
+                return -1;
+            }
+            else
+            {
+                if(actor0.GetPosition().y> actor1.GetPosition().y)
+                {
+                    return 1;
+                }
+                return -1;
             }
         }
     }

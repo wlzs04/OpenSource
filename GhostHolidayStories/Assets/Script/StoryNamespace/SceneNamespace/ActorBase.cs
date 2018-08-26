@@ -1,4 +1,5 @@
-﻿using Assets.Script.StoryNamespace.ActionNamespace;
+﻿using Assets.Script.Helper;
+using Assets.Script.StoryNamespace.ActionNamespace;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,20 +17,29 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     {
         string simpleActorClassName = "Actor";
 
-        string name="";//名称
-        string imagePath = "";//图片路径
-        float width = 0;//宽度
-        float height = 0;//高度
-        bool isBlock = false;//是否可以阻挡角色移动
-        int layer = 1;//图片所在层级,0代表永远在最下层，1表示与按演员所在位置进行排序，2表示永远在上层
-        Vector2 position;//位置
-        bool canShow = true;//是否显示
+        protected string name ="";//名称
+        protected string imagePath = "";//图片路径
+        protected float width = 0;//宽度
+        protected float height = 0;//高度
+        protected bool isBlock = false;//是否可以阻挡角色移动
+        protected int layer = 1;//图片所在层级,0代表永远在最下层，1表示与按演员所在位置进行排序，2表示永远在上层
+        protected Vector2 position;//位置
+        protected bool canShow = true;//是否显示
 
+        Sprite image = null;
+        GameObject gameObject = null;
+        Scene scene =null;
+        
         static Dictionary<string, ActorBase> legalActorMap = new Dictionary<string, ActorBase>();
 
         protected ActorBase(string simpleActorClassName)
         {
             this.simpleActorClassName = simpleActorClassName;
+        }
+
+        public GameObject GetGameObject()
+        {
+            return gameObject;
         }
 
         protected static void AddLegalActor(ActorBase actorBase)
@@ -53,6 +63,17 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 设置所在场景
+        /// </summary>
+        /// <param name="scene"></param>
+        public void SetScene(Scene scene)
+        {
+            gameObject.transform.parent = scene.GetGameObject().transform;
+            gameObject.transform.localPosition = position;
+            gameObject.transform.localScale = new Vector3(width, height);
         }
 
         /// <summary>
@@ -84,12 +105,14 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         protected virtual void LoadContent(XElement node)
         {
+            gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
             foreach (var attribute in node.Attributes())
             {
                 switch (attribute.Name.ToString())
                 {
                     case "name":
                         name = attribute.Value;
+                        gameObject.name = name;
                         break;
                     case "image":
                         imagePath = attribute.Value;
@@ -119,6 +142,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                         break;
                 }
             }
+            if(imagePath!="")
+            {
+                image = ImageHelper.LoadImage(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
+                gameObject.GetComponent<SpriteRenderer>().sprite = image;
+            }
         }
 
         /// <summary>
@@ -146,6 +174,16 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         private void MoveToPosition(Vector2 newPosition,float needTime,MoveState moveState)
         {
 
+        }
+
+        public int GetLayer()
+        {
+            return layer;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
         }
     }
 }

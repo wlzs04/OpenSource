@@ -46,7 +46,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         string simpleActionClassName = "Action";
 
         protected string actorName = "";
-        protected bool backToLastAction = false;
         protected bool endAllAction = false;
 
         static Dictionary<string, ActionBase> legalActionMap = new Dictionary<string, ActionBase>();
@@ -123,9 +122,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 {
                     case "actor":
                         actorName = item.Value;
-                        break;
-                    case "backToLastAction":
-                        backToLastAction = Convert.ToBoolean(item.Value);
                         break;
                     case "endAllAction":
                         endAllAction = Convert.ToBoolean(item.Value);

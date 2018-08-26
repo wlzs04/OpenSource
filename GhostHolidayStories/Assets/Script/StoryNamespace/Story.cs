@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-
+using UnityEngine;
 
 namespace Assets.Script.StoryNamespace
 {
@@ -32,11 +32,14 @@ namespace Assets.Script.StoryNamespace
         GameActor gameActor = null;
         CameraActor cameraActor = null;
 
+        GameObject world = null;
+
         public Story(string name)
         {
             this.name = name;
             storyPath = GameManager.GetInstance().GetStoriesPath() + name;
             LoadInfo();
+            world = GameObject.Find("World");
         }
 
         /// <summary>
@@ -199,6 +202,8 @@ namespace Assets.Script.StoryNamespace
                 return;
             }
             LoadContent();
+            GameManager.GetInstance().SetUI(UIState.Clean);
+            AddContent();
         }
 
         /// <summary>
@@ -209,6 +214,24 @@ namespace Assets.Script.StoryNamespace
         {
             currentSave = saveList[index];
             LoadContent();
+            GameManager.GetInstance().SetUI(UIState.Clean);
+            AddContent();
+        }
+
+        /// <summary>
+        /// 添加内容
+        /// </summary>
+        private void AddContent()
+        {
+            AddSceneToWorld();
+        }
+
+        private void AddSceneToWorld()
+        {
+            foreach (var item in sceneMap)
+            {
+                item.Value.SetWorld(world);
+            }
         }
 
         /// <summary>

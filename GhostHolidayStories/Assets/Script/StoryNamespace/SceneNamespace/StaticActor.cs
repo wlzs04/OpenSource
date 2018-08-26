@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Assets.Script.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
 
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
@@ -26,6 +28,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected override void LoadContent(XElement node)
         {
             base.LoadContent(node);
+
         }
+
     }
 }

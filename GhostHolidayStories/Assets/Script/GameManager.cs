@@ -40,8 +40,8 @@ namespace Assets.Script
             SetUI(UIState.Init);
             LoadAllStoryName();
 
-            ActorBase.LoadAllLegalActor();
             ActionBase.LoadAllLegalAction();
+            ActorBase.LoadAllLegalActor();
         }
 
         public static GameManager GetInstance()

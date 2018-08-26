@@ -23,7 +23,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected override ActorBase CreateActor(XElement node)
         {
             DynamicActor animationActor = new DynamicActor();
-
+            animationActor.LoadContent(node);
             return animationActor;
         }
 

@@ -36,9 +36,10 @@ namespace Assets.Script.StoryNamespace
 
             foreach (var item in node.Elements())
             {
-                if(item.Name.ToString().Contains("Action"))
+                ActionBase action = ActionBase.LoadAction(item);
+                if (action != null)
                 {
-                    ActionBase action = ActionBase.LoadAction(item);
+                    actionList.Add(action);
                 }
                 else
                 {
