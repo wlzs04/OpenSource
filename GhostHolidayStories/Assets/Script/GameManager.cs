@@ -33,6 +33,8 @@ namespace Assets.Script
 
         Transform canvasTransform = null;
         UIState uiState;
+
+        bool storyPlay = false;
         
         private GameManager()
         {
@@ -54,7 +56,10 @@ namespace Assets.Script
         /// </summary>
         public void Update()
         {
-            int y = 0;
+            if(storyPlay)
+            {
+                currentStory.Update();
+            }
         }
 
         /// <summary>
@@ -132,6 +137,7 @@ namespace Assets.Script
             if(currentStory!=null)
             {
                 currentStory.Start();
+                storyPlay = true;
             }
         }
 
@@ -143,6 +149,7 @@ namespace Assets.Script
             if (currentStory != null)
             {
                 currentStory.Continue(index);
+                storyPlay = true;
             }
         }
 
@@ -234,7 +241,7 @@ namespace Assets.Script
             returnButton.onClick.AddListener(() => { SetUI(UIState.StoryList); });
 
             Button startButton = GameObject.Find("StartButton").GetComponent<Button>();
-            startButton.onClick.AddListener(() => { currentStory.Start(); });
+            startButton.onClick.AddListener(() => { StartStory(); });
 
             Text descriptionText = GameObject.Find("DescriptionText").GetComponent<Text>();
             descriptionText.text = currentStory.GetDescription();

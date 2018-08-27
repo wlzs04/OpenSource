@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,17 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     {
         Vector2 position;
         MoveState moveState;
+        float needTime = 0;
 
         public MoveAction():base("Move")
         {
 
+        }
+
+        public override void Execute()
+        {
+            ActorBase actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
+            actor.MoveToPosition(position, needTime, moveState);
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -39,6 +47,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         break;
                     case "moveState":
                         moveState = (MoveState)Enum.Parse(typeof(MoveState), attribute.Value);
+                        break;
+                    case "needTime":
+                        needTime = (float)Convert.ToDouble(attribute.Value);
                         break;
                     default:
                         break;

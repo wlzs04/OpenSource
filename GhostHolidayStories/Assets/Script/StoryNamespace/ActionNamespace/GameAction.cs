@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         public GameAction() : base("Game")
         {
 
+        }
+
+        public override void Execute()
+        {
+            GameActor.GetInstance().SetGameState(gameState);
         }
 
         protected override ActionBase CreateAction(XElement node)

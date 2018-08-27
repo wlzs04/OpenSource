@@ -43,7 +43,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     abstract class ActionBase
     {
-        string simpleActionClassName = "Action";
+        string simpleActionClassName = "ActionBase";
 
         protected string actorName = "";
         protected bool endAllAction = false;
@@ -140,5 +140,10 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             return simpleActionClassName;
         }
+
+        /// <summary>
+        /// 执行
+        /// </summary>
+        public abstract void Execute();
     }
 }

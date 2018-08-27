@@ -9,7 +9,23 @@ namespace Assets.Script.Helper
 {
     class ImageHelper
     {
-        public static Sprite LoadImage(string path)
+        /// <summary>
+        /// 加载图片
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static Sprite LoadSprite(string path)
+        {
+            Texture2D texture = LoadTexture(path);
+            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        }
+
+        /// <summary>
+        /// 加载纹理
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static Texture2D LoadTexture(string path)
         {
             //创建文件读取流
             FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -28,7 +44,7 @@ namespace Assets.Script.Helper
             int height = 640;
             Texture2D texture = new Texture2D(width, height);
             texture.LoadImage(bytes);
-            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            return texture;
         }
     }
 }

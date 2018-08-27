@@ -1,4 +1,5 @@
 ﻿using Assets.Script;
+using Assets.Script.StoryNamespace.ActionNamespace;
 using Assets.Script.StoryNamespace.SceneNamespace;
 using System;
 using System.Collections.Generic;
@@ -25,21 +26,32 @@ namespace Assets.Script.StoryNamespace
 
         List<Save> saveList = new List<Save>();
         List<Chapter> chapterList = new List<Chapter>();
-        Dictionary<string, Scene> sceneMap = new Dictionary<string, Scene>();
+
+        World world = null;
 
         Save currentSave = null;
 
         GameActor gameActor = null;
         CameraActor cameraActor = null;
 
-        GameObject world = null;
+        Scene currentScene = null;
 
         public Story(string name)
         {
             this.name = name;
             storyPath = GameManager.GetInstance().GetStoriesPath() + name;
             LoadInfo();
-            world = GameObject.Find("World");
+            world = World.GetInstance();
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        public void Update()
+        {
+            world.Update();
+            gameActor.Update();
+            cameraActor.Update();
         }
 
         /// <summary>
@@ -169,6 +181,21 @@ namespace Assets.Script.StoryNamespace
             return storyPath;
         }
 
+        public World GetWorld()
+        {
+            return world;
+        }
+
+        public Scene GetCurrentScene()
+        {
+            return currentScene;
+        }
+
+        public void SetCurrentSceneByName(string sceneName)
+        {
+            currentScene = world.GetScene(sceneName);
+        }
+
         /// <summary>
         /// 加载故事完整内容
         /// </summary>
@@ -187,7 +214,12 @@ namespace Assets.Script.StoryNamespace
 
             LoadObject();
             LoadChapter(currentSave.GetChapterIndex());
-            LoadScene(currentSave.GetSceneName());
+            if(currentSave.GetSceneName()!="")
+            {
+                LoadScene(currentSave.GetSceneName());
+            }
+            gameActor = GameActor.GetInstance();
+            cameraActor = CameraActor.GetInstance();
         }
 
         /// <summary>
@@ -203,7 +235,7 @@ namespace Assets.Script.StoryNamespace
             }
             LoadContent();
             GameManager.GetInstance().SetUI(UIState.Clean);
-            AddContent();
+            StartContent();
         }
 
         /// <summary>
@@ -215,23 +247,15 @@ namespace Assets.Script.StoryNamespace
             currentSave = saveList[index];
             LoadContent();
             GameManager.GetInstance().SetUI(UIState.Clean);
-            AddContent();
+            //StartContent();
         }
 
         /// <summary>
-        /// 添加内容
+        /// 开始内容
         /// </summary>
-        private void AddContent()
+        private void StartContent()
         {
-            AddSceneToWorld();
-        }
-
-        private void AddSceneToWorld()
-        {
-            foreach (var item in sceneMap)
-            {
-                item.Value.SetWorld(world);
-            }
+            chapterList[currentSave.GetChapterIndex()].Start(currentSave.GetSectionIndex());
         }
 
         /// <summary>
@@ -267,7 +291,7 @@ namespace Assets.Script.StoryNamespace
             Scene scene = Scene.LoadScene(storyPath+"/Scene/"+ sceneName + ".xml", sceneName);
             if(scene!=null)
             {
-                sceneMap.Add(sceneName, scene);
+                world.AddScene(scene);
             }
             else
             {

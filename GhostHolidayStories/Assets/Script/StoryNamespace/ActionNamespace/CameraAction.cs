@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public CameraAction() : base("Camera")
         {
+        }
+
+        public override void Execute()
+        {
+            CameraActor.GetInstance().SetFollowActor(followActorName);
         }
 
         protected override ActionBase CreateAction(XElement node)

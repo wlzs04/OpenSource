@@ -21,6 +21,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
+        public override void Execute()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override ActionBase CreateAction(XElement node)
         {
             OptionAction action = new OptionAction();

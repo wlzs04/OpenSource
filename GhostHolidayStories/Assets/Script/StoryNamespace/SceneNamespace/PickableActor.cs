@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
 
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
@@ -11,6 +12,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     /// </summary>
     class PickableActor : ActorBase
     {
+        protected Sprite image = null;
         bool playAnimation = true;
         bool canPick = true;
 
@@ -58,6 +60,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                         break;
                 }
             }
+
+            image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            gameObject.GetComponent<SpriteRenderer>().sprite = image;
         }
     }
 }

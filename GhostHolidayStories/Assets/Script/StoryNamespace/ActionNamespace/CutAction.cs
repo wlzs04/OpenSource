@@ -7,11 +7,11 @@ using System.Xml.Linq;
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
     /// <summary>
-    /// 停止指令：让指定角色停止行动，未指定角色将停止所有角色
+    /// 结束指令：剧本上的内容暂停
     /// </summary>
-    class StopAction : ActionBase
+    class CutAction : ActionBase
     {
-        public StopAction():base("Stop")
+        public CutAction():base("Cut")
         {
 
         }
@@ -23,14 +23,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override ActionBase CreateAction(XElement node)
         {
-            StopAction action = new StopAction();
+            CutAction action = new CutAction();
             action.LoadContent(node);
             return action;
-        }
-
-        protected override void LoadContent(XElement node)
-        {
-            base.LoadContent(node);
         }
     }
 }

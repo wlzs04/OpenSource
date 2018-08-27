@@ -47,5 +47,26 @@ namespace Assets.Script.StoryNamespace
                 }
             }
         }
+
+        /// <summary>
+        /// 开始本节
+        /// </summary>
+        public void Start()
+        {
+            GameManager.GetCurrentStory().SetCurrentSceneByName(sceneName);
+            
+        }
+
+        /// <summary>
+        /// 执行下一条指令
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<ActionBase> ExecuteNextAction()
+        {
+            foreach (var item in actionList)
+            {
+                yield return item;
+            }
+        }
     }
 }

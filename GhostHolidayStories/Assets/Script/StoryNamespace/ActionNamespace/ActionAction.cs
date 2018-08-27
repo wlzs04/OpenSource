@@ -7,30 +7,25 @@ using System.Xml.Linq;
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
     /// <summary>
-    /// 停止指令：让指定角色停止行动，未指定角色将停止所有角色
+    /// 开始指令
     /// </summary>
-    class StopAction : ActionBase
+    class ActionAction : ActionBase
     {
-        public StopAction():base("Stop")
+        public ActionAction() : base("Action")
         {
 
-        }
-
-        public override void Execute()
-        {
-            
         }
 
         protected override ActionBase CreateAction(XElement node)
         {
-            StopAction action = new StopAction();
+            ActionAction action = new ActionAction();
             action.LoadContent(node);
             return action;
         }
 
-        protected override void LoadContent(XElement node)
+        public override void Execute()
         {
-            base.LoadContent(node);
+
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     /// </summary>
     abstract class ActorBase
     {
-        string simpleActorClassName = "Actor";
+        string simpleActorClassName = "ActorBase";
 
         protected string name ="";//名称
         protected string imagePath = "";//图片路径
@@ -26,10 +26,20 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected Vector2 position;//位置
         protected bool canShow = true;//是否显示
 
-        Sprite image = null;
-        GameObject gameObject = null;
-        Scene scene =null;
-        
+        protected Texture2D texture = null;
+        //protected Sprite image = null;
+        protected GameObject gameObject = null;
+        protected Scene scene =null;
+
+        /// <summary>
+        /// 与移动相关
+        /// </summary>
+        bool isMoving = false;
+        float needTime = 0;
+        float lastTime = 0;
+        Vector2 lastPosition;
+        Vector2 newPosition;
+
         static Dictionary<string, ActorBase> legalActorMap = new Dictionary<string, ActorBase>();
 
         protected ActorBase(string simpleActorClassName)
@@ -37,11 +47,32 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             this.simpleActorClassName = simpleActorClassName;
         }
 
-        public GameObject GetGameObject()
+        /// <summary>
+        /// 更新
+        /// </summary>
+        public virtual void Update()
         {
-            return gameObject;
+            if(isMoving)
+            {
+                if(Time.time-lastTime<= needTime)
+                {
+                    float rate = (Time.time - lastTime) / needTime;
+                    float moveX = rate * (newPosition.x - lastPosition.x);
+                    float moveY = rate * (newPosition.y - lastPosition.y);
+                    SetPosition(new Vector2(lastPosition.x+moveX, lastPosition.y + moveY));
+                }
+                else
+                {
+                    SetPosition(newPosition);
+                    isMoving = false;
+                }
+            }
         }
 
+        /// <summary>
+        /// 添加合法演员
+        /// </summary>
+        /// <param name="actorBase"></param>
         protected static void AddLegalActor(ActorBase actorBase)
         {
             legalActorMap.Add(actorBase.simpleActorClassName, actorBase);
@@ -73,7 +104,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             gameObject.transform.parent = scene.GetGameObject().transform;
             gameObject.transform.localPosition = position;
-            gameObject.transform.localScale = new Vector3(width, height);
+            gameObject.GetComponent<SpriteRenderer>().sortingOrder = layer;
+            gameObject.GetComponent<SpriteRenderer>().size = new Vector2(width, height);
         }
 
         /// <summary>
@@ -103,6 +135,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             return actor;
         }
 
+        /// <summary>
+        /// 加载内容
+        /// </summary>
+        /// <param name="node"></param>
         protected virtual void LoadContent(XElement node)
         {
             gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
@@ -144,8 +180,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             }
             if(imagePath!="")
             {
-                image = ImageHelper.LoadImage(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
-                gameObject.GetComponent<SpriteRenderer>().sprite = image;
+                texture = ImageHelper.LoadTexture(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
             }
         }
 
@@ -164,16 +199,40 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="newPosition"></param>
         private void SetPosition(Vector2 newPosition)
         {
-
+            position = newPosition;
+            gameObject.transform.localPosition = position;
         }
 
         /// <summary>
         /// 角色移动到指定位置
         /// </summary>
         /// <param name="newPosition"></param>
-        private void MoveToPosition(Vector2 newPosition,float needTime,MoveState moveState)
+        public void MoveToPosition(Vector2 newPosition,float needTime,MoveState moveState)
         {
+            this.needTime = needTime;
+            lastTime = Time.time;
+            lastPosition = position;
+            switch (moveState)
+            {
+                case MoveState.Set:
+                    SetPosition(newPosition);
+                    break;
+                case MoveState.AI:
+                    isMoving = true;
+                    break;
+                case MoveState.Line:
+                    isMoving = true;
+                    break;
+                case MoveState.Jump:
+                    break;
+                default:
+                    break;
+            }
+        }
 
+        public string GetName()
+        {
+            return name;
         }
 
         public int GetLayer()
@@ -184,6 +243,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         public Vector2 GetPosition()
         {
             return position;
+        }
+
+        public GameObject GetGameObject()
+        {
+            return gameObject;
         }
     }
 }

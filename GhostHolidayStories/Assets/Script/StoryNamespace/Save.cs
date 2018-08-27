@@ -20,7 +20,7 @@ namespace Assets.Script.StoryNamespace
         TimeSpan playTime;
         int chapterIndex = 0;
         int sectionIndex = 0;
-        string sceneName;
+        string sceneName="";
         Vector2 position;
 
         Sprite image = null;
@@ -120,7 +120,7 @@ namespace Assets.Script.StoryNamespace
 
             playTime = lastSaveTime - createTime;
 
-            image = ImageHelper.LoadImage(savePath.Substring(0, savePath.LastIndexOf(".")) + ".jpg");
+            image = ImageHelper.LoadSprite(savePath.Substring(0, savePath.LastIndexOf(".")) + ".jpg");
         }
 
         /// <summary>

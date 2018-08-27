@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
 
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
@@ -12,6 +13,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     /// </summary>
     class InteractiveActor : ActorBase
     {
+        protected Sprite image = null;
         bool playDefaultAnimation = true;//是否播放动画
         bool canTalk = true;//是否可以说话
 
@@ -64,6 +66,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     GameManager.ShowErrorMessage("从InteractiveActor中读取Action:" + item.Name.ToString() + "失败！");
                 }
             }
+
+            image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            gameObject.GetComponent<SpriteRenderer>().sprite = image;
         }
     }
 }

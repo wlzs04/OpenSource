@@ -2,8 +2,8 @@
   <Static name="grass" image="grass.png" width="1000" height="1000" isBlock="false" layer="0" position="0,0"/>
   <Static name="home1" image="house1.png" width="100" height="100" isBlock="true" layer="1" position="200,200"/>
   <Static name="home2" image="house2.png" width="200" height="200" isBlock="true" layer="1" position="700,700"/>
-  <Static name="cloud" image="cloud1.png" width="200" height="200" isBlock="false" layer="3" position="0,0"/>
-  <Dynamic name="person1" image="person1.png" row="1" column="4" onceTime="2" width="50" height="100" isBlock="true" layer="1" position="400,400" />
+  <Static name="cloud" image="cloud1.png" width="200" height="200" isBlock="false" layer="2" position="0,0"/>
+  <Dynamic name="person1" image="person1.png" row="1" column="4" onceTime="0.5" width="100" height="100" isBlock="true" layer="1" position="400,400" />
   <Pickable name="pick1" image="money.png" width="50" height="50" position="0,400" playDefaultAnimation="true" canPick="true">
     <ObjectItem itemId="10001" number="100"/>
     <ObjectItem itemId="10002" number ="1"/>

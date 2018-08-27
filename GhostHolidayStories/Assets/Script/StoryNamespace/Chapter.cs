@@ -61,5 +61,13 @@ namespace Assets.Script.StoryNamespace
         {
             return description;
         }
+
+        /// <summary>
+        /// 开始本章
+        /// </summary>
+        public void Start(int sectionIndex)
+        {
+            sectionList[sectionIndex].Start();
+        }
     }
 }

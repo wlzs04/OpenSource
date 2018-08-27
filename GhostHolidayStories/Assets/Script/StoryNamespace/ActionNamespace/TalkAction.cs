@@ -15,8 +15,14 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         int onlyTalkByTime = 0;//只有在规定次数的谈话才会显示
         string audio = "";//谈话的音频路径
         bool showContent = true;
+        bool isAsync = false;
 
         public TalkAction():base("Talk")
+        {
+
+        }
+
+        public override void Execute()
         {
 
         }

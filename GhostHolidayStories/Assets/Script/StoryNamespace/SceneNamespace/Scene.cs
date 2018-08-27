@@ -13,9 +13,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         string name;
         Vector2 position;
 
-        List<ActorBase> actorList = new List<ActorBase>();
+        Dictionary<string, ActorBase> actorMap = new Dictionary<string, ActorBase>();
+        //List<ActorBase> actorList = new List<ActorBase>();
 
-        GameObject world = null;
+        World world = null;
         GameObject gameObject = null;
 
         private Scene(string scenePath, string name)
@@ -25,6 +26,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
             gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
             gameObject.name = name;
+        }
+
+        public string GetName()
+        {
+            return name;
         }
 
         public GameObject GetGameObject()
@@ -73,7 +79,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 ActorBase actor = ActorBase.LoadActor(item);
                 if (actor!=null)
                 {
-                    actorList.Add(actor);
+                    actorMap.Add(actor.GetName(), actor);
                     actor.SetScene(this);
                 }
                 else
@@ -81,43 +87,35 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     GameManager.ShowErrorMessage("从场景中读取Actor:" + item.Name.ToString() + "失败！");
                 }
             }
-
-            actorList.Sort(SortRule);
         }
 
         public void Update()
         {
-            
+            foreach (var item in actorMap)
+            {
+                item.Value.Update();
+            }
         }
 
-        public void SetWorld(GameObject world)
+        public void SetWorld(World world)
         {
             this.world = world;
-            gameObject.transform.parent = world.transform;
+            gameObject.transform.parent = world.GetGameObject().transform;
             gameObject.transform.localPosition = position;
         }
 
         /// <summary>
-        /// 场景内的演员的排序规则
+        /// 通过名称获得演员
         /// </summary>
-        private int SortRule(ActorBase actor0, ActorBase actor1)
+        /// <param name="actorName"></param>
+        /// <returns></returns>
+        public ActorBase GetActor(string actorName)
         {
-            if(actor0.GetLayer()> actor1.GetLayer())
+            if(actorMap.ContainsKey(actorName))
             {
-                return 1;
+                return actorMap[actorName];
             }
-            else if (actor0.GetLayer() < actor1.GetLayer())
-            {
-                return -1;
-            }
-            else
-            {
-                if(actor0.GetPosition().y> actor1.GetPosition().y)
-                {
-                    return 1;
-                }
-                return -1;
-            }
+            return null;
         }
     }
 }

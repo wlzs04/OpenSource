@@ -23,6 +23,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         }
 
+        public override void Execute()
+        {
+            
+        }
+
         protected override ActionBase CreateAction(XElement node)
         {
             AnimationAction action = new AnimationAction();
