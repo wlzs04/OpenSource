@@ -69,5 +69,10 @@ namespace Assets.Script.StoryNamespace
         {
             sectionList[sectionIndex].Start();
         }
+
+        public Section GetSection(int sectionIndex)
+        {
+            return sectionList[sectionIndex];
+        }
     }
 }

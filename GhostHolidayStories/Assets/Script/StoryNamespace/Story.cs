@@ -26,6 +26,7 @@ namespace Assets.Script.StoryNamespace
 
         List<Save> saveList = new List<Save>();
         List<Chapter> chapterList = new List<Chapter>();
+        List<ActionBase> actionList = new List<ActionBase>();
 
         World world = null;
 
@@ -35,6 +36,9 @@ namespace Assets.Script.StoryNamespace
         CameraActor cameraActor = null;
 
         Scene currentScene = null;
+
+        bool actionStart = false;
+        bool haveRemoveAction = false;
 
         public Story(string name)
         {
@@ -49,9 +53,38 @@ namespace Assets.Script.StoryNamespace
         /// </summary>
         public void Update()
         {
+            if(actionStart)
+            {
+                if (actionList.Count <= 0)
+                {
+                    GetCurrentSection().ExecuteNextAction();
+                }
+                foreach (var item in actionList)
+                {
+                    item.Update();
+                    if (haveRemoveAction||!item.IsAsync())
+                    {
+                        haveRemoveAction = false;
+                        break;
+                    }
+                }
+            }
+
             world.Update();
             gameActor.Update();
             cameraActor.Update();
+        }
+
+        public void Action()
+        {
+            actionStart = true;
+            GameManager.GetInstance().SetUI(UIState.Clean);
+        }
+
+        public void Cut()
+        {
+            actionStart = false;
+            GameManager.GetInstance().SetUI(UIState.Clean);
         }
 
         /// <summary>
@@ -191,6 +224,10 @@ namespace Assets.Script.StoryNamespace
             return currentScene;
         }
 
+        /// <summary>
+        /// 通过名称获得场景
+        /// </summary>
+        /// <param name="sceneName"></param>
         public void SetCurrentSceneByName(string sceneName)
         {
             currentScene = world.GetScene(sceneName);
@@ -247,7 +284,6 @@ namespace Assets.Script.StoryNamespace
             currentSave = saveList[index];
             LoadContent();
             GameManager.GetInstance().SetUI(UIState.Clean);
-            //StartContent();
         }
 
         /// <summary>
@@ -297,6 +333,50 @@ namespace Assets.Script.StoryNamespace
             {
                 GameManager.ShowErrorMessage("加载场景："+ sceneName+"失败！");
             }
+        }
+
+        /// <summary>
+        /// 获得当前章
+        /// </summary>
+        /// <returns></returns>
+        public Chapter GetCurrentChapter()
+        {
+            return chapterList[currentSave.GetChapterIndex()];
+        }
+
+        /// <summary>
+        /// 获得当前节
+        /// </summary>
+        /// <returns></returns>
+        public Section GetCurrentSection()
+        {
+            return chapterList[currentSave.GetChapterIndex()].GetSection(currentSave.GetSectionIndex());
+        }
+
+        /// <summary>
+        /// 添加指令到故事中，一般是需要异步执行的指令如移动角色等
+        /// </summary>
+        /// <param name="action"></param>
+        public void AddAction(ActionBase action)
+        {
+            actionList.Add(action);
+        }
+
+        /// <summary>
+        /// 删除指令，当指令执行结束后执行
+        /// </summary>
+        /// <param name="action"></param>
+        public void RemoveAction(ActionBase action)
+        {
+            if(actionList.Contains(action))
+            {
+                actionList.Remove(action);
+            }
+            else
+            {
+                GameManager.ShowErrorMessage("因为指令不存在，所以无法删除指令:"+action.GetSimpleActionClassName());
+            }
+            haveRemoveAction = true;
         }
     }
 }

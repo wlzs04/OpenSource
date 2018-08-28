@@ -39,6 +39,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     }
 
     /// <summary>
+    /// 指令完成的回调
+    /// </summary>
+    public delegate void ActionCompleteCallBack();
+    
+    /// <summary>
     /// 指令基类：演员收到指令后进行相应行动
     /// </summary>
     abstract class ActionBase
@@ -47,12 +52,21 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected string actorName = "";
         protected bool endAllAction = false;
+        protected bool isAsync = false;//是否此指令执行的同时执行下一条指令
 
         static Dictionary<string, ActionBase> legalActionMap = new Dictionary<string, ActionBase>();
+
+        protected ActionCompleteCallBack actionCompleteCallBack;
 
         protected ActionBase(string simpleActionClassName)
         {
             this.simpleActionClassName = simpleActionClassName;
+            actionCompleteCallBack += Complete;
+        }
+
+        public virtual void Update()
+        {
+
         }
 
         /// <summary>
@@ -74,7 +88,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 if (item.Namespace == typeof(ActionBase).Namespace)
                 {
-                    if (item.IsClass&& item.Name != "ActionBase")
+                    if (item.IsClass&& item.Name != "ActionBase"&& item.Name != "ActionCompleteCallBack")
                     {
                         AddLegalAction((ActionBase)assembly.CreateInstance(item.FullName));
                     }
@@ -126,6 +140,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     case "endAllAction":
                         endAllAction = Convert.ToBoolean(item.Value);
                         break;
+                    case "isAsync":
+                        isAsync = Convert.ToBoolean(item.Value);
+                        break;
                     default:
                         break;
                 }
@@ -145,5 +162,18 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         /// 执行
         /// </summary>
         public abstract void Execute();
+
+        /// <summary>
+        /// 指令执行完成的处理方法
+        /// </summary>
+        protected virtual void Complete()
+        {
+            GameManager.GetCurrentStory().RemoveAction(this);
+        }
+
+        public bool IsAsync()
+        {
+            return isAsync;
+        }
     }
 }

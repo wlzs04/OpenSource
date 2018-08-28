@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
@@ -15,16 +17,28 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         int onlyTalkByTime = 0;//只有在规定次数的谈话才会显示
         string audio = "";//谈话的音频路径
         bool showContent = true;
-        bool isAsync = false;
+
+        int talkTime = 0;
 
         public TalkAction():base("Talk")
         {
-
         }
 
         public override void Execute()
         {
-
+            GameManager.GetCurrentStory().AddAction(this);
+            talkTime++;
+            if (onlyTalkByTime != 0 && talkTime != onlyTalkByTime)
+            {
+                actionCompleteCallBack.Invoke();
+                return;
+            }
+            GameManager.GetInstance().SetUI(UIState.Talk);
+            TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
+            talkUIScript.SetActorName(actorName);
+            talkUIScript.SetContent(content);
+            talkUIScript.SetAudio(audio);
+            talkUIScript.SetCompleteCallBack(actionCompleteCallBack);
         }
 
         protected override ActionBase CreateAction(XElement node)

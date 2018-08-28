@@ -21,7 +21,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
+            GameManager.GetCurrentStory().AddAction(this);
             GameActor.GetInstance().SetGameState(gameState);
+            actionCompleteCallBack.Invoke();
         }
 
         protected override ActionBase CreateAction(XElement node)

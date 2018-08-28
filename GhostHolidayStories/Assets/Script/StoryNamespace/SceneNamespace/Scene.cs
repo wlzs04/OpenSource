@@ -79,7 +79,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 ActorBase actor = ActorBase.LoadActor(item);
                 if (actor!=null)
                 {
-                    actorMap.Add(actor.GetName(), actor);
                     actor.SetScene(this);
                 }
                 else
@@ -116,6 +115,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 return actorMap[actorName];
             }
             return null;
+        }
+
+        public void AddActor(ActorBase actor)
+        {
+            actorMap.Add(actor.GetName(), actor);
         }
     }
 }

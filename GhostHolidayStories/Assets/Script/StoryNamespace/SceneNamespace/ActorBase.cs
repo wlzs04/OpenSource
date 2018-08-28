@@ -30,16 +30,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         //protected Sprite image = null;
         protected GameObject gameObject = null;
         protected Scene scene =null;
-
-        /// <summary>
-        /// 与移动相关
-        /// </summary>
-        bool isMoving = false;
-        float needTime = 0;
-        float lastTime = 0;
-        Vector2 lastPosition;
-        Vector2 newPosition;
-
+        
         static Dictionary<string, ActorBase> legalActorMap = new Dictionary<string, ActorBase>();
 
         protected ActorBase(string simpleActorClassName)
@@ -52,21 +43,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// </summary>
         public virtual void Update()
         {
-            if(isMoving)
-            {
-                if(Time.time-lastTime<= needTime)
-                {
-                    float rate = (Time.time - lastTime) / needTime;
-                    float moveX = rate * (newPosition.x - lastPosition.x);
-                    float moveY = rate * (newPosition.y - lastPosition.y);
-                    SetPosition(new Vector2(lastPosition.x+moveX, lastPosition.y + moveY));
-                }
-                else
-                {
-                    SetPosition(newPosition);
-                    isMoving = false;
-                }
-            }
         }
 
         /// <summary>
@@ -102,6 +78,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="scene"></param>
         public void SetScene(Scene scene)
         {
+            scene.AddActor(this);
             gameObject.transform.parent = scene.GetGameObject().transform;
             gameObject.transform.localPosition = position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = layer;
@@ -183,53 +160,17 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 texture = ImageHelper.LoadTexture(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
             }
         }
-
-        /// <summary>
-        /// 执行命令
-        /// </summary>
-        /// <param name="action"></param>
-        public void Action(Action action)
-        {
-
-        }
-
+        
         /// <summary>
         /// 设置位置
         /// </summary>
         /// <param name="newPosition"></param>
-        private void SetPosition(Vector2 newPosition)
+        public void SetPosition(Vector2 newPosition)
         {
             position = newPosition;
             gameObject.transform.localPosition = position;
         }
-
-        /// <summary>
-        /// 角色移动到指定位置
-        /// </summary>
-        /// <param name="newPosition"></param>
-        public void MoveToPosition(Vector2 newPosition,float needTime,MoveState moveState)
-        {
-            this.needTime = needTime;
-            lastTime = Time.time;
-            lastPosition = position;
-            switch (moveState)
-            {
-                case MoveState.Set:
-                    SetPosition(newPosition);
-                    break;
-                case MoveState.AI:
-                    isMoving = true;
-                    break;
-                case MoveState.Line:
-                    isMoving = true;
-                    break;
-                case MoveState.Jump:
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        
         public string GetName()
         {
             return name;

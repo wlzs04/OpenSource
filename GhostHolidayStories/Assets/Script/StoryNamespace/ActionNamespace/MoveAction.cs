@@ -14,15 +14,66 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         MoveState moveState;
         float needTime = 0;
 
+        /// <summary>
+        /// 与移动相关
+        /// </summary>
+        bool isMoving = false;
+        float lastTime = 0;
+        Vector2 lastPosition;
+        Vector2 newPosition;
+
+        ActorBase actor = null;
+
         public MoveAction():base("Move")
         {
+        }
 
+        public override void Update()
+        {
+            base.Update();
+            if (isMoving)
+            {
+                if (Time.time - lastTime <= needTime)
+                {
+                    float rate = (Time.time - lastTime) / needTime;
+                    float moveX = rate * (newPosition.x - lastPosition.x);
+                    float moveY = rate * (newPosition.y - lastPosition.y);
+                    actor.SetPosition(new Vector2(lastPosition.x + moveX, lastPosition.y + moveY));
+                }
+                else
+                {
+                    actor.SetPosition(newPosition);
+                    isMoving = false;
+                    actionCompleteCallBack.Invoke();
+                }
+            }
         }
 
         public override void Execute()
         {
-            ActorBase actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
-            actor.MoveToPosition(position, needTime, moveState);
+            GameManager.GetCurrentStory().AddAction(this);
+            actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
+            lastTime = Time.time;
+            lastPosition = actor.GetPosition();
+            newPosition = position;
+            switch (moveState)
+            {
+                case MoveState.Set:
+                    actor.SetPosition(newPosition);
+                    actionCompleteCallBack.Invoke();
+                    break;
+                case MoveState.AI:
+                    isMoving = true;
+                    break;
+                case MoveState.Line:
+                    isMoving = true;
+                    break;
+                case MoveState.Jump:
+                    isMoving = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         protected override ActionBase CreateAction(XElement node)

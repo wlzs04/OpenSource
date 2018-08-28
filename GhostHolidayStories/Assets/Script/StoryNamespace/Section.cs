@@ -13,6 +13,7 @@ namespace Assets.Script.StoryNamespace
         int index = 0;
         string sceneName;
         string description = "";
+        int actionIndex = 0;
 
         public void LoadContent(XElement node)
         {
@@ -54,18 +55,24 @@ namespace Assets.Script.StoryNamespace
         public void Start()
         {
             GameManager.GetCurrentStory().SetCurrentSceneByName(sceneName);
-            
+            ExecuteNextAction();
         }
 
         /// <summary>
         /// 执行下一条指令
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<ActionBase> ExecuteNextAction()
+        public void ExecuteNextAction()
         {
-            foreach (var item in actionList)
+            if(actionIndex>= actionList.Count)
             {
-                yield return item;
+                GameManager.ShowDebugMessage("当前节的指令已经执行完！");
+                GameManager.GetCurrentStory().Cut();
+            }
+            else
+            {
+                actionList[actionIndex].Execute();
+                actionIndex++;
             }
         }
     }

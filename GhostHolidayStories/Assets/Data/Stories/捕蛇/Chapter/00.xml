@@ -7,9 +7,9 @@
     </Enter>
     <Move actor="test" position="400,400" moveState="Set"/>
     <Camera followActor="test" isAsync="false" needTime="0" moveState="Set"/>
-    <Animation actor="test" isAsync="true" loopTime="-1" onceTime="2" row="1" column="4" animationName="Walk" />
+    <Animation actor="test" isAsync="true" loopTime="4" onceTime="0.5" row="1" column="4" image="person1.png" />
     <Move actor="test" isAsync="false" needTime="2" position="500,500" moveState="AI"/>
-    <Stop actor="test" />
+    <Starring actor="test"/>
     <Game gameState="Free"/>
     <Cut/>
 	</Section>

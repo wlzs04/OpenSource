@@ -13,14 +13,12 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.2.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -224,6 +222,7 @@
   <ItemGroup>
     <Compile Include="Assets\Script\AudioPlayer.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
+    <Compile Include="Assets\Script\Helper\AudioHelper.cs" />
     <Compile Include="Assets\Script\Helper\ImageHelper.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\ActionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\ActionBase.cs" />
@@ -236,6 +235,7 @@
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\OptionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\QuestionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\RandomAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StarringAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StopAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\TalkAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Chapter.cs" />
@@ -252,6 +252,7 @@
     <Compile Include="Assets\Script\StoryNamespace\Section.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Story.cs" />
     <Compile Include="Assets\Script\StoryNamespace\World.cs" />
+    <Compile Include="Assets\Script\TalkUIScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Data\Common\Common.xml" />

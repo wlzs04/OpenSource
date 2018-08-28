@@ -13,7 +13,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     class CameraAction : ActionBase
     {
         string followActorName = "";
-        bool isAsync = false;
         float needTime = 0;
         MoveState moveState;
 
@@ -23,7 +22,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
+            GameManager.GetCurrentStory().AddAction(this);
             CameraActor.GetInstance().SetFollowActor(followActorName);
+            actionCompleteCallBack.Invoke();
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -42,9 +43,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 {
                     case "followActor":
                         followActorName = attribute.Value;
-                        break;
-                    case "isAsync":
-                        isAsync = Convert.ToBoolean(attribute.Value);
                         break;
                     case "needTime":
                         needTime = (float)Convert.ToDouble(attribute.Value);

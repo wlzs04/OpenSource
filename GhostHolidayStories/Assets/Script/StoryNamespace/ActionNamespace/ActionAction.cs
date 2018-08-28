@@ -25,7 +25,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
-
+            GameManager.GetCurrentStory().AddAction(this);
+            GameManager.GetCurrentStory().Action();
+            actionCompleteCallBack.Invoke();
         }
     }
 }

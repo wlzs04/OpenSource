@@ -20,6 +20,7 @@ namespace Assets.Script.StoryNamespace
         TimeSpan playTime;
         int chapterIndex = 0;
         int sectionIndex = 0;
+        int actionIndex = 0;
         string sceneName="";
         Vector2 position;
 
@@ -103,6 +104,9 @@ namespace Assets.Script.StoryNamespace
                     case "sectionIndex":
                         sectionIndex = Convert.ToInt32(attribute.Value);
                         break;
+                    case "actionIndex":
+                        actionIndex = Convert.ToInt32(attribute.Value);
+                        break;
                     case "sceneName":
                         sceneName = attribute.Value;
                         break;
@@ -152,6 +156,11 @@ namespace Assets.Script.StoryNamespace
         public int GetSectionIndex()
         {
             return sectionIndex;
+        }
+        
+        public int GetActionIndex()
+        {
+            return actionIndex;
         }
 
         public string GetSceneName()

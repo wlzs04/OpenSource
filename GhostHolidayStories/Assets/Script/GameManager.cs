@@ -16,11 +16,12 @@ namespace Assets.Script
     /// </summary>
     enum UIState
     {
+        Clean,//清空
         Init,//初始
         StoryList,//故事列表
         StoryContent,//故事内容
         Interlude,//过场
-        Clean,//清空
+        Talk,//谈话
     }
 
     class GameManager
@@ -158,6 +159,10 @@ namespace Assets.Script
         /// </summary>
         public void SetUI(UIState uiState)
         {
+            if(this.uiState == uiState)
+            {
+                return;
+            }
             this.uiState = uiState;
             if(uiState==UIState.Clean)
             {
@@ -175,7 +180,7 @@ namespace Assets.Script
                 {
                     GameObject.DestroyImmediate(canvasTransform.GetChild(0).gameObject);
                 }
-                GameObject.Instantiate(uiObject, canvasTransform);
+                GameObject.Instantiate(uiObject, canvasTransform).name= uiState.ToString() + "UIRootPrefab";
                 switch (uiState)
                 {
                     case UIState.Init:
@@ -190,7 +195,11 @@ namespace Assets.Script
                     case UIState.Interlude:
                         SetUIInterlude();
                         break;
+                    case UIState.Talk:
+                        SetUITalk();
+                        break;
                     default:
+                        ShowErrorMessage("未知UI状态！");
                         break;
                 }
             }
@@ -265,6 +274,14 @@ namespace Assets.Script
         /// 设置过场UI
         /// </summary>
         public void SetUIInterlude()
+        {
+
+        }
+
+        /// <summary>
+        /// 设置谈话UI
+        /// </summary>
+        public void SetUITalk()
         {
 
         }

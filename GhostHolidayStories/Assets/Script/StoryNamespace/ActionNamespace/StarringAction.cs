@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,32 +8,27 @@ using System.Xml.Linq;
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
     /// <summary>
-    /// 结束指令：结束剧本上的内容,让演员可以自由移动
+    /// 主演指令：设置指定演员为主演，主演可以被玩家控制
     /// </summary>
-    class CutAction : ActionBase
+    class StarringAction : ActionBase
     {
-        public CutAction():base("Cut")
+        public StarringAction():base("Starring")
         {
-
         }
 
         public override void Execute()
         {
             GameManager.GetCurrentStory().AddAction(this);
-            GameManager.GetCurrentStory().Cut();
+            ActorBase actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
+            GameActor.GetInstance().SetStarringActor(actor);
             actionCompleteCallBack.Invoke();
         }
 
         protected override ActionBase CreateAction(XElement node)
         {
-            CutAction action = new CutAction();
+            StarringAction action = new StarringAction();
             action.LoadContent(node);
             return action;
-        }
-
-        protected override void Complete()
-        {
-            GameManager.GetCurrentStory().RemoveAction(this);
         }
     }
 }
