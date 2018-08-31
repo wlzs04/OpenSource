@@ -83,6 +83,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             gameObject.transform.localPosition = position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = layer;
             gameObject.GetComponent<SpriteRenderer>().size = new Vector2(width, height);
+            if(isBlock)
+            {
+                gameObject.GetComponent<BoxCollider2D>().size = new Vector2(width, height);
+                gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(width/2, height/2);
+            }
         }
 
         /// <summary>
@@ -119,6 +124,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected virtual void LoadContent(XElement node)
         {
             gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
+            gameObject.AddComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+            gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+            gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+            gameObject.GetComponent<Rigidbody2D>().simulated = true;
             foreach (var attribute in node.Attributes())
             {
                 switch (attribute.Name.ToString())
@@ -138,6 +147,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                         break;
                     case "isBlock":
                         isBlock = Convert.ToBoolean(attribute.Value);
+                        gameObject.AddComponent<BoxCollider2D>();
                         break;
                     case "layer":
                         layer = Convert.ToInt32(attribute.Value);
@@ -167,8 +177,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="newPosition"></param>
         public void SetPosition(Vector2 newPosition)
         {
-            position = newPosition;
-            gameObject.transform.localPosition = position;
+            gameObject.GetComponent<Rigidbody2D>().MovePosition(newPosition);
+            position = gameObject.transform.localPosition;
+            //gameObject.transform.localPosition = position;
         }
         
         public string GetName()

@@ -55,18 +55,23 @@ namespace Assets.Script.StoryNamespace
         {
             if(actionStart)
             {
-                if (actionList.Count <= 0)
-                {
-                    GetCurrentSection().ExecuteNextAction();
-                }
+                int asyncNumber = 0;
                 foreach (var item in actionList)
                 {
                     item.Update();
+                    if(item.IsAsync())
+                    {
+                        asyncNumber++;
+                    }
                     if (haveRemoveAction||!item.IsAsync())
                     {
                         haveRemoveAction = false;
                         break;
                     }
+                }
+                if (actionList.Count == asyncNumber )
+                {
+                    GetCurrentSection().ExecuteNextAction();
                 }
             }
 

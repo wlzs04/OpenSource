@@ -76,10 +76,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             oldImage = actor.GetGameObject().GetComponent<SpriteRenderer>().sprite;
             actor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
 
-            if(isAsync)
-            {
-                //GameManager.GetCurrentStory().GetCurrentSection().ExecuteNextAction();
-            }
         }
 
         protected override ActionBase CreateAction(XElement node)

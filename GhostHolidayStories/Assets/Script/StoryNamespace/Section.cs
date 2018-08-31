@@ -66,7 +66,7 @@ namespace Assets.Script.StoryNamespace
         {
             if(actionIndex>= actionList.Count)
             {
-                GameManager.ShowDebugMessage("当前节的指令已经执行完！");
+                GameManager.ShowErrorMessage("当前节的指令已经执行完，是不是少Cut指令了？");
                 GameManager.GetCurrentStory().Cut();
             }
             else

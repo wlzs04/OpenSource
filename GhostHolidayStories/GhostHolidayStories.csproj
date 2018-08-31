@@ -246,6 +246,7 @@
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\DynamicActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\GameActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\InteractiveActor.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\MoveableActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\PickableActor.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\Scene.cs" />
     <Compile Include="Assets\Script\StoryNamespace\SceneNamespace\StaticActor.cs" />

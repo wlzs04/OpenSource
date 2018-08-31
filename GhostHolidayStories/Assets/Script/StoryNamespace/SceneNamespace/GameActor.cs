@@ -43,22 +43,32 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 }
                 else
                 {
-                    Vector2 position = starringActor.GetPosition();
-                    if (Input.GetKeyDown(KeyCode.W))
+                    if(starringActor is MoveableActor)
                     {
-                        starringActor.SetPosition(new Vector2(position.x, position.y + 10));
-                    }
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        starringActor.SetPosition(new Vector2(position.x, position.y - 10));
-                    }
-                    if (Input.GetKeyDown(KeyCode.A))
-                    {
-                        starringActor.SetPosition(new Vector2(position.x-10, position.y));
-                    }
-                    if (Input.GetKeyDown(KeyCode.D))
-                    {
-                        starringActor.SetPosition(new Vector2(position.x+10, position.y));
+                        float speed = (starringActor as MoveableActor).GetSpeed();
+                        float mx = 0;
+                        float my = 0;
+                        if (Input.GetKey(KeyCode.W))
+                        {
+                            my += speed;
+                        }
+                        if (Input.GetKey(KeyCode.S))
+                        {
+                            my -= speed;
+                        }
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            mx -= speed;
+                        }
+                        if (Input.GetKey(KeyCode.D))
+                        {
+                            mx += speed;
+                        }
+                        if (mx != 0 || my != 0)
+                        {
+                            Vector2 position = starringActor.GetPosition();
+                            starringActor.SetPosition(new Vector2(position.x + mx*Time.deltaTime, position.y + my * Time.deltaTime));
+                        }
                     }
                 }
             }
