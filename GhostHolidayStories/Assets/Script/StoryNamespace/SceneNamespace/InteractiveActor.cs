@@ -21,9 +21,23 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         List<ActionBase> actionList = new List<ActionBase>();
 
+        int actionIndex = 0;
+        bool startInteractive = false;
+        bool needExecuteNextAction = false;
+
         public InteractiveActor() : base("Interactive")
         {
 
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if(startInteractive&& needExecuteNextAction)
+            {
+                needExecuteNextAction = false;
+                ExecuteNextAction();
+            }
         }
 
         protected override ActorBase CreateActor(XElement node)
@@ -69,6 +83,38 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
             image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
             gameObject.GetComponent<SpriteRenderer>().sprite = image;
+
+            foreach (var item in actionList)
+            {
+                item.AddCompleteCallBack(() => { needExecuteNextAction = true; });
+            }
+        }
+
+        /// <summary>
+    /// 开始交互
+    /// </summary>
+        public void Interactive()
+        {
+            startInteractive = true;
+            interactiveNumber = 0;
+            ExecuteNextAction();
+        }
+
+        /// <summary>
+        /// 执行下一条指令
+        /// </summary>
+        void ExecuteNextAction()
+        {
+            if (interactiveNumber < actionList.Count)
+            {
+                actionList[interactiveNumber].Execute();
+                interactiveNumber++;
+            }
+            else
+            {
+                startInteractive = false;
+                GameManager.GetInstance().SetUI(UIState.Clean);
+            }
         }
     }
 }

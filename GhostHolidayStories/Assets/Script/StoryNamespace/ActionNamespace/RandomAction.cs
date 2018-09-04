@@ -12,6 +12,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     class RandomAction : ActionBase
     {
         List<ActionBase> actionList = new List<ActionBase>();
+        Random random = new Random();
 
         public RandomAction() : base("Random")
         {
@@ -19,7 +20,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
-            throw new NotImplementedException();
+            actionList[random.Next(actionList.Count)].Execute();
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -44,6 +45,21 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     GameManager.ShowErrorMessage("在添加随机指令时指令加载失败！");
                 }
             }
+
+            foreach (var item in actionList)
+            {
+                item.AddCompleteCallBack(() => {
+                    if(actionCompleteCallBack!=null)
+                    {
+                        actionCompleteCallBack.Invoke();
+                    }
+                });
+            }
+        }
+
+        protected override void Complete()
+        {
+            //base.Complete();
         }
     }
 }

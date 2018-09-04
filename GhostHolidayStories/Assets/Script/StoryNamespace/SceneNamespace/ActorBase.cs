@@ -78,6 +78,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="scene"></param>
         public void SetScene(Scene scene)
         {
+            this.scene = scene;
             scene.AddActor(this);
             gameObject.transform.parent = scene.GetGameObject().transform;
             gameObject.transform.localPosition = position;
@@ -88,6 +89,26 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 gameObject.GetComponent<BoxCollider2D>().size = new Vector2(width, height);
                 gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(width/2, height/2);
             }
+        }
+
+        /// <summary>
+        /// 获得所在场景
+        /// </summary>
+        /// <returns></returns>
+        public Scene GetScene()
+        {
+            return scene;
+        }
+
+        /// <summary>
+        /// 从场景中移除
+        /// </summary>
+        public void RemoveFromScene()
+        {
+            scene.RemoveActor(this);
+            gameObject.transform.parent = null;
+            scene = null;
+            GameObject.DestroyImmediate(gameObject);
         }
 
         /// <summary>
@@ -200,6 +221,15 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        /// <summary>
+        /// 获得演员信息
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetInfo()
+        {
+            return "";
         }
     }
 }

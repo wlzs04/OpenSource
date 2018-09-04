@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using UnityEngine;
 
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
@@ -20,7 +21,19 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
-            throw new NotImplementedException();
+            if(showContent)
+            {
+                GameManager.GetInstance().SetUI(UIState.Talk);
+                TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
+                talkUIScript.SetActorName(actorName);
+                talkUIScript.SetContent(content);
+
+                talkUIScript.SetCompleteCallBack(ShowOption);
+            }
+            else
+            {
+                ShowOption();
+            }
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -62,6 +75,24 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 {
                     GameManager.ShowErrorMessage("在添加选项指令时指令加载失败！");
                 }
+            }
+        }
+
+        protected override void Complete()
+        {
+            //base.Complete();
+        }
+
+        /// <summary>
+        /// 显示选项
+        /// </summary>
+        protected void ShowOption()
+        {
+            GameManager.GetInstance().SetUI(UIState.Question); 
+            QuestionUIScript script = GameObject.Find("QuestionUIRootPrefab").GetComponent<QuestionUIScript>();
+            foreach (var item in optionList)
+            {
+                script.AddOption(item.GetContent(), () => { item.Execute(); });
             }
         }
     }

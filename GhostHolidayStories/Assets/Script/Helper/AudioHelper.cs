@@ -15,7 +15,7 @@ namespace Assets.Script.Helper
         public static AudioClip LoadAudio(string audioPath)
         {
             WWW www = new WWW(audioPath);
-            if (www == null)
+            if (!string.IsNullOrEmpty(www.error))
             {
                 GameManager.ShowErrorMessage("加载音频文件：" + audioPath + "失败！");
             }

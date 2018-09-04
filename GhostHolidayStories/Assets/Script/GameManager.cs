@@ -22,6 +22,7 @@ namespace Assets.Script
         StoryContent,//故事内容
         Interlude,//过场
         Talk,//谈话
+        Question,//问题：带选项
     }
 
     class GameManager
@@ -32,14 +33,19 @@ namespace Assets.Script
 
         string storiesPath = "/Data/Stories/";
 
-        Transform canvasTransform = null;
+        static Transform canvasTransform;
         UIState uiState;
+
+        static GameObject tipPrefab;
 
         bool storyPlay = false;
         
         private GameManager()
         {
             canvasTransform = GameObject.Find("Canvas").transform;
+
+            tipPrefab = Resources.Load<GameObject>("UI/TipUIRootPrefab");
+
             SetUI(UIState.Init);
             LoadAllStoryName();
 
@@ -155,11 +161,21 @@ namespace Assets.Script
         }
 
         /// <summary>
+        /// 弹出提示框
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="autoDestroy"></param>
+        public static void ShowTip(string content, bool autoDestroy = false)
+        {
+            GameObject.Instantiate(tipPrefab, canvasTransform).GetComponent<TipUIScript>().SetContent(content,autoDestroy);
+        }
+
+        /// <summary>
         /// 设置UI
         /// </summary>
         public void SetUI(UIState uiState)
         {
-            if(this.uiState == uiState)
+            if(this.uiState == uiState&& canvasTransform.childCount!=0)
             {
                 return;
             }
@@ -197,6 +213,9 @@ namespace Assets.Script
                         break;
                     case UIState.Talk:
                         SetUITalk();
+                        break;
+                    case UIState.Question:
+                        SetUIQuestion();
                         break;
                     default:
                         ShowErrorMessage("未知UI状态！");
@@ -282,6 +301,14 @@ namespace Assets.Script
         /// 设置谈话UI
         /// </summary>
         public void SetUITalk()
+        {
+
+        }
+
+        /// <summary>
+        /// 设置问题UI
+        /// </summary>
+        public void SetUIQuestion()
         {
 
         }

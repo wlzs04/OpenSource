@@ -26,7 +26,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
-            GameManager.GetCurrentStory().AddAction(this);
             talkTime++;
             if (onlyTalkByTime != 0 && talkTime != onlyTalkByTime)
             {
@@ -71,6 +70,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         break;
                 }
             }
+        }
+
+        protected override void Complete()
+        {
+            //base.Complete();
         }
     }
 }

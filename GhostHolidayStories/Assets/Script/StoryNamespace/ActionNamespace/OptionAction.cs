@@ -23,7 +23,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute()
         {
-            throw new NotImplementedException();
+            actionList[0].Execute();
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -57,6 +57,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 actionList.Add(LoadAction(item));
             }
+        }
+
+        public string GetContent()
+        {
+            return content;
         }
     }
 }

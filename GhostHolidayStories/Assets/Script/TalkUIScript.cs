@@ -16,16 +16,32 @@ public class TalkUIScript : MonoBehaviour, IPointerClickHandler
 
     ActionCompleteCallBack completeAction = null;
 
-    // Use this for initialization
-    void Start () {
+    public TalkUIScript()
+    {
+    }
+
+    void Awake()
+    {
         actorNameText = transform.Find("BackImage").Find("ActorNameText").GetComponent<Text>();
         contentText = transform.Find("BackImage").Find("ContentText").GetComponent<Text>();
         talkAudio = GetComponent<AudioSource>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    // Use this for initialization
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update () {
+		if(Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Space))
+        {
+            if (completeAction != null)
+            {
+                completeAction();
+            }
+            //GameManager.GetInstance().SetUI(UIState.Clean);
+        }
 	}
 
     /// <summary>
@@ -55,6 +71,7 @@ public class TalkUIScript : MonoBehaviour, IPointerClickHandler
         if(audioName!="")
         {
             talkAudio.clip = AudioHelper.LoadAudio(GameManager.GetCurrentStory().GetStoryPath() + "/Audio/" + audioName);
+            talkAudio.volume = 1;
             talkAudio.Play();
         }
         else
@@ -75,5 +92,6 @@ public class TalkUIScript : MonoBehaviour, IPointerClickHandler
         {
             completeAction();
         }
+        //GameManager.GetInstance().SetUI(UIState.Clean);
     }
 }

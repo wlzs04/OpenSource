@@ -64,5 +64,23 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
             gameObject.GetComponent<SpriteRenderer>().sprite = image;
         }
+
+        public override string GetInfo()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var item in objectItemList)
+            {
+                if(item== objectItemList[objectItemList.Count-1])
+                {
+                    stringBuilder.Append(item.GetName() + ":" + item.GetNumber());
+                }
+                else
+                {
+                    stringBuilder.AppendLine(item.GetName() + ":" + item.GetNumber());
+                }
+            }
+
+            return stringBuilder.ToString();
+        }
     }
 }

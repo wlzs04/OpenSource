@@ -39,6 +39,15 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         }
 
         /// <summary>
+        /// 获得当前场景中所有演员
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, ActorBase> GetAllActor()
+        {
+            return actorMap;
+        }
+
+        /// <summary>
         /// 加载场景
         /// </summary>
         /// <param name="scenePath"></param>
@@ -117,9 +126,21 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             return null;
         }
 
+        /// <summary>
+        /// 添加演员
+        /// </summary>
+        /// <param name="actor"></param>
         public void AddActor(ActorBase actor)
         {
             actorMap.Add(actor.GetName(), actor);
+        }
+
+        /// <summary>
+        /// 移除演员
+        /// </summary>
+        public void RemoveActor(ActorBase actor)
+        {
+            actorMap.Remove(actor.GetName());
         }
     }
 }

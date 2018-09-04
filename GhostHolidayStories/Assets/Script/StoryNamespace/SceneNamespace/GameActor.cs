@@ -1,4 +1,5 @@
-﻿using Assets.Script.StoryNamespace.ActionNamespace;
+﻿using Assets.Script.Helper;
+using Assets.Script.StoryNamespace.ActionNamespace;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         GameState gameState;
 
+        float pickRange = 200;//主角可捡起物品的范围
+        
         private GameActor():base("Game")
         {
 
@@ -34,11 +37,24 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             base.Update();
             if(gameState==GameState.Free)
             {
-                if (Input.GetKeyDown(KeyCode.J))
+                if (Input.GetKeyDown(KeyCode.J)|| Input.GetKeyDown(KeyCode.Space))
                 {
-                    if (CheckInteractive())
-                    {
+                    ActorBase actor = null;
+                    actor = CheckPickable();
 
+                    if (actor!=null)
+                    {
+                        StringBuilder stringBuffer = new StringBuilder();
+                        stringBuffer.AppendLine("获得物品：");
+                        stringBuffer.Append(actor.GetInfo());
+                        actor.RemoveFromScene();
+                        GameManager.ShowTip(stringBuffer.ToString());
+                        return;
+                    }
+                    actor = CheckInteractive();
+                    if (actor != null)
+                    {
+                        (actor as InteractiveActor).Interactive();
                     }
                 }
                 else
@@ -111,14 +127,37 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             return gameState;
         }
+        
+        /// <summary>
+        /// 检测主演周围是否有可以捡起的物品
+        /// </summary>
+        /// <returns></returns>
+        public ActorBase CheckPickable()
+        {
+            foreach (var item in starringActor.GetScene().GetAllActor())
+            {
+                if(item.Value is PickableActor &&  GameHelper.CheckActorInArea(item.Value,starringActor.GetPosition(), pickRange))
+                {
+                    return item.Value;
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// 检测主演周围是否有可以进行交互的演员
         /// </summary>
         /// <returns></returns>
-        public bool CheckInteractive()
+        public ActorBase CheckInteractive()
         {
-            return false;
+            foreach (var item in starringActor.GetScene().GetAllActor())
+            {
+                if (item.Value is InteractiveActor && GameHelper.CheckActorInArea(item.Value, starringActor.GetPosition(), pickRange))
+                {
+                    return item.Value;
+                }
+            }
+            return null;
         }
     }
 }

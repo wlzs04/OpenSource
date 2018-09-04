@@ -12,6 +12,7 @@
     <Talk content="你好,我是普通人。" onlyTalkByTime="1" />
     <Talk content="你很健谈啊！" audio="normalPersonTalk02.mp3" onlyTalkByTime="10"/>
     <Random>
+      <!--
       <Question content="你找我有事吗？" isLoop="true">
         <Option content="请问这里是哪里？" changeStateAfterSelect="true">
           <Talk content="这里是青州。"/>
@@ -25,6 +26,7 @@
         <Option content="突然想起来有事，我先走了？" endAllAction="true"/>
         <Option content="...没事。" endLoop="true"/>
       </Question>
+      -->
       <Question showContent="false" isLoop="true">
         <Option content="（你看着他的上半身。）" changeStateAfterSelect="true">
           <Talk content="此人头上戴着束发嵌宝紫金冠，齐眉勒着二龙抢珠金抹额，穿一件二色金百蝶穿花大红箭袖。"/>
@@ -41,7 +43,9 @@
           <Talk content="抱歉，认错了。"/>
         </Option>
       </Question>
+      <!--
       <Talk content="我现在有点忙。" endAllAction="true"/>
+      -->
     </Random>
     <Talk content="那好吧，再见。"/>
   </Interactive>

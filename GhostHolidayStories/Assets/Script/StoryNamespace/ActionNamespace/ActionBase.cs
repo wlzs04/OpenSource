@@ -88,7 +88,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 if (item.Namespace == typeof(ActionBase).Namespace)
                 {
-                    if (item.IsClass&& item.Name != "ActionBase"&& item.Name != "ActionCompleteCallBack")
+                    if (typeof(ActionBase).IsAssignableFrom(item) && item.Name != "ActionBase")
                     {
                         AddLegalAction((ActionBase)assembly.CreateInstance(item.FullName));
                     }
@@ -169,6 +169,15 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         protected virtual void Complete()
         {
             GameManager.GetCurrentStory().RemoveAction(this);
+        }
+
+        /// <summary>
+        /// 添加指令完成的回调方法
+        /// </summary>
+        /// <param name="callBack"></param>
+        public void AddCompleteCallBack(ActionCompleteCallBack callBack)
+        {
+            actionCompleteCallBack += callBack;
         }
 
         public bool IsAsync()
