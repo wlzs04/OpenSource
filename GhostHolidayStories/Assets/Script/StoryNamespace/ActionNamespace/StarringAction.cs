@@ -20,7 +20,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             GameManager.GetCurrentStory().AddAction(this);
             ActorBase actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
-            GameActor.GetInstance().SetStarringActor(actor);
+            DirectorActor.GetInstance().SetStarringActor(actor);
             actionCompleteCallBack.Invoke();
         }
 

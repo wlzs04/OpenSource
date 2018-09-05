@@ -64,7 +64,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             {
                 if(item.Namespace== typeof(ActorBase).Namespace)
                 {
-                    if (item.Name != "Scene" && item.Name != "ActorBase" && item.Name != "GameActor" & item.Name != "CameraActor")
+                    if (typeof(ActorBase).IsAssignableFrom(item)  && item.Name != "ActorBase"&&item.GetConstructors().Length!=0)
                     {
                         AddLegalActor((ActorBase)assembly.CreateInstance(item.FullName));
                     }

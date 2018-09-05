@@ -11,6 +11,17 @@ using UnityEngine;
 
 namespace Assets.Script.StoryNamespace
 {
+    /// <summary>
+    /// 故事UI状态
+    /// </summary>
+    enum StoryUIState
+    {
+        Hide,//隐藏
+        Interlude,//过场
+        Talk,//谈话
+        Question,//问题：带选项
+    }
+
     class Story
     {
         string name;
@@ -32,7 +43,7 @@ namespace Assets.Script.StoryNamespace
 
         Save currentSave = null;
 
-        GameActor gameActor = null;
+        DirectorActor directorActor = null;
         CameraActor cameraActor = null;
 
         Scene currentScene = null;
@@ -43,7 +54,7 @@ namespace Assets.Script.StoryNamespace
         public Story(string name)
         {
             this.name = name;
-            storyPath = GameManager.GetInstance().GetStoriesPath() + name;
+            storyPath = GameManager.GetStoriesPath() + name;
             LoadInfo();
             world = World.GetInstance();
         }
@@ -76,20 +87,20 @@ namespace Assets.Script.StoryNamespace
             }
 
             world.Update();
-            gameActor.Update();
+            directorActor.Update();
             cameraActor.Update();
         }
 
         public void Action()
         {
             actionStart = true;
-            GameManager.GetInstance().SetUI(UIState.Clean);
+            DirectorActor.SetUI(StoryUIState.Hide);
         }
 
         public void Cut()
         {
             actionStart = false;
-            GameManager.GetInstance().SetUI(UIState.Clean);
+            DirectorActor.SetUI(StoryUIState.Hide);
         }
 
         /// <summary>
@@ -260,7 +271,7 @@ namespace Assets.Script.StoryNamespace
             {
                 LoadScene(currentSave.GetSceneName());
             }
-            gameActor = GameActor.GetInstance();
+            directorActor = DirectorActor.GetInstance();
             cameraActor = CameraActor.GetInstance();
         }
 
@@ -276,7 +287,7 @@ namespace Assets.Script.StoryNamespace
                 return;
             }
             LoadContent();
-            GameManager.GetInstance().SetUI(UIState.Clean);
+            DirectorActor.SetUI(StoryUIState.Hide);
             StartContent();
         }
 
@@ -288,7 +299,7 @@ namespace Assets.Script.StoryNamespace
         {
             currentSave = saveList[index];
             LoadContent();
-            GameManager.GetInstance().SetUI(UIState.Clean);
+            DirectorActor.SetUI(StoryUIState.Hide);
         }
 
         /// <summary>

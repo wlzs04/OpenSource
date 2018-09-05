@@ -10,39 +10,39 @@ using UnityEngine;
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
     /// <summary>
-    /// 游戏主体
+    /// 导演
     /// </summary>
-    class GameActor : ActorBase
+    class DirectorActor : ActorBase
     {
-        static GameActor gameActor = new GameActor();
+        static DirectorActor directorActor = new DirectorActor();
 
         ActorBase starringActor = null;
 
         GameState gameState;
 
         float pickRange = 200;//主角可捡起物品的范围
-        
-        private GameActor():base("Game")
+
+        private DirectorActor() : base("Director")
         {
 
         }
 
-        public static GameActor GetInstance()
+        public static DirectorActor GetInstance()
         {
-            return gameActor;
+            return directorActor;
         }
 
         public override void Update()
         {
             base.Update();
-            if(gameState==GameState.Free)
+            if (gameState == GameState.Free)
             {
-                if (Input.GetKeyDown(KeyCode.J)|| Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Space))
                 {
                     ActorBase actor = null;
                     actor = CheckPickable();
 
-                    if (actor!=null)
+                    if (actor != null)
                     {
                         StringBuilder stringBuffer = new StringBuilder();
                         stringBuffer.AppendLine("获得物品：");
@@ -59,7 +59,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 }
                 else
                 {
-                    if(starringActor is MoveableActor)
+                    if (starringActor is MoveableActor)
                     {
                         float speed = (starringActor as MoveableActor).GetSpeed();
                         float mx = 0;
@@ -83,7 +83,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                         if (mx != 0 || my != 0)
                         {
                             Vector2 position = starringActor.GetPosition();
-                            starringActor.SetPosition(new Vector2(position.x + mx*Time.deltaTime, position.y + my * Time.deltaTime));
+                            starringActor.SetPosition(new Vector2(position.x + mx * Time.deltaTime, position.y + my * Time.deltaTime));
                         }
                     }
                 }
@@ -92,19 +92,24 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         protected override ActorBase CreateActor(XElement node)
         {
-            GameManager.ShowErrorMessage("GameActor演员无法被创建！");
+            GameManager.ShowErrorMessage("DirectorActor演员无法被创建！");
             return null;
+        }
+
+        public static void SetUI(StoryUIState ui)
+        {
+
         }
 
         /// <summary>
         /// 设置主演
         /// </summary>
-        /// <param name="actor"></param>
+        /// <returns></returns>
         public void SetStarringActor(ActorBase actor)
         {
-            if(starringActor!=null)
+            if (starringActor != null)
             {
-                GameManager.ShowDebugMessage("主演由：" + starringActor.GetName() + "替换为：" + actor.GetName());
+                GameManager.ShowErrorMessage("主演:" + starringActor.GetName() + "被替换为：" + actor.GetName());
             }
             starringActor = actor;
         }
@@ -127,7 +132,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             return gameState;
         }
-        
+
         /// <summary>
         /// 检测主演周围是否有可以捡起的物品
         /// </summary>
@@ -136,7 +141,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             foreach (var item in starringActor.GetScene().GetAllActor())
             {
-                if(item.Value is PickableActor &&  GameHelper.CheckActorInArea(item.Value,starringActor.GetPosition(), pickRange))
+                if (item.Value is PickableActor && GameHelper.CheckActorInArea(item.Value, starringActor.GetPosition(), pickRange))
                 {
                     return item.Value;
                 }

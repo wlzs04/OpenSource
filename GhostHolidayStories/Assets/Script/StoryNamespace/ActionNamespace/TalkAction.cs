@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 actionCompleteCallBack.Invoke();
                 return;
             }
-            GameManager.GetInstance().SetUI(UIState.Talk);
+            DirectorActor.SetUI(StoryUIState.Talk);
             TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
             talkUIScript.SetActorName(actorName);
             talkUIScript.SetContent(content);

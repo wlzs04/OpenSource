@@ -16,41 +16,45 @@ namespace Assets.Script
     /// </summary>
     enum UIState
     {
-        Clean,//清空
+        Hide,//隐藏
         Init,//初始
         StoryList,//故事列表
         StoryContent,//故事内容
-        Interlude,//过场
-        Talk,//谈话
-        Question,//问题：带选项
     }
 
     class GameManager
     {
         static GameManager gameManager = new GameManager();
-        List<string> storyNameList = new List<string>();
-        static Story currentStory = null;
-
-        string storiesPath = "/Data/Stories/";
-
+        static Story currentStory;
+        static string storiesPath;
         static Transform canvasTransform;
-        UIState uiState;
 
-        static GameObject tipPrefab;
+        static GameObject tipUIPrefab;
+        static GameObject storyItemPrefab;
+        static GameObject saveItemPrefab;
+        static UIState uiState;
+        static bool storyPlay;
 
-        bool storyPlay = false;
-        
+        static List<string> storyNameList;
+
+        //UI根节点列表
+        static Dictionary<UIState, GameObject> uiRootMap;
+
         private GameManager()
         {
-            canvasTransform = GameObject.Find("Canvas").transform;
+            storiesPath = "/Data/Stories/";
+            uiRootMap = new Dictionary<UIState, GameObject>();
+            storyNameList = new List<string>();
+            storyPlay = false;
 
-            tipPrefab = Resources.Load<GameObject>("UI/TipUIRootPrefab");
-
+            InitPrefab();
+            InitUI();
             SetUI(UIState.Init);
+
             LoadAllStoryName();
 
-            ActionBase.LoadAllLegalAction();
             ActorBase.LoadAllLegalActor();
+            ActionBase.LoadAllLegalAction();
         }
 
         public static GameManager GetInstance()
@@ -59,11 +63,61 @@ namespace Assets.Script
         }
 
         /// <summary>
+        /// 初始化预设
+        /// </summary>
+        void InitPrefab()
+        {
+            tipUIPrefab = Resources.Load<GameObject>("UI/TipUIPrefab");
+            storyItemPrefab = Resources.Load<GameObject>("UI/StoryItemPrefab");
+            saveItemPrefab = Resources.Load<GameObject>("UI/SaveItemPrefab");
+        }
+
+        /// <summary>
+        /// 初始化UI
+        /// </summary>
+        void InitUI()
+        {
+            canvasTransform = GameObject.Find("Canvas").transform;
+            foreach (UIState item in Enum.GetValues(typeof(UIState)))
+            {
+                if (item == UIState.Hide)
+                {
+                    continue;
+                }
+                GameObject uiPrefab = Resources.Load<GameObject>("UI/" + item.ToString() + "UIRootPrefab");
+                if (uiPrefab == null)
+                {
+                    ShowErrorMessage("资源目录下缺少" + item.ToString() + "预设文件！");
+                    continue;
+                }
+                GameObject uiRootObject = GameObject.Instantiate(uiPrefab, canvasTransform);
+                uiRootObject.SetActive(false);
+                uiRootObject.name = item.ToString() + "UIRootPrefab";
+                uiRootMap.Add(item, uiRootObject);
+            }
+
+            InitInitUI();
+            InitStoryListUI();
+            InitStoryContentUI();
+        }
+
+        /// <summary>
+        /// 清空UI
+        /// </summary>
+        void CleanUI()
+        {
+            foreach (var item in uiRootMap)
+            {
+                GameObject.DestroyImmediate(item.Value);
+            }
+        }
+
+        /// <summary>
         /// 更新：每帧执行
         /// </summary>
         public void Update()
         {
-            if(storyPlay)
+            if (storyPlay)
             {
                 currentStory.Update();
             }
@@ -88,27 +142,28 @@ namespace Assets.Script
         }
 
         /// <summary>
+        /// 弹出提示框
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="autoDestroy"></param>
+        public static void ShowTip(string content, bool autoDestroy = false, float showTime = 2)
+        {
+            GameObject.Instantiate(tipUIPrefab, canvasTransform).GetComponent<TipUIScript>().SetContent(content, autoDestroy, showTime);
+        }
+
+        /// <summary>
         /// 获得故事集路径
         /// </summary>
         /// <returns></returns>
-        public string GetStoriesPath()
+        public static string GetStoriesPath()
         {
             return Application.dataPath + storiesPath;
         }
 
         /// <summary>
-        /// 获得所有故事的名字
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetAllStoryName()
-        {
-            return storyNameList;
-        }
-
-        /// <summary>
         /// 加载所有故事的名字
         /// </summary>
-        private void LoadAllStoryName()
+        void LoadAllStoryName()
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(GetStoriesPath());
 
@@ -122,7 +177,7 @@ namespace Assets.Script
         /// 按故事名选择指定故事
         /// </summary>
         /// <param name="storyName"></param>
-        public void ChooseStory(string storyName)
+        public static void ChooseStory(string storyName)
         {
             currentStory = new Story(storyName);
         }
@@ -139,119 +194,111 @@ namespace Assets.Script
         /// <summary>
         /// 开始新故事
         /// </summary>
-        public void StartStory()
+        public static void StartStory()
         {
-            if(currentStory!=null)
+            if (currentStory != null)
             {
+                gameManager.CleanUI();
                 currentStory.Start();
                 storyPlay = true;
+            }
+            else
+            {
+                ShowErrorMessage("当前尚未选择故事！");
             }
         }
 
         /// <summary>
         /// 继续故事
         /// </summary>
-        public void ContinueStory(int index)
+        public static void ContinueStory(int index)
         {
             if (currentStory != null)
             {
+                gameManager.CleanUI();
                 currentStory.Continue(index);
                 storyPlay = true;
             }
-        }
-
-        /// <summary>
-        /// 弹出提示框
-        /// </summary>
-        /// <param name="content"></param>
-        /// <param name="autoDestroy"></param>
-        public static void ShowTip(string content, bool autoDestroy = false)
-        {
-            GameObject.Instantiate(tipPrefab, canvasTransform).GetComponent<TipUIScript>().SetContent(content,autoDestroy);
+            else
+            {
+                ShowErrorMessage("当前尚未选择故事！");
+            }
         }
 
         /// <summary>
         /// 设置UI
         /// </summary>
-        public void SetUI(UIState uiState)
+        public static void SetUI(UIState newUIState)
         {
-            if(this.uiState == uiState&& canvasTransform.childCount!=0)
+            if (uiState == newUIState)
             {
                 return;
             }
-            this.uiState = uiState;
-            if(uiState==UIState.Clean)
+            uiState = newUIState;
+            for (int i = 0; i < canvasTransform.childCount; i++)
             {
-                if (canvasTransform.childCount != 0)
-                {
-                    GameObject.DestroyImmediate(canvasTransform.GetChild(0).gameObject);
-                }
+                canvasTransform.GetChild(i).gameObject.SetActive(false);
+            }
+            if (uiState == UIState.Hide)
+            {
                 return;
             }
 
-            GameObject uiObject = Resources.Load<GameObject>("UI/"+ uiState.ToString() + "UIRootPrefab");
-            if (uiObject != null)
+            if (uiRootMap.ContainsKey(uiState))
             {
-                if(canvasTransform.childCount!=0)
-                {
-                    GameObject.DestroyImmediate(canvasTransform.GetChild(0).gameObject);
-                }
-                GameObject.Instantiate(uiObject, canvasTransform).name= uiState.ToString() + "UIRootPrefab";
+                uiRootMap[uiState].SetActive(true);
+                //如果有UI需要刷新内容，可以将方法添加到下方
                 switch (uiState)
                 {
-                    case UIState.Init:
-                        SetUIInit();
-                        break;
                     case UIState.StoryList:
-                        SetUIStoryList();
+                        gameManager.RefreshStoryListUI();
                         break;
                     case UIState.StoryContent:
-                        SetUIStoryContent();
-                        break;
-                    case UIState.Interlude:
-                        SetUIInterlude();
-                        break;
-                    case UIState.Talk:
-                        SetUITalk();
-                        break;
-                    case UIState.Question:
-                        SetUIQuestion();
+                        gameManager.RefreshStoryContentUI();
                         break;
                     default:
-                        ShowErrorMessage("未知UI状态！");
                         break;
                 }
             }
             else
             {
-                ShowErrorMessage("没有与"+ uiState.ToString()+"匹配的UI预设。");
+                ShowErrorMessage("没有与" + uiState.ToString() + "匹配的UI预设。");
             }
         }
 
         /// <summary>
-        /// 设置初始UI
+        /// 初始化初始UI
         /// </summary>
-        private void SetUIInit()
+        void InitInitUI()
         {
-            Button startButton = GameObject.Find("StartButton").GetComponent<Button>();
-            Button configButton = GameObject.Find("ConfigButton").GetComponent<Button>();
-            Button exitButton = GameObject.Find("ExitButton").GetComponent<Button>();
+            Button startButton = uiRootMap[UIState.Init].transform.Find("OptionListPanel/StartButton").GetComponent<Button>();
+            Button configButton = uiRootMap[UIState.Init].transform.Find("OptionListPanel/ConfigButton").GetComponent<Button>();
+            Button exitButton = uiRootMap[UIState.Init].transform.Find("OptionListPanel/ExitButton").GetComponent<Button>();
 
-            startButton.onClick.AddListener(()=> { SetUI(UIState.StoryList); });
-            configButton.onClick.AddListener(() => {  });
+            startButton.onClick.AddListener(() => { SetUI(UIState.StoryList); });
+            configButton.onClick.AddListener(() => { });
             exitButton.onClick.AddListener(() => { Exit(); });
         }
 
         /// <summary>
-        /// 设置故事列表UI
+        /// 初始化故事列表UI
         /// </summary>
-        private void SetUIStoryList()
+        void InitStoryListUI()
         {
-            Button returnButton = GameObject.Find("ReturnButton").GetComponent<Button>();
+            Button returnButton = uiRootMap[UIState.StoryList].transform.Find("ReturnButton").GetComponent<Button>();
             returnButton.onClick.AddListener(() => { SetUI(UIState.Init); });
+        }
 
-            Transform contentTranfsorm = GameObject.Find("Content").transform;
-            GameObject storyItemPrefab = Resources.Load<GameObject>("UI/StoryItemPrefab");
+        /// <summary>
+        /// 刷新故事列表UI
+        /// </summary>
+        void RefreshStoryListUI()
+        {
+            Transform contentTranfsorm = uiRootMap[UIState.StoryList].transform.Find("StoryListScrollView/Viewport/Content").transform;
+            for (int i = 0; i < contentTranfsorm.childCount; i++)
+            {
+                GameObject.DestroyImmediate(contentTranfsorm.GetChild(i).gameObject);
+            }
             foreach (var item in storyNameList)
             {
                 GameObject storyItem = GameObject.Instantiate(storyItemPrefab, contentTranfsorm);
@@ -261,22 +308,31 @@ namespace Assets.Script
         }
 
         /// <summary>
-        /// 设置故事内容UI
+        /// 初始化故事内容UI
         /// </summary>
-        public void SetUIStoryContent()
+        void InitStoryContentUI()
         {
-            Button returnButton = GameObject.Find("ReturnButton").GetComponent<Button>();
+            Button returnButton = uiRootMap[UIState.StoryContent].transform.Find("ReturnButton").GetComponent<Button>();
             returnButton.onClick.AddListener(() => { SetUI(UIState.StoryList); });
 
-            Button startButton = GameObject.Find("StartButton").GetComponent<Button>();
+            Button startButton = uiRootMap[UIState.StoryContent].transform.Find("StartButton").GetComponent<Button>();
             startButton.onClick.AddListener(() => { StartStory(); });
+        }
 
-            Text descriptionText = GameObject.Find("DescriptionText").GetComponent<Text>();
+        /// <summary>
+        /// 刷新故事内容UI
+        /// </summary>
+        void RefreshStoryContentUI()
+        {
+            Text descriptionText = uiRootMap[UIState.StoryContent].transform.Find("InfoPanel/DescriptionText").GetComponent<Text>();
             descriptionText.text = currentStory.GetDescription();
 
-            Transform contentTranfsorm = GameObject.Find("Content").transform;
-            GameObject saveItemPrefab = Resources.Load<GameObject>("UI/SaveItemPrefab");
-            for ( int i =0;i< currentStory.GetSaveNumber();i++)
+            Transform contentTranfsorm = uiRootMap[UIState.StoryContent].transform.Find("SaveListScrollView/Viewport/Content").transform;
+            for (int i = 0; i < contentTranfsorm.childCount; i++)
+            {
+                GameObject.DestroyImmediate(contentTranfsorm.GetChild(i).gameObject);
+            }
+            for (int i = 0; i < currentStory.GetSaveNumber(); i++)
             {
                 int saveIndex = i;
                 Save save = currentStory.GetSaveList()[i];
@@ -284,33 +340,11 @@ namespace Assets.Script
                 saveItem.transform.Find("Image").GetComponent<Image>().sprite = save.GetImage();
                 saveItem.transform.Find("PlayTimeText").GetComponent<Text>().text = save.GetPlayTime().ToString();
                 saveItem.transform.Find("ChapterAndSectionIndexText").GetComponent<Text>().text = "第" + (save.GetChapterIndex() + 1) + "章:第" + (save.GetSectionIndex() + 1) + "节";
-                saveItem.AddComponent<Button>().onClick.AddListener(() => {
-                    ContinueStory(saveIndex); });
+                saveItem.AddComponent<Button>().onClick.AddListener(() =>
+                {
+                    ContinueStory(saveIndex);
+                });
             }
-        }
-
-        /// <summary>
-        /// 设置过场UI
-        /// </summary>
-        public void SetUIInterlude()
-        {
-
-        }
-
-        /// <summary>
-        /// 设置谈话UI
-        /// </summary>
-        public void SetUITalk()
-        {
-
-        }
-
-        /// <summary>
-        /// 设置问题UI
-        /// </summary>
-        public void SetUIQuestion()
-        {
-
         }
 
         /// <summary>
@@ -318,11 +352,11 @@ namespace Assets.Script
         /// </summary>
         public static void Exit()
         {
-            #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-            #else
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
                 Application.Quit();
-            #endif
+#endif
         }
     }
 }

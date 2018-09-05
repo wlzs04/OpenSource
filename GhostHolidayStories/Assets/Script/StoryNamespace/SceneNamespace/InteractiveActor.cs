@@ -113,7 +113,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             else
             {
                 startInteractive = false;
-                GameManager.GetInstance().SetUI(UIState.Clean);
+                DirectorActor.SetUI(StoryUIState.Hide);
             }
         }
     }

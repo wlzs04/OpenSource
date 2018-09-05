@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             if(showContent)
             {
-                GameManager.GetInstance().SetUI(UIState.Talk);
+                DirectorActor.SetUI(StoryUIState.Talk);
                 TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
                 talkUIScript.SetActorName(actorName);
                 talkUIScript.SetContent(content);
@@ -88,7 +89,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         /// </summary>
         protected void ShowOption()
         {
-            GameManager.GetInstance().SetUI(UIState.Question); 
+            DirectorActor.SetUI(StoryUIState.Question); 
             QuestionUIScript script = GameObject.Find("QuestionUIRootPrefab").GetComponent<QuestionUIScript>();
             foreach (var item in optionList)
             {

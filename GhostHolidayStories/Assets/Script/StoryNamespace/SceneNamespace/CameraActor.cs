@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
     /// <summary>
-    /// 摄像机
+    /// 摄像师
     /// </summary>
     class CameraActor : ActorBase
     {

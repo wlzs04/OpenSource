@@ -9,17 +9,10 @@ public class TipUIScript : MonoBehaviour, IPointerClickHandler
     Text contentText = null;
     Image clickImage = null;
 
-    bool autoDestroy = false;
-    float destroyDelayTime = 2;
+    bool autoDestroy = false;//是否主动销毁
+    float showTime = 2;//显示时间
+    float startShowTime = 0;//开始显示的时间
 
-    float showTime = 0;
-
-    public TipUIScript()
-    {
-        
-    }
-
-    // Use this for initialization
     void Start () {
         
     }
@@ -29,18 +22,18 @@ public class TipUIScript : MonoBehaviour, IPointerClickHandler
         contentText = transform.Find("BackImage").Find("ContentText").GetComponent<Text>();
         clickImage = transform.Find("BackImage").Find("ClickImage").GetComponent<Image>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if(Input.GetKeyDown(KeyCode.J)|| Input.GetKeyDown(KeyCode.Space))
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Space))
         {
             GameObject.DestroyImmediate(gameObject);
         }
-		if(autoDestroy&&Time.time-showTime>= destroyDelayTime)
+        if (autoDestroy && Time.time - startShowTime >= showTime)
         {
             GameObject.DestroyImmediate(gameObject);
         }
-	}
+    }
 
     /// <summary>
     /// 设置提示框内容
@@ -48,11 +41,11 @@ public class TipUIScript : MonoBehaviour, IPointerClickHandler
     /// <param name="content"></param>
     /// <param name="autoDestroy"></param>
     /// <param name="destroyDelayTime"></param>
-    public void SetContent(string content,bool autoDestroy = false, float destroyDelayTime = 2)
+    public void SetContent(string content,bool autoDestroy = false, float showTime = 2)
     {
         contentText.text = content;
         this.autoDestroy = autoDestroy;
-        this.destroyDelayTime = destroyDelayTime;
+        this.showTime = showTime;
         showTime = Time.time;
     }
 

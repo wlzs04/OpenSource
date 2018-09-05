@@ -22,7 +22,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         public override void Execute()
         {
             GameManager.GetCurrentStory().AddAction(this);
-            GameActor.GetInstance().SetGameState(gameState);
+            DirectorActor.GetInstance().SetGameState(gameState);
             actionCompleteCallBack.Invoke();
         }
 
