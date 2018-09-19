@@ -13,31 +13,19 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     /// </summary>
     class InteractiveActor : ActorBase
     {
-        protected Sprite image = null;
         bool playDefaultAnimation = true;//是否播放动画
-        bool canTalk = true;//是否可以说话
 
         int interactiveNumber = 0;//交互次数
-
-        List<ActionBase> actionList = new List<ActionBase>();
-
-        int actionIndex = 0;
-        bool startInteractive = false;
-        bool needExecuteNextAction = false;
-
+        
         public InteractiveActor() : base("Interactive")
         {
-
+            canInteractive = true;
+            actionExecuteCondition = ActionExecuteCondition.Interactive;
         }
 
         public override void Update()
         {
             base.Update();
-            if(startInteractive&& needExecuteNextAction)
-            {
-                needExecuteNextAction = false;
-                ExecuteNextAction();
-            }
         }
 
         protected override ActorBase CreateActor(XElement node)
@@ -54,6 +42,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected override void LoadContent(XElement node)
         {
             base.LoadContent(node);
+
             foreach (var attribute in node.Attributes())
             {
                 switch (attribute.Name.ToString())
@@ -61,60 +50,19 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     case "playDefaultAnimation":
                         playDefaultAnimation = Convert.ToBoolean(attribute.Value);
                         break;
-                    case "canTalk":
-                        canTalk = Convert.ToBoolean(attribute.Value);
-                        break;
                     default:
                         break;
                 }
             }
-            foreach (var item in node.Elements())
-            {
-                ActionBase action = ActionBase.LoadAction(item);
-                if (action != null)
-                {
-                    actionList.Add(action);
-                }
-                else
-                {
-                    GameManager.ShowErrorMessage("从InteractiveActor中读取Action:" + item.Name.ToString() + "失败！");
-                }
-            }
-
-            image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            gameObject.GetComponent<SpriteRenderer>().sprite = image;
-
-            foreach (var item in actionList)
-            {
-                item.AddCompleteCallBack(() => { needExecuteNextAction = true; });
-            }
         }
 
         /// <summary>
-    /// 开始交互
-    /// </summary>
-        public void Interactive()
-        {
-            startInteractive = true;
-            interactiveNumber = 0;
-            ExecuteNextAction();
-        }
-
-        /// <summary>
-        /// 执行下一条指令
+        /// 开始交互
         /// </summary>
-        void ExecuteNextAction()
+        public override void Interactive(ActorBase actor)
         {
-            if (interactiveNumber < actionList.Count)
-            {
-                actionList[interactiveNumber].Execute();
-                interactiveNumber++;
-            }
-            else
-            {
-                startInteractive = false;
-                DirectorActor.SetUI(StoryUIState.Hide);
-            }
+            base.Interactive(actor);
+            interactiveNumber++;
         }
     }
 }

@@ -19,11 +19,10 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            GameManager.GetCurrentStory().AddAction(this);
             enterActor.SetScene(GameManager.GetCurrentStory().GetCurrentScene());
-            actionCompleteCallBack.Invoke();
+            Complete();
         }
 
         protected override ActionBase CreateAction(XElement node)

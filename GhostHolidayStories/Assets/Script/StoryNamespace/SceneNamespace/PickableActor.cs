@@ -12,15 +12,12 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     /// </summary>
     class PickableActor : ActorBase
     {
-        protected Sprite image = null;
         bool playAnimation = true;
-        bool canPick = true;
-
-        List<ObjectItem> objectItemList = new List<ObjectItem>();
-
+        
         public PickableActor() : base("Pickable")
         {
-
+            canInteractive = true;
+            actionExecuteCondition = ActionExecuteCondition.Interactive;
         }
 
         protected override ActorBase CreateActor(XElement node)
@@ -40,47 +37,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     case "playAnimation":
                         playAnimation = Convert.ToBoolean(attribute.Value);
                         break;
-                    case "canPick":
-                        canPick = Convert.ToBoolean(attribute.Value);
-                        break;
                     default:
                         break;
                 }
             }
-            foreach (var item in node.Elements())
-            {
-                switch (item.Name.ToString())
-                {
-                    case "ObjectItem":
-                        ObjectItem objectItem = ObjectItem.LoadObject(item);
-                        objectItemList.Add(objectItem);
-                        break;
-                    default:
-                        GameManager.ShowErrorMessage("PickableActor中出现未知子节点："+ item.Name.ToString());
-                        break;
-                }
-            }
-
-            image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            gameObject.GetComponent<SpriteRenderer>().sprite = image;
-        }
-
-        public override string GetInfo()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (var item in objectItemList)
-            {
-                if(item== objectItemList[objectItemList.Count-1])
-                {
-                    stringBuilder.Append(item.GetName() + ":" + item.GetNumber());
-                }
-                else
-                {
-                    stringBuilder.AppendLine(item.GetName() + ":" + item.GetNumber());
-                }
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }

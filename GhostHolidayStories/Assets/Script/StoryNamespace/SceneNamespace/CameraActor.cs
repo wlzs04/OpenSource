@@ -13,9 +13,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     class CameraActor : ActorBase
     {
         static CameraActor cameraActor = new CameraActor();
-
-        GameObject gameObject = null;
-        ActorBase actor = null;
+        
+        ActorBase focusActor = null;//被拍摄的演员
 
         private CameraActor():base("Camera")
         {
@@ -29,9 +28,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         public override void Update()
         {
-            if(actor != null)
+            if(focusActor != null)
             {
-                gameObject.transform.localPosition = new Vector3(actor.GetPosition().x, actor.GetPosition().y, gameObject.transform.localPosition.z);
+                gameObject.transform.localPosition = focusActor.GetPosition();
             }
         }
 
@@ -39,6 +38,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             GameManager.ShowErrorMessage("CameraActor演员无法被创建！");
             return null;
+        }
+
+        protected override void LoadContent(XElement node)
+        {
+            GameManager.ShowErrorMessage("CameraActor演员无法从文件中加载！");
         }
 
         /// <summary>
@@ -49,21 +53,30 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             if(actorName=="")
             {
-                actor = null;
+                focusActor = null;
             }
             else
             {
-                actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
+                focusActor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
             }
+        }
+
+        /// <summary>
+        /// 设置跟随的演员
+        /// </summary>
+        /// <param name="focusActor"></param>
+        public void SetFollowActor(ActorBase focusActor)
+        {
+            this.focusActor = focusActor;
         }
 
         /// <summary>
         /// 获得跟随的演员
         /// </summary>
         /// <returns></returns>
-        public ActorBase GetFollowActor()
+        public ActorBase GetFocusActor()
         {
-            return actor;
+            return focusActor;
         }
     }
 }

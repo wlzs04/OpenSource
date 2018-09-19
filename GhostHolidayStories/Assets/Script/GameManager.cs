@@ -26,6 +26,7 @@ namespace Assets.Script
     {
         static GameManager gameManager = new GameManager();
         static Story currentStory;
+        static string commonPath;
         static string storiesPath;
         static Transform canvasTransform;
 
@@ -37,11 +38,14 @@ namespace Assets.Script
 
         static List<string> storyNameList;
 
+        static AudioPlayer audioPlayer;
+
         //UI根节点列表
         static Dictionary<UIState, GameObject> uiRootMap;
 
         private GameManager()
         {
+            commonPath = "/Data/Common/";
             storiesPath = "/Data/Stories/";
             uiRootMap = new Dictionary<UIState, GameObject>();
             storyNameList = new List<string>();
@@ -55,6 +59,10 @@ namespace Assets.Script
 
             ActorBase.LoadAllLegalActor();
             ActionBase.LoadAllLegalAction();
+
+            audioPlayer = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
+
+            audioPlayer.PlayAudio(GetCommonPath()+"Audio/back.ogg");
         }
 
         public static GameManager GetInstance()
@@ -110,6 +118,7 @@ namespace Assets.Script
             {
                 GameObject.DestroyImmediate(item.Value);
             }
+            uiRootMap.Clear();
         }
 
         /// <summary>
@@ -152,12 +161,30 @@ namespace Assets.Script
         }
 
         /// <summary>
+        /// 获得音乐播放器
+        /// </summary>
+        /// <returns></returns>
+        public static AudioPlayer GetAudioPlayer()
+        {
+            return audioPlayer;
+        }
+
+        /// <summary>
         /// 获得故事集路径
         /// </summary>
         /// <returns></returns>
         public static string GetStoriesPath()
         {
             return Application.dataPath + storiesPath;
+        }
+
+        /// <summary>
+        /// 获得通用路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetCommonPath()
+        {
+            return Application.dataPath + commonPath;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,11 +24,17 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             return action;
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            GameManager.GetCurrentStory().AddAction(this);
-            GameManager.GetCurrentStory().Action();
-            actionCompleteCallBack.Invoke();
+            if(executor is DirectorActor)
+            {
+                this.executor = executor;
+            }
+            else
+            {
+                GameManager.ShowErrorMessage("只有导演类可以使用Action指令！");
+            }
+            Complete();
         }
     }
 }

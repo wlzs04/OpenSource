@@ -20,11 +20,32 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            GameManager.GetCurrentStory().AddAction(this);
-            CameraActor.GetInstance().SetFollowActor(followActorName);
-            actionCompleteCallBack.Invoke();
+            if (executor is CameraActor)
+            {
+                this.executor = executor;
+                (executor as CameraActor).SetFollowActor(followActorName);
+
+                switch (moveState)
+                {
+                    case MoveState.Set:
+                        break;
+                    case MoveState.AI:
+                        break;
+                    case MoveState.Line:
+                        break;
+                    case MoveState.Jump:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                GameManager.ShowErrorMessage("只有摄像类可以使用Camera指令！");
+            }
+            Complete();
         }
 
         protected override ActionBase CreateAction(XElement node)

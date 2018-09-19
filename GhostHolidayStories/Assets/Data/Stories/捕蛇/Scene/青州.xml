@@ -3,16 +3,19 @@
   <Static name="home1" image="house1.png" width="100" height="100" isBlock="true" layer="1" position="200,200"/>
   <Static name="home2" image="house2.png" width="200" height="200" isBlock="true" layer="1" position="700,700"/>
   <Static name="cloud" image="cloud1.png" width="200" height="200" isBlock="false" layer="2" position="0,0"/>
-  <Dynamic name="person1" image="person1.png" row="1" column="4" onceTime="0.5" width="100" height="100" isBlock="true" layer="1" position="400,400" />
-  <Pickable name="pick1" image="money.png" width="50" height="50" position="0,400" playDefaultAnimation="true" canPick="true">
-    <ObjectItem itemId="10001" number="100"/>
-    <ObjectItem itemId="10002" number ="1"/>
+  <Dynamic name="person1" width="100" height="100" isBlock="true" layer="1" position="400,400" actionExecuteCondition="None">
+    <Animation isAsync="true" loopTime="0" onceTime="0.5" row="1" column="4" image="person1.png" />
+  </Dynamic>
+  <Pickable name="pick1" image="money.png" width="50" height="50" position="0,400" playDefaultAnimation="true">
+    <GetObject>
+      <ObjectItem itemId="10001" number="100"/>
+      <ObjectItem itemId="10002" number ="1"/>
+    </GetObject>
   </Pickable>
-  <Interactive name="普通人" image="person2.png" width="100" height="200" position="0,600" playDefaultAnimation="true" canTalk="true" isBlock="true">
+  <Interactive name="普通人" image="person2.png" width="100" height="200" position="0,600" playDefaultAnimation="true" isBlock="true">
     <Talk content="你好,我是普通人。" onlyTalkByTime="1" />
     <Talk content="你很健谈啊！" audio="normalPersonTalk02.mp3" onlyTalkByTime="10"/>
     <Random>
-      <!--
       <Question content="你找我有事吗？" isLoop="true">
         <Option content="请问这里是哪里？" changeStateAfterSelect="true">
           <Talk content="这里是青州。"/>
@@ -26,7 +29,6 @@
         <Option content="突然想起来有事，我先走了？" endAllAction="true"/>
         <Option content="...没事。" endLoop="true"/>
       </Question>
-      -->
       <Question showContent="false" isLoop="true">
         <Option content="（你看着他的上半身。）" changeStateAfterSelect="true">
           <Talk content="此人头上戴着束发嵌宝紫金冠，齐眉勒着二龙抢珠金抹额，穿一件二色金百蝶穿花大红箭袖。"/>
@@ -43,9 +45,7 @@
           <Talk content="抱歉，认错了。"/>
         </Option>
       </Question>
-      <!--
       <Talk content="我现在有点忙。" endAllAction="true"/>
-      -->
     </Random>
     <Talk content="那好吧，再见。"/>
   </Interactive>

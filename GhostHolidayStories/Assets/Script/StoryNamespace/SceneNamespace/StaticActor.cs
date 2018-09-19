@@ -13,11 +13,14 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
     /// </summary>
     class StaticActor : ActorBase
     {
-        protected Sprite image = null;
-
         public StaticActor():base("Static")
         {
 
+        }
+
+        public override void Update()
+        {
+            
         }
 
         protected override ActorBase CreateActor(XElement node)
@@ -30,8 +33,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected override void LoadContent(XElement node)
         {
             base.LoadContent(node);
-            image = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            gameObject.GetComponent<SpriteRenderer>().sprite = image;
+        }
+
+        public override void Interactive(ActorBase actor)
+        {
+            
         }
     }
 }

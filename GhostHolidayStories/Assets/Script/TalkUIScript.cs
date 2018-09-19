@@ -70,7 +70,7 @@ public class TalkUIScript : MonoBehaviour, IPointerClickHandler
     {
         if(audioName!="")
         {
-            talkAudio.clip = AudioHelper.LoadAudio(GameManager.GetCurrentStory().GetStoryPath() + "/Audio/" + audioName);
+            //talkAudio.clip = AudioHelper.PlayAudio(GameManager.GetCurrentStory().GetStoryPath() + "/Audio/" + audioName);
             talkAudio.volume = 1;
             talkAudio.Play();
         }

@@ -20,16 +20,12 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
             if(showContent)
             {
                 DirectorActor.SetUI(StoryUIState.Talk);
-                TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
-                talkUIScript.SetActorName(actorName);
-                talkUIScript.SetContent(content);
-
-                talkUIScript.SetCompleteCallBack(ShowOption);
+                DirectorActor.UITalk(executor,content, ShowOption);
             }
             else
             {
@@ -79,22 +75,14 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
         }
 
-        protected override void Complete()
-        {
-            //base.Complete();
-        }
-
         /// <summary>
         /// 显示选项
         /// </summary>
         protected void ShowOption()
         {
-            DirectorActor.SetUI(StoryUIState.Question); 
-            QuestionUIScript script = GameObject.Find("QuestionUIRootPrefab").GetComponent<QuestionUIScript>();
-            foreach (var item in optionList)
-            {
-                script.AddOption(item.GetContent(), () => { item.Execute(); });
-            }
+            DirectorActor.SetUI(StoryUIState.Question);
+            DirectorActor.UIQuestion(optionList);
+            
         }
     }
 }

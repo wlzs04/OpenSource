@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace Assets.Script.StoryNamespace.ActionNamespace
 {
+    /// <summary>
+    /// 指令：移动
+    /// </summary>
     class MoveAction : ActionBase
     {
         Vector2 position;
@@ -44,23 +47,21 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 {
                     actor.SetPosition(newPosition);
                     isMoving = false;
-                    actionCompleteCallBack.Invoke();
+                    Complete();
                 }
             }
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            GameManager.GetCurrentStory().AddAction(this);
-            actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
             lastTime = Time.time;
             lastPosition = actor.GetPosition();
             newPosition = position;
             switch (moveState)
             {
                 case MoveState.Set:
-                    actor.SetPosition(newPosition);
-                    actionCompleteCallBack.Invoke();
+                    executor.SetPosition(newPosition);
+                    Complete();
                     break;
                 case MoveState.AI:
                     isMoving = true;

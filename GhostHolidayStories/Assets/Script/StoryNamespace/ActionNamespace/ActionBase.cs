@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -42,26 +43,28 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// 指令完成的回调
     /// </summary>
     public delegate void ActionCompleteCallBack();
-    
+
     /// <summary>
     /// 指令基类：演员收到指令后进行相应行动
     /// </summary>
     abstract class ActionBase
     {
-        string simpleActionClassName = "ActionBase";
-
-        protected string actorName = "";
-        protected bool endAllAction = false;
-        protected bool isAsync = false;//是否此指令执行的同时执行下一条指令
-
+        //所有合法指令类型
         static Dictionary<string, ActionBase> legalActionMap = new Dictionary<string, ActionBase>();
 
-        protected ActionCompleteCallBack actionCompleteCallBack;
+        //由文件配置的属性
+        protected string actorName = "";//执行指令的演员
+        protected ActionResult actionResult;//指令执行后的反馈
+        protected bool isAsync = false;//是否此指令执行的同时执行下一条指令
+        protected bool endAllAction = false;//判断此指令执行后结束以下所有指令
+        string simpleActionClassName = "Action";
+
+        protected ActorBase executor = null;//执行者
+        protected bool isCompleted = false;//是否完成
 
         protected ActionBase(string simpleActionClassName)
         {
             this.simpleActionClassName = simpleActionClassName;
-            actionCompleteCallBack += Complete;
         }
 
         public virtual void Update()
@@ -159,30 +162,27 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         }
 
         /// <summary>
-        /// 执行
+        /// 执行指令
         /// </summary>
-        public abstract void Execute();
+        /// <param name="executor"></param>
+        public abstract void Execute(ActorBase executor);
 
         /// <summary>
         /// 指令执行完成的处理方法
         /// </summary>
         protected virtual void Complete()
         {
-            GameManager.GetCurrentStory().RemoveAction(this);
-        }
-
-        /// <summary>
-        /// 添加指令完成的回调方法
-        /// </summary>
-        /// <param name="callBack"></param>
-        public void AddCompleteCallBack(ActionCompleteCallBack callBack)
-        {
-            actionCompleteCallBack += callBack;
+            isCompleted = true;
         }
 
         public bool IsAsync()
         {
             return isAsync;
+        }
+
+        public bool IsCompleted()
+        {
+            return isCompleted;
         }
     }
 }

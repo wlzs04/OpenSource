@@ -20,7 +20,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         int column = 1;//列数
         string imagePath = "";//动画图片名称
 
-        ActorBase actor = null;
         Sprite oldImage = null;
         float lastTime = 0;
         float changeAfterTime = 0;
@@ -44,19 +43,18 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     haveLoopTime++;
                     if (haveLoopTime >= loopTime)
                     {
-                        actor.GetGameObject().GetComponent<SpriteRenderer>().sprite = oldImage;
-                        actionCompleteCallBack.Invoke();
+                        executor.GetGameObject().GetComponent<SpriteRenderer>().sprite = oldImage;
                     }
                 }
-                actor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
+                executor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
                 lastTime = Time.time;
             }
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
             GameManager.GetCurrentStory().AddAction(this);
-            actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
+            this.executor = executor;
 
             Texture2D texture = ImageHelper.LoadTexture(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
 
@@ -73,9 +71,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
             lastTime = Time.time;
             changeAfterTime = onceTime / row / column;
-            oldImage = actor.GetGameObject().GetComponent<SpriteRenderer>().sprite;
-            actor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
-
+            oldImage = executor.GetGameObject().GetComponent<SpriteRenderer>().sprite;
+            executor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
         }
 
         protected override ActionBase CreateAction(XElement node)

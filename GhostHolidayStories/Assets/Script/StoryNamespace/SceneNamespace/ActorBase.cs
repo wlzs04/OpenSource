@@ -11,12 +11,26 @@ using UnityEngine;
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
     /// <summary>
+    /// 指令执行条件
+    /// </summary>
+    enum ActionExecuteCondition
+    {
+        None,//无条件
+        Interactive,//交互
+        InRange,//在范围中
+    }
+
+    /// <summary>
     /// 演员基类：场景中的一切都是演员
     /// </summary>
     abstract class ActorBase
     {
-        string simpleActorClassName = "ActorBase";
+        string simpleActorClassName = "ActorBase";//演员类型简称
 
+        //所有合法演员类型
+        static Dictionary<string, ActorBase> legalActorMap = new Dictionary<string, ActorBase>();
+
+        //由文件配置的属性
         protected string name ="";//名称
         protected string imagePath = "";//图片路径
         protected float width = 0;//宽度
@@ -25,13 +39,23 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected int layer = 1;//图片所在层级,0代表永远在最下层，1表示与按演员所在位置进行排序，2表示永远在上层
         protected Vector2 position;//位置
         protected bool canShow = true;//是否显示
+        protected ActionExecuteCondition actionExecuteCondition;//包含的指令执行的条件
+        protected bool canInteractive = false;//是否可以进行交互
 
-        protected Texture2D texture = null;
-        //protected Sprite image = null;
+        protected bool inExecution = false;//是否在指令执行中
+        protected bool inInteractive = false;//是否在交互中
+        protected Sprite image = null;//图片
         protected GameObject gameObject = null;
-        protected Scene scene =null;
-        
-        static Dictionary<string, ActorBase> legalActorMap = new Dictionary<string, ActorBase>();
+        protected Rigidbody2D rigidBody = null;
+        protected BoxCollider2D boxCollider = null;
+        protected Scene scene =null;//所在场景
+
+        //演员本身拥有的指令列表
+        List<ActionBase> actionList = new List<ActionBase>();
+        //演员需要执行的指令队列
+        Queue<ActionBase> actionQueue = new Queue<ActionBase>();
+        //演员需要执行的指令队列缓存列表
+        List<ActionBase> actionCacheList = new List<ActionBase>();
 
         protected ActorBase(string simpleActorClassName)
         {
@@ -43,13 +67,91 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// </summary>
         public virtual void Update()
         {
+            if(inExecution)
+            {
+                ExecuteActionQueue();
+            }
+            else if(CheckAction())
+            {
+                inExecution = true;
+            }
+        }
+
+        /// <summary>
+        /// 执行指令队列
+        /// </summary>
+        void ExecuteActionQueue()
+        {
+            foreach (var item in actionCacheList)
+            {
+                item.Update();
+            }
+            for (int i = actionCacheList.Count - 1; i >= 0; i--)
+            {
+                if (actionCacheList[i].IsCompleted())
+                {
+                    actionCacheList.RemoveAt(i);
+                }
+            }
+            if(CheckActionCacheIsAsync())
+            {
+                while (actionQueue.Count > 0)
+                {
+                    ActionBase action = actionQueue.Dequeue();
+                    actionCacheList.Add(action);
+                    action.Execute(this);
+                    if (!action.IsAsync())
+                    {
+                        break;
+                    }
+                }
+            }
+            if (actionCacheList.Count == 0)
+            {
+                inExecution = false;
+            }
+        }
+
+        /// <summary>
+        /// 检测当前正在执行的指令是不是全部为可同步
+        /// </summary>
+        /// <returns></returns>
+        bool CheckActionCacheIsAsync()
+        {
+            foreach (var item in actionCacheList)
+            {
+                if(!item.IsAsync())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 检查是否有可执行的命令
+        /// </summary>
+        /// <returns></returns>
+        bool CheckAction()
+        {
+            if (actionExecuteCondition == ActionExecuteCondition.None 
+                && actionList.Count>0)
+            {
+                foreach (var item in actionList)
+                {
+                    actionQueue.Enqueue(item);
+                }
+
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
         /// 添加合法演员
         /// </summary>
         /// <param name="actorBase"></param>
-        protected static void AddLegalActor(ActorBase actorBase)
+        static void AddLegalActor(ActorBase actorBase)
         {
             legalActorMap.Add(actorBase.simpleActorClassName, actorBase);
         }
@@ -82,13 +184,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             scene.AddActor(this);
             gameObject.transform.parent = scene.GetGameObject().transform;
             gameObject.transform.localPosition = position;
-            gameObject.GetComponent<SpriteRenderer>().sortingOrder = layer;
-            gameObject.GetComponent<SpriteRenderer>().size = new Vector2(width, height);
-            if(isBlock)
-            {
-                gameObject.GetComponent<BoxCollider2D>().size = new Vector2(width, height);
-                gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(width/2, height/2);
-            }
         }
 
         /// <summary>
@@ -144,18 +239,12 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="node"></param>
         protected virtual void LoadContent(XElement node)
         {
-            gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
-            gameObject.AddComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-            gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
-            gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-            gameObject.GetComponent<Rigidbody2D>().simulated = true;
             foreach (var attribute in node.Attributes())
             {
                 switch (attribute.Name.ToString())
                 {
                     case "name":
                         name = attribute.Value;
-                        gameObject.name = name;
                         break;
                     case "image":
                         imagePath = attribute.Value;
@@ -168,7 +257,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                         break;
                     case "isBlock":
                         isBlock = Convert.ToBoolean(attribute.Value);
-                        gameObject.AddComponent<BoxCollider2D>();
                         break;
                     case "layer":
                         layer = Convert.ToInt32(attribute.Value);
@@ -182,14 +270,50 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     case "canShow":
                         canShow = Convert.ToBoolean(attribute.Value);
                         break;
+                    case "actionExecuteCondition":
+                        actionExecuteCondition = (ActionExecuteCondition)Enum.Parse(typeof(ActionExecuteCondition), attribute.Value);
+                        break;
                     default:
                         break;
                 }
             }
-            if(imagePath!="")
+
+            foreach (var item in node.Elements())
             {
-                texture = ImageHelper.LoadTexture(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
+                ActionBase action = ActionBase.LoadAction(item);
+                actionList.Add(action);
             }
+
+            InitActor();
+        }
+
+        /// <summary>
+        /// 初始化演员
+        /// </summary>
+        void InitActor()
+        {
+            gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
+            rigidBody = gameObject.AddComponent<Rigidbody2D>();
+            rigidBody.bodyType = RigidbodyType2D.Static;
+            rigidBody.gravityScale = 0;
+            rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rigidBody.simulated = true;
+            boxCollider = gameObject.AddComponent<BoxCollider2D>();
+
+            gameObject.name = name;
+            if (imagePath!="")
+            {
+                image = ImageHelper.LoadSprite(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);
+                gameObject.GetComponent<SpriteRenderer>().sprite = image;
+            }
+            if (isBlock)
+            {
+                boxCollider.size = new Vector2(width, height);
+                boxCollider.offset = new Vector2(width / 2, height / 2);
+            }
+
+            gameObject.GetComponent<SpriteRenderer>().sortingOrder = layer;
+            gameObject.GetComponent<SpriteRenderer>().size = new Vector2(width, height);
         }
         
         /// <summary>
@@ -198,9 +322,18 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="newPosition"></param>
         public void SetPosition(Vector2 newPosition)
         {
-            gameObject.GetComponent<Rigidbody2D>().MovePosition(newPosition);
+            gameObject.transform.localPosition = newPosition;
+            position = newPosition;
+        }
+
+        /// <summary>
+        /// 移动到位置
+        /// </summary>
+        /// <param name="newPosition"></param>
+        public void MoveToPosition(Vector2 newPosition)
+        {
+            rigidBody.MovePosition(newPosition);
             position = gameObject.transform.localPosition;
-            //gameObject.transform.localPosition = position;
         }
         
         public string GetName()
@@ -230,6 +363,43 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         public virtual string GetInfo()
         {
             return "";
+        }
+
+        public bool CanInteractive()
+        {
+            return canInteractive;
+        }
+
+        /// <summary>
+        /// 演员之间进行交互
+        /// </summary>
+        public virtual void Interactive(ActorBase actor)
+        {
+            if(inInteractive)
+            {
+                GameManager.ShowDebugMessage("演员"+name+"正在交互中！");
+                return;
+            }
+            inInteractive = true;
+            if (actionExecuteCondition==ActionExecuteCondition.Interactive)
+            {
+                foreach (var item in actionList)
+                {
+                    actionQueue.Enqueue(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 结束当前所有动作
+        /// </summary>
+        public void Cut()
+        {
+            inInteractive = false;
+            inExecution = false;
+
+            actionQueue.Clear();
+            actionCacheList.Clear();
         }
     }
 }

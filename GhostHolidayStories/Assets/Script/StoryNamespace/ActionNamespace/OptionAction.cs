@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            actionList[0].Execute();
+            //actionList[0].Execute();
         }
 
         protected override ActionBase CreateAction(XElement node)
