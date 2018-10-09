@@ -67,6 +67,23 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             this.simpleActionClassName = simpleActionClassName;
         }
 
+        public virtual ActorBase GetExecutor()
+        {
+            if(actorName!="")
+            {
+                return World.GetInstance().GetActor(actorName);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 指令初始化，清空已完成等状态
+        /// </summary>
+        public virtual void Init()
+        {
+            isCompleted = false;
+        }
+
         public virtual void Update()
         {
 
@@ -162,10 +179,27 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         }
 
         /// <summary>
+        /// 获得执行者名称
+        /// </summary>
+        /// <returns></returns>
+        public string GetActorName()
+        {
+            return actorName;
+        }
+
+        /// <summary>
         /// 执行指令
         /// </summary>
         /// <param name="executor"></param>
         public abstract void Execute(ActorBase executor);
+
+        /// <summary>
+        /// 执行指令的快捷方法
+        /// </summary>
+        public void Execute()
+        {
+            Execute(GetExecutor());
+        }
 
         /// <summary>
         /// 指令执行完成的处理方法

@@ -28,6 +28,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected override void LoadContent(XElement node)
         {
             base.LoadContent(node);
+
+            rigidBody.bodyType = RigidbodyType2D.Dynamic;
+
         }
     }
 }

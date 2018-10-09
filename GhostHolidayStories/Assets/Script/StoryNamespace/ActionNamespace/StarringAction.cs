@@ -16,12 +16,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            GameManager.GetCurrentStory().AddAction(this);
             ActorBase actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
             DirectorActor.GetInstance().SetStarringActor(actor);
-            actionCompleteCallBack.Invoke();
+            Complete();
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -29,6 +28,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             StarringAction action = new StarringAction();
             action.LoadContent(node);
             return action;
+        }
+
+        public override ActorBase GetExecutor()
+        {
+            return CameraActor.GetInstance();
         }
     }
 }

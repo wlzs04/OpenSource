@@ -267,16 +267,14 @@
   <ItemGroup>
     <None Include="Assets\Data\Common\Common.xml" />
     <None Include="Assets\Data\ReadMe.txt" />
-    <None Include="Assets\Data\Stories\捕蛇\Chapter\00.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Assets\Data\Stories\捕蛇\Chapter\00.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Config\ObjectInfo.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Save\00.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Save\01.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml">
+    <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml" />
+    <None Include="Assets\Data\Stories\捕蛇\Story.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Assets\Data\Stories\捕蛇\Story.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Video\temp.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

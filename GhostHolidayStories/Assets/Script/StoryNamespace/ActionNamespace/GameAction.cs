@@ -38,7 +38,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             foreach (var attribute in node.Attributes())
             {
                 switch (attribute.Name.ToString())
-                {
+                { 
                     case "gameState":
                         gameState = (GameState)Enum.Parse(typeof(GameState), attribute.Value);
                         break;
@@ -46,6 +46,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         break;
                 }
             }
+        }
+
+        public override ActorBase GetExecutor()
+        {
+            return DirectorActor.GetInstance();
         }
     }
 }

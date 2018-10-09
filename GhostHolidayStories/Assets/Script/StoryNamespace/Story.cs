@@ -56,7 +56,6 @@ namespace Assets.Script.StoryNamespace
             this.name = name;
             storyPath = GameManager.GetStoriesPath() + name;
             LoadInfo();
-            world = World.GetInstance();
         }
 
         /// <summary>
@@ -64,28 +63,6 @@ namespace Assets.Script.StoryNamespace
         /// </summary>
         public void Update()
         {
-            if(actionStart)
-            {
-                int asyncNumber = 0;
-                foreach (var item in actionList)
-                {
-                    item.Update();
-                    if(item.IsAsync())
-                    {
-                        asyncNumber++;
-                    }
-                    if (haveRemoveAction||!item.IsAsync())
-                    {
-                        haveRemoveAction = false;
-                        break;
-                    }
-                }
-                if (actionList.Count == asyncNumber )
-                {
-                    GetCurrentSection().ExecuteNextAction();
-                }
-            }
-
             world.Update();
             directorActor.Update();
             cameraActor.Update();
@@ -94,13 +71,13 @@ namespace Assets.Script.StoryNamespace
         public void Action()
         {
             actionStart = true;
-            DirectorActor.SetUI(StoryUIState.Hide);
+            DirectorActor.UIHide();
         }
 
         public void Cut()
         {
             actionStart = false;
-            DirectorActor.SetUI(StoryUIState.Hide);
+            DirectorActor.UIHide();
         }
 
         /// <summary>
@@ -280,14 +257,15 @@ namespace Assets.Script.StoryNamespace
         /// </summary>
         public void Start()
         {
+            world = World.GetInstance();
             currentSave = Save.CreateSave();
             if (currentSave == null)
             {
                 GameManager.ShowDebugMessage("存档创建失败！");
                 return;
             }
-            LoadContent();
-            DirectorActor.SetUI(StoryUIState.Hide);
+            saveList.Add(currentSave);
+            Continue(currentSave.GetIndex()-1);
             StartContent();
         }
 
@@ -297,9 +275,10 @@ namespace Assets.Script.StoryNamespace
         /// <param name="index"></param>
         public void Continue(int index)
         {
+            world = World.GetInstance();
             currentSave = saveList[index];
             LoadContent();
-            DirectorActor.SetUI(StoryUIState.Hide);
+            DirectorActor.UIHide();
         }
 
         /// <summary>
@@ -307,7 +286,9 @@ namespace Assets.Script.StoryNamespace
         /// </summary>
         private void StartContent()
         {
-            chapterList[currentSave.GetChapterIndex()].Start(currentSave.GetSectionIndex());
+            Section currentSection = chapterList[currentSave.GetChapterIndex()].GetSection(currentSave.GetSectionIndex());
+            SetCurrentSceneByName(currentSection.GetSceneName());
+            directorActor.SetStoryAction(currentSection.GetActionList());
         }
 
         /// <summary>
@@ -367,32 +348,6 @@ namespace Assets.Script.StoryNamespace
         public Section GetCurrentSection()
         {
             return chapterList[currentSave.GetChapterIndex()].GetSection(currentSave.GetSectionIndex());
-        }
-
-        /// <summary>
-        /// 添加指令到故事中，一般是需要异步执行的指令如移动角色等
-        /// </summary>
-        /// <param name="action"></param>
-        public void AddAction(ActionBase action)
-        {
-            actionList.Add(action);
-        }
-
-        /// <summary>
-        /// 删除指令，当指令执行结束后执行
-        /// </summary>
-        /// <param name="action"></param>
-        public void RemoveAction(ActionBase action)
-        {
-            if(actionList.Contains(action))
-            {
-                actionList.Remove(action);
-            }
-            else
-            {
-                GameManager.ShowErrorMessage("因为指令不存在，所以无法删除指令:"+action.GetSimpleActionClassName());
-            }
-            haveRemoveAction = true;
         }
     }
 }

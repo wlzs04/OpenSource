@@ -71,7 +71,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             {
                 ExecuteActionQueue();
             }
-            else if(CheckAction())
+            else if(CheckSelfAction())
             {
                 inExecution = true;
             }
@@ -129,10 +129,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         }
 
         /// <summary>
-        /// 检查是否有可执行的命令
+        /// 检查演员自身是否携带有可执行的命令，
+        /// 有的话根据条件添加到执行队列中
         /// </summary>
         /// <returns></returns>
-        bool CheckAction()
+        bool CheckSelfAction()
         {
             if (actionExecuteCondition == ActionExecuteCondition.None 
                 && actionList.Count>0)
@@ -400,6 +401,15 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
             actionQueue.Clear();
             actionCacheList.Clear();
+        }
+
+        /// <summary>
+        /// 添加指令到执行队列
+        /// </summary>
+        public void AddActionToQueue(ActionBase action)
+        {
+            inExecution = true;
+            actionQueue.Enqueue(action);
         }
     }
 }

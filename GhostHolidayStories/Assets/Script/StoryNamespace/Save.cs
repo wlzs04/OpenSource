@@ -177,5 +177,10 @@ namespace Assets.Script.StoryNamespace
         {
             return playTime;
         }
+
+        public int GetIndex()
+        {
+            return index;
+        }
     }
 }

@@ -24,8 +24,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             if(showContent)
             {
-                DirectorActor.SetUI(StoryUIState.Talk);
-                DirectorActor.UITalk(executor,content, ShowOption);
+                DirectorActor.UITalk(executor,content,"", ShowOption);
             }
             else
             {
@@ -80,9 +79,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         /// </summary>
         protected void ShowOption()
         {
-            DirectorActor.SetUI(StoryUIState.Question);
             DirectorActor.UIQuestion(optionList);
-            
         }
     }
 }

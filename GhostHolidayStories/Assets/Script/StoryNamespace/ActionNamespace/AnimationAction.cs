@@ -53,7 +53,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute(ActorBase executor)
         {
-            GameManager.GetCurrentStory().AddAction(this);
             this.executor = executor;
 
             Texture2D texture = ImageHelper.LoadTexture(GameManager.GetCurrentStory().GetStoryPath() + "/Texture/" + imagePath);

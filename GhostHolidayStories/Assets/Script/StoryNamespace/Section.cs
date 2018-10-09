@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using Assets.Script.StoryNamespace.ActionNamespace;
+using Assets.Script.StoryNamespace.SceneNamespace;
 
 namespace Assets.Script.StoryNamespace
 {
@@ -13,7 +14,6 @@ namespace Assets.Script.StoryNamespace
         int index = 0;
         string sceneName;
         string description = "";
-        int actionIndex = 0;
 
         public void LoadContent(XElement node)
         {
@@ -49,31 +49,24 @@ namespace Assets.Script.StoryNamespace
             }
         }
 
-        /// <summary>
-        /// 开始本节
-        /// </summary>
-        public void Start()
+        public List<ActionBase> GetActionList()
         {
-            GameManager.GetCurrentStory().SetCurrentSceneByName(sceneName);
-            ExecuteNextAction();
+            return actionList;
+        }
+
+        public string GetSceneName()
+        {
+            return sceneName;
         }
 
         /// <summary>
-        /// 执行下一条指令
+        /// 开始本节
         /// </summary>
-        /// <returns></returns>
-        public void ExecuteNextAction()
-        {
-            if(actionIndex>= actionList.Count)
-            {
-                GameManager.ShowErrorMessage("当前节的指令已经执行完，是不是少Cut指令了？");
-                GameManager.GetCurrentStory().Cut();
-            }
-            else
-            {
-                actionList[actionIndex].Execute();
-                actionIndex++;
-            }
-        }
+        //public void Start()
+        //{
+        //    GameManager.GetCurrentStory().SetCurrentSceneByName(sceneName);
+        //    //ExecuteNextAction();
+        //    DirectorActor.GetInstance().SetAllAction(actionList);
+        //}
     }
 }

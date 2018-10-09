@@ -14,7 +14,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         Vector2 position;
 
         Dictionary<string, ActorBase> actorMap = new Dictionary<string, ActorBase>();
-        //List<ActorBase> actorList = new List<ActorBase>();
 
         World world = null;
         GameObject gameObject = null;
@@ -48,7 +47,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         }
 
         /// <summary>
-        /// 加载场景
+        /// 加载场景，未做重复检查
         /// </summary>
         /// <param name="scenePath"></param>
         /// <param name="name"></param>

@@ -58,6 +58,11 @@ namespace Assets.Script.StoryNamespace
             return gameObject;
         }
 
+        /// <summary>
+        /// 在所有场景中寻找指定演员
+        /// </summary>
+        /// <param name="actorName"></param>
+        /// <returns></returns>
         public ActorBase GetActor(string actorName)
         {
             ActorBase actor = null;
@@ -72,6 +77,12 @@ namespace Assets.Script.StoryNamespace
             return actor;
         }
 
+        /// <summary>
+        /// 在指定场景中寻找指定演员
+        /// </summary>
+        /// <param name="actorName"></param>
+        /// <param name="sceneName"></param>
+        /// <returns></returns>
         public ActorBase GetActor(string actorName,string sceneName)
         {
             return sceneMap[sceneName].GetActor(actorName);

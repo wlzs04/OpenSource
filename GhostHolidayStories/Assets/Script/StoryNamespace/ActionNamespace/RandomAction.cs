@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,9 +19,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
-            actionList[random.Next(actionList.Count)].Execute();
+            actionList[random.Next(actionList.Count)].Execute(executor);
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -44,16 +45,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 {
                     GameManager.ShowErrorMessage("在添加随机指令时指令加载失败！");
                 }
-            }
-
-            foreach (var item in actionList)
-            {
-                item.AddCompleteCallBack(() => {
-                    if(actionCompleteCallBack!=null)
-                    {
-                        actionCompleteCallBack.Invoke();
-                    }
-                });
             }
         }
 

@@ -43,11 +43,16 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 }
                 else
                 {
-                    ActorBase newActor= ActorBase.LoadActor(item); ;
+                    ActorBase newActor= ActorBase.LoadActor(item);
                     GameManager.ShowErrorMessage("入场的演员:"+ newActor .GetName()+ "已存在，将会被新演员："+ newActor.GetName()+ "代替！");
                     enterActor = newActor;
                 }
             }
+        }
+
+        public override ActorBase GetExecutor()
+        {
+            return DirectorActor.GetInstance();
         }
     }
 }

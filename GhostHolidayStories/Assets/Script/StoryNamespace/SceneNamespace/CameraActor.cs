@@ -30,8 +30,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             if(focusActor != null)
             {
-                gameObject.transform.localPosition = focusActor.GetPosition();
+                Vector3 focusActorPosition = focusActor.GetPosition();
+                gameObject.transform.localPosition = new Vector3(focusActorPosition.x, focusActorPosition.y, gameObject.transform.localPosition.z);
             }
+            base.Update();
         }
 
         protected override ActorBase CreateActor(XElement node)

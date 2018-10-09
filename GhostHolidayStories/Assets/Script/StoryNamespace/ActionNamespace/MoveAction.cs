@@ -55,8 +55,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         public override void Execute(ActorBase executor)
         {
             lastTime = Time.time;
-            lastPosition = actor.GetPosition();
+            lastPosition = executor.GetPosition();
             newPosition = position;
+            actor = executor;
             switch (moveState)
             {
                 case MoveState.Set:

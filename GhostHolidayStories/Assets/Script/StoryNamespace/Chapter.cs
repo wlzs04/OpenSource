@@ -65,10 +65,10 @@ namespace Assets.Script.StoryNamespace
         /// <summary>
         /// 开始本章
         /// </summary>
-        public void Start(int sectionIndex)
-        {
-            sectionList[sectionIndex].Start();
-        }
+        //public void Start(int sectionIndex)
+        //{
+        //    sectionList[sectionIndex].Start();
+        //}
 
         public Section GetSection(int sectionIndex)
         {

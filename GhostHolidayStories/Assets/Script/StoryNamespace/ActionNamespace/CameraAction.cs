@@ -76,5 +76,10 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 }
             }
         }
+
+        public override ActorBase GetExecutor()
+        {
+            return CameraActor.GetInstance();
+        }
     }
 }

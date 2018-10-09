@@ -10,19 +10,16 @@ public class AudioPlayer : MonoBehaviour {
 
     GameManager gameManager = null;
 
-    //AudioClip backAudio = null;
     AudioSource audioSource = null;
 
     Dictionary<string, AudioClip> audioMap = new Dictionary<string, AudioClip>();
 
-    // Use this for initialization
     void Start ()
     {
         audioSource = GetComponent<AudioSource>();
         gameManager = GameManager.GetInstance();
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
         gameManager.Update();
@@ -36,7 +33,7 @@ public class AudioPlayer : MonoBehaviour {
     {
         if(!audioMap.ContainsKey(audioPath))
         {
-            StartCoroutine(AddAudioClip(audioPath));
+            StartCoroutine(AddAudioClip(audioPath,true));
             return;
         }
         audioSource.clip = audioMap[audioPath];
@@ -48,7 +45,7 @@ public class AudioPlayer : MonoBehaviour {
     /// </summary>
     /// <param name="audioPath"></param>
     /// <returns></returns>
-    IEnumerator AddAudioClip(string audioPath)
+    IEnumerator AddAudioClip(string audioPath,bool playIt)
     {
         WWW www = new WWW(audioPath);
         while (!www.isDone)
@@ -57,9 +54,19 @@ public class AudioPlayer : MonoBehaviour {
         }
         AudioClip audio = www.GetAudioClip(false, false, AudioType.OGGVORBIS);
         audioMap[audioPath] = audio;
-        audioSource.clip = audioMap[audioPath];
-        audioSource.Play();
+        if(playIt)
+        {
+            audioSource.clip = audioMap[audioPath];
+            audioSource.Play();
+        }
         yield return audio;
     }
 
+    /// <summary>
+    /// 停止背景音乐
+    /// </summary>
+    public void StopBackAudio()
+    {
+        audioSource.Stop();
+    }
 }

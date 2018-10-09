@@ -25,20 +25,16 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute()
+        public override void Execute(ActorBase executor)
         {
             talkTime++;
             if (onlyTalkByTime != 0 && talkTime != onlyTalkByTime)
             {
-                actionCompleteCallBack.Invoke();
+                Complete();
                 return;
             }
-            DirectorActor.SetUI(StoryUIState.Talk);
-            TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
-            talkUIScript.SetActorName(actorName);
-            talkUIScript.SetContent(content);
-            talkUIScript.SetAudio(audio);
-            talkUIScript.SetCompleteCallBack(actionCompleteCallBack);
+
+            DirectorActor.UITalk(actorName, content, audio, Complete);
         }
 
         protected override ActionBase CreateAction(XElement node)

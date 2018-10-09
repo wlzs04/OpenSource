@@ -22,6 +22,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             if (executor is DirectorActor)
             {
                 this.executor = executor;
+                DirectorActor.GetInstance().StopExecuteStoryAction();
             }
             else
             {
@@ -37,9 +38,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             return action;
         }
 
-        protected override void Complete()
+        public override ActorBase GetExecutor()
         {
-            
+            return DirectorActor.GetInstance();
         }
     }
 }
