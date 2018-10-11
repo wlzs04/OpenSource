@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.ActionNamespace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class OptionItemUIScript : MonoBehaviour, IPointerClickHandler
+public class OptionItemUIScript : MonoBehaviour, IPointerClickHandler,IPointerEnterHandler, IPointerExitHandler
 {
     Text optionText = null;
     Action callBack = null;
@@ -37,5 +38,15 @@ public class OptionItemUIScript : MonoBehaviour, IPointerClickHandler
         {
             callBack();
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        transform.localScale = new Vector3(1.05f,1.05f,1);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        transform.localScale = new Vector3(1, 1, 1);
     }
 }

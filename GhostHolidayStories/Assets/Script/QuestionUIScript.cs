@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Script.StoryNamespace.ActionNamespace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,5 +32,16 @@ public class QuestionUIScript : MonoBehaviour {
     public void AddOption(string content,Action callBack)
     {
         GameObject.Instantiate(optionPrefab, back).GetComponent<OptionItemUIScript>().SetContent(content,callBack);
+    }
+
+    /// <summary>
+    /// 清空所有选项
+    /// </summary>
+    public void ClearAllOption()
+    {
+        for (int i = back.childCount-1; i >=0 ; i--)
+        {
+            GameObject.DestroyImmediate(back.GetChild(i).gameObject);
+        }
     }
 }

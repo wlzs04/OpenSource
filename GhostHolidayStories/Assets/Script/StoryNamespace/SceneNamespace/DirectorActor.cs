@@ -29,16 +29,21 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         //主演属性
         float influenceRange = 200;//影响的范围
-        float speed = 200;//速度
+        float speed = 500;//速度
 
         List<ActionBase> storyActionList = new List<ActionBase>();
         bool needExecuteStoryAction = true;//判断是否需要让演员执行指令
 
         int currentActionIndex = 0;//当前执行的指令位置
 
+        Transform canvasTransform = null;
+
+        //UI根节点列表
+        static Dictionary<StoryUIState, GameObject> uiRootMap;
+
         private DirectorActor() : base("Director")
         {
-
+            InitUI();
         }
 
         public static DirectorActor GetInstance()
@@ -64,7 +69,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     }
                 }
             }
-            else
+            else if(gameState==GameState.Free) 
             {
                 GetUserInput();
             }
@@ -88,12 +93,12 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 actor = CheckInteractive();
                 if (actor != null)
                 {
-                    (actor as InteractiveActor).Interactive(starringActor);
+                    actor.Interactive(starringActor);
                 }
             }
             else
             {
-                if (starringActor!=null)
+                if (starringActor != null)
                 {
                     float move = speed * Time.deltaTime;
                     float mx = 0;
@@ -129,9 +134,37 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             return null;
         }
 
+        void InitUI()
+        {
+            uiRootMap = new Dictionary<StoryUIState, GameObject>();
+            canvasTransform = GameObject.Find("Canvas").transform;
+
+            foreach (StoryUIState item in Enum.GetValues(typeof(StoryUIState)))
+            {
+                if (item == StoryUIState.Hide)
+                {
+                    continue;
+                }
+                GameObject uiPrefab = Resources.Load<GameObject>("UI/" + item.ToString() + "UIRootPrefab");
+                if (uiPrefab == null)
+                {
+                    GameManager.ShowErrorMessage("资源目录下缺少" + item.ToString() + "预设文件！");
+                    continue;
+                }
+                GameObject uiRootObject = GameObject.Instantiate(uiPrefab, canvasTransform);
+                uiRootObject.SetActive(false);
+                uiRootObject.name = item.ToString() + "UIRootPrefab";
+                uiRootMap.Add(item, uiRootObject);
+            }
+        }
+
         public static void UIHide()
         {
-
+            currentStoryUIState = StoryUIState.Hide;
+            foreach (var item in uiRootMap)
+            {
+                item.Value.SetActive(false);
+            }
         }
 
         public static void UITalk(ActorBase actor,string content, string audio, ActionCompleteCallBack callBack)
@@ -141,9 +174,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         public static void UITalk(string actorName, string content,string audio, ActionCompleteCallBack callBack)
         {
+            UIHide();
             currentStoryUIState = StoryUIState.Talk;
-
-            TalkUIScript talkUIScript = GameObject.Find("TalkUIRootPrefab").GetComponent<TalkUIScript>();
+            uiRootMap[currentStoryUIState].SetActive(true);
+            TalkUIScript talkUIScript = uiRootMap[currentStoryUIState].GetComponent<TalkUIScript>();
+            talkUIScript.Init();
             talkUIScript.SetActorName(actorName);
             talkUIScript.SetContent(content);
             talkUIScript.SetAudio(audio);
@@ -152,9 +187,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         public static void UIQuestion(List<OptionAction> optionList)
         {
+            UIHide();
             currentStoryUIState = StoryUIState.Question;
-
-            QuestionUIScript script = GameObject.Find("QuestionUIRootPrefab").GetComponent<QuestionUIScript>();
+            uiRootMap[currentStoryUIState].SetActive(true);
+            QuestionUIScript script = uiRootMap[currentStoryUIState].GetComponent<QuestionUIScript>();
+            script.ClearAllOption();
             foreach (var item in optionList)
             {
                 script.AddOption(item.GetContent(), () => { item.Execute(directorActor.GetStarringActor()); });
@@ -246,14 +283,23 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         }
 
         /// <summary>
-        /// 设置接下来所有的指令，
+        /// 开始执行指令
+        /// </summary>
+        public void StartStoryAction()
+        {
+            needExecuteStoryAction = true;
+            currentActionIndex = 0;
+            storyActionList[currentActionIndex].Execute();
+        }
+
+        /// <summary>
+        /// 添加接下来所有的指令，
         /// 一般用于主线、支线和角色之间对话的信息，
         /// 为章节文件传入主线指令或角色自带指令
         /// </summary>
         /// <param name="actionList"></param>
-        public void SetStoryAction(List<ActionBase> actionList)
+        public void AddStoryAction(List<ActionBase> actionList)
         {
-            storyActionList.Clear();
             if(actionList.Count>0)
             {
                 foreach (var item in actionList)
@@ -262,8 +308,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     storyActionList.Add(item);
                 }
                 needExecuteStoryAction = true;
-                currentActionIndex = 0;
-                storyActionList[0].Execute();
             }
         }
 

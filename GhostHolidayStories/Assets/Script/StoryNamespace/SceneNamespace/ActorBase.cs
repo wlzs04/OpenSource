@@ -106,9 +106,14 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     }
                 }
             }
-            if (actionCacheList.Count == 0)
+            if (actionCacheList.Count == 0&& actionQueue.Count==0)
             {
                 inExecution = false;
+                if(inInteractive)
+                {
+                    inInteractive = false;
+                }
+                DirectorActor.GetInstance().SetGameState(GameState.Free);
             }
         }
 
@@ -185,6 +190,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             scene.AddActor(this);
             gameObject.transform.parent = scene.GetGameObject().transform;
             gameObject.transform.localPosition = position;
+            GameManager.ShowDebugMessage("演员：" + name + "入场："+ scene.GetName()+ "!");
         }
 
         /// <summary>
@@ -205,6 +211,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             gameObject.transform.parent = null;
             scene = null;
             GameObject.DestroyImmediate(gameObject);
+            GameManager.ShowDebugMessage("演员：" + name + "退场！");
         }
 
         /// <summary>
@@ -386,8 +393,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             {
                 foreach (var item in actionList)
                 {
-                    actionQueue.Enqueue(item);
+                    item.Init();
+                    AddActionToQueue(item);
                 }
+                DirectorActor.GetInstance().SetGameState(GameState.Interactive);
             }
         }
 

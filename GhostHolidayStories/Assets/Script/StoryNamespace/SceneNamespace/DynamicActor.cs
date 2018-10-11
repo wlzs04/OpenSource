@@ -30,7 +30,6 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             base.LoadContent(node);
 
             rigidBody.bodyType = RigidbodyType2D.Dynamic;
-
         }
     }
 }

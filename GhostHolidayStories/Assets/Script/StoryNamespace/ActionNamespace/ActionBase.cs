@@ -14,8 +14,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     enum GameState
     {
-        Controlled,//角色受控制，玩家无法控制角色，一般用在剧情中。
-        Free,//角色由玩家控制。
+        Controlled,//角色受控制，玩家无法操作角色，一般用在剧情中
+        Interactive,//角色交互中，玩家无法移动角色，但可以进行选择确定等操作，一般用在交互中
+        Free,//角色由玩家控制
     }
 
     /// <summary>
@@ -49,6 +50,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     abstract class ActionBase
     {
+        string simpleActionClassName = "Action";//指令类型简称
         //所有合法指令类型
         static Dictionary<string, ActionBase> legalActionMap = new Dictionary<string, ActionBase>();
 
@@ -57,7 +59,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         protected ActionResult actionResult;//指令执行后的反馈
         protected bool isAsync = false;//是否此指令执行的同时执行下一条指令
         protected bool endAllAction = false;//判断此指令执行后结束以下所有指令
-        string simpleActionClassName = "Action";
+        protected bool executeByStarringActor = false;//是否由主角进行执行
 
         protected ActorBase executor = null;//执行者
         protected bool isCompleted = false;//是否完成
@@ -69,6 +71,10 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public virtual ActorBase GetExecutor()
         {
+            if(executeByStarringActor)
+            {
+                return DirectorActor.GetInstance().GetStarringActor();
+            }
             if(actorName!="")
             {
                 return World.GetInstance().GetActor(actorName);
@@ -77,7 +83,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         }
 
         /// <summary>
-        /// 指令初始化，清空已完成等状态
+        /// 初始化指令，清空已完成等状态
         /// </summary>
         public virtual void Init()
         {

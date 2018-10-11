@@ -288,7 +288,8 @@ namespace Assets.Script.StoryNamespace
         {
             Section currentSection = chapterList[currentSave.GetChapterIndex()].GetSection(currentSave.GetSectionIndex());
             SetCurrentSceneByName(currentSection.GetSceneName());
-            directorActor.SetStoryAction(currentSection.GetActionList());
+            directorActor.AddStoryAction(currentSection.GetActionList());
+            directorActor.StartStoryAction();
         }
 
         /// <summary>

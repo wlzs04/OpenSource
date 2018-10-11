@@ -16,8 +16,36 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         List<OptionAction> optionList = new List<OptionAction>();
 
+        OptionAction currentOptionAction = null;
+
         public QuestionAction() : base("Question")
         {
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if(currentOptionAction!=null)
+            {
+                if(!currentOptionAction.IsCompleted())
+                {
+                    currentOptionAction.Update();
+                }
+                else
+                {
+                    currentOptionAction.Init();
+                    if(isLoop&& !currentOptionAction.GetEndLoop())
+                    {
+                        currentOptionAction = null;
+                        ShowOption();
+                    }
+                    else
+                    {
+                        currentOptionAction = null;
+                        Complete();
+                    }
+                }
+            }
         }
 
         public override void Execute(ActorBase executor)
@@ -65,7 +93,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 OptionAction action = (OptionAction)LoadAction(item);
                 if (action != null)
                 {
-                    optionList.Add(action);
+                    AddOption(action);
                 }
                 else
                 {
@@ -75,11 +103,30 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         }
 
         /// <summary>
+        /// 向问题指令中添加选项指令
+        /// </summary>
+        /// <param name="optionAction"></param>
+        void AddOption(OptionAction optionAction)
+        {
+            optionAction.SetQuestionActionAndIndex(this, optionList.Count);
+            optionList.Add(optionAction);
+        }
+
+        /// <summary>
         /// 显示选项
         /// </summary>
         protected void ShowOption()
         {
             DirectorActor.UIQuestion(optionList);
+        }
+
+        /// <summary>
+        /// 选择指定选项
+        /// </summary>
+        /// <param name="index"></param>
+        public void ChooseOption(int index)
+        {
+            currentOptionAction = optionList[index];
         }
     }
 }

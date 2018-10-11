@@ -36,10 +36,14 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         stringBuilder.AppendLine(item.GetName() + ":" + item.GetNumber());
                     }
                 }
-
-                executor.RemoveFromScene();
                 GameManager.ShowTip(stringBuilder.ToString());
             }
+            else
+            {
+                GameManager.ShowErrorMessage("获得物品指令执行时没有发现执行者。");
+
+            }
+            Complete();
         }
 
         protected override ActionBase CreateAction(XElement node)

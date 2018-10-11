@@ -71,7 +71,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override void Complete()
         {
-            //base.Complete();
+            DirectorActor.UIHide();
+            base.Complete();
         }
     }
 }

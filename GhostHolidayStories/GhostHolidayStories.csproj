@@ -243,6 +243,7 @@
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\MoveAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\OptionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\QuestionAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\QuitAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\RandomAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StarringAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StopAction.cs" />
@@ -271,10 +272,10 @@
     <None Include="Assets\Data\Stories\捕蛇\Config\ObjectInfo.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Save\00.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Save\01.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Story.xml">
+    <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Assets\Data\Stories\捕蛇\Story.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Video\temp.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -45,6 +45,18 @@ public class TalkUIScript : MonoBehaviour, IPointerClickHandler
 	}
 
     /// <summary>
+    /// 初始化TalkUI，清空角色名称等信息
+    /// </summary>
+    public void Init()
+    {
+        actorNameText.text = "";
+        contentText.text = "";
+        talkAudio.Stop();
+        talkAudio.clip = null;
+        completeAction = null;
+    }
+
+    /// <summary>
     /// 设置演员名称
     /// </summary>
     /// <param name="actorName"></param>
@@ -92,6 +104,5 @@ public class TalkUIScript : MonoBehaviour, IPointerClickHandler
         {
             completeAction();
         }
-        //GameManager.GetInstance().SetUI(UIState.Clean);
     }
 }
