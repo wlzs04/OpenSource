@@ -20,7 +20,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         static StoryUIState currentStoryUIState;
 
-        GameState gameState;
+        GameState gameState= GameState.Free;
 
         Scene currentScene = null;
 
@@ -32,7 +32,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         float speed = 500;//速度
 
         List<ActionBase> storyActionList = new List<ActionBase>();
-        bool needExecuteStoryAction = true;//判断是否需要让演员执行指令
+        bool needExecuteStoryAction = false;//判断是否需要让演员执行指令
 
         int currentActionIndex = 0;//当前执行的指令位置
 
@@ -169,7 +169,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         public static void UITalk(ActorBase actor,string content, string audio, ActionCompleteCallBack callBack)
         {
-            UITalk(actor.GetName(), content, audio, callBack);
+            UITalk(actor!=null?actor.GetName():"", content, audio, callBack);
         }
 
         public static void UITalk(string actorName, string content,string audio, ActionCompleteCallBack callBack)
@@ -194,8 +194,9 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             script.ClearAllOption();
             foreach (var item in optionList)
             {
-                script.AddOption(item.GetContent(), () => { item.Execute(directorActor.GetStarringActor()); });
+                script.AddOption(item.GetContent(), () => { item.Execute(directorActor.GetStarringActor()); }, item.GetSelectedMark());
             }
+            script.SetFocusIndex(0);
         }
 
         /// <summary>
@@ -242,9 +243,11 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             }
             if (starringActor != null)
             {
+                starringActor.SetCanMove(false);
                 GameManager.ShowErrorMessage("主演:" + starringActor.GetName() + "被替换为：" + actor.GetName());
             }
             starringActor = actor;
+            starringActor.SetCanMove(true);
         }
 
         /// <summary>

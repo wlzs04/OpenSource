@@ -12,7 +12,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     class EnterAction : ActionBase
     {
-        ActorBase enterActor = null;
+        XElement enterActorElement = null;
+        //ActorBase enterActor = null;
 
         public EnterAction():base("Enter")
         {
@@ -21,6 +22,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         public override void Execute(ActorBase executor)
         {
+            ActorBase enterActor= ActorBase.LoadActor(enterActorElement);
             enterActor.SetScene(GameManager.GetCurrentStory().GetCurrentScene());
             Complete();
         }
@@ -35,18 +37,13 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         protected override void LoadContent(XElement node)
         {
             base.LoadContent(node);
-            foreach (var item in node.Elements())
+            if(node.HasElements)
             {
-                if(enterActor == null)
-                {
-                    enterActor = ActorBase.LoadActor(item);
-                }
-                else
-                {
-                    ActorBase newActor= ActorBase.LoadActor(item);
-                    GameManager.ShowErrorMessage("入场的演员:"+ newActor .GetName()+ "已存在，将会被新演员："+ newActor.GetName()+ "代替！");
-                    enterActor = newActor;
-                }
+                enterActorElement = node.Elements().First();
+            }
+            else
+            {
+                GameManager.ShowErrorMessage("入场指令中不存在演员！");
             }
         }
 

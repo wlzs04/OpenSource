@@ -323,7 +323,12 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = layer;
             gameObject.GetComponent<SpriteRenderer>().size = new Vector2(width, height);
         }
-        
+
+        public Vector2 GetSize()
+        {
+            return new Vector2(width, height);
+        }
+
         /// <summary>
         /// 设置位置
         /// </summary>
@@ -419,6 +424,15 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             inExecution = true;
             actionQueue.Enqueue(action);
+        }
+
+        /// <summary>
+        /// 设置演员是否可以移动，一般用于让主演移动
+        /// </summary>
+        /// <param name="canMove"></param>
+        public void SetCanMove(bool canMove)
+        {
+            rigidBody.bodyType = canMove? RigidbodyType2D.Dynamic:RigidbodyType2D.Static;
         }
     }
 }

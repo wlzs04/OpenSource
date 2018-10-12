@@ -14,14 +14,32 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     {
         List<ActionBase> actionList = new List<ActionBase>();
         Random random = new Random();
+        int selectedActionIndex = -1;
 
         public RandomAction() : base("Random")
         {
         }
 
+        public override void Update()
+        {
+            base.Update();
+            actionList[selectedActionIndex].Update();
+            if (selectedActionIndex!=-1&& actionList[selectedActionIndex].IsCompleted())
+            {
+                Complete();
+                actionList[selectedActionIndex].Init();
+            }
+        }
+
         public override void Execute(ActorBase executor)
         {
-            actionList[random.Next(actionList.Count)].Execute(executor);
+            if(actionList.Count<=0)
+            {
+                Complete();
+                return;
+            }
+            selectedActionIndex = random.Next(actionList.Count);
+            actionList[selectedActionIndex].Execute();
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -50,7 +68,13 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override void Complete()
         {
-            //base.Complete();
+            base.Complete();
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            selectedActionIndex = -1;
         }
     }
 }

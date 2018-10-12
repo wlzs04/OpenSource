@@ -207,6 +207,7 @@ namespace Assets.Script
         public static void ChooseStory(string storyName)
         {
             currentStory = new Story(storyName);
+            currentStory.LoadInfo();
         }
 
         /// <summary>

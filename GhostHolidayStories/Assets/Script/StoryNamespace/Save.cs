@@ -1,4 +1,5 @@
 ﻿using Assets.Script.Helper;
+using Assets.Script.StoryNamespace.SceneNamespace;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,18 @@ namespace Assets.Script.StoryNamespace
     {
         int index = 0;
         string savePath;
+
+        //需要保存的内容
         DateTime createTime;
         DateTime lastSaveTime;
-        TimeSpan playTime;
         int chapterIndex = 0;
         int sectionIndex = 0;
-        int actionIndex = 0;
         string sceneName="";
         Vector2 position;
+        XElement starringActorElement = null;
 
         Sprite image = null;
+        TimeSpan playTime=new TimeSpan();
 
         private Save(string savePath, int index)
         {
@@ -104,9 +107,6 @@ namespace Assets.Script.StoryNamespace
                     case "sectionIndex":
                         sectionIndex = Convert.ToInt32(attribute.Value);
                         break;
-                    case "actionIndex":
-                        actionIndex = Convert.ToInt32(attribute.Value);
-                        break;
                     case "sceneName":
                         sceneName = attribute.Value;
                         break;
@@ -122,7 +122,13 @@ namespace Assets.Script.StoryNamespace
                 }
             }
 
-            playTime = lastSaveTime - createTime;
+            foreach (var item in root.Elements())
+            {
+                if (item.Name== "Starring")
+                {
+                    starringActorElement = item.Elements().First();
+                }
+            }
 
             image = ImageHelper.LoadSprite(savePath.Substring(0, savePath.LastIndexOf(".")) + ".jpg");
         }
@@ -133,7 +139,6 @@ namespace Assets.Script.StoryNamespace
         public void SaveGameData()
         {
             lastSaveTime = DateTime.Now;
-            playTime = lastSaveTime - createTime;
 
             XDocument doc = new XDocument(
                 new XElement("Save",
@@ -148,6 +153,11 @@ namespace Assets.Script.StoryNamespace
             doc.Save(savePath);
         }
 
+        public TimeSpan GetPlayTime()
+        {
+            return playTime;
+        }
+
         public int GetChapterIndex()
         {
             return chapterIndex;
@@ -158,11 +168,6 @@ namespace Assets.Script.StoryNamespace
             return sectionIndex;
         }
         
-        public int GetActionIndex()
-        {
-            return actionIndex;
-        }
-
         public string GetSceneName()
         {
             return sceneName;
@@ -173,14 +178,19 @@ namespace Assets.Script.StoryNamespace
             return image;
         }
 
-        public TimeSpan GetPlayTime()
-        {
-            return playTime;
-        }
-
         public int GetIndex()
         {
             return index;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
+
+        public XElement GetStarringActorElement()
+        {
+            return starringActorElement;
         }
     }
 }

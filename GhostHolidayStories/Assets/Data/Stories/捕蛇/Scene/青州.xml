@@ -1,10 +1,10 @@
 ﻿<Scene position="0,0">
-  <Static name="grass" image="grass.png" width="1000" height="1000" isBlock="false" layer="0" position="0,0"/>
+  <Static name="grass1" image="grass.png" width="1000" height="1000" isBlock="false" layer="0" position="0,0"/>
   <Static name="home1" image="house1.png" width="100" height="100" isBlock="true" layer="1" position="200,200"/>
   <Static name="home2" image="house2.png" width="200" height="200" isBlock="true" layer="1" position="700,700"/>
   <Static name="cloud" image="cloud1.png" width="200" height="200" isBlock="false" layer="2" position="0,0"/>
-  <Dynamic name="person1" width="100" height="100" isBlock="true" layer="1" position="400,400" actionExecuteCondition="None">
-    <Animation isAsync="true" loopTime="0" onceTime="0.5" row="1" column="4" image="person1.png" />
+  <Dynamic name="person1" width="100" height="100" isBlock="true" layer="1" position="600,600" actionExecuteCondition="None">
+    <Animation actor="person1" isAsync="true" loopTime="-1" onceTime="0.5" row="1" column="4" image="person1.png" />
   </Dynamic>
   <Pickable name="pick1" image="money.png" width="50" height="50" position="0,400" playDefaultAnimation="true">
     <GetObject>
@@ -14,57 +14,47 @@
     <Quit />
   </Pickable>
   <Interactive name="普通人" image="person2.png" width="100" height="200" position="0,600" playDefaultAnimation="true" isBlock="true">
-    <Talk content="你好,我是普通人。" onlyTalkByTime="1" />
-    <Talk content="你很健谈啊！" audio="normalPersonTalk02.mp3" onlyTalkByTime="10"/>
-    <Question showContent="false" isLoop="true">
-      <Option content="（你看着他的上半身。）" changeStateAfterSelect="true">
-        <Talk actor="普通人" content="此人头上戴着束发嵌宝紫金冠，齐眉勒着二龙抢珠金抹额，穿一件二色金百蝶穿花大红箭袖。"/>
-      </Option>
-      <Option content="（你看着他的下半身。）">
-        <Talk actor="普通人" content="此人束着五彩丝攒花结长穗宫绦，外罩石青起花八团倭锻排穗褂，登着青缎粉底小朝靴。"/>
-      </Option>
-      <Option content="不想看了。" endLoop="true">
-        <Talk actor="普通人" content="????????"/>
-      </Option>
-      <Option content="（好眼熟，问问他是谁。）" endLoop="true">
-        <Talk executeByStarringActor="true" content="请问您是···贾宝玉？"/>
-        <Talk actor="普通人" content="不是。"/>
-        <Talk executeByStarringActor="true" content="抱歉，认错了。"/>
-      </Option>
-    </Question>
-    <!--<Random>
+    <Talk actor="普通人" content="你好,我是普通人。" onlyTalkByTime="1" />
+    <Talk actor="普通人" content="你很健谈啊！" audio="normalPersonTalk02.mp3" onlyTalkByTime="10"/>
+    <Random>
       <Question content="你找我有事吗？" isLoop="true">
         <Option content="请问这里是哪里？" changeStateAfterSelect="true">
-          <Talk content="这里是青州。"/>
+          <Talk actor="普通人" content="这里是青州。"/>
         </Option>
         <Option content="请问这附近有什么客栈吗？">
           <Random>
-            <Talk content="向东走40步左右有间悦来客栈。"/>
-            <Talk content="向北走20步左右有间平阳客栈。"/>
+            <Talk actor="普通人" content="向东走40步左右有间悦来客栈。"/>
+            <Talk actor="普通人" content="向北走20步左右有间平阳客栈。"/>
           </Random>
         </Option>
-        <Option content="突然想起来有事，我先走了？" endAllAction="true"/>
+        <Option content="突然想起来有事，我先走了？" endLoop="true"/>
         <Option content="...没事。" endLoop="true"/>
       </Question>
       <Question showContent="false" isLoop="true">
         <Option content="（你看着他的上半身。）" changeStateAfterSelect="true">
-          <Talk content="此人头上戴着束发嵌宝紫金冠，齐眉勒着二龙抢珠金抹额，穿一件二色金百蝶穿花大红箭袖。"/>
+          <Talk actor="普通人" content="此人头上戴着束发嵌宝紫金冠，齐眉勒着二龙抢珠金抹额，穿一件二色金百蝶穿花大红箭袖。"/>
         </Option>
         <Option content="（你看着他的下半身。）">
-          <Talk content="此人束着五彩丝攒花结长穗宫绦，外罩石青起花八团倭锻排穗褂，登着青缎粉底小朝靴。"/>
+          <Talk actor="普通人" content="此人束着五彩丝攒花结长穗宫绦，外罩石青起花八团倭锻排穗褂，登着青缎粉底小朝靴。"/>
         </Option>
-        <Option content="不想看了。">
-          <Talk content="????????" endAllAction="true"/>
+        <Option content="不想看了。" endLoop="true">
+          <Talk actor="普通人" content="????????"/>
         </Option>
         <Option content="（好眼熟，问问他是谁。）" endLoop="true">
-          <Talk content="请问您是···贾宝玉？"/>
-          <Talk content="不是。"/>
-          <Talk content="抱歉，认错了。"/>
+          <Talk executeByStarringActor="true" content="请问您是···贾宝玉？"/>
+          <Talk actor="普通人" content="不是。"/>
+          <Talk executeByStarringActor="true" content="抱歉，认错了。"/>
         </Option>
       </Question>
-      <Talk content="我现在有点忙。" endAllAction="true"/>
+      <Talk actor="普通人" content="我现在有点忙。"/>
     </Random>
-    -->
-    <Talk content="那好吧，再见。"/>
+    <Talk actor="普通人" content="那好吧，再见。"/>
+  </Interactive>
+
+  <Interactive name="守卫1" image="person2.png" width="100" height="200" position="500,0" playDefaultAnimation="true" isBlock="true">
+    <StartSection chapterIndex="0" sectionIndex ="1"/>
+  </Interactive>
+  <Interactive name="守卫2" image="person2.png" width="100" height="200" position="700,0" playDefaultAnimation="true" isBlock="true">
+    <Talk actor="守卫2" content="不要找我，去问另一个。"/>
   </Interactive>
 </Scene>

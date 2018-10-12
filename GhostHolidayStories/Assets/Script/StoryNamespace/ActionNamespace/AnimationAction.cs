@@ -41,9 +41,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 if (currentImageIndex == 0)
                 {
                     haveLoopTime++;
-                    if (haveLoopTime >= loopTime)
+                    if (loopTime!=-1&&haveLoopTime >= loopTime)
                     {
                         executor.GetGameObject().GetComponent<SpriteRenderer>().sprite = oldImage;
+                        Complete();
+                        return;
                     }
                 }
                 executor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
@@ -64,6 +66,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 for (int j = 0; j < column; j++)
                 {
                     Sprite sprite = Sprite.Create(texture, new Rect(j * everyWidth, i * everyHeight, everyWidth, everyHeight), Vector2.zero);
+                    
                     imageList.Add(sprite);
                 }
             }
@@ -72,6 +75,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             changeAfterTime = onceTime / row / column;
             oldImage = executor.GetGameObject().GetComponent<SpriteRenderer>().sprite;
             executor.GetGameObject().GetComponent<SpriteRenderer>().sprite = imageList[currentImageIndex];
+            executor.GetGameObject().GetComponent<SpriteRenderer>().size=executor.GetSize();
         }
 
         protected override ActionBase CreateAction(XElement node)

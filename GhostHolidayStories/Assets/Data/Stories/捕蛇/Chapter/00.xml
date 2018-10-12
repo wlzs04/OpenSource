@@ -7,21 +7,21 @@
     </Enter>
     <Move actor="test" position="400,400" moveState="Set"/>
     <Camera followActor="test" isAsync="false" needTime="0" moveState="Set"/>
-    <!--
     <Animation actor="test" isAsync="true" loopTime="4" onceTime="0.5" row="1" column="4" image="person1.png" />
     <Move actor="test" isAsync="false" needTime="2" position="500,500" moveState="AI"/>
-    -->
     <Starring actor="test"/>
     <Game gameState="Free"/>
     <Cut/>
 	</Section>
 	<Section index="1" sceneName="青州" description="青州知府派人接待。">
+    <Action/>
     <Game gameState="Controlled"/>
-    <Move actor="test" position="100,100" moveState="Set"/>
-    <Camera followActor="test" isAsync="false" needTime="0" moveState="Set"/>
-    <Animation actor="test" isAsync="true" isLoop="true" needTime="2" isTalk="false" animationName="Walk" />
-    <Move actor="test" needTime="2" position="500,500" moveState="AI"/>
-    <Stop actor="test" />
+    <Animation actor="test" isAsync="true" loopTime="1" onceTime="0.5" row="1" column="4" image="person1.png" />
+    <Move actor="test" position="400,200" needTime="0.5" moveState="AI"/>
+    <Move actor="test" position="500,200" needTime="0.5" moveState="AI"/>
+    <Talk actor="test" content="请问这里是青州吗？"/>
+    <Talk actor="守卫1" content="是，不过你不能进去！"/>
     <Game gameState="Free"/>
+    <Cut/>
 	</Section>
 </Chapter>

@@ -34,7 +34,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 return;
             }
 
-            DirectorActor.UITalk(actorName, content, audio, Complete);
+            DirectorActor.UITalk(executor.GetName(), content, audio, Complete);
         }
 
         protected override ActionBase CreateAction(XElement node)

@@ -18,9 +18,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         QuestionAction questionAction = null;//本选项所存在的问题指令
         int index = 0;//当前选项为问题的第几个选项
+        bool haveSelected = false;//是否被选中过
 
         List<ActionBase> actionList = new List<ActionBase>();//当选择此项后进行的下一项指令
-        int currentActionIndex = 0;
+        int currentActionIndex = 0;//当前执行到了那个指令
+        List<ActionBase> actionCacheList = new List<ActionBase>();
 
         public OptionAction():base("Option")
         {
@@ -33,13 +35,22 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 Complete();
             }
-            if (actionList[currentActionIndex].IsCompleted())
+            for (int i = actionCacheList.Count-1; i >=0; i--)
+            {
+                actionCacheList[i].Update();
+                if(actionCacheList[i].IsCompleted())
+                {
+                    actionCacheList.RemoveAt(i);
+                }
+            }
+            if (actionList[currentActionIndex].IsCompleted()|| actionList[currentActionIndex].IsAsync())
             {
                 for (int i = currentActionIndex + 1; i < actionList.Count; i++)
                 {
                     currentActionIndex++;
                     ActionBase action = actionList[i];
                     action.Execute();
+                    actionCacheList.Add(action);
                     if (!action.IsAsync())
                     {
                         break;
@@ -53,14 +64,18 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             GameManager.ShowDebugMessage(executor.GetName()+"选择了："+content);
 
             questionAction.ChooseOption(index);
+            haveSelected = true;
 
             if(actionList.Count == 0)
             {
                 Complete();
             }
-
-            ActionBase action = actionList[currentActionIndex];
-            action.Execute();
+            else
+            {
+                ActionBase action = actionList[currentActionIndex];
+                action.Execute();
+                actionCacheList.Add(action);
+            }
         }
 
         public override void Init()
@@ -132,6 +147,15 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         public bool GetEndLoop()
         {
             return endLoop;
+        }
+
+        /// <summary>
+        /// 获得此选项是否有被选过的痕迹
+        /// </summary>
+        /// <returns></returns>
+        public bool GetSelectedMark()
+        {
+            return changeStateAfterSelect && haveSelected;
         }
     }
 }

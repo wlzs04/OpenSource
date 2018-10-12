@@ -169,6 +169,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     case "isAsync":
                         isAsync = Convert.ToBoolean(item.Value);
                         break;
+                    case "executeByStarringActor":
+                        executeByStarringActor = Convert.ToBoolean(item.Value);
+                        break;
                     default:
                         break;
                 }

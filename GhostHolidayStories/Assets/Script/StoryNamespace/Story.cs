@@ -55,7 +55,6 @@ namespace Assets.Script.StoryNamespace
         {
             this.name = name;
             storyPath = GameManager.GetStoriesPath() + name;
-            LoadInfo();
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Assets.Script.StoryNamespace
         /// <summary>
         /// 加载故事信息
         /// </summary>
-        private void LoadInfo()
+        public void LoadInfo()
         {
             LoadConfig();
             LoadSave();
@@ -247,9 +246,20 @@ namespace Assets.Script.StoryNamespace
             if(currentSave.GetSceneName()!="")
             {
                 LoadScene(currentSave.GetSceneName());
+                SetCurrentSceneByName(currentSave.GetSceneName());
             }
             directorActor = DirectorActor.GetInstance();
             cameraActor = CameraActor.GetInstance();
+
+            //如果主演存在加载主演
+            if(currentSave.GetStarringActorElement()!=null)
+            {
+                ActorBase actor = ActorBase.LoadActor(currentSave.GetStarringActorElement());
+                actor.SetScene(currentScene);
+                actor.SetPosition(currentSave.GetPosition());
+                directorActor.SetStarringActor(actor);
+                cameraActor.SetFollowActor(actor);
+            }
         }
 
         /// <summary>
@@ -287,6 +297,17 @@ namespace Assets.Script.StoryNamespace
         private void StartContent()
         {
             Section currentSection = chapterList[currentSave.GetChapterIndex()].GetSection(currentSave.GetSectionIndex());
+            SetCurrentSceneByName(currentSection.GetSceneName());
+            directorActor.AddStoryAction(currentSection.GetActionList());
+            directorActor.StartStoryAction();
+        }
+
+        /// <summary>
+        /// 开始新章节
+        /// </summary>
+        public void StartNewChapterSection(int chapterIndex,int sectionIndex)
+        {
+            Section currentSection = chapterList[chapterIndex].GetSection(sectionIndex);
             SetCurrentSceneByName(currentSection.GetSceneName());
             directorActor.AddStoryAction(currentSection.GetActionList());
             directorActor.StartStoryAction();
