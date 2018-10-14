@@ -10,7 +10,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// <summary>
     /// 选项指令：一般用于对话中,由玩家在给定选项中进行选择
     /// </summary>
-    class OptionAction : ActionBase
+    class OptionAction : MultiplyAction
     {
         string content = "";
         bool changeStateAfterSelect = false;
@@ -20,43 +20,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         int index = 0;//当前选项为问题的第几个选项
         bool haveSelected = false;//是否被选中过
 
-        List<ActionBase> actionList = new List<ActionBase>();//当选择此项后进行的下一项指令
-        int currentActionIndex = 0;//当前执行到了那个指令
-        List<ActionBase> actionCacheList = new List<ActionBase>();
-
         public OptionAction():base("Option")
         {
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            if(actionList[actionList.Count - 1].IsCompleted())
-            {
-                Complete();
-            }
-            for (int i = actionCacheList.Count-1; i >=0; i--)
-            {
-                actionCacheList[i].Update();
-                if(actionCacheList[i].IsCompleted())
-                {
-                    actionCacheList.RemoveAt(i);
-                }
-            }
-            if (actionList[currentActionIndex].IsCompleted()|| actionList[currentActionIndex].IsAsync())
-            {
-                for (int i = currentActionIndex + 1; i < actionList.Count; i++)
-                {
-                    currentActionIndex++;
-                    ActionBase action = actionList[i];
-                    action.Execute();
-                    actionCacheList.Add(action);
-                    if (!action.IsAsync())
-                    {
-                        break;
-                    }
-                }
-            }
         }
 
         public override void Execute(ActorBase executor)
@@ -66,26 +31,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             questionAction.ChooseOption(index);
             haveSelected = true;
 
-            if(actionList.Count == 0)
-            {
-                Complete();
-            }
-            else
-            {
-                ActionBase action = actionList[currentActionIndex];
-                action.Execute();
-                actionCacheList.Add(action);
-            }
-        }
-
-        public override void Init()
-        {
-            base.Init();
-            foreach (var item in actionList)
-            {
-                item.Init();
-            }
-            currentActionIndex = 0;
+            base.Execute(executor);
         }
 
         protected override ActionBase CreateAction(XElement node)
@@ -115,15 +61,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         break;
                 }
             }
-            foreach (var item in node.Elements())
-            {
-                actionList.Add(LoadAction(item));
-            }
-        }
-
-        protected override void Complete()
-        {
-            base.Complete();
         }
 
         public string GetContent()

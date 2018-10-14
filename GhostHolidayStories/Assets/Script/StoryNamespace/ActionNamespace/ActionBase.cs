@@ -114,7 +114,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 if (item.Namespace == typeof(ActionBase).Namespace)
                 {
-                    if (typeof(ActionBase).IsAssignableFrom(item) && item.Name != "ActionBase")
+                    if (typeof(ActionBase).IsAssignableFrom(item) && !item.IsAbstract)
                     {
                         AddLegalAction((ActionBase)assembly.CreateInstance(item.FullName));
                     }

@@ -10,11 +10,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// <summary>
     /// 指令：获得物品
     /// </summary>
-    class GetObjectAction : ActionBase
+    class AddObjectAction : ActionBase
     {
         List<ObjectItem> objectItemList = new List<ObjectItem>();
 
-        public GetObjectAction() : base("GetObject")
+        public AddObjectAction() : base("AddObject")
         {
         }
 
@@ -22,11 +22,13 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             if (executor != null)
             {
+
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine("获得物品：");
 
                 foreach (var item in objectItemList)
                 {
+                    DirectorActor.GetInstance().AddObejct(item.GetItemId(), item.GetNumber());
                     if (item == objectItemList[objectItemList.Count - 1])
                     {
                         stringBuilder.Append(item.GetName() + ":" + item.GetNumber());
@@ -48,7 +50,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override ActionBase CreateAction(XElement node)
         {
-            GetObjectAction action = new GetObjectAction();
+            AddObjectAction action = new AddObjectAction();
             action.LoadContent(node);
             return action;
         }
@@ -73,10 +75,15 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         objectItemList.Add(objectItem);
                         break;
                     default:
-                        GameManager.ShowErrorMessage("GetObjectAction中出现未知子节点：" + item.Name.ToString());
+                        GameManager.ShowErrorMessage("AddObjectAction中出现未知子节点：" + item.Name.ToString());
                         break;
                 }
             }
+        }
+
+        public override ActorBase GetExecutor()
+        {
+            return DirectorActor.GetInstance().GetStarringActor();
         }
     }
 }

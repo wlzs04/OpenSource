@@ -232,23 +232,28 @@
     <Compile Include="Assets\Script\Helper\ImageHelper.cs" />
     <Compile Include="Assets\Script\OptionItemUIScript.cs" />
     <Compile Include="Assets\Script\QuestionUIScript.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StartSectionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\ActionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\ActionBase.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\RemoveObjectAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\AnimationAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\CameraAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\ConditionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\CutAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\EnterAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\FalseAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\GameAction.cs" />
-    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\GetObjectAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\AddObjectAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\MoveAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\MultiplyAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\OptionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\QuestionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\QuitAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\RandomAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StarringAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StartSectionAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\StopAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\TalkAction.cs" />
+    <Compile Include="Assets\Script\StoryNamespace\ActionNamespace\TrueAction.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Chapter.cs" />
     <Compile Include="Assets\Script\StoryNamespace\ObjectItem.cs" />
     <Compile Include="Assets\Script\StoryNamespace\Save.cs" />
@@ -269,11 +274,11 @@
   <ItemGroup>
     <None Include="Assets\Data\Common\Common.xml" />
     <None Include="Assets\Data\ReadMe.txt" />
-    <None Include="Assets\Data\Stories\捕蛇\Chapter\00.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Config\ObjectInfo.xml" />
-    <None Include="Assets\Data\Stories\捕蛇\Save\00.xml">
+    <None Include="Assets\Data\Stories\捕蛇\Chapter\00.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Assets\Data\Stories\捕蛇\Config\ObjectInfo.xml" />
+    <None Include="Assets\Data\Stories\捕蛇\Save\00.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Save\01.xml" />
     <None Include="Assets\Data\Stories\捕蛇\Scene\青州.xml">
       <SubType>Designer</SubType>

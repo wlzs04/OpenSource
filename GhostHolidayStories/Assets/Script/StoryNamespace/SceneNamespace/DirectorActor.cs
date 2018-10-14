@@ -41,6 +41,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         //UI根节点列表
         static Dictionary<StoryUIState, GameObject> uiRootMap;
 
+        Dictionary<int, int> objectItemMap = new Dictionary<int, int>();
+
         private DirectorActor() : base("Director")
         {
             InitUI();
@@ -314,11 +316,54 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             }
         }
 
+        /// <summary>
+        /// 停止正在执行的指令
+        /// </summary>
         public void StopExecuteStoryAction()
         {
             storyActionList.Clear();
             needExecuteStoryAction = false;
             currentActionIndex = 0;
+        }
+
+        /// <summary>
+        /// 获得物品
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="number"></param>
+        public void AddObejct(int itemId,int number)
+        {
+            if(objectItemMap.ContainsKey(itemId))
+            {
+                objectItemMap[itemId] = objectItemMap[itemId] + number;
+            }
+            else
+            {
+                objectItemMap[itemId] = number;
+            }
+        }
+
+        /// <summary>
+        /// 移除物品
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="number"></param>
+        public void RemoveObejct(int itemId, int number)
+        {
+            if (objectItemMap.ContainsKey(itemId))
+            {
+                objectItemMap[itemId] = objectItemMap[itemId] - number > 0 ? objectItemMap[itemId] - number : 0;
+            }
+        }
+
+        /// <summary>
+        /// 获得指定物品的数量
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        public int GetObjectNumberById(int itemId)
+        {
+            return objectItemMap.ContainsKey(itemId) ? objectItemMap[itemId] : 0;
         }
     }
 }
