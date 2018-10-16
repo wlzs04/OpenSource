@@ -24,7 +24,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             GameManager.ShowDebugMessage(executor.GetName()+"选择了："+content);
 
@@ -61,6 +61,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         break;
                 }
             }
+        }
+
+        public override ActorBase GetExecutor()
+        {
+            return DirectorActor.GetInstance().GetStarringActor();
         }
 
         public string GetContent()

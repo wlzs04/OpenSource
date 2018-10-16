@@ -36,7 +36,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             result = conditionNode.GetResult();
             if (result && trueAction != null)
@@ -132,6 +132,10 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 return DirectorActor.GetInstance().GetObjectNumberById(Convert.ToInt32(parameterList[0]));
             }
+            else if(functionName == "HaveFinishChapterAndSection")
+            {
+                return DirectorActor.GetInstance().HaveFinishChapterAndSection(Convert.ToInt32(parameterList[0]), Convert.ToInt32(parameterList[1]));
+            }
             GameManager.ShowErrorMessage("在条件指令表达式中存在未知方法："+functionName);
             return 0;
         }
@@ -201,6 +205,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 }
                 switch (comparerType)
                 {
+                    case ComparerType.None:
+                        return (bool)ConditionAction.ExecuteConditionFunction(leftFunctionName, leftParamList);
                     case ComparerType.Equal:
                         return leftValue == rightValue;
                     case ComparerType.MoreThan:
@@ -240,7 +246,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             ConditionType tempConditionType;
             ComparerType tempComparerType;
-            bool conditionFinishFlag = false;//条件节点是否可以使用')'作为节点结束标志
             
             //开始判断条件节点开始，以'('为起点
             if (expression[currentCharPosition]!='(')
@@ -276,16 +281,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                 //开始判断条件节点结束，以')'为起点
                 if (expression[currentCharPosition] == ')')
                 {
-                    if (conditionFinishFlag)
-                    {
-                        currentCharPosition++;
-                        return;
-                    }
-                    else
-                    {
-                        GameManager.ShowErrorMessage("条件表达式" + expression + "在未知位置出现')'。");
-                    }
-                    continue;
+                    currentCharPosition++;
+                    return;
                 }
 
                 //判断是否为条件符号
@@ -295,7 +292,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     if (conditionType == ConditionType.None)
                     {
                         conditionType = tempConditionType;
-                        conditionFinishFlag = true;
                     }
                     else
                     {
@@ -310,7 +306,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     if (comparerType == ComparerType.None)
                     {
                         comparerType = tempComparerType;
-                        conditionFinishFlag = true;
                     }
                     else
                     {

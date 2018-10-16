@@ -12,14 +12,34 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     class QuitAction : ActionBase
     {
+        bool inDirector = false;
         public QuitAction() : base("Quit")
         {
 
         }
 
-        public override void Execute(ActorBase executor)
+        public override void Update()
         {
-            if(executor is DirectorActor)
+            base.Update();
+
+            if(World.GetInstance().GetActor(actorName)==null)
+            {
+                Complete();
+            }
+            else if (inDirector)
+            {
+                World.GetInstance().GetActor(actorName).RemoveFromScene();
+                Complete();
+            }
+        }
+
+        protected override void Execute(ActorBase executor)
+        {
+            if (World.GetInstance().GetActor(actorName) == null)
+            {
+                Complete();
+            }
+            else if (inDirector)
             {
                 World.GetInstance().GetActor(actorName).RemoveFromScene();
                 Complete();
@@ -28,6 +48,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 actorName = executor.GetName();
                 DirectorActor.GetInstance().AddActionToQueue(this);
+                inDirector = true;
             }
         }
 
@@ -38,9 +59,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             return action;
         }
 
-        public override ActorBase GetExecutor()
+        protected override XElement ExportContent()
         {
-            return DirectorActor.GetInstance();
+            return new XElement("Quit",new XAttribute("actor",actorName));
         }
     }
 }

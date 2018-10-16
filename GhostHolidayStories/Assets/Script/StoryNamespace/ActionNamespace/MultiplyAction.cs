@@ -51,7 +51,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             if (actionList.Count == 0)
             {

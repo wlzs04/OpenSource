@@ -32,7 +32,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             return DirectorActor.GetInstance();
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             GameManager.GetCurrentStory().StartNewChapterSection(chapterIndex, sectionIndex);            
             Complete();

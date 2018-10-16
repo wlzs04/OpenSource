@@ -20,6 +20,7 @@ namespace Assets.Script.StoryNamespace
         Interlude,//过场
         Talk,//谈话
         Question,//问题：带选项
+        Menu,//主菜单
     }
 
     class Story
@@ -62,8 +63,8 @@ namespace Assets.Script.StoryNamespace
         /// </summary>
         public void Update()
         {
-            world.Update();
             directorActor.Update();
+            world.Update();
             cameraActor.Update();
         }
 
@@ -256,9 +257,15 @@ namespace Assets.Script.StoryNamespace
             {
                 ActorBase actor = ActorBase.LoadActor(currentSave.GetStarringActorElement());
                 actor.SetScene(currentScene);
-                actor.SetPosition(currentSave.GetPosition());
                 directorActor.SetStarringActor(actor);
                 cameraActor.SetFollowActor(actor);
+            }
+
+            //执行存档中需要在进入游戏时执行的指令
+            foreach (var item in currentSave.GetNeedExecuteOnLoadActionList())
+            {
+                ActionBase action = ActionBase.LoadAction(item);
+                directorActor.AddActionToQueue(action);
             }
         }
 
@@ -267,7 +274,6 @@ namespace Assets.Script.StoryNamespace
         /// </summary>
         public void Start()
         {
-            world = World.GetInstance();
             currentSave = Save.CreateSave();
             if (currentSave == null)
             {
@@ -287,6 +293,7 @@ namespace Assets.Script.StoryNamespace
         {
             world = World.GetInstance();
             currentSave = saveList[index];
+            DirectorActor.GetInstance().Init();
             LoadContent();
             DirectorActor.UIHide();
         }
@@ -309,6 +316,7 @@ namespace Assets.Script.StoryNamespace
         {
             Section currentSection = chapterList[chapterIndex].GetSection(sectionIndex);
             SetCurrentSceneByName(currentSection.GetSceneName());
+            currentSave.AddFinishChapterAndSection(chapterIndex, sectionIndex);
             directorActor.AddStoryAction(currentSection.GetActionList());
             directorActor.StartStoryAction();
         }
@@ -370,6 +378,11 @@ namespace Assets.Script.StoryNamespace
         public Section GetCurrentSection()
         {
             return chapterList[currentSave.GetChapterIndex()].GetSection(currentSave.GetSectionIndex());
+        }
+
+        public Save GetCurrentSave()
+        {
+            return currentSave;
         }
     }
 }

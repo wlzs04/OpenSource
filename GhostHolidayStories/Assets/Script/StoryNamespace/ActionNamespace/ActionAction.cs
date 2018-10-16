@@ -29,7 +29,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             return DirectorActor.GetInstance();
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             if(executor is DirectorActor)
             {

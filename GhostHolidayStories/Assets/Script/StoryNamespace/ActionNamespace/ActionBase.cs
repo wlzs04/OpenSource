@@ -60,6 +60,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         protected bool isAsync = false;//是否此指令执行的同时执行下一条指令
         protected bool endAllAction = false;//判断此指令执行后结束以下所有指令
         protected bool executeByStarringActor = false;//是否由主角进行执行
+        //是否需要保存到存档中，用于物品获取或NPC移动，保证读取存档后场景内容与保存时相同
+        protected bool isNeedSaveToData = false;
 
         protected ActorBase executor = null;//执行者
         protected bool isCompleted = false;//是否完成
@@ -163,19 +165,29 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     case "actor":
                         actorName = item.Value;
                         break;
-                    case "endAllAction":
-                        endAllAction = Convert.ToBoolean(item.Value);
-                        break;
                     case "isAsync":
                         isAsync = Convert.ToBoolean(item.Value);
                         break;
                     case "executeByStarringActor":
                         executeByStarringActor = Convert.ToBoolean(item.Value);
                         break;
+                    case "isNeedSaveToData":
+                        isNeedSaveToData = Convert.ToBoolean(item.Value);
+                        break;
                     default:
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// 导出内容
+        /// </summary>
+        /// <returns></returns>
+        protected virtual XElement ExportContent()
+        {
+            GameManager.ShowErrorMessage(simpleActionClassName+"指令没有重写导出方法，无法导出！");
+            return null;
         }
 
         /// <summary>
@@ -197,25 +209,40 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         }
 
         /// <summary>
-        /// 执行指令
+        /// 执行指令：由子类来重写
         /// </summary>
         /// <param name="executor"></param>
-        public abstract void Execute(ActorBase executor);
+        protected abstract void Execute(ActorBase executor);
 
         /// <summary>
-        /// 执行指令的快捷方法
+        /// 执行指令的真正执行方法
         /// </summary>
         public void Execute()
         {
+            GameManager.ShowDebugMessage("正在执行"+ simpleActionClassName + "指令！");
             Execute(GetExecutor());
         }
 
         /// <summary>
         /// 指令执行完成的处理方法
         /// </summary>
-        protected virtual void Complete()
+        protected void Complete()
         {
             isCompleted = true;
+            CompleteAction();
+            if (isNeedSaveToData)
+            {
+                GameManager.ShowDebugMessage("将" + simpleActionClassName + "指令添加到当前存档中！");
+                DirectorActor.GetInstance().AddActionToSave(ExportContent());
+            }
+        }
+
+        /// <summary>
+        /// 子类重写指令执行完成的处理方法
+        /// </summary>
+        protected virtual void CompleteAction()
+        {
+            
         }
 
         public bool IsAsync()

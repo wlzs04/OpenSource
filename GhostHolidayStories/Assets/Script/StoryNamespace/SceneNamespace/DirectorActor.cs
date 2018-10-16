@@ -9,6 +9,10 @@ using UnityEngine;
 
 namespace Assets.Script.StoryNamespace.SceneNamespace
 {
+
+
+
+
     /// <summary>
     /// 导演
     /// </summary>
@@ -43,14 +47,25 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
 
         Dictionary<int, int> objectItemMap = new Dictionary<int, int>();
 
+        Story story = null;
+
         private DirectorActor() : base("Director")
         {
-            InitUI();
+            
         }
 
         public static DirectorActor GetInstance()
         {
             return directorActor;
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public void Init()
+        {
+            InitUI();
+            story = GameManager.GetCurrentStory();
         }
 
         public override void Update()
@@ -85,7 +100,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             if(Input.GetKeyDown(KeyCode.Escape))
             {
-                Pause();
+                //Pause();
+                UIMenu();
                 return;
             }
 
@@ -160,6 +176,18 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             }
         }
 
+        /// <summary>
+        /// 清空UI
+        /// </summary>
+        void CleanUI()
+        {
+            foreach (var item in uiRootMap)
+            {
+                GameObject.DestroyImmediate(item.Value);
+            }
+            uiRootMap.Clear();
+        }
+
         public static void UIHide()
         {
             currentStoryUIState = StoryUIState.Hide;
@@ -196,9 +224,26 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             script.ClearAllOption();
             foreach (var item in optionList)
             {
-                script.AddOption(item.GetContent(), () => { item.Execute(directorActor.GetStarringActor()); }, item.GetSelectedMark());
+                script.AddOption(item.GetContent(), () => { item.Execute(); }, item.GetSelectedMark());
             }
             script.SetFocusIndex(0);
+        }
+
+        public static void UIMenu()
+        {
+            UIHide();
+            currentStoryUIState = StoryUIState.Menu;
+            uiRootMap[currentStoryUIState].SetActive(true);
+            directorActor.gameState = GameState.Controlled;
+        }
+
+        /// <summary>
+        /// UI界面从菜单返回
+        /// </summary>
+        public static void UIReturnFromMenu()
+        {
+            UIHide();
+            directorActor.gameState = GameState.Free;
         }
 
         /// <summary>
@@ -215,6 +260,22 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         void Start()
         {
             isPlaying = true;
+        }
+
+        /// <summary>
+        /// 退出故事
+        /// </summary>
+        public static void ExitStory()
+        {
+            GameManager.ShowDebugMessage("退出当前故事,回到游戏主界面！");
+            directorActor.starringActor = null;
+            directorActor.storyActionList.Clear();
+            directorActor.objectItemMap.Clear();
+            directorActor.SetGameState(GameState.Free);
+            directorActor.CleanUI();
+            World.GetInstance().Clear();
+            directorActor.story = null;
+            GameManager.ExitStory();
         }
 
         /// <summary>
@@ -364,6 +425,42 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         public int GetObjectNumberById(int itemId)
         {
             return objectItemMap.ContainsKey(itemId) ? objectItemMap[itemId] : 0;
+        }
+
+        /// <summary>
+        /// 判断当前存档是否已经完成了指定章节
+        /// </summary>
+        /// <param name="chapterIndex"></param>
+        /// <param name="sectionIndex"></param>
+        /// <returns></returns>
+        public bool HaveFinishChapterAndSection(int chapterIndex,int sectionIndex)
+        {
+            return story.GetCurrentSave().HaveFinishChapterAndSection(chapterIndex, sectionIndex);
+        }
+
+        /// <summary>
+        /// 保存当前存档到文件中
+        /// </summary>
+        public static void SaveGameData()
+        {
+            directorActor.story.GetCurrentSave().SaveGameData();
+        }
+
+        /// <summary>
+        /// 获得当前所在场景
+        /// </summary>
+        /// <returns></returns>
+        public static Scene GetCurrentScene()
+        {
+            return directorActor.story.GetCurrentScene();
+        }
+
+        /// <summary>
+        /// 添加指令到存档中
+        /// </summary>
+        public void AddActionToSave(XElement action)
+        {
+            directorActor.story.GetCurrentSave().AddActionToSave(action);
         }
     }
 }

@@ -99,7 +99,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 {
                     ActionBase action = actionQueue.Dequeue();
                     actionCacheList.Add(action);
-                    action.Execute(this);
+                    action.Execute();
                     if (!action.IsAsync())
                     {
                         break;
@@ -293,6 +293,20 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             }
 
             InitActor();
+        }
+
+        public XElement ExportContent()
+        {
+            XElement node = new XElement(simpleActorClassName,
+                new XAttribute("name", name),
+                new XAttribute("image", imagePath), 
+                new XAttribute("width", width), 
+                new XAttribute("height", height),
+                new XAttribute("position", position.x+","+ position.y),
+                new XAttribute("layer", layer),
+                new XAttribute("isBlock", isBlock)
+                );
+            return node;
         }
 
         /// <summary>

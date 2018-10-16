@@ -31,7 +31,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             if(actionList.Count<=0)
             {
@@ -64,11 +64,6 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     GameManager.ShowErrorMessage("在添加随机指令时指令加载失败！");
                 }
             }
-        }
-
-        protected override void Complete()
-        {
-            base.Complete();
         }
 
         public override void Init()

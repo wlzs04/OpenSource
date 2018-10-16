@@ -18,14 +18,16 @@ namespace Assets.Script.StoryNamespace
         string savePath;
 
         //需要保存的内容
-        DateTime createTime;
-        DateTime lastSaveTime;
-        int chapterIndex = 0;
-        int sectionIndex = 0;
-        string sceneName="";
-        Vector2 position;
-        XElement starringActorElement = null;
-
+        DateTime createTime;//创建时间
+        DateTime lastSaveTime;//最后一次保存时间
+        int chapterIndex = 0;//当前章
+        int sectionIndex = 0;//当前节
+        string sceneName="";//所在场景
+        XElement starringActorElement = null;//主演信息，仅以节点形式保存
+        //已经完成的章节
+        Dictionary<int, List<int>> haveFinishChapterAndSectionMap = new Dictionary<int, List<int>>();
+        //需要在存档加载时执行的指令
+        List<XElement> needExecuteOnLoadActionList = new List<XElement>();
         Sprite image = null;
         TimeSpan playTime=new TimeSpan();
 
@@ -110,12 +112,6 @@ namespace Assets.Script.StoryNamespace
                     case "sceneName":
                         sceneName = attribute.Value;
                         break;
-                    case "position":
-                        int tempIndex = attribute.Value.IndexOf(',');
-                        float x = (float)Convert.ToDouble(attribute.Value.Substring(0, tempIndex));
-                        float y = (float)Convert.ToDouble(attribute.Value.Substring(tempIndex+1));
-                        position = new Vector2(x, y);
-                        break;
                     default:
                         GameManager.ShowErrorMessage("未知属性：" + attribute.Name.ToString());
                         break;
@@ -124,12 +120,33 @@ namespace Assets.Script.StoryNamespace
 
             foreach (var item in root.Elements())
             {
-                if (item.Name== "Starring")
+                if (item.Name == "Starring")
                 {
                     starringActorElement = item.Elements().First();
                 }
+                if (item.Name == "HaveFinishChapterAndSection")
+                {
+                    haveFinishChapterAndSectionMap.Clear();
+                    foreach (var chapter in item.Elements())
+                    {
+                        int chapterIndex = Convert.ToInt32(chapter.Attribute("index").Value);
+                        haveFinishChapterAndSectionMap[chapterIndex] = new List<int>();
+                        foreach (var section in chapter.Elements())
+                        {
+                            int sectionIndex = Convert.ToInt32(section.Attribute("index").Value);
+                            haveFinishChapterAndSectionMap[chapterIndex].Add(sectionIndex);
+                        }
+                    }
+                }
+                if (item.Name == "NeedExecuteOnLoadAction")
+                {
+                    needExecuteOnLoadActionList.Clear();
+                    foreach (var action in item.Elements())
+                    {
+                        needExecuteOnLoadActionList.Add(action);
+                    }
+                }
             }
-
             image = ImageHelper.LoadSprite(savePath.Substring(0, savePath.LastIndexOf(".")) + ".jpg");
         }
 
@@ -139,17 +156,40 @@ namespace Assets.Script.StoryNamespace
         public void SaveGameData()
         {
             lastSaveTime = DateTime.Now;
-
             XDocument doc = new XDocument(
                 new XElement("Save",
-                    new XAttribute("createTime", createTime),
-                    new XAttribute("lastSaveTime", lastSaveTime),
+                    new XAttribute("createTime", createTime.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new XAttribute("lastSaveTime", lastSaveTime.ToString("yyyy-MM-dd HH:mm:ss")),
                     new XAttribute("chapterIndex", chapterIndex),
                     new XAttribute("sectionIndex", sectionIndex),
-                    new XAttribute("sceneName", sceneName),
-                    new XAttribute("position", position.x + "," + position.y)
+                    new XAttribute("sceneName", DirectorActor.GetCurrentScene().GetName())
                 ));
+            XElement chapterAndSectionElement = new XElement("HaveFinishChapterAndSection");
+            foreach (var chapter in haveFinishChapterAndSectionMap)
+            {
+                XElement chapterElement = new XElement("Chapter",
+                    new XAttribute("index",chapter.Key));
+                foreach (var section in chapter.Value)
+                {
+                    XElement sectionElement = new XElement("Section",
+                        new XAttribute("index", section));
+                    chapterElement.Add(sectionElement);
+                }
+                chapterAndSectionElement.Add(chapterElement);
+            }
 
+            XElement needExecuteOnLoadActionElement = new XElement("NeedExecuteOnLoadAction");
+            foreach (var action in needExecuteOnLoadActionList)
+            {
+                needExecuteOnLoadActionElement.Add(action);
+            }
+
+            //暂时将主演信息以节点形式导出
+            starringActorElement = DirectorActor.GetInstance().GetStarringActor().ExportContent();
+            
+            doc.Root.Add(new XElement("Starring", starringActorElement));
+            doc.Root.Add(chapterAndSectionElement);
+            doc.Root.Add(needExecuteOnLoadActionElement);
             doc.Save(savePath);
         }
 
@@ -183,14 +223,72 @@ namespace Assets.Script.StoryNamespace
             return index;
         }
 
-        public Vector2 GetPosition()
-        {
-            return position;
-        }
-
         public XElement GetStarringActorElement()
         {
             return starringActorElement;
+        }
+
+        /// <summary>
+        /// 判断当前存档是否已经完成了指定章节
+        /// </summary>
+        /// <param name="chapterIndex"></param>
+        /// <param name="sectionIndex"></param>
+        /// <returns></returns>
+        public bool HaveFinishChapterAndSection(int chapterIndex,int sectionIndex)
+        {
+            foreach (var chapter in haveFinishChapterAndSectionMap)
+            {
+                if(chapter.Key== chapterIndex)
+                {
+                    foreach (var section in chapter.Value)
+                    {
+                        if(section==sectionIndex)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 添加完成指定章节
+        /// </summary>
+        /// <param name="chapterIndex"></param>
+        /// <param name="sectionIndex"></param>
+        public void AddFinishChapterAndSection(int chapterIndex, int sectionIndex)
+        {
+            this.chapterIndex = chapterIndex;
+            this.sectionIndex = sectionIndex;
+            if (haveFinishChapterAndSectionMap.ContainsKey(chapterIndex))
+            {
+                if(haveFinishChapterAndSectionMap[chapterIndex].Contains(sectionIndex))
+                {
+                    GameManager.ShowErrorMessage("当前存档已经完成指定章:"+ chapterIndex + ",节："+ sectionIndex+"。请检查是否存在主线剧情逻辑错误！");
+                }
+                else
+                {
+                    haveFinishChapterAndSectionMap[chapterIndex].Add(sectionIndex);
+                }
+            }
+            else
+            {
+                haveFinishChapterAndSectionMap[chapterIndex] = new List<int>() { sectionIndex };
+            }
+        }
+
+        /// <summary>
+        /// 添加需要在存档加载时执行的指令
+        /// </summary>
+        public void AddActionToSave(XElement node)
+        {
+            needExecuteOnLoadActionList.Add(node);
+        }
+
+        public List<XElement> GetNeedExecuteOnLoadActionList()
+        {
+            return needExecuteOnLoadActionList;
         }
     }
 }

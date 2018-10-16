@@ -113,5 +113,17 @@ namespace Assets.Script.StoryNamespace
                 return scene;
             }
         }
+
+        /// <summary>
+        /// 清理世界
+        /// </summary>
+        public void Clear()
+        {
+            foreach (var item in sceneMap)
+            {
+                item.Value.Clear();
+            }
+            sceneMap.Clear();
+        }
     }
 }

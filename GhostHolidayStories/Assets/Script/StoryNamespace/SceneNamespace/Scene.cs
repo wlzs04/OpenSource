@@ -141,5 +141,18 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             actorMap.Remove(actor.GetName());
         }
+
+        /// <summary>
+        /// 清空场景
+        /// </summary>
+        public void Clear()
+        {
+            foreach (var item in actorMap)
+            {
+                GameObject.DestroyImmediate(item.Value.GetGameObject());
+            }
+            actorMap.Clear();
+            GameObject.DestroyImmediate(gameObject);
+        }
     }
 }

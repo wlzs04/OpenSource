@@ -19,29 +19,8 @@
     <Animation actor="test" isAsync="true" loopTime="1" onceTime="0.5" row="1" column="4" image="person1.png" />
     <Move actor="test" position="400,200" needTime="0.5" moveState="AI"/>
     <Move actor="test" position="500,200" needTime="0.5" moveState="AI"/>
-    <Talk actor="test" content="请问这里是青州吗？"/>
-    <Talk actor="守卫1" content="是，不过你不能进去！"/>
-    <Talk actor="test" content="为什么？"/>
-    <Talk actor="守卫1" content="进门需要交100文，你有就放你进去？"/>
-    <Question actor="守卫1" showContent="false" isLoop="false">
-      <Option content="交钱进入。">
-        <Condition expression="(GetObjectNumberById(10001)>=100)">
-          <True>
-            <RemoveObject>
-              <ObjectItem itemId="10001" number="100"/>
-            </RemoveObject>
-            <Talk actor="守卫1" content="嗯！进去吧！"/>
-          </True>
-          <False>
-            <Talk actor="守卫1" content="钱不够，不能进！"/>
-          </False>
-        </Condition>
-      </Option>
-      <Option content="不交。">
-        <Talk actor="test" content="没有进城门需要交钱的道理。"/>
-        <Talk actor="守卫1" content="那就在城外站着吧！"/>
-      </Option>
-    </Question>
+    <Move actor="守卫1" position="400,0" needTime="0.5" moveState="AI" isNeedSaveToData="true"/>
+    <Talk executeByStarringActor="true" content="走吧！不然钱就浪费了！"/>
     <Game gameState="Free"/>
     <Cut/>
 	</Section>

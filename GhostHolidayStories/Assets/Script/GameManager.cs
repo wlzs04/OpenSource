@@ -35,6 +35,7 @@ namespace Assets.Script
         static GameObject saveItemPrefab;
         static UIState uiState;
         static bool storyPlay;
+        static bool uiHaveInit = false;//UI是否已经被初始化
 
         static List<string> storyNameList;
 
@@ -53,7 +54,6 @@ namespace Assets.Script
 
             InitPrefab();
             InitUI();
-            SetUI(UIState.Init);
 
             LoadAllStoryName();
 
@@ -85,6 +85,10 @@ namespace Assets.Script
         /// </summary>
         void InitUI()
         {
+            if(uiHaveInit)
+            {
+                return;
+            }
             canvasTransform = GameObject.Find("Canvas").transform;
             foreach (UIState item in Enum.GetValues(typeof(UIState)))
             {
@@ -107,6 +111,9 @@ namespace Assets.Script
             InitInitUI();
             InitStoryListUI();
             InitStoryContentUI();
+
+            SetUI(UIState.Init);
+            uiHaveInit = true;
         }
 
         /// <summary>
@@ -119,6 +126,7 @@ namespace Assets.Script
                 GameObject.DestroyImmediate(item.Value);
             }
             uiRootMap.Clear();
+            uiHaveInit = false;
         }
 
         /// <summary>
@@ -385,6 +393,16 @@ namespace Assets.Script
 #else
                 Application.Quit();
 #endif
+        }
+
+        /// <summary>
+        /// 退出故事
+        /// </summary>
+        public static void ExitStory()
+        {
+            storyPlay = false;
+            currentStory = null;
+            gameManager.InitUI();
         }
     }
 }

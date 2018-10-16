@@ -52,7 +52,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             lastTime = Time.time;
             lastPosition = executor.GetPosition();
@@ -108,6 +108,13 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                         break;
                 }
             }
+        }
+
+        protected override XElement ExportContent()
+        {
+            return new XElement("Move",
+                new XAttribute("actor",actorName),
+                new XAttribute("position", position.x+","+position.y));
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             ActorBase actor = GameManager.GetCurrentStory().GetWorld().GetActor(actorName);
             DirectorActor.GetInstance().SetStarringActor(actor);

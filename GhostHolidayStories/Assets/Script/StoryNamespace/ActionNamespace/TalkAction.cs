@@ -25,7 +25,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
         }
 
-        public override void Execute(ActorBase executor)
+        protected override void Execute(ActorBase executor)
         {
             talkTime++;
             if (onlyTalkByTime != 0 && talkTime != onlyTalkByTime)
@@ -69,10 +69,9 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             }
         }
 
-        protected override void Complete()
+        protected override void CompleteAction()
         {
             DirectorActor.UIHide();
-            base.Complete();
         }
     }
 }
