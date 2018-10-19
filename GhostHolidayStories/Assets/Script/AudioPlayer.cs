@@ -69,4 +69,12 @@ public class AudioPlayer : MonoBehaviour {
     {
         audioSource.Stop();
     }
+
+    /// <summary>
+    /// 设置音量大小
+    /// </summary>
+    public void SetVolume(float value)
+    {
+        audioSource.volume = value;
+    }
 }

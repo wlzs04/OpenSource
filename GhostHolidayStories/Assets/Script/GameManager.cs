@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Assets.Script
@@ -18,8 +19,17 @@ namespace Assets.Script
     {
         Hide,//隐藏
         Init,//初始
+        Config,//配置
         StoryList,//故事列表
         StoryContent,//故事内容
+    }
+    
+    /// <summary>
+    /// 配置信息
+    /// </summary>
+    class ConfigData
+    {
+        public float Volume { set; get; }
     }
 
     class GameManager
@@ -44,6 +54,8 @@ namespace Assets.Script
         //UI根节点列表
         static Dictionary<UIState, GameObject> uiRootMap;
 
+        ConfigData config;
+
         private GameManager()
         {
             commonPath = "/Data/Common/";
@@ -51,6 +63,8 @@ namespace Assets.Script
             uiRootMap = new Dictionary<UIState, GameObject>();
             storyNameList = new List<string>();
             storyPlay = false;
+
+            LoadConfig();
 
             InitPrefab();
             InitUI();
@@ -68,6 +82,35 @@ namespace Assets.Script
         public static GameManager GetInstance()
         {
             return gameManager;
+        }
+
+        /// <summary>
+        /// 加载配置文件
+        /// </summary>
+        void LoadConfig()
+        {
+            config = new ConfigData();
+            XDocument doc = XDocument.Load(Application.dataPath+commonPath+"Config.xml");
+
+            foreach (var item in doc.Root.Elements())
+            {
+                if(item.Name=="Audio")
+                {
+                    config.Volume = (float)Convert.ToDouble(item.Attribute("volume").Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存配置文件
+        /// </summary>
+        void SaveConfig()
+        {
+            XDocument doc = new XDocument(
+                new XElement("Save",
+                    new XElement("Audio",new XAttribute("volume",config.Volume))
+                ));
+            doc.Save(Application.dataPath + commonPath + "Config.xml");
         }
 
         /// <summary>
@@ -109,6 +152,7 @@ namespace Assets.Script
             }
 
             InitInitUI();
+            InitConfigUI();
             InitStoryListUI();
             InitStoryContentUI();
 
@@ -286,6 +330,9 @@ namespace Assets.Script
                 //如果有UI需要刷新内容，可以将方法添加到下方
                 switch (uiState)
                 {
+                    case UIState.Config:
+                        gameManager.RefreshConfigUI();
+                        break;
                     case UIState.StoryList:
                         gameManager.RefreshStoryListUI();
                         break;
@@ -303,6 +350,15 @@ namespace Assets.Script
         }
 
         /// <summary>
+        /// 设置音量大小
+        /// </summary>
+        public void SetAudioVolume(float value)
+        {
+            config.Volume = value;
+            audioPlayer.SetVolume(value);
+        }
+
+        /// <summary>
         /// 初始化初始UI
         /// </summary>
         void InitInitUI()
@@ -312,8 +368,29 @@ namespace Assets.Script
             Button exitButton = uiRootMap[UIState.Init].transform.Find("OptionListPanel/ExitButton").GetComponent<Button>();
 
             startButton.onClick.AddListener(() => { SetUI(UIState.StoryList); });
-            configButton.onClick.AddListener(() => { });
+            configButton.onClick.AddListener(() => { SetUI(UIState.Config); });
             exitButton.onClick.AddListener(() => { Exit(); });
+        }
+
+        /// <summary>
+        /// 初始化设置UI
+        /// </summary>
+        void InitConfigUI()
+        {
+            Button returnButton = uiRootMap[UIState.Config].transform.Find("ReturnButton").GetComponent<Button>();
+            returnButton.onClick.AddListener(() => { SetUI(UIState.Init); });
+
+            Slider audioSlider = uiRootMap[UIState.Config].transform.Find("OptionListPanel/AudioArea/AudioSlider").GetComponent<Slider>();
+            SetAudioVolume(config.Volume);
+            audioSlider.onValueChanged.AddListener((float value)=> { SetAudioVolume(value);});
+        }
+
+        /// <summary>
+        /// 刷新设置UI
+        /// </summary>
+        void RefreshConfigUI()
+        {
+
         }
 
         /// <summary>
@@ -388,10 +465,12 @@ namespace Assets.Script
         /// </summary>
         public static void Exit()
         {
+            gameManager.SaveConfig();
+
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-                Application.Quit();
+            Application.Quit();
 #endif
         }
 

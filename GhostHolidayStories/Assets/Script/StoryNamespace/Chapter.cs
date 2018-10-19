@@ -56,19 +56,11 @@ namespace Assets.Script.StoryNamespace
         {
             return name;
         }
-
+        
         public string GetDescription()
         {
             return description;
         }
-
-        /// <summary>
-        /// 开始本章
-        /// </summary>
-        //public void Start(int sectionIndex)
-        //{
-        //    sectionList[sectionIndex].Start();
-        //}
 
         public Section GetSection(int sectionIndex)
         {
