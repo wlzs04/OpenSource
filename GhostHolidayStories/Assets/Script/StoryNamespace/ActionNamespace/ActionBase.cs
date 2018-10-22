@@ -228,12 +228,15 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         /// </summary>
         protected void Complete()
         {
-            isCompleted = true;
-            CompleteAction();
-            if (isNeedSaveToData)
+            if(!isCompleted)
             {
-                GameManager.ShowDebugMessage("将" + simpleActionClassName + "指令添加到当前存档中！");
-                DirectorActor.GetInstance().AddActionToSave(ExportContent());
+                isCompleted = true;
+                CompleteAction();
+                if (isNeedSaveToData)
+                {
+                    GameManager.ShowDebugMessage("将" + simpleActionClassName + "指令添加到当前存档中！");
+                    DirectorActor.GetInstance().AddActionToSave(ExportContent());
+                }
             }
         }
 

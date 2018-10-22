@@ -378,6 +378,15 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             return position;
         }
 
+        /// <summary>
+        /// 获得世界位置
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetWorldPosition()
+        {
+            return position + scene.GetPosition();
+        }
+
         public GameObject GetGameObject()
         {
             return gameObject;

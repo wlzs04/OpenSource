@@ -15,11 +15,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     class TalkAction:ActionBase
     {
         string content = "";//谈话内容
-        int onlyTalkByTime = 0;//只有在规定次数的谈话才会显示
+        int onlyActionByTime = 0;//只有在规定次数的谈话才会显示
         string audio = "";//谈话的音频路径
         bool showContent = true;
 
-        int talkTime = 0;
+        int actionTime = 0;
 
         public TalkAction():base("Talk")
         {
@@ -27,8 +27,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override void Execute(ActorBase executor)
         {
-            talkTime++;
-            if (onlyTalkByTime != 0 && talkTime != onlyTalkByTime)
+            actionTime++;
+            if (onlyActionByTime != 0 && actionTime != onlyActionByTime)
             {
                 Complete();
                 return;
@@ -54,8 +54,8 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
                     case "content":
                         content = attribute.Value;
                         break;
-                    case "onlyTalkByTime":
-                        onlyTalkByTime = Convert.ToInt32(attribute.Value);
+                    case "onlyActionByTime":
+                        onlyActionByTime = Convert.ToInt32(attribute.Value);
                         break;
                     case "audio":
                         audio = attribute.Value;

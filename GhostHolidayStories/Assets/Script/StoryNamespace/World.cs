@@ -1,6 +1,7 @@
 ﻿using Assets.Script.StoryNamespace.SceneNamespace;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -37,10 +38,35 @@ namespace Assets.Script.StoryNamespace
         }
 
         /// <summary>
+        /// 加载世界中所有场景
+        /// </summary>
+        public void LoadAllScene()
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(GameManager.GetCurrentStory().GetStoryPath() + "/Scene");
+
+            foreach (var item in directoryInfo.GetFiles())
+            {
+                if (item.Extension == ".xml")
+                {
+                    string sceneName = item.Name.Substring(0, item.Name.IndexOf('.'));
+                    Scene scene = Scene.LoadScene(item.FullName, sceneName);
+                    if (scene != null)
+                    {
+                        AddScene(scene);
+                    }
+                    else
+                    {
+                        GameManager.ShowErrorMessage("加载场景：" + sceneName + "失败！");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 添加场景
         /// </summary>
         /// <param name="scene"></param>
-        public void AddScene(Scene scene)
+        void AddScene(Scene scene)
         {
             if(sceneMap.ContainsKey(scene.GetName()))
             {
@@ -99,19 +125,24 @@ namespace Assets.Script.StoryNamespace
             {
                 return sceneMap[sceneName];
             }
-            else
+            return null;
+        }
+
+        /// <summary>
+        /// 通过地点获得所在场景
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public Scene GetSceneByPosition(Vector2 position)
+        {
+            foreach (var item in sceneMap)
             {
-                Scene scene = Scene.LoadScene(GameManager.GetCurrentStory().GetStoryPath() + "/Scene/" + sceneName + ".xml", sceneName);
-                if (scene != null)
+                if(item.Value.InScecneByPosition(position))
                 {
-                    AddScene(scene);
+                    return item.Value;
                 }
-                else
-                {
-                    GameManager.ShowErrorMessage("加载场景：" + sceneName + "失败！");
-                }
-                return scene;
             }
+            return null;
         }
 
         /// <summary>

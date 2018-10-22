@@ -77,6 +77,8 @@ namespace Assets.Script
             audioPlayer = GameObject.Find("AudioPlayer").GetComponent<AudioPlayer>();
 
             audioPlayer.PlayAudio(GetCommonPath()+"Audio/back.ogg");
+
+            SetAudioVolume(config.Volume);
         }
 
         public static GameManager GetInstance()
@@ -133,6 +135,7 @@ namespace Assets.Script
                 return;
             }
             canvasTransform = GameObject.Find("Canvas").transform;
+            CleanUI();
             foreach (UIState item in Enum.GetValues(typeof(UIState)))
             {
                 if (item == UIState.Hide)
@@ -165,9 +168,9 @@ namespace Assets.Script
         /// </summary>
         void CleanUI()
         {
-            foreach (var item in uiRootMap)
+            for (int i = canvasTransform.childCount - 1; i >= 0; i--)
             {
-                GameObject.DestroyImmediate(item.Value);
+                GameObject.DestroyImmediate(canvasTransform.GetChild(i).gameObject);
             }
             uiRootMap.Clear();
             uiHaveInit = false;
@@ -381,7 +384,7 @@ namespace Assets.Script
             returnButton.onClick.AddListener(() => { SetUI(UIState.Init); });
 
             Slider audioSlider = uiRootMap[UIState.Config].transform.Find("OptionListPanel/AudioArea/AudioSlider").GetComponent<Slider>();
-            SetAudioVolume(config.Volume);
+            audioSlider.value = config.Volume;
             audioSlider.onValueChanged.AddListener((float value)=> { SetAudioVolume(value);});
         }
 

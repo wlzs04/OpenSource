@@ -246,7 +246,7 @@ namespace Assets.Script.StoryNamespace
             LoadChapter(currentSave.GetChapterIndex());
             if(currentSave.GetSceneName()!="")
             {
-                LoadScene(currentSave.GetSceneName());
+                //LoadScene(currentSave.GetSceneName());
                 SetCurrentSceneByName(currentSave.GetSceneName());
             }
             directorActor = DirectorActor.GetInstance();
@@ -292,6 +292,7 @@ namespace Assets.Script.StoryNamespace
         public void Continue(int index)
         {
             world = World.GetInstance();
+            world.LoadAllScene();
             currentSave = saveList[index];
             DirectorActor.GetInstance().Init();
             LoadContent();
@@ -349,18 +350,18 @@ namespace Assets.Script.StoryNamespace
         /// 加载场景
         /// </summary>
         /// <param name="sceneName"></param>
-        private void LoadScene(string sceneName)
-        {
-            Scene scene = Scene.LoadScene(storyPath+"/Scene/"+ sceneName + ".xml", sceneName);
-            if(scene!=null)
-            {
-                world.AddScene(scene);
-            }
-            else
-            {
-                GameManager.ShowErrorMessage("加载场景："+ sceneName+"失败！");
-            }
-        }
+        //private void LoadScene(string sceneName)
+        //{
+        //    Scene scene = Scene.LoadScene(storyPath+"/Scene/"+ sceneName + ".xml", sceneName);
+        //    if(scene!=null)
+        //    {
+        //        world.AddScene(scene);
+        //    }
+        //    else
+        //    {
+        //        GameManager.ShowErrorMessage("加载场景："+ sceneName+"失败！");
+        //    }
+        //}
 
         /// <summary>
         /// 获得当前章

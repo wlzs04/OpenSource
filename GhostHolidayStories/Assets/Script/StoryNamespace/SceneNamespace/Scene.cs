@@ -12,19 +12,19 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         string scenePath;
         string name;
         Vector2 position;
+        float width = 0;
+        float height = 0;
 
         Dictionary<string, ActorBase> actorMap = new Dictionary<string, ActorBase>();
 
         World world = null;
         GameObject gameObject = null;
+        Rect rect;
 
         private Scene(string scenePath, string name)
         {
             this.scenePath = scenePath;
             this.name = name;
-
-            gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
-            gameObject.name = name;
         }
 
         public string GetName()
@@ -60,6 +60,17 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         }
 
         /// <summary>
+        /// 初始化场景本身
+        /// </summary>
+        void InitScene()
+        {
+            gameObject = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Actor/ActorPrefab"));
+            gameObject.name = name;
+
+            rect = new Rect(position, new Vector2(width, height));
+        }
+
+        /// <summary>
         /// 加载内容
         /// </summary>
         private void LoadContent()
@@ -77,10 +88,21 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                         float y = (float)Convert.ToDouble(attribute.Value.Substring(tempIndex + 1));
                         position = new Vector2(x, y);
                         break;
+                    case "name":
+                        name = attribute.Value;
+                        break;
+                    case "width":
+                        width = (float)Convert.ToDouble(attribute.Value);
+                        break;
+                    case "height":
+                        height = (float)Convert.ToDouble(attribute.Value);
+                        break;
                     default:
                         break;
                 }
             }
+
+            InitScene();
 
             foreach (var item in root.Elements())
             {
@@ -102,6 +124,16 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             {
                 item.Value.Update();
             }
+        }
+
+        /// <summary>
+        /// 判断传入点是否在场景中
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool InScecneByPosition(Vector2 position)
+        {
+            return rect.Contains(position);
         }
 
         public void SetWorld(World world)
@@ -153,6 +185,21 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             }
             actorMap.Clear();
             GameObject.DestroyImmediate(gameObject);
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
+
+        public float GetWidth()
+        {
+            return width;
+        }
+
+        public float GetHeight()
+        {
+            return height;
         }
     }
 }

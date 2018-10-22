@@ -45,9 +45,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         //UI根节点列表
         static Dictionary<StoryUIState, GameObject> uiRootMap;
 
-        Dictionary<int, int> objectItemMap = new Dictionary<int, int>();
+        //Dictionary<int, int> objectItemMap = new Dictionary<int, int>();
 
         Story story = null;
+        Save currentSave = null;
 
         private DirectorActor() : base("Director")
         {
@@ -66,6 +67,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             InitUI();
             story = GameManager.GetCurrentStory();
+            currentSave = story.GetCurrentSave();
         }
 
         public override void Update()
@@ -100,9 +102,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             if(Input.GetKeyDown(KeyCode.Escape))
             {
-                //Pause();
-                UIMenu();
-                return;
+                if (gameState == GameState.Free)
+                {
+                    UIMenu();
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Space))
@@ -141,6 +144,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     {
                         Vector2 position = starringActor.GetPosition();
                         starringActor.MoveToPosition(new Vector2(position.x + mx, position.y + my));
+                        CheckCurrentScene();
                     }
                 }
             }
@@ -150,6 +154,14 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             GameManager.ShowErrorMessage("DirectorActor演员无法被创建！");
             return null;
+        }
+
+        /// <summary>
+        /// 检测主演所在场景，主要用于主演主动移动后
+        /// </summary>
+        void CheckCurrentScene()
+        {
+            currentScene = World.GetInstance().GetSceneByPosition(starringActor.GetPosition());
         }
 
         void InitUI()
@@ -234,6 +246,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             UIHide();
             currentStoryUIState = StoryUIState.Menu;
             uiRootMap[currentStoryUIState].SetActive(true);
+            uiRootMap[currentStoryUIState].GetComponent<MenuUIScript>().RefreshObjectList();
             directorActor.gameState = GameState.Controlled;
         }
 
@@ -270,7 +283,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             GameManager.ShowDebugMessage("退出当前故事,回到游戏主界面！");
             directorActor.starringActor = null;
             directorActor.storyActionList.Clear();
-            directorActor.objectItemMap.Clear();
+            //directorActor.objectItemMap.Clear();
             directorActor.SetGameState(GameState.Free);
             directorActor.CleanUI();
             World.GetInstance().Clear();
@@ -338,7 +351,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <returns></returns>
         public ActorBase CheckInteractive()
         {
-            foreach (var item in starringActor.GetScene().GetAllActor())
+            foreach (var item in currentScene.GetAllActor())
             {
                 if (item.Value.CanInteractive() && GameHelper.CheckActorInArea(item.Value, starringActor.GetPosition(), influenceRange))
                 {
@@ -394,14 +407,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="number"></param>
         public void AddObejct(int itemId,int number)
         {
-            if(objectItemMap.ContainsKey(itemId))
-            {
-                objectItemMap[itemId] = objectItemMap[itemId] + number;
-            }
-            else
-            {
-                objectItemMap[itemId] = number;
-            }
+            currentSave.AddObejct(itemId,number);
         }
 
         /// <summary>
@@ -411,10 +417,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <param name="number"></param>
         public void RemoveObejct(int itemId, int number)
         {
-            if (objectItemMap.ContainsKey(itemId))
-            {
-                objectItemMap[itemId] = objectItemMap[itemId] - number > 0 ? objectItemMap[itemId] - number : 0;
-            }
+            currentSave.RemoveObejct(itemId, number);
         }
 
         /// <summary>
@@ -424,7 +427,25 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <returns></returns>
         public int GetObjectNumberById(int itemId)
         {
-            return objectItemMap.ContainsKey(itemId) ? objectItemMap[itemId] : 0;
+            return currentSave.GetObjectNumberById(itemId); 
+        }
+
+        public Dictionary<int,int> GetObjectItemMap()
+        {
+            return currentSave.GetObjectItemMap();
+        }
+
+        /// <summary>
+        /// 获得金钱数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetMoney()
+        {
+            if(currentSave.GetObjectItemMap().ContainsKey(10001))
+            {
+                return currentSave.GetObjectItemMap()[10001];
+            }
+            return 0;
         }
 
         /// <summary>

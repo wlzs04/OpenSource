@@ -1,0 +1,10 @@
+﻿<Scene name="青州城外" position="-500,0" width="500" height="500">
+  <Static name="grass2" image="grass.png" width="500" height="500" isBlock="false" layer="0" position="0,0"/>
+  <Pickable name="pick2" image="money.png" width="50" height="50" position="0,400" playDefaultAnimation="true">
+    <AddObject>
+      <ObjectItem itemId="10001" number="100"/>
+      <ObjectItem itemId="10002" number ="1"/>
+    </AddObject>
+    <Quit actor="pick2" isNeedSaveToData="true"/>
+  </Pickable>
+</Scene>

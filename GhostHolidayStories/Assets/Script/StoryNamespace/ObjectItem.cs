@@ -18,6 +18,7 @@ namespace Assets.Script.StoryNamespace
         int itemId;//物品Id
         int number = 1;//数量
 
+        static int maxObjectCount = 99;//物品可拥有的最大数量
         static Dictionary<int, ObjectInfo> objectInfoMap = new Dictionary<int, ObjectInfo>();
 
         public static void LoadConfig()
@@ -36,6 +37,11 @@ namespace Assets.Script.StoryNamespace
                     objectInfoMap.Add(objectInfo.itemId, objectInfo);
                 }
             }
+        }
+
+        public static string GetNameById(int id)
+        {
+            return objectInfoMap[id].name;
         }
 
         /// <summary>

@@ -11,7 +11,6 @@ public class OptionItemUIScript : MonoBehaviour, IPointerClickHandler,IPointerEn
     QuestionUIScript questionUIScript=null;
     Text optionText = null;
     Action callBack = null;
-    bool showSelectedState = false;//是否显示已经被选过
     int index = 0;
 
     // Use this for initialization

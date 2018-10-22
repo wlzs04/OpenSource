@@ -18,7 +18,7 @@ namespace Assets.Script.Helper
         /// <returns></returns>
         public static bool CheckActorInArea(ActorBase actor, Vector2 position ,float radius)
         {
-            return (position - actor.GetPosition()).magnitude<= radius;
+            return (position - actor.GetWorldPosition()).magnitude<= radius;
         }
     }
 }

@@ -3,19 +3,51 @@ using Assets.Script.StoryNamespace.SceneNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuUIScript : MonoBehaviour {
-    
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-        
-	}
+
+    ScrollRect objectItemScrollView;
+    public GameObject objectItemPrefab;
+
+    Text moneyText;
+
+    void Awake()
+    {
+        objectItemScrollView = transform.Find("BackImage/ObjectItemScrollView").GetComponent<ScrollRect>();
+        moneyText = transform.Find("BackImage/MoneyText").GetComponent<Text>();
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            DirectorActor.UIReturnFromMenu();
+        }
+    }
+
+    /// <summary>
+    /// 刷新物品列表
+    /// </summary>
+    public void RefreshObjectList()
+    {
+        for (int i = objectItemScrollView.content.childCount - 1; i >= 0; i--)
+        {
+            GameObject.DestroyImmediate(objectItemScrollView.content.GetChild(i).gameObject);
+        }
+
+        foreach (var item in DirectorActor.GetInstance().GetObjectItemMap())
+        {
+            if(item.Key!=10001)
+            {
+
+                GameObject objectItem = GameObject.Instantiate(objectItemPrefab, objectItemScrollView.content);
+                objectItem.GetComponent<ObjectItemScript>().SetInfo(item.Key, item.Value);
+            }
+        }
+
+        moneyText.text = "金钱：" + DirectorActor.GetInstance().GetMoney();
+    }
     
     /// <summary>
     /// 从菜单界面返回到游戏场景界面
