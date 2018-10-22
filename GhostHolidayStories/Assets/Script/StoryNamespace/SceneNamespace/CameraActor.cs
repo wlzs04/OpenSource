@@ -80,5 +80,14 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             return focusActor;
         }
+
+        /// <summary>
+        /// 获得摄像机
+        /// </summary>
+        /// <returns></returns>
+        public Camera GetCamera()
+        {
+            return gameObject.GetComponent<Camera>();
+        }
     }
 }

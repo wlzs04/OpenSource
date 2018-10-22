@@ -281,7 +281,7 @@ namespace Assets.Script.StoryNamespace
                 return;
             }
             saveList.Add(currentSave);
-            Continue(currentSave.GetIndex()-1);
+            Continue(currentSave.GetIndex());
             StartContent();
         }
 

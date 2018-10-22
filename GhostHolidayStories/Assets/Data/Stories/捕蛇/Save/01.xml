@@ -1,14 +1,14 @@
-﻿<Save createTime="2018-08-20 12:00:00" 
-      lastSaveTime="2018-08-20 14:00:00" 
-      chapterIndex="0" 
-      sectionIndex="1" 
-      sceneName="青州" >
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Save createTime="2018-08-20 12:00:00" lastSaveTime="2018-10-22 18:13:13" chapterIndex="0" sectionIndex="1" sceneName="青州">
   <Starring>
-    <Dynamic name="test" image="person2.png" width="100" height="200" position="0,0" layer="1" isBlock="true"/>
+    <Dynamic name="test" image="person2.png" width="100" height="200" position="281.306,443.1575" layer="1" isBlock="true" />
   </Starring>
   <HaveFinishChapterAndSection>
     <Chapter index="0">
-      <Section index="0"/>
+      <Section index="0" />
     </Chapter>
   </HaveFinishChapterAndSection>
+  <NeedExecuteOnLoadAction>
+  </NeedExecuteOnLoadAction>
+  <ObjectItemMap />
 </Save>

@@ -66,7 +66,7 @@ namespace Assets.Script.StoryNamespace
             }
             if (story.GetSaveNumber() < story.GetMaxSaveNumber())
             {
-                int index = story.GetSaveNumber() + 1;
+                int index = story.GetSaveNumber();
                 string savePath = story.GetStoryPath() + "/Save/" + index + ".xml";
                 Save save = new Save(savePath, index);
                 save.createTime = DateTime.Now;
@@ -212,6 +212,14 @@ namespace Assets.Script.StoryNamespace
             doc.Root.Add(needExecuteOnLoadActionElement);
             doc.Root.Add(objectItemMapElement);
             doc.Save(savePath);
+        }
+
+        /// <summary>
+        /// 获得存档图片路径
+        /// </summary>
+        public string GetImagePath()
+        {
+            return savePath.Substring(0, savePath.LastIndexOf(".")) + ".jpg";
         }
 
         public TimeSpan GetPlayTime()
