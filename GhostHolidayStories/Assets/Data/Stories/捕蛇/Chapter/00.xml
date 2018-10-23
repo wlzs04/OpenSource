@@ -1,5 +1,27 @@
 ﻿<Chapter name="第一章" description="半掩家门初入林，林深天开似无垠">
-	<Section index="0" sceneName="青州" description="户部尚书的两个儿子第一次到青州。">
+  <Section index="0" sceneName="青州城外" description="木和鸣刚到青州城外">
+    <Action/>
+    <Game gameState="Controlled"/>
+    <Enter>
+      <Dynamic name="木" image="person2.png" width="100" height="200" position="500,200" layer="1" isBlock="true"/>
+      <Dynamic name="鸣" image="person2.png" width="100" height="200" position="600,200" layer="1" isBlock="true"/>
+    </Enter>
+    <Camera followActor="木" isAsync="false" needTime="0" moveState="Set"/>
+    <Move actor="木" isAsync="false" needTime="1" position="500,300" moveState="AI"/>
+    <Talk actor="木" content="呼···可算到了。"/>
+    <Talk actor="木" content="看守卫的样子，···他们还没来吧！"/>
+    <Talk actor="鸣" isAsync="true" content="你再趴会儿，我先进了。"/>
+    <Move actor="鸣" needTime="1" position="700,700" moveState="AI"/>
+    <Quit actor="鸣"/>
+    <Talk actor="木" content="呼···，随便吧！"/>
+    <Wait needTime="1"/>
+    <Talk actor="木" content="其实也没必要早来,先休息一下。"/>
+    <Starring actor="木"/>
+    <Game gameState="Free"/>
+    <Cut/>
+  </Section>
+  <!--
+	<Section index="1" sceneName="青州" description="户部尚书的两个儿子第一次到青州。">
     <Action/>
     <Game gameState="Controlled"/>
     <Enter>
@@ -13,7 +35,7 @@
     <Game gameState="Free"/>
     <Cut/>
 	</Section>
-	<Section index="1" sceneName="青州" description="青州知府派人接待。">
+	<Section index="2" sceneName="青州" description="青州知府派人接待。">
     <Action/>
     <Game gameState="Controlled"/>
     <Animation actor="test" isAsync="true" loopTime="1" onceTime="0.5" row="1" column="4" image="person1.png" />
@@ -24,4 +46,5 @@
     <Game gameState="Free"/>
     <Cut/>
 	</Section>
+  -->
 </Chapter>

@@ -81,7 +81,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             {
                 return World.GetInstance().GetActor(actorName);
             }
-            return null;
+            return DirectorActor.GetInstance().GetStarringActor();
         }
 
         /// <summary>

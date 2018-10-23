@@ -30,7 +30,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         {
             if(focusActor != null)
             {
-                Vector3 focusActorPosition = focusActor.GetPosition();
+                Vector3 focusActorPosition = focusActor.GetWorldPosition();
                 gameObject.transform.localPosition = new Vector3(focusActorPosition.x, focusActorPosition.y, gameObject.transform.localPosition.z);
             }
             base.Update();

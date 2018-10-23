@@ -50,6 +50,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         Story story = null;
         Save currentSave = null;
 
+        DateTime playFromTime;//游戏开始时间
+
         private DirectorActor() : base("Director")
         {
             
@@ -68,6 +70,8 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             InitUI();
             story = GameManager.GetCurrentStory();
             currentSave = story.GetCurrentSave();
+
+            playFromTime = DateTime.Now;
         }
 
         public override void Update()
@@ -142,7 +146,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                     }
                     if (mx != 0 || my != 0)
                     {
-                        Vector2 position = starringActor.GetPosition();
+                        Vector2 position = starringActor.GetWorldPosition();
                         starringActor.MoveToPosition(new Vector2(position.x + mx, position.y + my));
                         CheckCurrentScene();
                     }
@@ -161,7 +165,19 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// </summary>
         void CheckCurrentScene()
         {
-            currentScene = World.GetInstance().GetSceneByPosition(starringActor.GetPosition());
+            Scene newScene = World.GetInstance().GetSceneByPosition(starringActor.GetWorldPosition());
+            if (newScene!=null)
+            {
+                if(newScene != currentScene)
+                {
+                    GameManager.ShowDebugMessage("当前主要从场景："+ currentScene + "移动到场景："+newScene+"中。");
+                    currentScene = newScene;
+                }
+            }
+            else
+            {
+                GameManager.ShowErrorMessage("当前主演已移动到地图外。");
+            }
         }
 
         void InitUI()
@@ -446,6 +462,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 return currentSave.GetObjectItemMap()[10001];
             }
             return 0;
+
         }
 
         /// <summary>
@@ -479,7 +496,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         /// <returns></returns>
         public static Scene GetCurrentScene()
         {
-            return directorActor.story.GetCurrentScene();
+            return directorActor.currentScene;
         }
 
         /// <summary>
@@ -520,6 +537,15 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
             GameObject.Destroy(rt);
             
             return screenShot;
+        }
+
+        /// <summary>
+        /// 获得本次游戏时间
+        /// </summary>
+        /// <returns></returns>
+        public TimeSpan GetThisTimePlayTimeSpan()
+        {
+            return DateTime.Now - playFromTime;
         }
     }
 }

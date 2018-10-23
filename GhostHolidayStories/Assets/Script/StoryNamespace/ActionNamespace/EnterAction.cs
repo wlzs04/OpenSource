@@ -12,8 +12,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     class EnterAction : ActionBase
     {
-        XElement enterActorElement = null;
-        //ActorBase enterActor = null;
+        List<XElement> enterActorElementList = new List<XElement>();
 
         public EnterAction():base("Enter")
         {
@@ -22,8 +21,11 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override void Execute(ActorBase executor)
         {
-            ActorBase enterActor= ActorBase.LoadActor(enterActorElement);
-            enterActor.SetScene(GameManager.GetCurrentStory().GetCurrentScene());
+            foreach (var item in enterActorElementList)
+            {
+                ActorBase enterActor = ActorBase.LoadActor(item);
+                enterActor.SetScene(DirectorActor.GetCurrentScene());
+            }
             Complete();
         }
 
@@ -36,10 +38,14 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
 
         protected override void LoadContent(XElement node)
         {
+            enterActorElementList.Clear();
             base.LoadContent(node);
             if(node.HasElements)
             {
-                enterActorElement = node.Elements().First();
+                foreach (var item in node.Elements())
+                {
+                    enterActorElementList.Add(item);
+                }
             }
             else
             {

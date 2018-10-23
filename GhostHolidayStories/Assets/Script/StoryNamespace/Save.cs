@@ -107,6 +107,9 @@ namespace Assets.Script.StoryNamespace
                     case "lastSaveTime":
                         lastSaveTime = Convert.ToDateTime(attribute.Value);
                         break;
+                    case "playTime":
+                        playTime = new TimeSpan(0,0, (int)Convert.ToDouble(attribute.Value));
+                        break;
                     case "chapterIndex":
                         chapterIndex = Convert.ToInt32(attribute.Value);
                         break;
@@ -171,6 +174,7 @@ namespace Assets.Script.StoryNamespace
                 new XElement("Save",
                     new XAttribute("createTime", createTime.ToString("yyyy-MM-dd HH:mm:ss")),
                     new XAttribute("lastSaveTime", lastSaveTime.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new XAttribute("playTime",(int)playTime.Add(DirectorActor.GetInstance().GetThisTimePlayTimeSpan()).TotalSeconds),
                     new XAttribute("chapterIndex", chapterIndex),
                     new XAttribute("sectionIndex", sectionIndex),
                     new XAttribute("sceneName", DirectorActor.GetCurrentScene().GetName())

@@ -1,10 +1,44 @@
-﻿<Scene name="青州城外" position="-500,0" width="500" height="500">
-  <Static name="grass2" image="grass.png" width="500" height="500" isBlock="false" layer="0" position="0,0"/>
-  <Pickable name="pick2" image="money.png" width="50" height="50" position="0,400" playDefaultAnimation="true">
-    <AddObject>
-      <ObjectItem itemId="10001" number="100"/>
-      <ObjectItem itemId="10002" number ="1"/>
-    </AddObject>
-    <Quit actor="pick2" isNeedSaveToData="true"/>
-  </Pickable>
+﻿<Scene name="青州城外" position="-1000,0" width="1000" height="1000">
+  <Static name="grass2" image="grass.png" width="1000" height="1000" isBlock="false" layer="0" position="0,0"/>
+  <Interactive name="守卫1" image="person2.png" width="100" height="200" position="350,800" playDefaultAnimation="true" isBlock="true">
+    <Condition expression="(HaveFinishChapterAndSection(0,1))">
+      <True>
+        <Move actor="守卫1" position="400,0" needTime="0.5" moveState="AI" isAsync="true"/>
+        <Talk actor="守卫1" content="赶紧进去！"/>
+      </True>
+      <False>
+        <Talk content="请问这里是青州吗？" onlyActionByTime="1"/>
+        <Talk actor="守卫1" content="是，不过你不能进去！" onlyActionByTime="1"/>
+        <Talk content="为什么？" onlyActionByTime="1"/>
+        <Talk actor="守卫1" content="进门需要交100文，你有就放你进去？" onlyActionByTime="1"/>
+        <Question actor="守卫1" content="想好了吗？" isLoop="false">
+          <Option content="交钱进入。">
+            <Condition expression="(GetObjectNumberById(10001)>=100)">
+              <True>
+                <RemoveObject>
+                  <ObjectItem itemId="10001" number="100"/>
+                </RemoveObject>
+                <Talk actor="守卫1" content="嗯！进去吧！"/>
+                <StartSection chapterIndex="0" sectionIndex ="1"/>
+              </True>
+              <False>
+                <Talk actor="守卫1" content="钱不够，不能进！"/>
+              </False>
+            </Condition>
+          </Option>
+          <Option content="不交。">
+            <Talk content="没有进城门需要交钱的道理。"/>
+            <Talk actor="守卫1" content="那就在城外站着吧！"/>
+          </Option>
+        </Question>
+      </False>
+    </Condition>
+  </Interactive>
+  <Interactive name="守卫2" image="person2.png" width="100" height="200" position="650,800" playDefaultAnimation="true" isBlock="true">
+    <Talk actor="守卫2" content="不要找我，去问另一个。"/>
+  </Interactive>
+
+  <Static name="茶摊桌椅" image="茶摊桌椅.png" width="200" height="200" isBlock="true" position="0,400"/>
+  
+  
 </Scene>
