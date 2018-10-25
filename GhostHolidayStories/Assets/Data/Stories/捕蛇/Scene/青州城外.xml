@@ -1,4 +1,4 @@
-﻿<Scene name="青州城外" position="-1000,0" width="1000" height="1000">
+<Scene name="青州城外" position="-1000,0" width="1000" height="1000">
   <Static name="grass2" image="grass.png" width="1000" height="1000" isBlock="false" layer="0" position="0,0"/>
   <Interactive name="守卫1" image="person2.png" width="100" height="200" position="350,800" playDefaultAnimation="true" isBlock="true">
     <Condition expression="(HaveFinishChapterAndSection(0,1))">
@@ -34,11 +34,19 @@
       </False>
     </Condition>
   </Interactive>
+  <Trigger width="100" height="100" position="500,800" canInteractive="true" actionExecuteCondition="Interactive">
+    <True>
+      <Talk actor="守卫1" content="站住！"/>
+    </True>
+  </Trigger>
   <Interactive name="守卫2" image="person2.png" width="100" height="200" position="650,800" playDefaultAnimation="true" isBlock="true">
     <Talk actor="守卫2" content="不要找我，去问另一个。"/>
   </Interactive>
 
   <Static name="茶摊桌椅" image="茶摊桌椅.png" width="200" height="200" isBlock="true" position="0,400"/>
+  <Interactive name="城外茶摊小二" image="person2.png" width="100" height="200" isBlock="true" position="800,500">
+    <Talk actor="城外茶摊小二" content="客人有事的话就先走吧！小店儿快收摊了。"/>
+  </Interactive>
   
   
 </Scene>

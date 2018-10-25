@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\GhostHolidayStories",
+    "\\GhostHolidayStories\\Assets",
+    "\\GhostHolidayStories\\Assets\\Script",
+    "\\GhostHolidayStories\\Assets\\Script\\StoryNamespace"
   ],
+  "SelectedNode": "\\GhostHolidayStories\\Assets\\Script\\StoryNamespace\\Save.cs",
   "PreviewInSolutionExplorer": false
 }

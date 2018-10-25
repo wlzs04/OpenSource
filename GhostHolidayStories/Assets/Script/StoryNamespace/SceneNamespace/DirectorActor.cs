@@ -1,4 +1,4 @@
-﻿using Assets.Script.Helper;
+using Assets.Script.Helper;
 using Assets.Script.StoryNamespace.ActionNamespace;
 using System;
 using System.Collections.Generic;
@@ -45,12 +45,16 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         //UI根节点列表
         static Dictionary<StoryUIState, GameObject> uiRootMap;
 
-        //Dictionary<int, int> objectItemMap = new Dictionary<int, int>();
+        //倒计时UI根节点：比较特殊，单独提出
+        GameObject timerUIRoot;
 
         Story story = null;
         Save currentSave = null;
 
         DateTime playFromTime;//游戏开始时间
+
+        TimerUIRootScript timerUIRootScript;
+        TimerAction timerAction;//计时器指令，用于限制玩家时间，在同一时间内只能拥有一个计时指令
 
         private DirectorActor() : base("Director")
         {
@@ -202,6 +206,10 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
                 uiRootObject.name = item.ToString() + "UIRootPrefab";
                 uiRootMap.Add(item, uiRootObject);
             }
+            GameObject timerUIRootPrefab = Resources.Load<GameObject>("UI/TimerUIRootPrefab");
+            timerUIRoot = GameObject.Instantiate(timerUIRootPrefab, canvasTransform);
+            timerUIRootScript = timerUIRoot.GetComponent<TimerUIRootScript>();
+            timerUIRoot.SetActive(false);
         }
 
         /// <summary>
@@ -297,6 +305,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         public static void ExitStory()
         {
             GameManager.ShowDebugMessage("退出当前故事,回到游戏主界面！");
+            directorActor.timerAction = null;
             directorActor.starringActor = null;
             directorActor.storyActionList.Clear();
             //directorActor.objectItemMap.Clear();
@@ -546,6 +555,21 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         public TimeSpan GetThisTimePlayTimeSpan()
         {
             return DateTime.Now - playFromTime;
+        }
+
+        /// <summary>
+        /// 设置计时器指令
+        /// </summary>
+        public void SetTimerAction(TimerAction timerAction)
+        {
+            if(this.timerAction !=null)
+            {
+                GameManager.ShowErrorMessage("计时器指令已存在，将被覆盖。");
+            }
+            this.timerAction = timerAction;
+            timerUIRootScript.SetInfo(timerAction.GetRemainTime(),
+                timerAction.GetCanPass(),
+                ()=>{ DirectorActor.GetInstance().AddActionToQueue(timerAction.GetPassAction());});
         }
     }
 }

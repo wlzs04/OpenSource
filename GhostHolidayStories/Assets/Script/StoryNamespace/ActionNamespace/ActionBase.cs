@@ -1,4 +1,4 @@
-﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using Assets.Script.StoryNamespace.SceneNamespace;
 using System;
 using System.Collections.Generic;
 using System.Linq;

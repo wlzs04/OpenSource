@@ -1,50 +1,40 @@
-﻿<Chapter name="第一章" description="半掩家门初入林，林深天开似无垠">
+<Chapter name="第一章" description="半掩家门初入林，林深天开似无垠">
   <Section index="0" sceneName="青州城外" description="木和鸣刚到青州城外">
     <Action/>
     <Game gameState="Controlled"/>
-    <Enter>
+    <Enter sceneName="青州城外">
       <Dynamic name="木" image="person2.png" width="100" height="200" position="500,200" layer="1" isBlock="true"/>
       <Dynamic name="鸣" image="person2.png" width="100" height="200" position="600,200" layer="1" isBlock="true"/>
     </Enter>
     <Camera followActor="木" isAsync="false" needTime="0" moveState="Set"/>
     <Move actor="木" isAsync="false" needTime="1" position="500,300" moveState="AI"/>
-    <Talk actor="木" content="呼···可算到了。"/>
-    <Talk actor="木" content="看守卫的样子，···他们还没来吧！"/>
-    <Talk actor="鸣" isAsync="true" content="你再趴会儿，我先进了。"/>
-    <Move actor="鸣" needTime="1" position="700,700" moveState="AI"/>
+    <Talk actor="木" content="呼···，终于到了，这里就是青州吧！"/>
+    <Move actor="鸣" needTime="0.5" position="700,700" moveState="AI"/>
+    <Talk actor="鸣" isAsync="false" content="你先趴会儿，我先进了。"/>
+    <Move actor="鸣" needTime="0.2" position="700,800" moveState="AI"/>
     <Quit actor="鸣"/>
-    <Talk actor="木" content="呼···，随便吧！"/>
     <Wait needTime="1"/>
-    <Talk actor="木" content="其实也没必要早来,先休息一下。"/>
+    <Talk actor="木" isAsync="true" content="看门卫的样子他们还没到，呼···我拼命跑是为了什么？"/>
+    <Move actor="木" needTime="2" position="700,600" moveState="AI"/>
+    <Talk actor="木" content="其实也没必要早来,···都怪你。"/>
+    <Move actor="城外茶摊小二" isAsync="true" needTime="1" position="800,700" moveState="AI"/>
+    <Talk actor="城外茶摊小二" content="一文。"/>
+    <Talk actor="木" content="(放下钱，拿起碗来，···一饮而尽。)"/>
+    <Wait needTime="1"/>
+    <Talk actor="木" content="都怪我不认识路。"/>
+    <Wait needTime="1"/>
+    <Talk actor="木" content="休息片刻。"/>
+    <Talk actor="木" content="怎么办，要现在进城吗？"/>
+    <Timer timerType="Countdown" canPass="true" remainTime="10">
+      <Pass>
+        <!--
+        <StartSection chapter="0" section="1"/>
+        -->
+        <Talk actor="木" content="时间到！"/>
+      </Pass>
+    </Timer>
     <Starring actor="木"/>
     <Game gameState="Free"/>
     <Cut/>
   </Section>
-  <!--
-	<Section index="1" sceneName="青州" description="户部尚书的两个儿子第一次到青州。">
-    <Action/>
-    <Game gameState="Controlled"/>
-    <Enter>
-      <Dynamic name="test" image="person2.png" width="100" height="200" position="0,0" layer="1" isBlock="true"/>
-    </Enter>
-    <Move actor="test" position="400,400" moveState="Set"/>
-    <Camera followActor="test" isAsync="false" needTime="0" moveState="Set"/>
-    <Animation actor="test" isAsync="true" loopTime="4" onceTime="0.5" row="1" column="4" image="person1.png" />
-    <Move actor="test" isAsync="false" needTime="2" position="500,500" moveState="AI"/>
-    <Starring actor="test"/>
-    <Game gameState="Free"/>
-    <Cut/>
-	</Section>
-	<Section index="2" sceneName="青州" description="青州知府派人接待。">
-    <Action/>
-    <Game gameState="Controlled"/>
-    <Animation actor="test" isAsync="true" loopTime="1" onceTime="0.5" row="1" column="4" image="person1.png" />
-    <Move actor="test" position="400,200" needTime="0.5" moveState="AI"/>
-    <Move actor="test" position="500,200" needTime="0.5" moveState="AI"/>
-    <Move actor="守卫1" position="400,0" needTime="0.5" moveState="AI" isNeedSaveToData="true"/>
-    <Talk executeByStarringActor="true" content="走吧！不然钱就浪费了！"/>
-    <Game gameState="Free"/>
-    <Cut/>
-	</Section>
-  -->
 </Chapter>

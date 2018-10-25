@@ -1,4 +1,4 @@
-﻿using Assets.Script.StoryNamespace.SceneNamespace;
+using Assets.Script.StoryNamespace.SceneNamespace;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
     /// </summary>
     class EnterAction : ActionBase
     {
+        string sceneName = "";
         List<XElement> enterActorElementList = new List<XElement>();
 
         public EnterAction():base("Enter")
@@ -24,7 +25,7 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
             foreach (var item in enterActorElementList)
             {
                 ActorBase enterActor = ActorBase.LoadActor(item);
-                enterActor.SetScene(DirectorActor.GetCurrentScene());
+                enterActor.SetScene(World.GetInstance().GetScene(sceneName));
             }
             Complete();
         }
@@ -40,7 +41,18 @@ namespace Assets.Script.StoryNamespace.ActionNamespace
         {
             enterActorElementList.Clear();
             base.LoadContent(node);
-            if(node.HasElements)
+            foreach (var attribute in node.Attributes())
+            {
+                switch (attribute.Name.ToString())
+                {
+                    case "sceneName":
+                        sceneName = attribute.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (node.HasElements)
             {
                 foreach (var item in node.Elements())
                 {

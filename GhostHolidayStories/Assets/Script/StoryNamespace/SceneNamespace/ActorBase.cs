@@ -1,4 +1,4 @@
-﻿using Assets.Script.Helper;
+using Assets.Script.Helper;
 using Assets.Script.StoryNamespace.ActionNamespace;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace Assets.Script.StoryNamespace.SceneNamespace
         protected Scene scene =null;//所在场景
 
         //演员本身拥有的指令列表
-        List<ActionBase> actionList = new List<ActionBase>();
+        protected List<ActionBase> actionList = new List<ActionBase>();
         //演员需要执行的指令队列
         Queue<ActionBase> actionQueue = new Queue<ActionBase>();
         //演员需要执行的指令队列缓存列表
